@@ -60,6 +60,33 @@ export function EditableText({
   }
 
   if (!editing) {
+    const isHeading = Tag === "h1" || Tag === "h2" || Tag === "h3";
+    const content = value || placeholder || emptyLabel;
+    const label = `Edit ${value || placeholder || "value"}`;
+    if (isHeading) {
+      return (
+        <Tag className={className}>
+          <span
+            role="button"
+            tabIndex={0}
+            onClick={() => setEditing(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setEditing(true);
+              }
+            }}
+            aria-label={label}
+            className={cn(
+              "cursor-text rounded-sm px-0.5 -mx-0.5 hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-ring/40 transition-colors",
+              !value && "text-muted-foreground/60 italic",
+            )}
+          >
+            {content}
+          </span>
+        </Tag>
+      );
+    }
     return (
       <Tag
         role="button"
@@ -71,14 +98,14 @@ export function EditableText({
             setEditing(true);
           }
         }}
+        aria-label={label}
         className={cn(
           "cursor-text rounded-sm px-0.5 -mx-0.5 hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-ring/40 transition-colors",
           !value && "text-muted-foreground/60 italic",
           className,
         )}
-        title="Click to edit"
       >
-        {value || placeholder || emptyLabel}
+        {content}
       </Tag>
     );
   }
