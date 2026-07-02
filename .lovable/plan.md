@@ -1,38 +1,41 @@
-Restrict editor access to Google accounts on `coachingfederation.ch`. Three layers so it can't be bypassed by tweaking the client.
+# KR cards + per-KR initiatives
 
-## 1. Client — hint Google's account picker
+Reshape each OKR so key results are the primary unit: a responsive grid of KR cards, each owning its initiatives, opened in a side sheet for editing/details. The alignment analysis re-renders off the same reactive state.
 
-In `src/routes/auth.tsx`, pass the `hd` parameter so Google only lets users pick a `coachingfederation.ch` account:
+## Data model
 
-```ts
-lovable.auth.signInWithOAuth("google", {
-  redirect_uri: window.location.origin,
-  extraParams: { hd: "coachingfederation.ch", prompt: "select_account" },
-});
-```
+- Add `kr_id uuid` to `public.initiatives`, FK to `public.key_results(id) ON DELETE CASCADE`, indexed.
+- Backfill: for each existing initiative, set `kr_id` = first KR (by `position`, then `created_at`) of its `okr_set_id`. Orphans (sets with no KRs) get deleted.
+- Make `kr_id NOT NULL` after backfill. Keep `okr_set_id` for now (denormalized convenience, faster set-level queries) and add a trigger that keeps it in sync with `kr_id`'s parent set — or drop it if we prefer strict normalization. Plan: **keep `okr_set_id`**, enforce consistency via a `BEFORE INSERT/UPDATE` trigger.
+- RLS/grants unchanged — inherits current initiative policies.
 
-## 2. Client — reject any session whose email isn't on the domain
+## Server functions (`src/lib/okr.functions.ts` or equivalent)
 
-Still in `src/routes/auth.tsx`, after `signInWithOAuth` resolves with a session (and also in `useAuth`'s `onAuthStateChange` in `src/lib/auth-context.tsx`), check `user.email`. If it doesn't end with `@coachingfederation.ch`, call `supabase.auth.signOut()` and show a toast: "Sign-in is restricted to coachingfederation.ch accounts." Copy on the sign-in card is updated to say the same up-front.
+- `addInitiative` input gains `kr_id` (required); `okr_set_id` derived server-side from the KR.
+- `updateInitiative` allows moving an initiative between KRs of the same set (optional now; can defer).
+- Loader payload nests initiatives under each KR: `OkrSetDTO.key_results[i].initiatives: InitiativeDTO[]`. Remove the top-level `set.initiatives` array (or leave as computed for a brief migration).
 
-## 3. Database — only grant the `editor` role to verified domain matches
+## UI — `src/routes/index.tsx`
 
-Rewrite the existing `public.grant_editor_on_signup()` trigger (currently gives every new user the `editor` role) so it only inserts into `user_roles` when both:
-- `new.email_confirmed_at is not null` (Google always confirms), and
-- `lower(split_part(new.email, '@', 2)) = 'coachingfederation.ch'`.
+- Replace the KR table inside `OkrCard` with a responsive grid: `grid gap-4 sm:grid-cols-2 xl:grid-cols-3` of `KrCard` components.
+- `KrCard` shows: KR number badge, title/text (truncate to ~3 lines), target, lead, initiative count, and a "Open" affordance (whole card is a button).
+- Remove the "Related projects & initiatives" section from `OkrCard`.
+- New `KrDetailSheet` (shadcn `Sheet`, right side, ~520px): editable KR fields (text, target, lead), and an initiatives table with inline add/edit/delete — same interaction model already used elsewhere. Closing the sheet returns to the dashboard.
+- Alignment analysis: since it reads from the same query cache, invalidation on KR/initiative mutations auto-refreshes it. No structural change needed beyond pointing it at the nested shape.
 
-Also add an `AFTER UPDATE OF email_confirmed_at` trigger that grants the role when a previously-unconfirmed email later confirms with the right domain. This is the standard verified-domain pattern — a client that skips step 2 still can't edit, because they have no editor role and every write policy checks `has_role(auth.uid(),'editor')`.
+## Detail view: sheet vs route
 
-Users outside the domain who somehow reach a session can still view the dashboard (public read), but every edit will be blocked by RLS.
-
-## Files touched
-
-- `src/routes/auth.tsx` — pass `hd`/`prompt`, post-sign-in domain check, updated copy.
-- `src/lib/auth-context.tsx` — enforce domain check in `onAuthStateChange` so a bad session anywhere in the app is signed out immediately.
-- One migration replacing `grant_editor_on_signup` and adding the confirm-update trigger.
+Chosen: **modal side sheet** (per your answer). State is local to the dashboard; no URL change. If deep-linking is wanted later, we can add `?kr=<id>` search-param sync in a follow-up.
 
 ## Out of scope
 
-- A separate allow-list UI for exceptions.
-- Anything about who can view the dashboard (viewing stays public).
-- Removing the editor role from existing users whose email isn't on the domain — I can add a one-off cleanup step if you want, otherwise the migration only affects future sign-ups.
+- Moving initiatives between KRs via drag/drop.
+- Deep-linkable KR URLs.
+- Per-KR permissions or owners beyond the existing `lead` field.
+
+## Files touched
+
+- `supabase/migrations/<new>.sql` — add `kr_id`, backfill, NOT NULL, trigger, index.
+- `src/lib/okr.functions.ts` (or the current initiatives module) — signatures + loader shape.
+- `src/routes/index.tsx` — `OkrCard` grid, new `KrCard`, new `KrDetailSheet`, remove old initiatives block.
+- Types regenerated after migration approval.

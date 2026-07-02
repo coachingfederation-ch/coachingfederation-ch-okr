@@ -48,7 +48,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         .order("sort_order", { ascending: true }),
       supabase
         .from("initiatives")
-        .select("id,okr_set_id,text,sort_order")
+        .select("id,okr_set_id,kr_id,text,sort_order")
         .order("sort_order", { ascending: true }),
       supabase
         .from("alignment_rows")
@@ -60,17 +60,17 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
       pillars.error || sets.error || krs.error || inits.error || aligns.error;
     if (err) throw new Error(err.message);
 
+    const initsByKr = new Map<string, InitiativeDTO[]>();
+    for (const r of inits.data ?? []) {
+      const arr = initsByKr.get(r.kr_id) ?? [];
+      arr.push(r as InitiativeDTO);
+      initsByKr.set(r.kr_id, arr);
+    }
     const krsBySet = new Map<string, KeyResultDTO[]>();
     for (const r of krs.data ?? []) {
       const arr = krsBySet.get(r.okr_set_id) ?? [];
-      arr.push(r as KeyResultDTO);
+      arr.push({ ...(r as Omit<KeyResultDTO, "initiatives">), initiatives: initsByKr.get(r.id) ?? [] });
       krsBySet.set(r.okr_set_id, arr);
-    }
-    const initsBySet = new Map<string, InitiativeDTO[]>();
-    for (const r of inits.data ?? []) {
-      const arr = initsBySet.get(r.okr_set_id) ?? [];
-      arr.push(r as InitiativeDTO);
-      initsBySet.set(r.okr_set_id, arr);
     }
 
     const okr_sets: OkrSetDTO[] = (sets.data ?? []).map((s) => ({
@@ -85,7 +85,6 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
       alignment: s.alignment,
       sort_order: s.sort_order,
       key_results: krsBySet.get(s.id) ?? [],
-      initiatives: initsBySet.get(s.id) ?? [],
     }));
 
     return {
@@ -100,6 +99,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
     };
   },
 );
+
 
 // -------- WRITES (editor-only via RLS) --------
 
@@ -234,14 +234,20 @@ export const addInitiative = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) =>
     z
-      .object({ okr_set_id: uuidSchema, text: initiativePatchSchema.shape.text })
+      .object({ kr_id: uuidSchema, text: initiativePatchSchema.shape.text })
       .parse(raw),
   )
   .handler(async ({ data, context }) => {
+    const { data: krRow, error: krErr } = await context.supabase
+      .from("key_results")
+      .select("okr_set_id")
+      .eq("id", data.kr_id)
+      .single();
+    if (krErr) throw new Error(krErr.message);
     const { data: maxRow } = await context.supabase
       .from("initiatives")
       .select("sort_order")
-      .eq("okr_set_id", data.okr_set_id)
+      .eq("kr_id", data.kr_id)
       .order("sort_order", { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -249,7 +255,8 @@ export const addInitiative = createServerFn({ method: "POST" })
     const { data: row, error } = await context.supabase
       .from("initiatives")
       .insert({
-        okr_set_id: data.okr_set_id,
+        kr_id: data.kr_id,
+        okr_set_id: krRow.okr_set_id,
         text: data.text,
         sort_order: nextSort,
       })
@@ -258,6 +265,7 @@ export const addInitiative = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { id: row.id };
   });
+
 
 export const updateInitiative = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

@@ -51,6 +51,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          kr_id: string
           okr_set_id: string
           sort_order: number
           text: string
@@ -59,6 +60,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          kr_id: string
           okr_set_id: string
           sort_order?: number
           text?: string
@@ -67,12 +69,20 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          kr_id?: string
           okr_set_id?: string
           sort_order?: number
           text?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "initiatives_kr_id_fkey"
+            columns: ["kr_id"]
+            isOneToOne: false
+            referencedRelation: "key_results"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "initiatives_okr_set_id_fkey"
             columns: ["okr_set_id"]
