@@ -60,8 +60,11 @@ function AuthPage() {
           <p className="eyebrow">ICFS · Editor access</p>
           <h1 className="mt-2 text-2xl font-bold">Sign in to edit</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Anyone can view the dashboard. Sign in with Google to enable inline editing.
+            Anyone can view the dashboard. Sign in with your{" "}
+            <span className="font-medium text-foreground">@coachingfederation.ch</span>{" "}
+            Google account to enable inline editing.
           </p>
+
 
           <button
             type="button"
