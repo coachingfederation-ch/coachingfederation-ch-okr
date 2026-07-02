@@ -395,19 +395,13 @@ function OkrCard({
   canEdit: boolean;
   m: OkrMutations;
 }) {
-  const [initDraft, setInitDraft] = useState("");
+  const [openKrId, setOpenKrId] = useState<string | null>(null);
+  const openKr = openKrId
+    ? set.key_results.find((k) => k.id === openKrId) ?? null
+    : null;
 
   const updateSet = (patch: Partial<OkrSetDTO>) =>
     m.updateSet.mutate({ id: set.id, patch });
-
-  const submitInit = () => {
-    const text = initDraft.trim();
-    if (!text) return;
-    m.addInit.mutate(
-      { okr_set_id: set.id, text },
-      { onSuccess: () => setInitDraft("") },
-    );
-  };
 
   return (
     <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
@@ -474,7 +468,6 @@ function OkrCard({
         onChange={(next) => updateSet({ pillars: next })}
       />
 
-
       <section className="mt-6 rounded-2xl border border-border/70 bg-muted/40 p-5">
         <div className="eyebrow mb-2">Objective</div>
         <EditableText
@@ -504,7 +497,7 @@ function OkrCard({
       </section>
 
       <section className="mt-6">
-        <div className="mb-2 flex items-center justify-between">
+        <div className="mb-3 flex items-center justify-between">
           <SectionLabel>Key results</SectionLabel>
           {canEdit && (
             <button
@@ -517,186 +510,280 @@ function OkrCard({
             </button>
           )}
         </div>
-        <div className="overflow-hidden rounded-xl border border-border/70">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/60 text-left">
-              <tr className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                <th className="w-16 py-3 pl-4 font-semibold">KR</th>
-                <th className="py-3 font-semibold">Key result</th>
-                <th className="w-56 py-3 font-semibold">Target</th>
-                <th className="w-32 py-3 font-semibold">Lead</th>
-                {canEdit && <th className="w-10" />}
-              </tr>
-            </thead>
-            <tbody>
-              {set.key_results.map((r, i) => (
-                <KeyResultRow key={r.id} kr={r} striped={i % 2 === 1} canEdit={canEdit} m={m} />
-              ))}
-              {set.key_results.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={canEdit ? 5 : 4}
-                    className="py-4 pl-4 text-sm text-muted-foreground italic bg-white"
-                  >
-                    No key results yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        {set.key_results.length === 0 ? (
+          <p className="rounded-xl border border-dashed border-border/70 bg-muted/30 p-4 text-sm italic text-muted-foreground">
+            No key results yet.
+          </p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {set.key_results.map((r) => (
+              <KrCard key={r.id} kr={r} onOpen={() => setOpenKrId(r.id)} />
+            ))}
+          </div>
+        )}
       </section>
 
-      <section className="mt-6 grid gap-6 md:grid-cols-2">
-        <div>
-          <SectionLabel>Related projects &amp; initiatives</SectionLabel>
-          {set.initiatives.length > 0 && (
-            <ul className="mb-3 space-y-2">
-              {set.initiatives.map((it) => (
-                <InitiativeRow key={it.id} init={it} canEdit={canEdit} m={m} />
-              ))}
-            </ul>
-          )}
-          {canEdit && (
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={initDraft}
-                onChange={(e) => setInitDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    submitInit();
-                  }
-                }}
-                maxLength={LIMITS.initiative}
-                placeholder="New project or initiative…"
-                className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring/40"
-              />
-              <button
-                type="button"
-                disabled={!initDraft.trim() || m.addInit.isPending}
-                onClick={submitInit}
-                className="btn-mono inline-flex h-10 items-center justify-center rounded-md border border-primary/25 bg-white px-4 hover:bg-primary/5 transition-colors disabled:opacity-50"
-              >
-                Add
-              </button>
-            </div>
-          )}
-        </div>
-        <div>
-          <SectionLabel>Team members</SectionLabel>
-          <p className="text-xs text-muted-foreground">
-            Coming soon — track owners per key result via the Lead column above.
-          </p>
-        </div>
-      </section>
+      <KrDetailSheet
+        kr={openKr}
+        canEdit={canEdit}
+        m={m}
+        onClose={() => setOpenKrId(null)}
+      />
     </article>
   );
 }
 
-function KeyResultRow({
-  kr, striped, canEdit, m,
+function KrCard({
+  kr, onOpen,
 }: {
   kr: KeyResultDTO;
-  striped: boolean;
-  canEdit: boolean;
-  m: OkrMutations;
+  onOpen: () => void;
 }) {
-  const update = (patch: Partial<KeyResultDTO>) =>
-    m.updateKr.mutate({ id: kr.id, patch });
+  const count = kr.initiatives.length;
   return (
-    <tr
-      className={cn(
-        "border-t border-border/60 align-top",
-        striped ? "bg-muted/20" : "bg-white",
-      )}
+    <button
+      type="button"
+      onClick={onOpen}
+      className="group flex h-full flex-col rounded-2xl border border-border/70 bg-white p-4 text-left shadow-[0_1px_2px_rgba(20,20,60,0.03)] transition-all hover:border-primary/40 hover:shadow-[0_4px_16px_-8px_rgba(20,20,60,0.15)] focus:outline-none focus:ring-2 focus:ring-ring/40"
     >
-      <td className="py-3 pl-4 text-primary/80 font-medium">
-        <EditableText
-          value={kr.kr}
-          canEdit={canEdit}
-          maxLength={LIMITS.kr}
-          onSave={(v) => update({ kr: v })}
-        />
-      </td>
-      <td className="py-3 pr-4 leading-relaxed text-foreground">
-        <EditableText
-          multiline
-          value={kr.text}
-          canEdit={canEdit}
-          maxLength={LIMITS.krText}
-          onSave={(v) => update({ text: v })}
-          placeholder="Describe the key result…"
-        />
-      </td>
-      <td className="py-3 pr-4 text-foreground">
-        <EditableText
-          value={kr.target}
-          canEdit={canEdit}
-          maxLength={LIMITS.target}
-          onSave={(v) => update({ target: v })}
-          placeholder="Target"
-        />
-      </td>
-      <td className="py-3 pr-4 text-muted-foreground">
-        <EditableText
-          value={kr.lead}
-          canEdit={canEdit}
-          maxLength={LIMITS.lead}
-          onSave={(v) => update({ lead: v })}
-          placeholder="Lead"
-        />
-      </td>
-      {canEdit && (
-        <td className="py-3 pr-4 text-muted-foreground">
-          <button
-            type="button"
-            onClick={() => m.deleteKr.mutate({ id: kr.id })}
-            aria-label="Delete key result"
-            className="rounded-sm p-0.5 hover:bg-muted hover:text-destructive"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </td>
-      )}
-    </tr>
+      <div className="flex items-center justify-between gap-2">
+        <span className="inline-flex h-6 items-center rounded-md bg-primary/10 px-2 text-[11px] font-bold text-primary">
+          KR {kr.kr || "—"}
+        </span>
+        <span className="text-[11px] font-medium text-muted-foreground">
+          {count} {count === 1 ? "initiative" : "initiatives"}
+        </span>
+      </div>
+      <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-foreground">
+        {kr.text || <span className="italic text-muted-foreground">No description</span>}
+      </p>
+      <dl className="mt-4 space-y-1.5 text-xs">
+        <div className="flex gap-2">
+          <dt className="w-14 shrink-0 uppercase tracking-wider text-muted-foreground/80">Target</dt>
+          <dd className="min-w-0 flex-1 truncate text-foreground">
+            {kr.target || <span className="italic text-muted-foreground">—</span>}
+          </dd>
+        </div>
+        <div className="flex gap-2">
+          <dt className="w-14 shrink-0 uppercase tracking-wider text-muted-foreground/80">Lead</dt>
+          <dd className="min-w-0 flex-1 truncate text-muted-foreground">
+            {kr.lead || <span className="italic">—</span>}
+          </dd>
+        </div>
+      </dl>
+      <span className="mt-3 inline-flex text-[11px] font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+        Open details →
+      </span>
+    </button>
   );
 }
 
-function InitiativeRow({
-  init, canEdit, m,
+function KrDetailSheet({
+  kr, canEdit, m, onClose,
 }: {
-  init: InitiativeDTO;
+  kr: KeyResultDTO | null;
   canEdit: boolean;
   m: OkrMutations;
+  onClose: () => void;
 }) {
+  const [initDraft, setInitDraft] = useState("");
+
+  const submitInit = () => {
+    if (!kr) return;
+    const text = initDraft.trim();
+    if (!text) return;
+    m.addInit.mutate(
+      { kr_id: kr.id, text },
+      { onSuccess: () => setInitDraft("") },
+    );
+  };
+
+  const update = (patch: Partial<KeyResultDTO>) => {
+    if (!kr) return;
+    m.updateKr.mutate({ id: kr.id, patch });
+  };
+
   return (
-    <li className="flex items-start justify-between gap-3 text-sm text-foreground">
-      <span className="flex items-start gap-2 flex-1">
-        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-        <EditableText
-          className="flex-1"
-          multiline
-          value={init.text}
-          canEdit={canEdit}
-          maxLength={LIMITS.initiative}
-          onSave={(v) => m.updateInit.mutate({ id: init.id, text: v })}
-        />
-      </span>
-      {canEdit && (
-        <button
-          type="button"
-          onClick={() => m.deleteInit.mutate({ id: init.id })}
-          aria-label="Delete initiative"
-          className="mt-1 rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
-        >
-          <X className="h-3.5 w-3.5" />
-        </button>
-      )}
-    </li>
+    <Sheet
+      open={!!kr}
+      onOpenChange={(open) => {
+        if (!open) {
+          setInitDraft("");
+          onClose();
+        }
+      }}
+    >
+      <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
+        {kr && (
+          <>
+            <SheetHeader>
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-7 items-center rounded-md bg-primary/10 px-2.5 text-xs font-bold text-primary">
+                  KR {kr.kr || "—"}
+                </span>
+              </div>
+              <SheetTitle className="text-left">
+                <EditableText
+                  multiline
+                  value={kr.text}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.krText}
+                  onSave={(v) => update({ text: v })}
+                  placeholder="Describe the key result…"
+                  className="text-lg font-semibold leading-snug text-foreground"
+                />
+              </SheetTitle>
+              <SheetDescription className="text-left">
+                Owned outcome and the projects that deliver it.
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div>
+                <div className="section-label mb-1">Target</div>
+                <EditableText
+                  value={kr.target}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.target}
+                  onSave={(v) => update({ target: v })}
+                  placeholder="Target"
+                  className="text-sm text-foreground"
+                />
+              </div>
+              <div>
+                <div className="section-label mb-1">Lead</div>
+                <EditableText
+                  value={kr.lead}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.lead}
+                  onSave={(v) => update({ lead: v })}
+                  placeholder="Lead"
+                  className="text-sm text-muted-foreground"
+                />
+              </div>
+              <div>
+                <div className="section-label mb-1">KR number</div>
+                <EditableText
+                  value={kr.kr}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.kr}
+                  onSave={(v) => update({ kr: v })}
+                  className="text-sm font-medium text-primary"
+                />
+              </div>
+            </div>
+
+            <section className="mt-8">
+              <div className="mb-2 flex items-center justify-between">
+                <SectionLabel>Related projects &amp; initiatives</SectionLabel>
+                <span className="text-[11px] font-medium text-muted-foreground">
+                  {kr.initiatives.length}
+                </span>
+              </div>
+              <div className="overflow-hidden rounded-xl border border-border/70">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/60 text-left">
+                    <tr className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                      <th className="py-2 pl-4 font-semibold">Initiative</th>
+                      {canEdit && <th className="w-10" />}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {kr.initiatives.map((it, i) => (
+                      <tr
+                        key={it.id}
+                        className={cn(
+                          "border-t border-border/60 align-top",
+                          i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                        )}
+                      >
+                        <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
+                          <EditableText
+                            multiline
+                            value={it.text}
+                            canEdit={canEdit}
+                            maxLength={LIMITS.initiative}
+                            onSave={(v) => m.updateInit.mutate({ id: it.id, text: v })}
+                          />
+                        </td>
+                        {canEdit && (
+                          <td className="py-2.5 pr-3">
+                            <button
+                              type="button"
+                              onClick={() => m.deleteInit.mutate({ id: it.id })}
+                              aria-label="Delete initiative"
+                              className="rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                    {kr.initiatives.length === 0 && (
+                      <tr>
+                        <td
+                          colSpan={canEdit ? 2 : 1}
+                          className="py-3 pl-4 text-sm italic text-muted-foreground bg-white"
+                        >
+                          No initiatives yet.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              {canEdit && (
+                <div className="mt-3 flex gap-2">
+                  <input
+                    type="text"
+                    value={initDraft}
+                    onChange={(e) => setInitDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        submitInit();
+                      }
+                    }}
+                    maxLength={LIMITS.initiative}
+                    placeholder="New project or initiative…"
+                    className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring/40"
+                  />
+                  <button
+                    type="button"
+                    disabled={!initDraft.trim() || m.addInit.isPending}
+                    onClick={submitInit}
+                    className="btn-mono inline-flex h-10 items-center justify-center rounded-md border border-primary/25 bg-white px-4 hover:bg-primary/5 transition-colors disabled:opacity-50"
+                  >
+                    Add
+                  </button>
+                </div>
+              )}
+            </section>
+
+            {canEdit && (
+              <div className="mt-8 border-t border-border/60 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm("Delete this key result and its initiatives?")) {
+                      m.deleteKr.mutate({ id: kr.id });
+                      onClose();
+                    }
+                  }}
+                  className="text-xs font-medium text-destructive hover:underline"
+                >
+                  Delete key result
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 }
+
 
 // ---------- Alignment table ----------
 
