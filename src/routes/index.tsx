@@ -36,6 +36,12 @@ import {
 } from "@/lib/okr-schemas";
 import { EditableText } from "@/components/okr/EditableText";
 import { AuthBadge } from "@/components/okr/AuthBadge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
