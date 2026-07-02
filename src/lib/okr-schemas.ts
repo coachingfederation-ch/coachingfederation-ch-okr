@@ -68,8 +68,16 @@ export const keyResultPatchSchema = z.object({
 });
 
 export const initiativePatchSchema = z.object({
+  text: trimmedString(LIMITS.initiative).min(1, { message: "Cannot be empty" }).optional(),
+  owner: trimmedString(LIMITS.initiativeOwner).optional(),
+  description: trimmedString(LIMITS.initiativeDescription).optional(),
+  status: z.enum(INITIATIVE_STATUSES).optional(),
+});
+
+export const initiativeCreateSchema = z.object({
   text: trimmedString(LIMITS.initiative).min(1, { message: "Cannot be empty" }),
 });
+
 
 export const alignmentRowPatchSchema = z.object({
   pillar: trimmedString(LIMITS.alignmentPillar).optional(),
