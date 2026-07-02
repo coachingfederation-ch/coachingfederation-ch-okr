@@ -933,9 +933,15 @@ function IndexContent() {
     <main className="min-h-screen">
       <header className="bg-hero text-hero-foreground">
         <div className="mx-auto max-w-6xl px-8 pt-6 pb-14">
-          <div className="flex items-center justify-end mb-6">
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <img
+              src={icfLogo.url}
+              alt="ICF Switzerland Charter Chapter"
+              className="h-20 w-auto -ml-3 -mt-2"
+            />
             <AuthBadge />
           </div>
+
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-3xl">
               <p className="eyebrow !text-accent">ICF Switzerland · OKR Dashboard</p>
