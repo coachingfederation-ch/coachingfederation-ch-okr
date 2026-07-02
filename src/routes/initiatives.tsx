@@ -149,6 +149,7 @@ function InitiativesContent() {
 
   const [okrFilter, setOkrFilter] = useState<string>("all");
   const [krFilter, setKrFilter] = useState<string>("all");
+  const [createOpen, setCreateOpen] = useState(false);
 
   const flat: FlatInitiative[] = useMemo(() => {
     const rows: FlatInitiative[] = [];
