@@ -95,7 +95,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         .order("sort_order", { ascending: true }),
       supabase
         .from("initiatives")
-        .select("id,okr_set_id,kr_id,text,sort_order,translations,source_lang")
+        .select("id,okr_set_id,kr_id,text,owner,description,status,sort_order,translations,source_lang")
         .order("sort_order", { ascending: true }),
       supabase
         .from("alignment_rows")
