@@ -333,6 +333,9 @@ export const addInitiative = createServerFn({ method: "POST" })
       .object({
         kr_id: uuidSchema,
         text: initiativeCreateSchema.shape.text,
+        owner: initiativeCreateSchema.shape.owner,
+        description: initiativeCreateSchema.shape.description,
+        status: initiativeCreateSchema.shape.status,
         sourceLang: localeSchema.default("en"),
       })
       .parse(raw),
@@ -358,18 +361,24 @@ export const addInitiative = createServerFn({ method: "POST" })
         kr_id: data.kr_id,
         okr_set_id: krRow.okr_set_id,
         text: data.text,
+        owner: data.owner ?? "",
+        description: data.description ?? "",
+        status: data.status ?? "planned",
         sort_order: nextSort,
         source_lang: data.sourceLang,
       })
       .select("id")
       .single();
     if (error) throw new Error(error.message);
+    const translatePatch: Record<string, string> = { text: data.text };
+    if (data.owner) translatePatch.owner = data.owner;
+    if (data.description) translatePatch.description = data.description;
     await translateRow({
       ctx: context,
       table: "initiatives",
       id: row.id,
       sourceLang: data.sourceLang,
-      patch: { text: data.text },
+      patch: translatePatch,
     });
     return { id: row.id };
   });

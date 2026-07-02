@@ -76,6 +76,9 @@ export const initiativePatchSchema = z.object({
 
 export const initiativeCreateSchema = z.object({
   text: trimmedString(LIMITS.initiative).min(1, { message: "Cannot be empty" }),
+  owner: trimmedString(LIMITS.initiativeOwner).optional(),
+  description: trimmedString(LIMITS.initiativeDescription).optional(),
+  status: z.enum(["planned", "in_progress", "done", "canceled"]).optional(),
 });
 
 

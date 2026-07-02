@@ -75,6 +75,21 @@ export type StringKey =
   | "initiatives.status.in_progress"
   | "initiatives.status.done"
   | "initiatives.status.canceled"
+  | "initiatives.new"
+  | "initiatives.newTitle"
+  | "initiatives.form.kr"
+  | "initiatives.form.selectKr"
+  | "initiatives.form.title"
+  | "initiatives.form.titlePlaceholder"
+  | "initiatives.form.owner"
+  | "initiatives.form.ownerPlaceholder"
+  | "initiatives.form.description"
+  | "initiatives.form.descriptionPlaceholder"
+  | "initiatives.form.status"
+  | "initiatives.created"
+  | "common.cancel"
+  | "common.create"
+  | "common.creating"
   // misc
   | "tag.add"
   | "tag.remove"
@@ -160,6 +175,21 @@ const en: Record<StringKey, string> = {
   "initiatives.status.in_progress": "In Progress",
   "initiatives.status.done": "Done",
   "initiatives.status.canceled": "Canceled",
+  "initiatives.new": "+ New initiative",
+  "initiatives.newTitle": "New initiative",
+  "initiatives.form.kr": "Key Result",
+  "initiatives.form.selectKr": "Select a Key Result",
+  "initiatives.form.title": "Title",
+  "initiatives.form.titlePlaceholder": "What is the initiative?",
+  "initiatives.form.owner": "Owner",
+  "initiatives.form.ownerPlaceholder": "Who owns it?",
+  "initiatives.form.description": "Description",
+  "initiatives.form.descriptionPlaceholder": "Add more context (optional)",
+  "initiatives.form.status": "Status",
+  "initiatives.created": "Initiative created",
+  "common.cancel": "Cancel",
+  "common.create": "Create",
+  "common.creating": "Creating…",
   "lang.switcher": "Language",
 
 };
@@ -241,6 +271,21 @@ const de: Record<StringKey, string> = {
   "initiatives.status.in_progress": "In Arbeit",
   "initiatives.status.done": "Erledigt",
   "initiatives.status.canceled": "Abgebrochen",
+  "initiatives.new": "+ Neue Initiative",
+  "initiatives.newTitle": "Neue Initiative",
+  "initiatives.form.kr": "Key Result",
+  "initiatives.form.selectKr": "Key Result auswählen",
+  "initiatives.form.title": "Titel",
+  "initiatives.form.titlePlaceholder": "Worum geht die Initiative?",
+  "initiatives.form.owner": "Verantwortlich",
+  "initiatives.form.ownerPlaceholder": "Wer ist verantwortlich?",
+  "initiatives.form.description": "Beschreibung",
+  "initiatives.form.descriptionPlaceholder": "Mehr Kontext (optional)",
+  "initiatives.form.status": "Status",
+  "initiatives.created": "Initiative erstellt",
+  "common.cancel": "Abbrechen",
+  "common.create": "Erstellen",
+  "common.creating": "Wird erstellt…",
   "lang.switcher": "Sprache",
 
 };
@@ -321,6 +366,21 @@ const fr: Record<StringKey, string> = {
   "initiatives.status.in_progress": "En cours",
   "initiatives.status.done": "Terminée",
   "initiatives.status.canceled": "Annulée",
+  "initiatives.new": "+ Nouvelle initiative",
+  "initiatives.newTitle": "Nouvelle initiative",
+  "initiatives.form.kr": "Résultat clé",
+  "initiatives.form.selectKr": "Sélectionner un résultat clé",
+  "initiatives.form.title": "Titre",
+  "initiatives.form.titlePlaceholder": "Quelle est l'initiative ?",
+  "initiatives.form.owner": "Responsable",
+  "initiatives.form.ownerPlaceholder": "Qui en est responsable ?",
+  "initiatives.form.description": "Description",
+  "initiatives.form.descriptionPlaceholder": "Ajouter du contexte (facultatif)",
+  "initiatives.form.status": "Statut",
+  "initiatives.created": "Initiative créée",
+  "common.cancel": "Annuler",
+  "common.create": "Créer",
+  "common.creating": "Création…",
   "lang.switcher": "Langue",
 
 };
@@ -401,6 +461,21 @@ const it: Record<StringKey, string> = {
   "initiatives.status.in_progress": "In corso",
   "initiatives.status.done": "Completata",
   "initiatives.status.canceled": "Annullata",
+  "initiatives.new": "+ Nuova iniziativa",
+  "initiatives.newTitle": "Nuova iniziativa",
+  "initiatives.form.kr": "Risultato chiave",
+  "initiatives.form.selectKr": "Seleziona un risultato chiave",
+  "initiatives.form.title": "Titolo",
+  "initiatives.form.titlePlaceholder": "Qual è l'iniziativa?",
+  "initiatives.form.owner": "Responsabile",
+  "initiatives.form.ownerPlaceholder": "Chi è responsabile?",
+  "initiatives.form.description": "Descrizione",
+  "initiatives.form.descriptionPlaceholder": "Aggiungi contesto (opzionale)",
+  "initiatives.form.status": "Stato",
+  "initiatives.created": "Iniziativa creata",
+  "common.cancel": "Annulla",
+  "common.create": "Crea",
+  "common.creating": "Creazione…",
   "lang.switcher": "Lingua",
 
 };

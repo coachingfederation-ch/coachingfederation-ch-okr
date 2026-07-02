@@ -1,68 +1,28 @@
-# Initiative Portfolio — Kanban view
+## Add "New initiative" button on /initiatives
 
-New public route `/initiatives` with a 4-column Kanban of all initiatives across all OKR sets. Cards show title, owner, description, and a status dropdown. Editors can edit inline; viewers read-only. Owner and description auto-translate on save, matching the existing OKR content flow.
+A primary button in the filter bar opens a dialog to create an initiative with title, owner, description, status, and the parent Key Result. Only visible to editors (same rule as inline edits).
 
-## 1. Database
+### UX
 
-Migration adds three columns to `public.initiatives`:
-- `owner TEXT NOT NULL DEFAULT ''`
-- `description TEXT NOT NULL DEFAULT ''`
-- `status TEXT NOT NULL DEFAULT 'planned'` with a CHECK constraint on `('planned','in_progress','done','canceled')`
+- Button `+ New initiative` sits on the right of the filter bar (replaces the current count area, count moves next to filters). Editors only; hidden for viewers.
+- Clicking opens a shadcn `Dialog` titled "New initiative" with:
+  - **Key Result** — required `Select`, grouped by OKR (`OKR N. Title` → `KR n.m`). Pre-selects the currently filtered KR if one is active, else the first KR.
+  - **Title** — required `Textarea`, maxLength `LIMITS.initiative`.
+  - **Owner** — optional `Input`, maxLength `LIMITS.initiativeOwner`.
+  - **Description** — optional `Textarea`, maxLength `LIMITS.initiativeDescription`.
+  - **Status** — `Select` (Planned / In Progress / Done / Canceled), default `planned`, uses same translated labels + colored dot as the cards.
+  - Footer: `Cancel` and `Create` (disabled until title + KR present). Shows validation errors inline.
+- On success: toast, close dialog, invalidate `["dashboard"]`. Card appears in the matching column.
 
-Extend `TRANSLATABLE_FIELDS.initiatives` in `src/lib/okr-schemas.ts` to `["text", "owner", "description"]` — status is an enum (labels come from the i18n dictionary, not translated).
+### Technical details
 
-No new tables → no new GRANTs/policies needed; existing initiative RLS applies.
+- Extend `addInitiative` server fn in `src/lib/okr.functions.ts` to accept optional `owner`, `description`, `status` (reuse `initiativeCreateSchema` fields; add `owner`, `description`, `status` to that schema mirroring `initiativePatchSchema`). Insert them on the row; `translateRow` picks up owner/description automatically because `TRANSLATABLE_FIELDS.initiatives` already includes them.
+- No DB migration (columns already exist).
+- New component `src/components/okr/NewInitiativeDialog.tsx` — controlled open state, local form state, calls `useServerFn(addInitiative)` with `{ kr_id, text, owner?, description?, status?, sourceLang: locale }`.
+- Add i18n keys to `src/lib/i18n-strings.ts` (EN/DE/FR/IT): `initiatives.new`, `initiatives.newTitle`, `initiatives.form.kr`, `initiatives.form.title`, `initiatives.form.owner`, `initiatives.form.description`, `initiatives.form.status`, `initiatives.form.selectKr`, `common.cancel`, `common.create` (reuse existing where present).
+- Wire the button into `src/routes/initiatives.tsx` filter bar, gated on `canEdit`.
 
-## 2. Server functions (`src/lib/okr.functions.ts`)
+### Out of scope
 
-- Extend `initiativePatchSchema` with optional `owner` (max 100), `description` (max 2000), `status` (enum).
-- `getDashboard`: select the three new columns; add them to `InitiativeDTO`.
-- `updateInitiative` already routes through `translateRow` — the new translatable fields are picked up automatically via `TRANSLATABLE_FIELDS`.
-- `addInitiative`: unchanged (defaults handle new columns).
-
-## 3. i18n dictionary (`src/lib/i18n-strings.ts`)
-
-Add keys in all 4 languages:
-- `nav.okrs`, `nav.initiatives`
-- `initiatives.title` ("Initiative Portfolio")
-- `initiatives.subtitle`
-- `initiatives.filterAll`, `initiatives.filterByOkr`, `initiatives.filterByKr`
-- `initiatives.owner`, `initiatives.description`, `initiatives.status`
-- `initiatives.status.planned`, `.in_progress`, `.done`, `.canceled`
-- `initiatives.empty` (per column)
-- `initiatives.addOwner`, `initiatives.addDescription` (placeholders)
-
-## 4. New route `src/routes/initiatives.tsx`
-
-Public route (SSR on), same auth model as `/`. Uses the existing `getDashboard` query (single source of truth — no new server fn needed for reads).
-
-Layout:
-- Reuses the hero header pattern from `index.tsx` (logo, title, language switcher, auth badge, link back to `/`).
-- Filter bar: two `<Select>`s — OKR set (populated from dashboard data) and Key Result (dependent on selected set). "All" option in each.
-- 4-column grid (`grid-cols-1 md:grid-cols-2 xl:grid-cols-4`, `gap-4`). Each column: header with status label + count, then vertical stack of `<InitiativeCard>`s.
-- Card: KR badge (e.g. "1.2"), initiative title (existing `EditableText`), owner (`EditableText`, small), description (`EditableText`, multiline), status `<Select>` at the bottom. Card uses `Card` from `@/components/ui/card` with a colored left border per status.
-- Editors see edit affordances (via existing `isEditor` from `useAuth`); non-editors see plain text and a disabled Select.
-- Uses `pickTranslation(initiative, field, fallback, locale)` for rendering; writes call `updateInitiative` with `sourceLang: locale`.
-
-Add nav header to `src/routes/index.tsx` too: two-tab pill switcher between "OKRs" and "Initiative Portfolio" so users can discover the new page.
-
-## 5. Header nav component
-
-Small shared `<TopNav>` used in both routes (defined inline or under `src/components/okr/TopNav.tsx`) with two `<Link>`s using `activeProps` for the active tab styling. Keeps the language switcher on the right.
-
-## 6. SEO
-
-`head()` on `/initiatives` sets a route-specific title ("Initiative Portfolio — ICF Switzerland") and description. No og:image (matches current `/` behavior).
-
-## Out of scope
-- Drag-and-drop reordering between columns (per your choice).
-- Backfilling translations for existing rows (they translate on next edit, matching current behavior).
-- Bulk edit or CSV export.
-- Deep-link filters via URL search params (can add later if wanted).
-
-## Rollout order
-1. Migration (adds columns).
-2. Schema + server-fn updates (`okr-schemas.ts`, `okr.functions.ts`).
-3. i18n string additions.
-4. New route + shared TopNav + link from index.
-5. Verify build + Playwright screenshot of the board with sample data.
+- Creating initiatives from the main OKR page (already possible there).
+- Bulk create, templates, attachments.

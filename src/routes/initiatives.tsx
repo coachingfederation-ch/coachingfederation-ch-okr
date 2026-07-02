@@ -22,6 +22,8 @@ import type { StringKey } from "@/lib/i18n-strings";
 import { EditableText } from "@/components/okr/EditableText";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
+import { NewInitiativeDialog } from "@/components/okr/NewInitiativeDialog";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -147,6 +149,7 @@ function InitiativesContent() {
 
   const [okrFilter, setOkrFilter] = useState<string>("all");
   const [krFilter, setKrFilter] = useState<string>("all");
+  const [createOpen, setCreateOpen] = useState(false);
 
   const flat: FlatInitiative[] = useMemo(() => {
     const rows: FlatInitiative[] = [];
@@ -291,8 +294,15 @@ function InitiativesContent() {
                 </SelectContent>
               </Select>
             </FilterBlock>
-            <div className="ml-auto text-xs text-muted-foreground">
-              {filtered.length} / {flat.length}
+            <div className="ml-auto flex items-center gap-3">
+              <span className="text-xs text-muted-foreground">
+                {filtered.length} / {flat.length}
+              </span>
+              {canEdit && (
+                <Button size="sm" onClick={() => setCreateOpen(true)}>
+                  {t("initiatives.new")}
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -316,6 +326,13 @@ function InitiativesContent() {
           </Link>
         </p>
       </section>
+
+      <NewInitiativeDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        dashboard={data}
+        defaultKrId={krFilter !== "all" ? krFilter : undefined}
+      />
     </main>
   );
 }
