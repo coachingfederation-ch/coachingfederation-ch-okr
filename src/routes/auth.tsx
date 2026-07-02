@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
+import { useLocale } from "@/lib/i18n";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
+  const { t } = useLocale();
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -54,15 +56,13 @@ function AuthPage() {
     <main className="min-h-dvh flex items-center justify-center px-4 py-16 bg-background">
       <div className="w-full max-w-md">
         <Link to="/" className="btn-mono text-primary/70 hover:text-primary text-xs">
-          ← Back to dashboard
+          {t("auth.back")}
         </Link>
         <div className="mt-4 rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
-          <p className="eyebrow">ICFS · Editor access</p>
-          <h1 className="mt-2 text-2xl font-bold">Sign in to edit</h1>
+          <p className="eyebrow">{t("auth.editorAccess")}</p>
+          <h1 className="mt-2 text-2xl font-bold">{t("auth.pageTitle")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Anyone can view the dashboard. Sign in with your{" "}
-            <span className="font-medium text-foreground">@coachingfederation.ch</span>{" "}
-            Google account to enable inline editing.
+            {t("auth.pageSubtitle")}
           </p>
 
 
@@ -73,7 +73,7 @@ function AuthPage() {
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium hover:bg-muted/60 transition-colors disabled:opacity-50"
           >
             <GoogleIcon />
-            {busy ? "Please wait…" : "Continue with Google"}
+            {busy ? t("auth.pleaseWait") : t("auth.continueWithGoogle")}
           </button>
         </div>
       </div>
