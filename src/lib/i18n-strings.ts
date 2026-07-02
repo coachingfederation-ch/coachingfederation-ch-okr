@@ -223,7 +223,26 @@ const de: Record<StringKey, string> = {
   "common.loading": "Wird geladen…",
   "common.editValue": "Wert bearbeiten",
   "common.saveFailed": "Speichern fehlgeschlagen",
+  "nav.okrs": "OKRs",
+  "nav.initiatives": "Initiativen-Portfolio",
+  "initiatives.title": "Initiativen-Portfolio",
+  "initiatives.subtitle": "Alle Initiativen über alle OKRs hinweg, nach Status gruppiert.",
+  "initiatives.filterAllOkrs": "Alle OKRs",
+  "initiatives.filterAllKrs": "Alle Key Results",
+  "initiatives.filterOkr": "OKR",
+  "initiatives.filterKr": "Key Result",
+  "initiatives.owner": "Verantwortlich",
+  "initiatives.description": "Beschreibung",
+  "initiatives.status": "Status",
+  "initiatives.emptyColumn": "Keine Initiativen",
+  "initiatives.addOwner": "Verantwortliche/n hinzufügen…",
+  "initiatives.addDescription": "Beschreibung hinzufügen…",
+  "initiatives.status.planned": "Geplant",
+  "initiatives.status.in_progress": "In Arbeit",
+  "initiatives.status.done": "Erledigt",
+  "initiatives.status.canceled": "Abgebrochen",
   "lang.switcher": "Sprache",
+
 };
 
 const fr: Record<StringKey, string> = {
