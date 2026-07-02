@@ -56,33 +56,42 @@ export type Database = {
       initiatives: {
         Row: {
           created_at: string
+          description: string
           id: string
           kr_id: string
           okr_set_id: string
+          owner: string
           sort_order: number
           source_lang: string
+          status: string
           text: string
           translations: Json
           updated_at: string
         }
         Insert: {
           created_at?: string
+          description?: string
           id?: string
           kr_id: string
           okr_set_id: string
+          owner?: string
           sort_order?: number
           source_lang?: string
+          status?: string
           text?: string
           translations?: Json
           updated_at?: string
         }
         Update: {
           created_at?: string
+          description?: string
           id?: string
           kr_id?: string
           okr_set_id?: string
+          owner?: string
           sort_order?: number
           source_lang?: string
+          status?: string
           text?: string
           translations?: Json
           updated_at?: string
