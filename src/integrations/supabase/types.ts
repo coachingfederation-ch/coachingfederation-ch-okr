@@ -23,6 +23,8 @@ export type Database = {
           pillar: string
           sg: Database["public"]["Enums"]["contribution"]
           sort_order: number
+          source_lang: string
+          translations: Json
           updated_at: string
         }
         Insert: {
@@ -33,6 +35,8 @@ export type Database = {
           pillar: string
           sg?: Database["public"]["Enums"]["contribution"]
           sort_order?: number
+          source_lang?: string
+          translations?: Json
           updated_at?: string
         }
         Update: {
@@ -43,6 +47,8 @@ export type Database = {
           pillar?: string
           sg?: Database["public"]["Enums"]["contribution"]
           sort_order?: number
+          source_lang?: string
+          translations?: Json
           updated_at?: string
         }
         Relationships: []
@@ -54,7 +60,9 @@ export type Database = {
           kr_id: string
           okr_set_id: string
           sort_order: number
+          source_lang: string
           text: string
+          translations: Json
           updated_at: string
         }
         Insert: {
@@ -63,7 +71,9 @@ export type Database = {
           kr_id: string
           okr_set_id: string
           sort_order?: number
+          source_lang?: string
           text?: string
+          translations?: Json
           updated_at?: string
         }
         Update: {
@@ -72,7 +82,9 @@ export type Database = {
           kr_id?: string
           okr_set_id?: string
           sort_order?: number
+          source_lang?: string
           text?: string
+          translations?: Json
           updated_at?: string
         }
         Relationships: [
@@ -100,8 +112,10 @@ export type Database = {
           lead: string
           okr_set_id: string
           sort_order: number
+          source_lang: string
           target: string
           text: string
+          translations: Json
           updated_at: string
         }
         Insert: {
@@ -111,8 +125,10 @@ export type Database = {
           lead?: string
           okr_set_id: string
           sort_order?: number
+          source_lang?: string
           target?: string
           text?: string
+          translations?: Json
           updated_at?: string
         }
         Update: {
@@ -122,8 +138,10 @@ export type Database = {
           lead?: string
           okr_set_id?: string
           sort_order?: number
+          source_lang?: string
           target?: string
           text?: string
+          translations?: Json
           updated_at?: string
         }
         Relationships: [
@@ -148,7 +166,9 @@ export type Database = {
           role_label: string
           role_name: string
           sort_order: number
+          source_lang: string
           title: string
+          translations: Json
           updated_at: string
         }
         Insert: {
@@ -162,7 +182,9 @@ export type Database = {
           role_label?: string
           role_name?: string
           sort_order?: number
+          source_lang?: string
           title?: string
+          translations?: Json
           updated_at?: string
         }
         Update: {
@@ -176,7 +198,9 @@ export type Database = {
           role_label?: string
           role_name?: string
           sort_order?: number
+          source_lang?: string
           title?: string
+          translations?: Json
           updated_at?: string
         }
         Relationships: []
@@ -186,18 +210,24 @@ export type Database = {
           code: string
           description: string
           label: string
+          source_lang: string
+          translations: Json
           updated_at: string
         }
         Insert: {
           code: string
           description: string
           label: string
+          source_lang?: string
+          translations?: Json
           updated_at?: string
         }
         Update: {
           code?: string
           description?: string
           label?: string
+          source_lang?: string
+          translations?: Json
           updated_at?: string
         }
         Relationships: []

@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { LOCALES, type Locale, type TranslationsMap } from "./i18n-shared";
+
+
 
 export type Pillar = "SG" | "OE" | "CE";
 export const PILLARS: Pillar[] = ["SG", "OE", "CE"];
@@ -31,6 +34,9 @@ const trimmedString = (max: number) =>
   z.string().trim().max(max, { message: `Must be ${max} characters or fewer` });
 
 export const uuidSchema = z.string().uuid();
+
+export const localeSchema = z.enum(LOCALES);
+
 
 export const okrSetPatchSchema = z.object({
   title: trimmedString(LIMITS.title).optional(),
@@ -67,15 +73,24 @@ export const pillarSummaryPatchSchema = z.object({
 });
 
 // DTOs
-export type PillarSummaryDTO = { code: Pillar; label: string; description: string };
-export type InitiativeDTO = {
+type WithTranslations = {
+  translations?: TranslationsMap;
+  source_lang?: Locale;
+};
+
+export type PillarSummaryDTO = WithTranslations & {
+  code: Pillar;
+  label: string;
+  description: string;
+};
+export type InitiativeDTO = WithTranslations & {
   id: string;
   okr_set_id: string;
   kr_id: string;
   text: string;
   sort_order: number;
 };
-export type KeyResultDTO = {
+export type KeyResultDTO = WithTranslations & {
   id: string;
   okr_set_id: string;
   kr: string;
@@ -85,7 +100,7 @@ export type KeyResultDTO = {
   sort_order: number;
   initiatives: InitiativeDTO[];
 };
-export type OkrSetDTO = {
+export type OkrSetDTO = WithTranslations & {
   id: string;
   number: number;
   title: string;
@@ -99,7 +114,7 @@ export type OkrSetDTO = {
   key_results: KeyResultDTO[];
 };
 
-export type AlignmentRowDTO = {
+export type AlignmentRowDTO = WithTranslations & {
   id: string;
   pillar: string;
   sg: Contribution;
@@ -113,3 +128,14 @@ export type DashboardDTO = {
   okr_sets: OkrSetDTO[];
   alignment_rows: AlignmentRowDTO[];
 };
+
+// Translatable fields per table — the single source of truth used server-side
+// to know which fields to send through the translator.
+export const TRANSLATABLE_FIELDS = {
+  okr_sets: ["title", "role_name", "customer", "objective", "alignment"] as const,
+  key_results: ["text", "target", "lead"] as const,
+  initiatives: ["text"] as const,
+  alignment_rows: ["pillar", "how"] as const,
+  pillar_summaries: ["label", "description"] as const,
+} as const;
+

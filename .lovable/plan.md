@@ -1,40 +1,73 @@
-# Accessibility fixes
+# Multilanguage support (EN / DE / FR / IT)
 
-Fix the issues surfaced in the audit. Scope: presentation only, no data/logic changes.
+Auto-detect browser language, header switcher, AI-translated UI + all OKR content.
 
-## Critical
+## 1. Locale infrastructure (client)
 
-1. **`src/components/okr/EditableText.tsx` — preserve heading semantics.**
-   When `Tag` is a heading (`h1|h2|h3`), do NOT put `role="button"` on it (breaks the heading role). Render the heading as-is and wrap the click/keyboard affordance on an inner `<span role="button" tabIndex={0}>`. For non-heading tags keep current behavior.
+- New `src/lib/i18n.tsx`: `LocaleProvider`, `useLocale()` returning `{ locale, setLocale, t }`.
+- Supported locales: `en | de | fr | it`. Detect from `navigator.language` on first load (fallback `en`). Persist choice to `localStorage['icfs.locale']`.
+- Set `<html lang={locale}>` via a `useEffect` in the provider.
+- Static UI dictionary in `src/lib/i18n-strings.ts` — a typed `Record<Locale, Record<StringKey, string>>` covering every visible label (header, buttons, section titles, empty states, sheet labels, toasts). Hand-authored translations (small scope, ~40 keys).
+- Header switcher: 4 pill buttons `EN | DE | FR | IT` in the hero top row next to `AuthBadge`.
 
-2. **`src/routes/index.tsx` `KrCard` (~line 544) — no block content inside `<button>`.**
-   Convert the outer `<button>` to a `<div>` styled the same, and place a focusable, keyboard-activatable trigger inside — either an absolutely-positioned `<button className="absolute inset-0" aria-label={`Open KR ${kr.kr}: ${kr.text}`}>` overlay (stretched-link pattern) with the visible content behind it, or keep the visible content and wrap only the interactive affordance. Prefer the stretched-link pattern so the whole card remains clickable while the DOM stays valid. Ensure hover/focus styles still apply via `:focus-within` / `has-[:focus-visible]`.
+## 2. Content translation schema (DB)
 
-3. **`src/routes/index.tsx` `ContribCell` (~line 798) — give dots a text alternative.**
-   - Add `aria-label={`${row.pillar} → ${col.toUpperCase()}: ${value} contribution`}` on the button (edit mode) and on the wrapper span (read mode use `aria-label` on a `<span role="img">` or a visually-hidden `<span className="sr-only">`).
-   - Keep dots as decorative (`aria-hidden`).
+Add per-row translations without touching original columns.
 
-4. **`src/routes/index.tsx` pillar cards (~line 985) — fix heading level.**
-   Change `EditableText as="h3"` to `as="h2"` for pillar labels so the order is h1 → h2 (pillars) → h2 (OKR sets). Inside each OkrCard, the KR sheet already uses `SheetTitle` (Radix handles level), so no change there.
+- Add `translations JSONB DEFAULT '{}'::jsonb` and `source_lang TEXT DEFAULT 'en'` to:
+  `okr_sets`, `key_results`, `initiatives`, `alignment_rows`, `pillar_summaries`.
+- `translations` shape: `{ de: {field1: "...", field2: "..."}, fr: {...}, it: {...} }` (only non-source locales; source is always the original column value).
+- Reuse existing RLS/GRANTs (columns inherit table-level policies).
 
-## Warnings
+Translatable fields per table:
+- `okr_sets`: title, role_name, customer, objective, alignment
+- `key_results`: text, target, lead
+- `initiatives`: text
+- `alignment_rows`: pillar, how
+- `pillar_summaries`: label, description
 
-5. **`src/routes/index.tsx` `PillarChip` (~line 270) — replace `title` with `aria-label`.**
-   `aria-label={`${code} — ${PILLAR_NAMES[code]}`}` on the outer `<span>` (add `role="img"` since it's a labelled chip). Keep the visible code text.
+## 3. Translation service (server)
 
-6. **`src/routes/__root.tsx` — remove duplicate meta description.**
-   Delete the second `{ name: "description", … }` at line 91 (keep line 84). The `og:description` / `twitter:description` on lines 92–93 stay.
+- New Supabase Edge Function `translate-content` (Lovable AI, `google/gemini-3-flash-preview`, `generateText` + `Output.object`). Input: `{ sourceLang, targetLangs, fields: Record<string, string> }`. Output: `{ [lang]: { [field]: string } }`. Prompt: professional business translator, preserve tone, keep proper names, do not translate acronyms (ICF, OKR, KR, SG, OE, CE).
+- Called from within TanStack server functions (`src/lib/okr.functions.ts`) after every write that touches translatable fields. Steps in each mutation:
+  1. Persist original into existing columns + set `source_lang = payload.sourceLang` (client sends current UI locale).
+  2. Diff which translatable fields actually changed (skip translation when nothing changed).
+  3. Call `translate-content` for the 3 non-source langs, merge result into `translations` JSONB, write back.
+- Failure of the translate step must not fail the write — log + continue; translations can be regenerated later.
 
-7. **`src/routes/index.tsx` & `src/routes/auth.tsx` — swap `min-h-screen` → `min-h-dvh`** on the outer `<main>` for correct mobile viewport height.
+Server functions to update:
+- `updateOkrSet`, `addOkrSet` (seed defaults get translated once), `updateKeyResult`, `addKeyResult`, `updateInitiative`, `addInitiative`, `updateAlignmentRow`, `updatePillarSummary`.
+- Add `sourceLang` to each input schema (`okr-schemas.ts` Zod schemas).
+
+## 4. Rendering (client)
+
+- New helper `pickTranslation(row, field, locale) → string` in `src/lib/i18n.tsx`: returns original column when `locale === row.source_lang`, else `row.translations?.[locale]?.[field] ?? row[field]` (fallback to original).
+- Update `src/routes/index.tsx`:
+  - Replace hardcoded English UI strings with `t("...")`.
+  - Replace direct `set.title` / `kr.text` / etc. reads with `pickTranslation(...)`.
+  - `EditableText`: when saved, the current value is treated as new source in `locale`. The mutation includes `sourceLang: locale`, so the server re-translates and updates `source_lang` accordingly.
+  - The static `PILLAR_NAMES` map moves into the string dictionary.
+
+## 5. DTO/types
+
+- Extend DTO types in `src/lib/okr-schemas.ts` with `translations?: Record<Locale, Record<string,string>>` and `source_lang?: Locale`.
+- Regenerate/update `getDashboard` server fn to select the new columns.
+
+## 6. Auth page
+
+- Translate the 3 visible strings ("Sign in to edit", subtitle, button).
 
 ## Out of scope
 
-- Replacing `confirm()` with a Radix AlertDialog (UX, not a11y blocker).
-- Color-token contrast sweep (using shadcn tokens; no reported failure).
-- KR "Open details →" hover-only reveal — keyboard users see it via `group-focus-within:opacity-100`; add that class alongside `group-hover:opacity-100` in the KrCard rework.
+- Auto-translating existing rows in the DB (users can trigger by re-saving; a one-shot backfill script can be added later on request).
+- Language-specific SEO metadata (single `<html lang>` per session is enough for MVP).
+- Per-user saved preference (localStorage covers the requirement).
+- RTL languages.
 
-## Verification
+## Rollout order
 
-- Read the modified files after edits to confirm no duplicate imports / JSX imbalance.
-- `tsgo` typecheck (already run by harness).
-- Spot-check in preview: focus a KR card with Tab, activate with Enter → sheet opens.
+1. Migration (schema additions).
+2. Edge function `translate-content`.
+3. Server-fn changes + schema updates.
+4. Client `LocaleProvider`, dictionary, switcher.
+5. Wire `t()` + `pickTranslation` throughout `index.tsx` and `auth.tsx`.

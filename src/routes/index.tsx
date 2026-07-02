@@ -34,6 +34,9 @@ import {
   type PillarSummaryDTO,
   type RoleLabel,
 } from "@/lib/okr-schemas";
+import { LOCALES, LOCALE_LABELS, type Locale } from "@/lib/i18n-shared";
+import { pickTranslation, useLocale } from "@/lib/i18n";
+import { pillarName } from "@/lib/i18n-strings";
 import { EditableText } from "@/components/okr/EditableText";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import {
@@ -93,7 +96,7 @@ export const Route = createFileRoute("/")({
 type Ctx = { prev: DashboardDTO | undefined };
 type Mutator = (draft: DashboardDTO) => void;
 
-function useOkrMutations() {
+function useOkrMutations(sourceLang: Locale) {
   const qc = useQueryClient();
   const invalidate = () => qc.invalidateQueries({ queryKey: ["dashboard"] });
   const onErr = (e: unknown, _v: unknown, ctx: Ctx | undefined) => {
@@ -129,7 +132,7 @@ function useOkrMutations() {
     { id: string; patch: Partial<OkrSetDTO> },
     Ctx
   >({
-    mutationFn: (v) => updateOkrSetFn({ data: { id: v.id, patch: v.patch as never } }),
+    mutationFn: (v) => updateOkrSetFn({ data: { id: v.id, patch: v.patch as never, sourceLang } }),
     onMutate: (v) =>
       optimistic((d) => {
         const s = d.okr_sets.find((x) => x.id === v.id);
@@ -139,7 +142,7 @@ function useOkrMutations() {
     onSettled: invalidate,
   });
   const addSet = useMutation({
-    mutationFn: () => addOkrSetFn({}),
+    mutationFn: () => addOkrSetFn({ data: { sourceLang } }),
     onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
     onSuccess: invalidate,
   });
@@ -154,7 +157,7 @@ function useOkrMutations() {
   });
 
   const addKr = useMutation({
-    mutationFn: (v: { okr_set_id: string }) => addKrFn({ data: v }),
+    mutationFn: (v: { okr_set_id: string }) => addKrFn({ data: { ...v, sourceLang } }),
     onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
     onSuccess: invalidate,
   });
@@ -164,7 +167,7 @@ function useOkrMutations() {
     { id: string; patch: Partial<KeyResultDTO> },
     Ctx
   >({
-    mutationFn: (v) => updateKrFn({ data: { id: v.id, patch: v.patch as never } }),
+    mutationFn: (v) => updateKrFn({ data: { id: v.id, patch: v.patch as never, sourceLang } }),
     onMutate: (v) =>
       optimistic((d) => {
         for (const s of d.okr_sets) {
@@ -187,12 +190,12 @@ function useOkrMutations() {
   });
 
   const addInit = useMutation({
-    mutationFn: (v: { kr_id: string; text: string }) => addInitFn({ data: v }),
+    mutationFn: (v: { kr_id: string; text: string }) => addInitFn({ data: { ...v, sourceLang } }),
     onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
     onSuccess: invalidate,
   });
   const updateInit = useMutation<unknown, Error, { id: string; text: string }, Ctx>({
-    mutationFn: (v) => updateInitFn({ data: { id: v.id, patch: { text: v.text } } }),
+    mutationFn: (v) => updateInitFn({ data: { id: v.id, patch: { text: v.text }, sourceLang } }),
     onMutate: (v) =>
       optimistic((d) => {
         for (const s of d.okr_sets)
@@ -223,7 +226,7 @@ function useOkrMutations() {
     { id: string; patch: Partial<AlignmentRowDTO> },
     Ctx
   >({
-    mutationFn: (v) => updateAlignFn({ data: { id: v.id, patch: v.patch as never } }),
+    mutationFn: (v) => updateAlignFn({ data: { id: v.id, patch: v.patch as never, sourceLang } }),
     onMutate: (v) =>
       optimistic((d) => {
         const r = d.alignment_rows.find((x) => x.id === v.id);
@@ -240,7 +243,7 @@ function useOkrMutations() {
     Ctx
   >({
     mutationFn: (v) =>
-      updatePillarFn({ data: { code: v.code, patch: v.patch as never } }),
+      updatePillarFn({ data: { code: v.code, patch: v.patch as never, sourceLang } }),
     onMutate: (v) =>
       optimistic((d) => {
         const p = d.pillars.find((x) => x.code === v.code);
@@ -261,11 +264,37 @@ type OkrMutations = ReturnType<typeof useOkrMutations>;
 
 // ---------- Atoms ----------
 
-const PILLAR_NAMES: Record<Pillar, string> = {
-  SG: "Sustainable Growth & Impact",
-  OE: "Org. Development & Excellence",
-  CE: "Coaching Excellence & Value",
-};
+function LanguageSwitcher() {
+  const { locale, setLocale } = useLocale();
+  return (
+    <div
+      role="group"
+      aria-label="Language"
+      className="inline-flex items-center rounded-full bg-white/10 p-0.5 text-[11px] font-semibold"
+    >
+      {LOCALES.map((l) => {
+        const active = l === locale;
+        return (
+          <button
+            key={l}
+            type="button"
+            onClick={() => setLocale(l)}
+            aria-pressed={active}
+            aria-label={LOCALE_LABELS[l]}
+            className={cn(
+              "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider transition-colors",
+              active
+                ? "bg-white text-primary shadow-sm"
+                : "text-white/80 hover:text-white",
+            )}
+          >
+            {l}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function PillarChip({
   code, canEdit, onRemove,
@@ -274,17 +303,18 @@ function PillarChip({
   canEdit: boolean;
   onRemove?: () => void;
 }) {
+  const { locale, t } = useLocale();
   return (
     <span
       role="img"
-      aria-label={`${code} — ${PILLAR_NAMES[code]}`}
+      aria-label={`${code} — ${pillarName(locale, code)}`}
       className="inline-flex h-7 items-center gap-1 rounded-full border border-[--color-chip-active-border] bg-white pl-3 pr-2 text-[11px] font-semibold tracking-wide text-primary"
     >
       {code}
       {canEdit && onRemove && (
         <button
           type="button"
-          aria-label={`Remove ${code}`}
+          aria-label={`${t("tag.remove")} ${code}`}
           onClick={onRemove}
           className="inline-flex h-4 w-4 items-center justify-center rounded-full text-primary/60 hover:bg-primary/10 hover:text-primary"
         >
@@ -302,6 +332,7 @@ function PillarTagList({
   canEdit: boolean;
   onChange: (next: Pillar[]) => void;
 }) {
+  const { locale, t } = useLocale();
   const available = PILLARS.filter((p) => !pillars.includes(p));
   return (
     <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -321,7 +352,7 @@ function PillarTagList({
               className="inline-flex h-7 items-center gap-1 rounded-full border border-dashed border-border bg-white px-2.5 text-[11px] font-medium text-muted-foreground hover:bg-muted/60 hover:text-primary transition-colors"
             >
               <Plus className="h-3 w-3" />
-              Add tag
+              {t("tag.add")}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="min-w-[16rem]">
@@ -331,14 +362,14 @@ function PillarTagList({
                 onSelect={() => onChange([...pillars, p])}
               >
                 <span className="mr-2 font-semibold text-primary">{p}</span>
-                <span className="text-muted-foreground">{PILLAR_NAMES[p]}</span>
+                <span className="text-muted-foreground">{pillarName(locale, p)}</span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
       )}
       {!canEdit && pillars.length === 0 && (
-        <span className="text-xs text-muted-foreground">No tags</span>
+        <span className="text-xs text-muted-foreground">{t("tag.none")}</span>
       )}
     </div>
   );
@@ -404,6 +435,7 @@ function OkrCard({
   canEdit: boolean;
   m: OkrMutations;
 }) {
+  const { locale, t } = useLocale();
   const [openKrId, setOpenKrId] = useState<string | null>(null);
   const openKr = openKrId
     ? set.key_results.find((k) => k.id === openKrId) ?? null
@@ -411,6 +443,12 @@ function OkrCard({
 
   const updateSet = (patch: Partial<OkrSetDTO>) =>
     m.updateSet.mutate({ id: set.id, patch });
+
+  const titleText = pickTranslation(set, "title", set.title, locale);
+  const roleNameText = pickTranslation(set, "role_name", set.role_name, locale);
+  const customerText = pickTranslation(set, "customer", set.customer, locale);
+  const objectiveText = pickTranslation(set, "objective", set.objective, locale);
+  const alignmentText = pickTranslation(set, "alignment", set.alignment, locale);
 
   return (
     <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
@@ -422,7 +460,7 @@ function OkrCard({
           <div>
             <EditableText
               as="h2"
-              value={set.title}
+              value={titleText}
               canEdit={canEdit}
               maxLength={LIMITS.title}
               onSave={(v) => updateSet({ title: v })}
@@ -437,16 +475,16 @@ function OkrCard({
               />
               <span className="text-muted-foreground/60">:</span>
               <EditableText
-                value={set.role_name}
+                value={roleNameText}
                 canEdit={canEdit}
                 maxLength={LIMITS.roleName}
                 onSave={(v) => updateSet({ role_name: v })}
                 className="font-medium text-foreground"
                 placeholder="Name"
               />
-              <span className="ml-1 text-muted-foreground">Customer:</span>
+              <span className="ml-1 text-muted-foreground">{t("okr.customer")}</span>
               <EditableText
-                value={set.customer}
+                value={customerText}
                 canEdit={canEdit}
                 maxLength={LIMITS.customer}
                 onSave={(v) => updateSet({ customer: v })}
@@ -459,9 +497,9 @@ function OkrCard({
         {canEdit && (
           <button
             type="button"
-            aria-label="Delete OKR set"
+            aria-label={t("okr.delete")}
             onClick={() => {
-              if (confirm(`Delete OKR set "${set.title || "Untitled"}"?`))
+              if (confirm(`${t("okr.deleteConfirm")}: "${titleText || "Untitled"}"?`))
                 m.deleteSet.mutate({ id: set.id });
             }}
             className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
@@ -478,11 +516,11 @@ function OkrCard({
       />
 
       <section className="mt-6 rounded-2xl border border-border/70 bg-muted/40 p-5">
-        <div className="eyebrow mb-2">Objective</div>
+        <div className="eyebrow mb-2">{t("section.objective")}</div>
         <EditableText
           as="p"
           multiline
-          value={set.objective}
+          value={objectiveText}
           canEdit={canEdit}
           maxLength={LIMITS.objective}
           onSave={(v) => updateSet({ objective: v })}
@@ -492,11 +530,11 @@ function OkrCard({
       </section>
 
       <section className="mt-6">
-        <SectionLabel>Global alignment</SectionLabel>
+        <SectionLabel>{t("section.globalAlignment")}</SectionLabel>
         <EditableText
           as="p"
           multiline
-          value={set.alignment}
+          value={alignmentText}
           canEdit={canEdit}
           maxLength={LIMITS.alignment}
           onSave={(v) => updateSet({ alignment: v })}
@@ -507,7 +545,7 @@ function OkrCard({
 
       <section className="mt-6">
         <div className="mb-3 flex items-center justify-between">
-          <SectionLabel>Key results</SectionLabel>
+          <SectionLabel>{t("section.keyResults")}</SectionLabel>
           {canEdit && (
             <button
               type="button"
@@ -515,13 +553,13 @@ function OkrCard({
               disabled={m.addKr.isPending}
               className="btn-mono inline-flex items-center gap-1 text-primary hover:underline disabled:opacity-50"
             >
-              + Add key result
+              {t("okr.addKeyResult")}
             </button>
           )}
         </div>
         {set.key_results.length === 0 ? (
           <p className="rounded-xl border border-dashed border-border/70 bg-muted/30 p-4 text-sm italic text-muted-foreground">
-            No key results yet.
+            {t("okr.noKeyResults")}
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -548,13 +586,17 @@ function KrCard({
   kr: KeyResultDTO;
   onOpen: () => void;
 }) {
+  const { locale, t } = useLocale();
   const count = kr.initiatives.length;
+  const text = pickTranslation(kr, "text", kr.text, locale);
+  const target = pickTranslation(kr, "target", kr.target, locale);
+  const lead = pickTranslation(kr, "lead", kr.lead, locale);
   return (
     <div className="group relative flex h-full flex-col rounded-2xl border border-border/70 bg-white p-4 text-left shadow-[0_1px_2px_rgba(20,20,60,0.03)] transition-all hover:border-primary/40 hover:shadow-[0_4px_16px_-8px_rgba(20,20,60,0.15)] has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
       <button
         type="button"
         onClick={onOpen}
-        aria-label={`Open key result ${kr.kr || ""}: ${kr.text || "no description"}`}
+        aria-label={`${t("kr.openDetails")} ${kr.kr || ""}: ${text || t("kr.noDescription")}`}
         className="absolute inset-0 z-10 rounded-2xl focus:outline-none"
       />
       <div className="flex items-center justify-between gap-2">
@@ -562,28 +604,28 @@ function KrCard({
           KR {kr.kr || "—"}
         </span>
         <span className="text-[11px] font-medium text-muted-foreground">
-          {count} {count === 1 ? "initiative" : "initiatives"}
+          {count} {count === 1 ? t("kr.count.one") : t("kr.count.other")}
         </span>
       </div>
       <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-foreground">
-        {kr.text || <span className="italic text-muted-foreground">No description</span>}
+        {text || <span className="italic text-muted-foreground">{t("kr.noDescription")}</span>}
       </p>
       <dl className="mt-4 space-y-1.5 text-xs">
         <div className="flex gap-2">
-          <dt className="w-14 shrink-0 uppercase tracking-wider text-muted-foreground/80">Target</dt>
+          <dt className="w-14 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.target")}</dt>
           <dd className="min-w-0 flex-1 truncate text-foreground">
-            {kr.target || <span className="italic text-muted-foreground">—</span>}
+            {target || <span className="italic text-muted-foreground">—</span>}
           </dd>
         </div>
         <div className="flex gap-2">
-          <dt className="w-14 shrink-0 uppercase tracking-wider text-muted-foreground/80">Lead</dt>
+          <dt className="w-14 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.lead")}</dt>
           <dd className="min-w-0 flex-1 truncate text-muted-foreground">
-            {kr.lead || <span className="italic">—</span>}
+            {lead || <span className="italic">—</span>}
           </dd>
         </div>
       </dl>
       <span className="mt-3 inline-flex text-[11px] font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-        Open details →
+        {t("kr.openDetails")}
       </span>
     </div>
   );
@@ -597,6 +639,7 @@ function KrDetailSheet({
   m: OkrMutations;
   onClose: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [initDraft, setInitDraft] = useState("");
 
   const submitInit = () => {
@@ -613,6 +656,10 @@ function KrDetailSheet({
     if (!kr) return;
     m.updateKr.mutate({ id: kr.id, patch });
   };
+
+  const krText = kr ? pickTranslation(kr, "text", kr.text, locale) : "";
+  const krTarget = kr ? pickTranslation(kr, "target", kr.target, locale) : "";
+  const krLead = kr ? pickTranslation(kr, "lead", kr.lead, locale) : "";
 
   return (
     <Sheet
@@ -636,7 +683,7 @@ function KrDetailSheet({
               <SheetTitle className="text-left">
                 <EditableText
                   multiline
-                  value={kr.text}
+                  value={krText}
                   canEdit={canEdit}
                   maxLength={LIMITS.krText}
                   onSave={(v) => update({ text: v })}
@@ -645,35 +692,35 @@ function KrDetailSheet({
                 />
               </SheetTitle>
               <SheetDescription className="text-left">
-                Owned outcome and the projects that deliver it.
+                {t("kr.detailDescription")}
               </SheetDescription>
             </SheetHeader>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div>
-                <div className="section-label mb-1">Target</div>
+                <div className="section-label mb-1">{t("kr.target")}</div>
                 <EditableText
-                  value={kr.target}
+                  value={krTarget}
                   canEdit={canEdit}
                   maxLength={LIMITS.target}
                   onSave={(v) => update({ target: v })}
-                  placeholder="Target"
+                  placeholder={t("kr.target")}
                   className="text-sm text-foreground"
                 />
               </div>
               <div>
-                <div className="section-label mb-1">Lead</div>
+                <div className="section-label mb-1">{t("kr.lead")}</div>
                 <EditableText
-                  value={kr.lead}
+                  value={krLead}
                   canEdit={canEdit}
                   maxLength={LIMITS.lead}
                   onSave={(v) => update({ lead: v })}
-                  placeholder="Lead"
+                  placeholder={t("kr.lead")}
                   className="text-sm text-muted-foreground"
                 />
               </div>
               <div>
-                <div className="section-label mb-1">KR number</div>
+                <div className="section-label mb-1">{t("kr.number")}</div>
                 <EditableText
                   value={kr.kr}
                   canEdit={canEdit}
@@ -686,7 +733,7 @@ function KrDetailSheet({
 
             <section className="mt-8">
               <div className="mb-2 flex items-center justify-between">
-                <SectionLabel>Related projects &amp; initiatives</SectionLabel>
+                <SectionLabel>{t("section.relatedInitiatives")}</SectionLabel>
                 <span className="text-[11px] font-medium text-muted-foreground">
                   {kr.initiatives.length}
                 </span>
@@ -695,7 +742,7 @@ function KrDetailSheet({
                 <table className="w-full text-sm">
                   <thead className="bg-muted/60 text-left">
                     <tr className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                      <th className="py-2 pl-4 font-semibold">Initiative</th>
+                      <th className="py-2 pl-4 font-semibold">{t("initiative.header")}</th>
                       {canEdit && <th className="w-10" />}
                     </tr>
                   </thead>
@@ -711,7 +758,7 @@ function KrDetailSheet({
                         <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
                           <EditableText
                             multiline
-                            value={it.text}
+                            value={pickTranslation(it, "text", it.text, locale)}
                             canEdit={canEdit}
                             maxLength={LIMITS.initiative}
                             onSave={(v) => m.updateInit.mutate({ id: it.id, text: v })}
@@ -722,7 +769,7 @@ function KrDetailSheet({
                             <button
                               type="button"
                               onClick={() => m.deleteInit.mutate({ id: it.id })}
-                              aria-label="Delete initiative"
+                              aria-label={t("initiative.delete")}
                               className="rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
                             >
                               <X className="h-3.5 w-3.5" />
@@ -737,7 +784,7 @@ function KrDetailSheet({
                           colSpan={canEdit ? 2 : 1}
                           className="py-3 pl-4 text-sm italic text-muted-foreground bg-white"
                         >
-                          No initiatives yet.
+                          {t("initiative.none")}
                         </td>
                       </tr>
                     )}
@@ -757,7 +804,7 @@ function KrDetailSheet({
                       }
                     }}
                     maxLength={LIMITS.initiative}
-                    placeholder="New project or initiative…"
+                    placeholder={t("initiative.new")}
                     className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring/40"
                   />
                   <button
@@ -766,7 +813,7 @@ function KrDetailSheet({
                     onClick={submitInit}
                     className="btn-mono inline-flex h-10 items-center justify-center rounded-md border border-primary/25 bg-white px-4 hover:bg-primary/5 transition-colors disabled:opacity-50"
                   >
-                    Add
+                    {t("initiative.add")}
                   </button>
                 </div>
               )}
@@ -777,14 +824,14 @@ function KrDetailSheet({
                 <button
                   type="button"
                   onClick={() => {
-                    if (confirm("Delete this key result and its initiatives?")) {
+                    if (confirm(t("kr.deleteConfirm"))) {
                       m.deleteKr.mutate({ id: kr.id });
                       onClose();
                     }
                   }}
                   className="text-xs font-medium text-destructive hover:underline"
                 >
-                  Delete key result
+                  {t("kr.delete")}
                 </button>
               </div>
             )}
@@ -845,26 +892,27 @@ function AlignmentTable({
   canEdit: boolean;
   m: OkrMutations;
 }) {
+  const { locale, t } = useLocale();
   const cycle = (curr: Contribution): Contribution =>
     CONTRIBUTION_CYCLE[(CONTRIBUTION_CYCLE.indexOf(curr) + 1) % 3];
 
   return (
     <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
-      <h2 className="text-2xl font-bold text-foreground">Global alignment analysis</h2>
+      <h2 className="text-2xl font-bold text-foreground">{t("section.alignmentTitle")}</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        How each ICFS pillar contributes to the three ICF Global 2026–2029 focus areas.{" "}
+        {t("section.alignmentIntro")}{" "}
         <span className="inline-flex items-center gap-1 align-middle">
           <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
           <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
         </span>{" "}
-        = primary contribution,{" "}
+        {t("section.alignmentPrimary")}{" "}
         <span className="inline-flex items-center align-middle">
           <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
         </span>{" "}
-        = secondary contribution.
+        {t("section.alignmentSecondary")}
         {canEdit && (
           <span className="ml-1 text-muted-foreground/70">
-            Click a dot cell to cycle none → secondary → primary.
+            {t("section.alignmentCycleHint")}
           </span>
         )}
       </p>
@@ -873,53 +921,57 @@ function AlignmentTable({
         <table className="w-full text-sm">
           <thead className="bg-muted/60">
             <tr className="text-left text-[11px] uppercase tracking-widest text-muted-foreground">
-              <th className="py-3 pl-4 font-semibold">ICFS pillar</th>
+              <th className="py-3 pl-4 font-semibold">{t("section.alignmentPillar")}</th>
               <th className="w-20 py-3 font-semibold">SG</th>
               <th className="w-20 py-3 font-semibold">OE</th>
               <th className="w-20 py-3 font-semibold">CE</th>
-              <th className="py-3 pr-4 font-semibold">How it contributes</th>
+              <th className="py-3 pr-4 font-semibold">{t("section.alignmentHow")}</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, i) => (
-              <tr
-                key={row.id}
-                className={cn(
-                  "border-t border-border/60 align-top",
-                  i % 2 === 1 ? "bg-muted/20" : "bg-white",
-                )}
-              >
-                <td className="py-4 pl-4 font-semibold text-foreground">
-                  <EditableText
-                    value={row.pillar}
-                    canEdit={canEdit}
-                    maxLength={LIMITS.alignmentPillar}
-                    onSave={(v) => m.updateAlign.mutate({ id: row.id, patch: { pillar: v } })}
-                  />
-                </td>
-                {(["sg", "oe", "ce"] as const).map((col) => (
-                  <td key={col} className="py-4">
-                    <ContribCell
-                      value={row[col]}
+            {rows.map((row, i) => {
+              const pillarText = pickTranslation(row, "pillar", row.pillar, locale);
+              const howText = pickTranslation(row, "how", row.how, locale);
+              return (
+                <tr
+                  key={row.id}
+                  className={cn(
+                    "border-t border-border/60 align-top",
+                    i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                  )}
+                >
+                  <td className="py-4 pl-4 font-semibold text-foreground">
+                    <EditableText
+                      value={pillarText}
                       canEdit={canEdit}
-                      label={`${row.pillar} → ${col.toUpperCase()}`}
-                      onCycle={() =>
-                        m.updateAlign.mutate({ id: row.id, patch: { [col]: cycle(row[col]) } })
-                      }
+                      maxLength={LIMITS.alignmentPillar}
+                      onSave={(v) => m.updateAlign.mutate({ id: row.id, patch: { pillar: v } })}
                     />
                   </td>
-                ))}
-                <td className="py-4 pr-4 leading-relaxed text-muted-foreground">
-                  <EditableText
-                    multiline
-                    value={row.how}
-                    canEdit={canEdit}
-                    maxLength={LIMITS.alignmentHow}
-                    onSave={(v) => m.updateAlign.mutate({ id: row.id, patch: { how: v } })}
-                  />
-                </td>
-              </tr>
-            ))}
+                  {(["sg", "oe", "ce"] as const).map((col) => (
+                    <td key={col} className="py-4">
+                      <ContribCell
+                        value={row[col]}
+                        canEdit={canEdit}
+                        label={`${pillarText} → ${col.toUpperCase()}`}
+                        onCycle={() =>
+                          m.updateAlign.mutate({ id: row.id, patch: { [col]: cycle(row[col]) } })
+                        }
+                      />
+                    </td>
+                  ))}
+                  <td className="py-4 pr-4 leading-relaxed text-muted-foreground">
+                    <EditableText
+                      multiline
+                      value={howText}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.alignmentHow}
+                      onSave={(v) => m.updateAlign.mutate({ id: row.id, patch: { how: v } })}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -931,7 +983,14 @@ function AlignmentTable({
 
 function Index() {
   return (
-    <Suspense fallback={<div className="p-8 text-sm text-muted-foreground">Loading…</div>}>
+    <IndexSuspense />
+  );
+}
+
+function IndexSuspense() {
+  const { t } = useLocale();
+  return (
+    <Suspense fallback={<div className="p-8 text-sm text-muted-foreground">{t("common.loading")}</div>}>
       <IndexContent />
     </Suspense>
   );
@@ -940,7 +999,8 @@ function Index() {
 function IndexContent() {
   const { data } = useSuspenseQuery(dashboardQueryOptions);
   const { canEdit } = useAuth();
-  const m = useOkrMutations();
+  const { locale, t } = useLocale();
+  const m = useOkrMutations(locale);
 
   return (
     <main className="min-h-dvh">
@@ -952,19 +1012,20 @@ function IndexContent() {
               alt="ICF Switzerland Charter Chapter"
               className="h-20 w-auto -ml-3 -mt-2"
             />
-            <AuthBadge />
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher />
+              <AuthBadge />
+            </div>
           </div>
 
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-3xl">
-              <p className="eyebrow !text-accent">ICF Switzerland · OKR Dashboard</p>
+              <p className="eyebrow !text-accent">{t("hero.eyebrow")}</p>
               <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-                2026 OKRs with Global Alignment
+                {t("hero.title")}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">
-                One inspiring, customer-centric objective per strategic pillar —
-                aligned to the ICF Global Strategic Plan 2026–2029 and the Arbon board
-                retreat, 1 June 2026.
+                {t("hero.subtitle")}
               </p>
             </div>
             {canEdit && (
@@ -974,7 +1035,7 @@ function IndexContent() {
                 disabled={m.addSet.isPending}
                 className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 !text-primary shadow-sm hover:shadow transition-shadow disabled:opacity-50"
               >
-                <Plus className="h-4 w-4" /> Add OKR set
+                <Plus className="h-4 w-4" /> {t("hero.addOkrSet")}
               </button>
             )}
           </div>
@@ -987,6 +1048,8 @@ function IndexContent() {
             const p =
               data.pillars.find((x) => x.code === code) ??
               ({ code, label: code, description: "" } as PillarSummaryDTO);
+            const labelText = pickTranslation(p, "label", p.label, locale);
+            const descText = pickTranslation(p, "description", p.description, locale);
             return (
               <div
                 key={code}
@@ -996,7 +1059,7 @@ function IndexContent() {
                   <PillarDot code={code} />
                   <EditableText
                     as="h2"
-                    value={p.label}
+                    value={labelText}
                     canEdit={canEdit}
                     maxLength={LIMITS.pillarLabel}
                     onSave={(v) => m.updatePillar.mutate({ code, patch: { label: v } })}
@@ -1006,7 +1069,7 @@ function IndexContent() {
                 <EditableText
                   as="p"
                   multiline
-                  value={p.description}
+                  value={descText}
                   canEdit={canEdit}
                   maxLength={LIMITS.pillarDescription}
                   onSave={(v) =>
@@ -1032,7 +1095,7 @@ function IndexContent() {
               disabled={m.addSet.isPending}
               className="btn-mono inline-flex items-center gap-2 rounded-full border border-primary/25 bg-white px-5 py-2.5 text-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
             >
-              <Plus className="h-4 w-4" /> Add OKR set
+              <Plus className="h-4 w-4" /> {t("okr.addOkrSet")}
             </button>
           </div>
         )}
