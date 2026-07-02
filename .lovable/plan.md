@@ -1,17 +1,33 @@
 ## Problem
-The OKRs / Initiative Portfolio toggle uses TanStack Router `Link` with separate `className` and `activeProps.className`. When the route is active, both class strings are concatenated, so the active tab keeps the inactive `text-white/80` utility alongside `text-primary`. Tailwind resolves the white text, rendering the active label as white-on-white and unreadable.
 
-## Goal
-Make the toggle behave like the `LanguageSwitcher` component: only one of the two styled states is applied at a time, and the selected tab always shows the brand blue text (`text-primary`) on a white pill.
+The "New initiative" form currently opens as a centered modal Dialog. On the current viewport it:
+- overflows horizontally (Key Result select is clipped on the right)
+- floats over the page content awkwardly
+- pushes the Create/Cancel buttons close to the bottom edge
+
+## Proposed fix
+
+Replace the Dialog with a right-side **Sheet** (shadcn `Sheet` component) — a slide-in side panel. This is the best fit because:
+- Fixed width (`sm:max-w-md`) with built-in vertical scroll, so long selects and textareas never clip
+- Doesn't obscure the initiative list underneath — user keeps context
+- Consistent pattern for "create / edit record" flows
+- Works well on mobile (full width) and desktop (side panel)
+
+A bottom Drawer was considered but is less ergonomic on desktop for a 5-field form; Sheet is the standard shadcn choice here.
 
 ## Changes
-1. Refactor `src/components/okr/TopNav.tsx` to read the current pathname from the router and build the final `className` conditionally, the same way `LanguageSwitcher` uses a ternary for `active ? activeClasses : inactiveClasses`.
-2. Keep the existing visual tokens:
-   - Active: `bg-white text-primary shadow-sm`
-   - Inactive: `text-white/80 hover:text-white`
-3. Remove the `activeProps` prop usage to avoid class-string concatenation.
-4. Verify both the `/` (OKRs) and `/initiatives` (Initiative Portfolio) tabs show the blue active text on a white background, and the inactive tab remains white text on the dark header.
 
-## Out of scope
-- Changing the toggle layout, dimensions, or animation.
-- Any other navigation or styling changes.
+**`src/components/okr/NewInitiativeDialog.tsx`**
+- Swap `Dialog` / `DialogContent` / `DialogHeader` / `DialogTitle` / `DialogDescription` / `DialogFooter` for `Sheet` / `SheetContent` (side="right") / `SheetHeader` / `SheetTitle` / `SheetDescription` / `SheetFooter`
+- Content wrapper: `w-full sm:max-w-md flex flex-col` with a scrollable middle section (`flex-1 overflow-y-auto`) holding the 5 fields, and a sticky `SheetFooter` for Cancel / Create
+- Keep all existing form state, validation, i18n strings, mutation logic, and trigger button unchanged
+- Preserve the current field order: Key Result, Title, Owner, Description, Status
+
+**No changes** to schemas, server functions, i18n strings, or the trigger button in `src/routes/initiatives.tsx`.
+
+## Verification
+
+- Open `/initiatives`, click **+ New initiative** → panel slides in from the right, no horizontal clipping
+- Fields scroll independently; Create / Cancel remain visible at the bottom
+- Submit still creates the initiative and closes the panel
+- Check mobile viewport: panel takes full width
