@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { X, Plus, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
@@ -40,7 +40,7 @@ import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
 const dashboardQueryOptions = queryOptions({
-  queryKey: ["dashboard"],
+  queryKey: ["dashboard"] as const,
   queryFn: () => getDashboard(),
 });
 
@@ -72,9 +72,31 @@ export const Route = createFileRoute("/")({
   ),
 });
 
-// ---- Mutations helper ----
-function useDashboardMutations() {
+// ---------- Mutations ----------
+// One useMutation per action, called at the top of IndexContent (fixed hook count).
+// `mutate(variables)` handles the payload; optimistic updates use those variables.
+
+type Ctx = { prev: DashboardDTO | undefined };
+type Mutator = (draft: DashboardDTO) => void;
+
+function useOkrMutations() {
   const qc = useQueryClient();
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["dashboard"] });
+  const onErr = (e: unknown, _v: unknown, ctx: Ctx | undefined) => {
+    if (ctx?.prev) qc.setQueryData(["dashboard"], ctx.prev);
+    toast.error(e instanceof Error ? e.message : "Save failed");
+  };
+  const optimistic = async (mutator: Mutator): Promise<Ctx> => {
+    await qc.cancelQueries({ queryKey: ["dashboard"] });
+    const prev = qc.getQueryData<DashboardDTO>(["dashboard"]);
+    if (prev) {
+      const next = structuredClone(prev);
+      mutator(next);
+      qc.setQueryData(["dashboard"], next);
+    }
+    return { prev };
+  };
+
   const updateOkrSetFn = useServerFn(updateOkrSet);
   const addOkrSetFn = useServerFn(addOkrSet);
   const deleteOkrSetFn = useServerFn(deleteOkrSet);
@@ -87,131 +109,148 @@ function useDashboardMutations() {
   const updateAlignFn = useServerFn(updateAlignmentRow);
   const updatePillarFn = useServerFn(updatePillarSummary);
 
-  const invalidate = () => qc.invalidateQueries({ queryKey: ["dashboard"] });
-  const onErr = (e: unknown) =>
-    toast.error(e instanceof Error ? e.message : "Save failed");
+  const updateSet = useMutation<
+    unknown,
+    Error,
+    { id: string; patch: Partial<OkrSetDTO> },
+    Ctx
+  >({
+    mutationFn: (v) => updateOkrSetFn({ data: { id: v.id, patch: v.patch as never } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        const s = d.okr_sets.find((x) => x.id === v.id);
+        if (s) Object.assign(s, v.patch);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+  const addSet = useMutation({
+    mutationFn: () => addOkrSetFn({}),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
+    onSuccess: invalidate,
+  });
+  const deleteSet = useMutation<unknown, Error, { id: string }, Ctx>({
+    mutationFn: (v) => deleteOkrSetFn({ data: { id: v.id } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        d.okr_sets = d.okr_sets.filter((x) => x.id !== v.id);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
 
-  const optimistic = <T,>(mutator: (draft: DashboardDTO) => void, run: () => Promise<T>) =>
-    useMutation({
-      mutationFn: run,
-      onMutate: async () => {
-        await qc.cancelQueries({ queryKey: ["dashboard"] });
-        const prev = qc.getQueryData<DashboardDTO>(["dashboard"]);
-        if (prev) {
-          const next = structuredClone(prev);
-          mutator(next);
-          qc.setQueryData(["dashboard"], next);
+  const addKr = useMutation({
+    mutationFn: (v: { okr_set_id: string }) => addKrFn({ data: v }),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
+    onSuccess: invalidate,
+  });
+  const updateKr = useMutation<
+    unknown,
+    Error,
+    { id: string; patch: Partial<KeyResultDTO> },
+    Ctx
+  >({
+    mutationFn: (v) => updateKrFn({ data: { id: v.id, patch: v.patch as never } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets) {
+          const kr = s.key_results.find((k) => k.id === v.id);
+          if (kr) Object.assign(kr, v.patch);
         }
-        return { prev };
-      },
-      onError: (err, _v, ctx) => {
-        if (ctx?.prev) qc.setQueryData(["dashboard"], ctx.prev);
-        onErr(err);
-      },
-      onSettled: invalidate,
-    });
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+  const deleteKr = useMutation<unknown, Error, { id: string }, Ctx>({
+    mutationFn: (v) => deleteKrFn({ data: { id: v.id } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets)
+          s.key_results = s.key_results.filter((k) => k.id !== v.id);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+  const addInit = useMutation({
+    mutationFn: (v: { okr_set_id: string; text: string }) => addInitFn({ data: v }),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
+    onSuccess: invalidate,
+  });
+  const updateInit = useMutation<unknown, Error, { id: string; text: string }, Ctx>({
+    mutationFn: (v) => updateInitFn({ data: { id: v.id, patch: { text: v.text } } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets) {
+          const it = s.initiatives.find((i) => i.id === v.id);
+          if (it) it.text = v.text;
+        }
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+  const deleteInit = useMutation<unknown, Error, { id: string }, Ctx>({
+    mutationFn: (v) => deleteInitFn({ data: { id: v.id } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets)
+          s.initiatives = s.initiatives.filter((i) => i.id !== v.id);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+  const updateAlign = useMutation<
+    unknown,
+    Error,
+    { id: string; patch: Partial<AlignmentRowDTO> },
+    Ctx
+  >({
+    mutationFn: (v) => updateAlignFn({ data: { id: v.id, patch: v.patch as never } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        const r = d.alignment_rows.find((x) => x.id === v.id);
+        if (r) Object.assign(r, v.patch);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+  const updatePillar = useMutation<
+    unknown,
+    Error,
+    { code: Pillar; patch: Partial<PillarSummaryDTO> },
+    Ctx
+  >({
+    mutationFn: (v) =>
+      updatePillarFn({ data: { code: v.code, patch: v.patch as never } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        const p = d.pillars.find((x) => x.code === v.code);
+        if (p) Object.assign(p, v.patch);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
 
   return {
-    updateOkrSet: (id: string, patch: Partial<OkrSetDTO>) =>
-      optimistic(
-        (d) => {
-          const s = d.okr_sets.find((x) => x.id === id);
-          if (s) Object.assign(s, patch);
-        },
-        () => updateOkrSetFn({ data: { id, patch: patch as never } }),
-      ),
-    addOkrSet: () =>
-      useMutation({
-        mutationFn: () => addOkrSetFn({}),
-        onError: onErr,
-        onSuccess: invalidate,
-      }),
-    deleteOkrSet: (id: string) =>
-      optimistic(
-        (d) => {
-          d.okr_sets = d.okr_sets.filter((x) => x.id !== id);
-        },
-        () => deleteOkrSetFn({ data: { id } }),
-      ),
-    addKeyResult: (okr_set_id: string) =>
-      useMutation({
-        mutationFn: () => addKrFn({ data: { okr_set_id } }),
-        onError: onErr,
-        onSuccess: invalidate,
-      }),
-    updateKeyResult: (id: string, patch: Partial<KeyResultDTO>) =>
-      optimistic(
-        (d) => {
-          for (const s of d.okr_sets) {
-            const kr = s.key_results.find((k) => k.id === id);
-            if (kr) Object.assign(kr, patch);
-          }
-        },
-        () => updateKrFn({ data: { id, patch: patch as never } }),
-      ),
-    deleteKeyResult: (id: string) =>
-      optimistic(
-        (d) => {
-          for (const s of d.okr_sets)
-            s.key_results = s.key_results.filter((k) => k.id !== id);
-        },
-        () => deleteKrFn({ data: { id } }),
-      ),
-    addInitiative: (okr_set_id: string, text: string) =>
-      useMutation({
-        mutationFn: () => addInitFn({ data: { okr_set_id, text } }),
-        onError: onErr,
-        onSuccess: invalidate,
-      }),
-    updateInitiative: (id: string, text: string) =>
-      optimistic(
-        (d) => {
-          for (const s of d.okr_sets) {
-            const it = s.initiatives.find((i) => i.id === id);
-            if (it) it.text = text;
-          }
-        },
-        () => updateInitFn({ data: { id, patch: { text } } }),
-      ),
-    deleteInitiative: (id: string) =>
-      optimistic(
-        (d) => {
-          for (const s of d.okr_sets)
-            s.initiatives = s.initiatives.filter((i) => i.id !== id);
-        },
-        () => deleteInitFn({ data: { id } }),
-      ),
-    updateAlignmentRow: (id: string, patch: Partial<AlignmentRowDTO>) =>
-      optimistic(
-        (d) => {
-          const r = d.alignment_rows.find((x) => x.id === id);
-          if (r) Object.assign(r, patch);
-        },
-        () => updateAlignFn({ data: { id, patch: patch as never } }),
-      ),
-    updatePillarSummary: (code: Pillar, patch: Partial<PillarSummaryDTO>) =>
-      optimistic(
-        (d) => {
-          const p = d.pillars.find((x) => x.code === code);
-          if (p) Object.assign(p, patch);
-        },
-        () => updatePillarFn({ data: { code, patch: patch as never } }),
-      ),
+    updateSet, addSet, deleteSet,
+    addKr, updateKr, deleteKr,
+    addInit, updateInit, deleteInit,
+    updateAlign, updatePillar,
   };
 }
+type OkrMutations = ReturnType<typeof useOkrMutations>;
 
-// ---- Atoms ----
+// ---------- Atoms ----------
 
 function PillarChip({
-  code,
-  active,
-  canEdit,
-  onToggle,
+  code, active, canEdit, onToggle,
 }: {
   code: Pillar;
   active: boolean;
   canEdit: boolean;
-  onToggle?: () => void;
+  onToggle: () => void;
 }) {
   return (
     <button
@@ -252,22 +291,58 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return <div className="section-label mb-2">{children}</div>;
 }
 
-// ---- OKR card ----
+function RoleLabelSelect({
+  value, canEdit, onChange,
+}: {
+  value: RoleLabel;
+  canEdit: boolean;
+  onChange: (v: RoleLabel) => void;
+}) {
+  if (!canEdit) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white px-2 py-1 text-xs font-semibold text-primary">
+        {value}
+      </span>
+    );
+  }
+  return (
+    <span className="relative inline-flex">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as RoleLabel)}
+        className="appearance-none inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white pl-2 pr-6 py-1 text-xs font-semibold text-primary cursor-pointer hover:bg-primary/5"
+      >
+        {ROLE_LABELS.map((r) => (
+          <option key={r} value={r}>{r}</option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
+    </span>
+  );
+}
+
+// ---------- OKR card ----------
 
 function OkrCard({
-  set,
-  canEdit,
-  m,
+  set, canEdit, m,
 }: {
   set: OkrSetDTO;
   canEdit: boolean;
-  m: ReturnType<typeof useDashboardMutations>;
+  m: OkrMutations;
 }) {
-  const deleteSet = m.deleteOkrSet(set.id);
-  const updateSet = (patch: Partial<OkrSetDTO>) => m.updateOkrSet(set.id, patch).mutate();
-  const addKr = m.addKeyResult(set.id);
-  const [initDraft, setInitDraft] = useInitDraft();
-  const addInit = m.addInitiative(set.id, initDraft);
+  const [initDraft, setInitDraft] = useState("");
+
+  const updateSet = (patch: Partial<OkrSetDTO>) =>
+    m.updateSet.mutate({ id: set.id, patch });
+
+  const submitInit = () => {
+    const text = initDraft.trim();
+    if (!text) return;
+    m.addInit.mutate(
+      { okr_set_id: set.id, text },
+      { onSuccess: () => setInitDraft("") },
+    );
+  };
 
   return (
     <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
@@ -318,7 +393,8 @@ function OkrCard({
             type="button"
             aria-label="Delete OKR set"
             onClick={() => {
-              if (confirm(`Delete OKR set "${set.title}"?`)) deleteSet.mutate();
+              if (confirm(`Delete OKR set "${set.title || "Untitled"}"?`))
+                m.deleteSet.mutate({ id: set.id });
             }}
             className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
           >
@@ -378,8 +454,9 @@ function OkrCard({
           {canEdit && (
             <button
               type="button"
-              onClick={() => addKr.mutate()}
-              className="btn-mono inline-flex items-center gap-1 text-primary hover:underline"
+              onClick={() => m.addKr.mutate({ okr_set_id: set.id })}
+              disabled={m.addKr.isPending}
+              className="btn-mono inline-flex items-center gap-1 text-primary hover:underline disabled:opacity-50"
             >
               + Add key result
             </button>
@@ -398,19 +475,13 @@ function OkrCard({
             </thead>
             <tbody>
               {set.key_results.map((r, i) => (
-                <KeyResultRow
-                  key={r.id}
-                  kr={r}
-                  striped={i % 2 === 1}
-                  canEdit={canEdit}
-                  m={m}
-                />
+                <KeyResultRow key={r.id} kr={r} striped={i % 2 === 1} canEdit={canEdit} m={m} />
               ))}
               {set.key_results.length === 0 && (
                 <tr>
                   <td
                     colSpan={canEdit ? 5 : 4}
-                    className="py-4 pl-4 text-sm text-muted-foreground italic"
+                    className="py-4 pl-4 text-sm text-muted-foreground italic bg-white"
                   >
                     No key results yet.
                   </td>
@@ -438,11 +509,9 @@ function OkrCard({
                 value={initDraft}
                 onChange={(e) => setInitDraft(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && initDraft.trim()) {
+                  if (e.key === "Enter") {
                     e.preventDefault();
-                    addInit.mutate(undefined, {
-                      onSuccess: () => setInitDraft(""),
-                    });
+                    submitInit();
                   }
                 }}
                 maxLength={LIMITS.initiative}
@@ -451,10 +520,8 @@ function OkrCard({
               />
               <button
                 type="button"
-                disabled={!initDraft.trim() || addInit.isPending}
-                onClick={() =>
-                  addInit.mutate(undefined, { onSuccess: () => setInitDraft("") })
-                }
+                disabled={!initDraft.trim() || m.addInit.isPending}
+                onClick={submitInit}
                 className="btn-mono inline-flex h-10 items-center justify-center rounded-md border border-primary/25 bg-white px-4 hover:bg-primary/5 transition-colors disabled:opacity-50"
               >
                 Add
@@ -473,35 +540,16 @@ function OkrCard({
   );
 }
 
-function useInitDraft() {
-  return [useDraftState(), null] as unknown as [
-    string,
-    (v: string) => void,
-  ] extends never
-    ? never
-    : ReturnType<typeof useDraftState>;
-}
-// Small state helper so we don't repeat useState boilerplate
-function useDraftState() {
-  // biome-ignore lint: intentional
-  const s = require("react") as typeof import("react");
-  return s.useState("");
-}
-
 function KeyResultRow({
-  kr,
-  striped,
-  canEdit,
-  m,
+  kr, striped, canEdit, m,
 }: {
   kr: KeyResultDTO;
   striped: boolean;
   canEdit: boolean;
-  m: ReturnType<typeof useDashboardMutations>;
+  m: OkrMutations;
 }) {
-  const del = m.deleteKeyResult(kr.id);
   const update = (patch: Partial<KeyResultDTO>) =>
-    m.updateKeyResult(kr.id, patch).mutate();
+    m.updateKr.mutate({ id: kr.id, patch });
   return (
     <tr
       className={cn(
@@ -549,7 +597,7 @@ function KeyResultRow({
         <td className="py-3 pr-4 text-muted-foreground">
           <button
             type="button"
-            onClick={() => del.mutate()}
+            onClick={() => m.deleteKr.mutate({ id: kr.id })}
             aria-label="Delete key result"
             className="rounded-sm p-0.5 hover:bg-muted hover:text-destructive"
           >
@@ -562,15 +610,12 @@ function KeyResultRow({
 }
 
 function InitiativeRow({
-  init,
-  canEdit,
-  m,
+  init, canEdit, m,
 }: {
   init: InitiativeDTO;
   canEdit: boolean;
-  m: ReturnType<typeof useDashboardMutations>;
+  m: OkrMutations;
 }) {
-  const del = m.deleteInitiative(init.id);
   return (
     <li className="flex items-start justify-between gap-3 text-sm text-foreground">
       <span className="flex items-start gap-2 flex-1">
@@ -581,13 +626,13 @@ function InitiativeRow({
           value={init.text}
           canEdit={canEdit}
           maxLength={LIMITS.initiative}
-          onSave={(v) => m.updateInitiative(init.id, v).mutate()}
+          onSave={(v) => m.updateInit.mutate({ id: init.id, text: v })}
         />
       </span>
       {canEdit && (
         <button
           type="button"
-          onClick={() => del.mutate()}
+          onClick={() => m.deleteInit.mutate({ id: init.id })}
           aria-label="Delete initiative"
           className="mt-1 rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
         >
@@ -598,46 +643,10 @@ function InitiativeRow({
   );
 }
 
-function RoleLabelSelect({
-  value,
-  canEdit,
-  onChange,
-}: {
-  value: RoleLabel;
-  canEdit: boolean;
-  onChange: (v: RoleLabel) => void;
-}) {
-  if (!canEdit) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white px-2 py-1 text-xs font-semibold text-primary">
-        {value}
-      </span>
-    );
-  }
-  return (
-    <span className="relative inline-flex">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value as RoleLabel)}
-        className="appearance-none inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white pl-2 pr-6 py-1 text-xs font-semibold text-primary cursor-pointer hover:bg-primary/5"
-      >
-        {ROLE_LABELS.map((r) => (
-          <option key={r} value={r}>
-            {r}
-          </option>
-        ))}
-      </select>
-      <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
-    </span>
-  );
-}
-
-// ---- Alignment table ----
+// ---------- Alignment table ----------
 
 function ContribCell({
-  value,
-  canEdit,
-  onCycle,
+  value, canEdit, onCycle,
 }: {
   value: Contribution;
   canEdit: boolean;
@@ -668,13 +677,11 @@ function ContribCell({
 }
 
 function AlignmentTable({
-  rows,
-  canEdit,
-  m,
+  rows, canEdit, m,
 }: {
   rows: AlignmentRowDTO[];
   canEdit: boolean;
-  m: ReturnType<typeof useDashboardMutations>;
+  m: OkrMutations;
 }) {
   const cycle = (curr: Contribution): Contribution =>
     CONTRIBUTION_CYCLE[(CONTRIBUTION_CYCLE.indexOf(curr) + 1) % 3];
@@ -725,7 +732,7 @@ function AlignmentTable({
                     value={row.pillar}
                     canEdit={canEdit}
                     maxLength={LIMITS.alignmentPillar}
-                    onSave={(v) => m.updateAlignmentRow(row.id, { pillar: v }).mutate()}
+                    onSave={(v) => m.updateAlign.mutate({ id: row.id, patch: { pillar: v } })}
                   />
                 </td>
                 {(["sg", "oe", "ce"] as const).map((col) => (
@@ -734,7 +741,7 @@ function AlignmentTable({
                       value={row[col]}
                       canEdit={canEdit}
                       onCycle={() =>
-                        m.updateAlignmentRow(row.id, { [col]: cycle(row[col]) }).mutate()
+                        m.updateAlign.mutate({ id: row.id, patch: { [col]: cycle(row[col]) } })
                       }
                     />
                   </td>
@@ -745,7 +752,7 @@ function AlignmentTable({
                     value={row.how}
                     canEdit={canEdit}
                     maxLength={LIMITS.alignmentHow}
-                    onSave={(v) => m.updateAlignmentRow(row.id, { how: v }).mutate()}
+                    onSave={(v) => m.updateAlign.mutate({ id: row.id, patch: { how: v } })}
                   />
                 </td>
               </tr>
@@ -757,7 +764,7 @@ function AlignmentTable({
   );
 }
 
-// ---- Page ----
+// ---------- Page ----------
 
 function Index() {
   return (
@@ -770,8 +777,7 @@ function Index() {
 function IndexContent() {
   const { data } = useSuspenseQuery(dashboardQueryOptions);
   const { canEdit } = useAuth();
-  const m = useDashboardMutations();
-  const addSet = m.addOkrSet();
+  const m = useOkrMutations();
 
   return (
     <main className="min-h-screen">
@@ -795,8 +801,8 @@ function IndexContent() {
             {canEdit && (
               <button
                 type="button"
-                onClick={() => addSet.mutate()}
-                disabled={addSet.isPending}
+                onClick={() => m.addSet.mutate()}
+                disabled={m.addSet.isPending}
                 className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 !text-primary shadow-sm hover:shadow transition-shadow disabled:opacity-50"
               >
                 <Plus className="h-4 w-4" /> Add OKR set
@@ -824,7 +830,7 @@ function IndexContent() {
                     value={p.label}
                     canEdit={canEdit}
                     maxLength={LIMITS.pillarLabel}
-                    onSave={(v) => m.updatePillarSummary(code, { label: v }).mutate()}
+                    onSave={(v) => m.updatePillar.mutate({ code, patch: { label: v } })}
                     className="text-[15px] font-semibold text-foreground"
                   />
                 </div>
@@ -835,7 +841,7 @@ function IndexContent() {
                   canEdit={canEdit}
                   maxLength={LIMITS.pillarDescription}
                   onSave={(v) =>
-                    m.updatePillarSummary(code, { description: v }).mutate()
+                    m.updatePillar.mutate({ code, patch: { description: v } })
                   }
                   className="mt-3 text-sm leading-relaxed text-muted-foreground"
                 />
@@ -853,8 +859,8 @@ function IndexContent() {
           <div className="flex justify-center">
             <button
               type="button"
-              onClick={() => addSet.mutate()}
-              disabled={addSet.isPending}
+              onClick={() => m.addSet.mutate()}
+              disabled={m.addSet.isPending}
               className="btn-mono inline-flex items-center gap-2 rounded-full border border-primary/25 bg-white px-5 py-2.5 text-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
             >
               <Plus className="h-4 w-4" /> Add OKR set
