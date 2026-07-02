@@ -276,7 +276,8 @@ function PillarChip({
 }) {
   return (
     <span
-      title={PILLAR_NAMES[code]}
+      role="img"
+      aria-label={`${code} — ${PILLAR_NAMES[code]}`}
       className="inline-flex h-7 items-center gap-1 rounded-full border border-[--color-chip-active-border] bg-white pl-3 pr-2 text-[11px] font-semibold tracking-wide text-primary"
     >
       {code}
@@ -930,7 +931,7 @@ function IndexContent() {
   const m = useOkrMutations();
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-dvh">
       <header className="bg-hero text-hero-foreground">
         <div className="mx-auto max-w-6xl px-8 pt-6 pb-14">
           <div className="flex items-start justify-between gap-4 mb-6">
@@ -982,7 +983,7 @@ function IndexContent() {
                 <div className="flex items-center gap-3">
                   <PillarDot code={code} />
                   <EditableText
-                    as="h3"
+                    as="h2"
                     value={p.label}
                     canEdit={canEdit}
                     maxLength={LIMITS.pillarLabel}
