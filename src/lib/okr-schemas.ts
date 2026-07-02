@@ -33,11 +33,14 @@ export const LIMITS = {
   target: 200,
   lead: 100,
   initiative: 300,
+  initiativeOwner: 100,
+  initiativeDescription: 2000,
   pillarLabel: 120,
   pillarDescription: 500,
   alignmentPillar: 120,
   alignmentHow: 800,
 };
+
 
 const trimmedString = (max: number) =>
   z.string().trim().max(max, { message: `Must be ${max} characters or fewer` });
