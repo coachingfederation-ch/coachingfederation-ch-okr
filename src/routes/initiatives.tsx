@@ -22,6 +22,8 @@ import type { StringKey } from "@/lib/i18n-strings";
 import { EditableText } from "@/components/okr/EditableText";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
+import { NewInitiativeDialog } from "@/components/okr/NewInitiativeDialog";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
