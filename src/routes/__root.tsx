@@ -86,6 +86,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "ICF Switzerland 2026 OKRs with global alignment — one customer-centric objective per strategic pillar.",
       },
       { name: "author", content: "ICF Switzerland" },
+      { property: "og:title", content: "ICFS OKR Dashboard" },
+      { name: "twitter:title", content: "ICFS OKR Dashboard" },
+      { name: "description", content: "ICFS Goal Tracker visualizes and manages OKRs, enabling teams to track progress and align objectives." },
+      { property: "og:description", content: "ICFS Goal Tracker visualizes and manages OKRs, enabling teams to track progress and align objectives." },
+      { name: "twitter:description", content: "ICFS Goal Tracker visualizes and manages OKRs, enabling teams to track progress and align objectives." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6928dd88-e981-4698-b7e5-ed744a065971/id-preview-27861605--f71a5372-ad83-4e34-afb2-1b1f31204259.lovable.app-1783002019070.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6928dd88-e981-4698-b7e5-ed744a065971/id-preview-27861605--f71a5372-ad83-4e34-afb2-1b1f31204259.lovable.app-1783002019070.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:type", content: "website" },
     ],
     links: [
       {
