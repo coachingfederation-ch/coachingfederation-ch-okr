@@ -1,5 +1,48 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { Suspense } from "react";
 import { X, Plus, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
+
+import {
+  addInitiative,
+  addKeyResult,
+  addOkrSet,
+  deleteInitiative,
+  deleteKeyResult,
+  deleteOkrSet,
+  getDashboard,
+  updateAlignmentRow,
+  updateInitiative,
+  updateKeyResult,
+  updateOkrSet,
+  updatePillarSummary,
+} from "@/lib/okr.functions";
+import {
+  CONTRIBUTION_CYCLE,
+  LIMITS,
+  PILLARS,
+  ROLE_LABELS,
+  type AlignmentRowDTO,
+  type Contribution,
+  type DashboardDTO,
+  type InitiativeDTO,
+  type KeyResultDTO,
+  type OkrSetDTO,
+  type Pillar,
+  type PillarSummaryDTO,
+  type RoleLabel,
+} from "@/lib/okr-schemas";
+import { EditableText } from "@/components/okr/EditableText";
+import { AuthBadge } from "@/components/okr/AuthBadge";
+import { useAuth } from "@/lib/auth-context";
+import { cn } from "@/lib/utils";
+
+const dashboardQueryOptions = queryOptions({
+  queryKey: ["dashboard"],
+  queryFn: () => getDashboard(),
+});
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,267 +63,171 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(dashboardQueryOptions),
   component: Index,
+  errorComponent: ({ error }) => (
+    <div className="p-8 text-sm text-destructive" role="alert">
+      {error.message}
+    </div>
+  ),
 });
 
-// ---------- Data ----------
+// ---- Mutations helper ----
+function useDashboardMutations() {
+  const qc = useQueryClient();
+  const updateOkrSetFn = useServerFn(updateOkrSet);
+  const addOkrSetFn = useServerFn(addOkrSet);
+  const deleteOkrSetFn = useServerFn(deleteOkrSet);
+  const addKrFn = useServerFn(addKeyResult);
+  const updateKrFn = useServerFn(updateKeyResult);
+  const deleteKrFn = useServerFn(deleteKeyResult);
+  const addInitFn = useServerFn(addInitiative);
+  const updateInitFn = useServerFn(updateInitiative);
+  const deleteInitFn = useServerFn(deleteInitiative);
+  const updateAlignFn = useServerFn(updateAlignmentRow);
+  const updatePillarFn = useServerFn(updatePillarSummary);
 
-type Pillar = "SG" | "OE" | "CE";
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["dashboard"] });
+  const onErr = (e: unknown) =>
+    toast.error(e instanceof Error ? e.message : "Save failed");
 
-const pillarSummary: Record<
-  Pillar,
-  { label: string; description: string }
-> = {
-  SG: {
-    label: "Sustainable Growth & Impact",
-    description:
-      "Expand the reach of coaching globally while demonstrating measurable social impact.",
-  },
-  OE: {
-    label: "Org. Development & Excellence",
-    description:
-      "Modernise ICF governance, systems, infrastructure and talent management to build a high-performing, future-focused organisation.",
-  },
-  CE: {
-    label: "Coaching Excellence & Value",
-    description:
-      "Set the standard for world-class coaching, leading with credentials and education.",
-  },
-};
+  const optimistic = <T,>(mutator: (draft: DashboardDTO) => void, run: () => Promise<T>) =>
+    useMutation({
+      mutationFn: run,
+      onMutate: async () => {
+        await qc.cancelQueries({ queryKey: ["dashboard"] });
+        const prev = qc.getQueryData<DashboardDTO>(["dashboard"]);
+        if (prev) {
+          const next = structuredClone(prev);
+          mutator(next);
+          qc.setQueryData(["dashboard"], next);
+        }
+        return { prev };
+      },
+      onError: (err, _v, ctx) => {
+        if (ctx?.prev) qc.setQueryData(["dashboard"], ctx.prev);
+        onErr(err);
+      },
+      onSettled: invalidate,
+    });
 
-type OkrSet = {
-  number: number;
-  title: string;
-  roleLabel: string;
-  roleName: string;
-  customer: string;
-  pillars: Pillar[]; // which pillar chips are highlighted
-  objective: string;
-  alignment: string;
-  keyResults: { kr: string; text: string; target: string; lead?: string }[];
-  initiatives: string[];
-};
+  return {
+    updateOkrSet: (id: string, patch: Partial<OkrSetDTO>) =>
+      optimistic(
+        (d) => {
+          const s = d.okr_sets.find((x) => x.id === id);
+          if (s) Object.assign(s, patch);
+        },
+        () => updateOkrSetFn({ data: { id, patch: patch as never } }),
+      ),
+    addOkrSet: () =>
+      useMutation({
+        mutationFn: () => addOkrSetFn({}),
+        onError: onErr,
+        onSuccess: invalidate,
+      }),
+    deleteOkrSet: (id: string) =>
+      optimistic(
+        (d) => {
+          d.okr_sets = d.okr_sets.filter((x) => x.id !== id);
+        },
+        () => deleteOkrSetFn({ data: { id } }),
+      ),
+    addKeyResult: (okr_set_id: string) =>
+      useMutation({
+        mutationFn: () => addKrFn({ data: { okr_set_id } }),
+        onError: onErr,
+        onSuccess: invalidate,
+      }),
+    updateKeyResult: (id: string, patch: Partial<KeyResultDTO>) =>
+      optimistic(
+        (d) => {
+          for (const s of d.okr_sets) {
+            const kr = s.key_results.find((k) => k.id === id);
+            if (kr) Object.assign(kr, patch);
+          }
+        },
+        () => updateKrFn({ data: { id, patch: patch as never } }),
+      ),
+    deleteKeyResult: (id: string) =>
+      optimistic(
+        (d) => {
+          for (const s of d.okr_sets)
+            s.key_results = s.key_results.filter((k) => k.id !== id);
+        },
+        () => deleteKrFn({ data: { id } }),
+      ),
+    addInitiative: (okr_set_id: string, text: string) =>
+      useMutation({
+        mutationFn: () => addInitFn({ data: { okr_set_id, text } }),
+        onError: onErr,
+        onSuccess: invalidate,
+      }),
+    updateInitiative: (id: string, text: string) =>
+      optimistic(
+        (d) => {
+          for (const s of d.okr_sets) {
+            const it = s.initiatives.find((i) => i.id === id);
+            if (it) it.text = text;
+          }
+        },
+        () => updateInitFn({ data: { id, patch: { text } } }),
+      ),
+    deleteInitiative: (id: string) =>
+      optimistic(
+        (d) => {
+          for (const s of d.okr_sets)
+            s.initiatives = s.initiatives.filter((i) => i.id !== id);
+        },
+        () => deleteInitFn({ data: { id } }),
+      ),
+    updateAlignmentRow: (id: string, patch: Partial<AlignmentRowDTO>) =>
+      optimistic(
+        (d) => {
+          const r = d.alignment_rows.find((x) => x.id === id);
+          if (r) Object.assign(r, patch);
+        },
+        () => updateAlignFn({ data: { id, patch: patch as never } }),
+      ),
+    updatePillarSummary: (code: Pillar, patch: Partial<PillarSummaryDTO>) =>
+      optimistic(
+        (d) => {
+          const p = d.pillars.find((x) => x.code === code);
+          if (p) Object.assign(p, patch);
+        },
+        () => updatePillarFn({ data: { code, patch: patch as never } }),
+      ),
+  };
+}
 
-const okrSets: OkrSet[] = [
-  {
-    number: 1,
-    title: "Excellence & Ethics",
-    roleLabel: "Steward",
-    roleName: "Natacha",
-    customer: "Members & Volunteers",
-    pillars: [],
-    objective:
-      "Members and volunteers feel confident and well-supported in practicing to the highest ethical and professional standards.",
-    alignment:
-      "Ethics education and quality standards sit at the core of ICF's Coaching Excellence focus area. The governance aspect (volunteer ethical alignment) also supports Org. Excellence. Growing trust through ethical rigour feeds Sustainable Growth.",
-    keyResults: [
-      {
-        kr: "1.1",
-        text: "Increase meaningful and deep learning occasions for ethical and professional development (DE/FR/IT/EN)",
-        target: "1 → 4",
-      },
-      {
-        kr: "1.2",
-        text: "Provide free group mentoring sessions to the members led by an ICF MSQ mentor (3 per year)",
-        target: "Full preparation in 2026",
-      },
-      {
-        kr: "1.3",
-        text: "Provide individual supervision occasions to the volunteers for free (2 sessions per year) led by an ICF MCC supervisor",
-        target: "Full preparation in 2026",
-      },
-      {
-        kr: "1.4",
-        text: "Develop a program for senior (MCCs) coaches to further develop their excellence",
-        target: "Full preparation in 2026",
-      },
-      {
-        kr: "1.5",
-        text: "At least 50% of ethics/professional development events are accessible in a second language (FR, IT, or DE) beyond the primary delivery language.",
-        target: "By Q4",
-      },
-    ],
-    initiatives: [
-      "Ethics workshops in 4 languages every year",
-      "Ethical's support and clarity on processes and roles available through an easy guide for volunteers",
-      "Business series",
-      "AI learnings",
-      "Educational events provided by community leaders",
-      "Building an ICFS Mentoring group for members ready to launch in 2027",
-      "Building an ICFS Supervision team for volunteers ready to launch in 2027",
-      "Workgroup on ICF MCC's needs",
-    ],
-  },
-  {
-    number: 2,
-    title: "Community & Belonging",
-    roleLabel: "Steward",
-    roleName: "Beril",
-    customer: "Members",
-    pillars: ["SG"],
-    objective:
-      "Members feel they have a genuine professional home where they belong, connect, and grow – in every region and language.",
-    alignment:
-      "Thriving local communities are ICF's primary engine of Sustainable Growth – membership retention and word-of-mouth expand the profession's reach. Active peer engagement also reinforces Coaching Excellence by creating learning environments.",
-    keyResults: [
-      { kr: "2.1", text: "Increase the average sense of belonging score", target: "3.66 → 4.00/5" },
-      {
-        kr: "2.2",
-        text: "Local communities organized their events in the local language first whenever possible.",
-        target: "75% in local language (trending up)",
-      },
-      {
-        kr: "2.3",
-        text: "Increase unique member event participation by 25%, or reach at least 150 unique members through community events",
-        target: "+25% / 150 members",
-      },
-      {
-        kr: "2.4",
-        text: "At least 30% of community event participants attend two or more community activities during the year.",
-        target: "30%",
-      },
-      {
-        kr: "2.5",
-        text: "Every community keeps a simple baseline rhythm: one local event/quarter, one peer-learning touchpoint/quarter, one monthly update.",
-        target: "Ongoing",
-      },
-    ],
-    initiatives: [],
-  },
-  {
-    number: 3,
-    title: "Social Impact",
-    roleLabel: "Contact",
-    roleName: "Alessandra",
-    customer: "Swiss Public & Media",
-    pillars: [],
-    objective:
-      "More people in Switzerland understand and trust professional coaching as a credible and valuable contribution to society.",
-    alignment:
-      "Directly serves ICF's Sustainable Growth & Impact goal – expanding coaching's reach beyond the current community into public and organisational life. Media visibility also builds the credibility that underpins Coaching Excellence.",
-    keyResults: [
-      { kr: "3.1", text: "Public-facing events attracting non-member audiences", target: "+30%" },
-      {
-        kr: "3.2",
-        text: "Public resonance from CIE, roundtables and school directors, used for communications",
-        target: "Baseline TBD",
-      },
-      { kr: "3.3", text: "CIIO roundtable reach and public resonance", target: "Baseline TBD" },
-    ],
-    initiatives: [],
-  },
-  {
-    number: 4,
-    title: "Ecosystem & Partnerships",
-    roleLabel: "Contact",
-    roleName: "Hardy & Lilly",
-    customer: "Partner Organisations & Coaching Bodies",
-    pillars: ["SG", "OE"],
-    objective:
-      "Swiss bodies and partner organisations experience ICF Switzerland as a trusted, valuable partner in advancing the coaching profession.",
-    alignment:
-      "Partnerships expand the Swiss coaching market (Sustainable Growth) and strengthen the governance reach of the chapter by aligning with BSO, EMCC, SCA, and federal bodies (Org. Excellence). Coach Finder usage directly benefits members' professional practice.",
-    keyResults: [
-      {
-        kr: "4.1",
-        text: "Establishing the Swiss-wide Industry Pool Coaching Schweiz (IPC) as a partnership",
-        target: "EOY, official",
-      },
-      {
-        kr: "4.2",
-        text: "Active partnership engagements (joint events, meetings, collaborations)",
-        target: "Set baseline for 2026",
-      },
-    ],
-    initiatives: [
-      "Improved Coach Finder, with increased communication about it across our channels",
-      "Every Swiss member should have the opportunity to be present in the Coach Finder",
-    ],
-  },
-  {
-    number: 5,
-    title: "Communication & Visibility",
-    roleLabel: "Owner",
-    roleName: "Susan",
-    customer: "Potential Members & Public",
-    pillars: [],
-    objective:
-      "Anyone who encounters ICFS experiences one clear, consistent, and trustworthy voice of the chapter.",
-    alignment:
-      "A consistent, professional brand presence drives new member acquisition (Sustainable Growth) and reinforces the credibility of ICF credentials and standards in the Swiss market (Coaching Excellence).",
-    keyResults: [
-      { kr: "5.1", text: "Potential-member inquiries (forms, event registrations, email)", target: "+30%" },
-      {
-        kr: "5.2",
-        text: "Media partnerships (reduced cost or free publications) or inbound inquiries referencing ICF Switzerland",
-        target: "+40%",
-      },
-      { kr: "5.3", text: "Website reflecting all activities and current messaging", target: "EoQ4" },
-      { kr: "5.4", text: "Marketing materials updated and distributed to communities", target: "EoQ4" },
-    ],
-    initiatives: [],
-  },
-];
+// ---- Atoms ----
 
-type Contribution = "primary" | "secondary" | "none";
-const alignmentTable: {
-  pillar: string;
-  sg: Contribution;
-  oe: Contribution;
-  ce: Contribution;
-  how: string;
-}[] = [
-  {
-    pillar: "Excellence & Ethics",
-    sg: "secondary",
-    oe: "secondary",
-    ce: "primary",
-    how: "Directly advances Coaching Excellence (ethics, quality). Also supports Org. Excellence through volunteer ethical governance, and Growth by building the trust that enables profession expansion.",
-  },
-  {
-    pillar: "Community & Belonging",
-    sg: "primary",
-    oe: "none",
-    ce: "secondary",
-    how: "The primary local driver of Sustainable Growth — ICF grows when communities thrive. Also contributes to Coaching Excellence by creating peer learning environments.",
-  },
-  {
-    pillar: "Societal Impact",
-    sg: "primary",
-    oe: "none",
-    ce: "secondary",
-    how: "Squarely serves Sustainable Growth & Impact — putting coaching in front of new audiences and building public legitimacy. Secondary link to Coaching Excellence (public perception of credentials).",
-  },
-  {
-    pillar: "Ecosystem & Partnerships",
-    sg: "primary",
-    oe: "secondary",
-    ce: "none",
-    how: "The chapter's primary growth engine — partnerships expand the coaching market and drive Coach Finder traffic. Contributes to Org. Excellence by extending governance reach into partner organisations.",
-  },
-  {
-    pillar: "Communication & Visibility",
-    sg: "primary",
-    oe: "none",
-    ce: "secondary",
-    how: "Supports Sustainable Growth by attracting new members. Also reinforces Coaching Excellence by projecting a consistent, credible brand for credentialled coaches.",
-  },
-];
-
-// ---------- Small UI atoms ----------
-
-function PillarChip({ code, active }: { code: Pillar; active: boolean }) {
+function PillarChip({
+  code,
+  active,
+  canEdit,
+  onToggle,
+}: {
+  code: Pillar;
+  active: boolean;
+  canEdit: boolean;
+  onToggle?: () => void;
+}) {
   return (
-    <span
-      className={
-        "inline-flex h-7 min-w-9 items-center justify-center rounded-full border px-3 text-[11px] font-semibold tracking-wide " +
-        (active
+    <button
+      type="button"
+      disabled={!canEdit}
+      onClick={onToggle}
+      className={cn(
+        "inline-flex h-7 min-w-9 items-center justify-center rounded-full border px-3 text-[11px] font-semibold tracking-wide transition-colors",
+        active
           ? "border-[--color-chip-active-border] bg-white text-primary"
-          : "border-border bg-white text-muted-foreground")
-      }
+          : "border-border bg-white text-muted-foreground",
+        canEdit ? "hover:bg-primary/5 cursor-pointer" : "cursor-default",
+      )}
     >
       {code}
-    </span>
+    </button>
   );
 }
 
@@ -305,27 +252,23 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return <div className="section-label mb-2">{children}</div>;
 }
 
-function TextInput({ placeholder }: { placeholder: string }) {
-  return (
-    <input
-      type="text"
-      placeholder={placeholder}
-      className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring/40"
-    />
-  );
-}
+// ---- OKR card ----
 
-function AddButton({ children }: { children: React.ReactNode }) {
-  return (
-    <button className="btn-mono inline-flex h-10 items-center justify-center rounded-md border border-primary/25 bg-white px-4 hover:bg-primary/5 transition-colors">
-      {children}
-    </button>
-  );
-}
+function OkrCard({
+  set,
+  canEdit,
+  m,
+}: {
+  set: OkrSetDTO;
+  canEdit: boolean;
+  m: ReturnType<typeof useDashboardMutations>;
+}) {
+  const deleteSet = m.deleteOkrSet(set.id);
+  const updateSet = (patch: Partial<OkrSetDTO>) => m.updateOkrSet(set.id, patch).mutate();
+  const addKr = m.addKeyResult(set.id);
+  const [initDraft, setInitDraft] = useInitDraft();
+  const addInit = m.addInitiative(set.id, initDraft);
 
-// ---------- Blocks ----------
-
-function OkrCard({ set }: { set: OkrSet }) {
   return (
     <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
       <header className="flex items-start justify-between gap-4">
@@ -334,52 +277,113 @@ function OkrCard({ set }: { set: OkrSet }) {
             {set.number}
           </span>
           <div>
-            <h2 className="text-2xl font-bold text-foreground">{set.title}</h2>
+            <EditableText
+              as="h2"
+              value={set.title}
+              canEdit={canEdit}
+              maxLength={LIMITS.title}
+              onSave={(v) => updateSet({ title: v })}
+              className="text-2xl font-bold text-foreground"
+              placeholder="Untitled OKR"
+            />
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-              <button className="inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white px-2 py-1 text-xs font-semibold text-primary">
-                {set.roleLabel} <ChevronDown className="h-3 w-3" />
-              </button>
+              <RoleLabelSelect
+                value={set.role_label}
+                canEdit={canEdit}
+                onChange={(v) => updateSet({ role_label: v })}
+              />
               <span className="text-muted-foreground/60">:</span>
-              <span className="font-medium text-foreground">{set.roleName}</span>
+              <EditableText
+                value={set.role_name}
+                canEdit={canEdit}
+                maxLength={LIMITS.roleName}
+                onSave={(v) => updateSet({ role_name: v })}
+                className="font-medium text-foreground"
+                placeholder="Name"
+              />
               <span className="ml-1 text-muted-foreground">Customer:</span>
-              <span className="font-medium text-foreground">{set.customer}</span>
+              <EditableText
+                value={set.customer}
+                canEdit={canEdit}
+                maxLength={LIMITS.customer}
+                onSave={(v) => updateSet({ customer: v })}
+                className="font-medium text-foreground"
+                placeholder="Customer"
+              />
             </div>
           </div>
         </div>
-        <button
-          aria-label="Remove"
-          className="rounded-md p-1 text-muted-foreground hover:bg-muted"
-        >
-          <X className="h-4 w-4" />
-        </button>
+        {canEdit && (
+          <button
+            type="button"
+            aria-label="Delete OKR set"
+            onClick={() => {
+              if (confirm(`Delete OKR set "${set.title}"?`)) deleteSet.mutate();
+            }}
+            className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </header>
 
       <div className="mt-4 flex gap-2">
-        {(["SG", "OE", "CE"] as Pillar[]).map((p) => (
-          <PillarChip key={p} code={p} active={set.pillars.includes(p)} />
+        {PILLARS.map((p) => (
+          <PillarChip
+            key={p}
+            code={p}
+            active={set.pillars.includes(p)}
+            canEdit={canEdit}
+            onToggle={() => {
+              const next = set.pillars.includes(p)
+                ? set.pillars.filter((x) => x !== p)
+                : [...set.pillars, p];
+              updateSet({ pillars: next });
+            }}
+          />
         ))}
       </div>
 
       <section className="mt-6 rounded-2xl border border-border/70 bg-muted/40 p-5">
         <div className="eyebrow mb-2">Objective</div>
-        <p className="text-[15px] font-semibold leading-relaxed text-foreground">
-          {set.objective}
-        </p>
+        <EditableText
+          as="p"
+          multiline
+          value={set.objective}
+          canEdit={canEdit}
+          maxLength={LIMITS.objective}
+          onSave={(v) => updateSet({ objective: v })}
+          className="text-[15px] font-semibold leading-relaxed text-foreground"
+          placeholder="What outcome should this OKR create?"
+        />
       </section>
 
       <section className="mt-6">
         <SectionLabel>Global alignment</SectionLabel>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {set.alignment}
-        </p>
+        <EditableText
+          as="p"
+          multiline
+          value={set.alignment}
+          canEdit={canEdit}
+          maxLength={LIMITS.alignment}
+          onSave={(v) => updateSet({ alignment: v })}
+          className="text-sm leading-relaxed text-muted-foreground"
+          placeholder="How does this connect to the ICF Global focus areas?"
+        />
       </section>
 
       <section className="mt-6">
         <div className="mb-2 flex items-center justify-between">
           <SectionLabel>Key results</SectionLabel>
-          <button className="btn-mono inline-flex items-center gap-1 text-primary hover:underline">
-            + Add key result
-          </button>
+          {canEdit && (
+            <button
+              type="button"
+              onClick={() => addKr.mutate()}
+              className="btn-mono inline-flex items-center gap-1 text-primary hover:underline"
+            >
+              + Add key result
+            </button>
+          )}
         </div>
         <div className="overflow-hidden rounded-xl border border-border/70">
           <table className="w-full text-sm">
@@ -389,35 +393,29 @@ function OkrCard({ set }: { set: OkrSet }) {
                 <th className="py-3 font-semibold">Key result</th>
                 <th className="w-56 py-3 font-semibold">Target</th>
                 <th className="w-32 py-3 font-semibold">Lead</th>
-                <th className="w-10" />
+                {canEdit && <th className="w-10" />}
               </tr>
             </thead>
             <tbody>
-              {set.keyResults.map((r, i) => (
-                <tr
-                  key={r.kr}
-                  className={
-                    "border-t border-border/60 " +
-                    (i % 2 === 1 ? "bg-muted/20" : "bg-white")
-                  }
-                >
-                  <td className="py-3 pl-4 align-top text-primary/80 font-medium">
-                    {r.kr}
-                  </td>
-                  <td className="py-3 pr-4 align-top leading-relaxed text-foreground">
-                    {r.text}
-                  </td>
-                  <td className="py-3 pr-4 align-top text-foreground">
-                    {r.target}
-                  </td>
-                  <td className="py-3 pr-4 align-top text-muted-foreground">
-                    {r.lead ?? ""}
-                  </td>
-                  <td className="py-3 pr-4 align-top text-muted-foreground">
-                    <X className="h-4 w-4" />
+              {set.key_results.map((r, i) => (
+                <KeyResultRow
+                  key={r.id}
+                  kr={r}
+                  striped={i % 2 === 1}
+                  canEdit={canEdit}
+                  m={m}
+                />
+              ))}
+              {set.key_results.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={canEdit ? 5 : 4}
+                    className="py-4 pl-4 text-sm text-muted-foreground italic"
+                  >
+                    No key results yet.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -429,95 +427,391 @@ function OkrCard({ set }: { set: OkrSet }) {
           {set.initiatives.length > 0 && (
             <ul className="mb-3 space-y-2">
               {set.initiatives.map((it) => (
-                <li
-                  key={it}
-                  className="flex items-start justify-between gap-3 text-sm text-foreground"
-                >
-                  <span className="flex items-start gap-2">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    <span>{it}</span>
-                  </span>
-                  <X className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                </li>
+                <InitiativeRow key={it.id} init={it} canEdit={canEdit} m={m} />
               ))}
             </ul>
           )}
-          <div className="flex gap-2">
-            <TextInput placeholder="New project or initiative…" />
-            <AddButton>Add</AddButton>
-          </div>
+          {canEdit && (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={initDraft}
+                onChange={(e) => setInitDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && initDraft.trim()) {
+                    e.preventDefault();
+                    addInit.mutate(undefined, {
+                      onSuccess: () => setInitDraft(""),
+                    });
+                  }
+                }}
+                maxLength={LIMITS.initiative}
+                placeholder="New project or initiative…"
+                className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring/40"
+              />
+              <button
+                type="button"
+                disabled={!initDraft.trim() || addInit.isPending}
+                onClick={() =>
+                  addInit.mutate(undefined, { onSuccess: () => setInitDraft("") })
+                }
+                className="btn-mono inline-flex h-10 items-center justify-center rounded-md border border-primary/25 bg-white px-4 hover:bg-primary/5 transition-colors disabled:opacity-50"
+              >
+                Add
+              </button>
+            </div>
+          )}
         </div>
-
         <div>
           <SectionLabel>Team members</SectionLabel>
-          <div className="flex gap-2">
-            <TextInput placeholder="Add team member…" />
-            <AddButton>Add</AddButton>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-6">
-        <SectionLabel>Explore more (external links)</SectionLabel>
-        <div className="flex flex-wrap gap-2">
-          <div className="min-w-56 flex-1">
-            <TextInput placeholder="Link label (e.g. Project brief)" />
-          </div>
-          <div className="min-w-64 flex-[2]">
-            <TextInput placeholder="https://…" />
-          </div>
-          <AddButton>Add link</AddButton>
+          <p className="text-xs text-muted-foreground">
+            Coming soon — track owners per key result via the Lead column above.
+          </p>
         </div>
       </section>
     </article>
   );
 }
 
-function ContribCell({ v }: { v: Contribution }) {
-  if (v === "none") return <span className="text-muted-foreground/40">—</span>;
-  const dot = <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />;
+function useInitDraft() {
+  return [useDraftState(), null] as unknown as [
+    string,
+    (v: string) => void,
+  ] extends never
+    ? never
+    : ReturnType<typeof useDraftState>;
+}
+// Small state helper so we don't repeat useState boilerplate
+function useDraftState() {
+  // biome-ignore lint: intentional
+  const s = require("react") as typeof import("react");
+  return s.useState("");
+}
+
+function KeyResultRow({
+  kr,
+  striped,
+  canEdit,
+  m,
+}: {
+  kr: KeyResultDTO;
+  striped: boolean;
+  canEdit: boolean;
+  m: ReturnType<typeof useDashboardMutations>;
+}) {
+  const del = m.deleteKeyResult(kr.id);
+  const update = (patch: Partial<KeyResultDTO>) =>
+    m.updateKeyResult(kr.id, patch).mutate();
   return (
-    <span className="inline-flex items-center gap-1">
-      {dot}
-      {v === "primary" && dot}
+    <tr
+      className={cn(
+        "border-t border-border/60 align-top",
+        striped ? "bg-muted/20" : "bg-white",
+      )}
+    >
+      <td className="py-3 pl-4 text-primary/80 font-medium">
+        <EditableText
+          value={kr.kr}
+          canEdit={canEdit}
+          maxLength={LIMITS.kr}
+          onSave={(v) => update({ kr: v })}
+        />
+      </td>
+      <td className="py-3 pr-4 leading-relaxed text-foreground">
+        <EditableText
+          multiline
+          value={kr.text}
+          canEdit={canEdit}
+          maxLength={LIMITS.krText}
+          onSave={(v) => update({ text: v })}
+          placeholder="Describe the key result…"
+        />
+      </td>
+      <td className="py-3 pr-4 text-foreground">
+        <EditableText
+          value={kr.target}
+          canEdit={canEdit}
+          maxLength={LIMITS.target}
+          onSave={(v) => update({ target: v })}
+          placeholder="Target"
+        />
+      </td>
+      <td className="py-3 pr-4 text-muted-foreground">
+        <EditableText
+          value={kr.lead}
+          canEdit={canEdit}
+          maxLength={LIMITS.lead}
+          onSave={(v) => update({ lead: v })}
+          placeholder="Lead"
+        />
+      </td>
+      {canEdit && (
+        <td className="py-3 pr-4 text-muted-foreground">
+          <button
+            type="button"
+            onClick={() => del.mutate()}
+            aria-label="Delete key result"
+            className="rounded-sm p-0.5 hover:bg-muted hover:text-destructive"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </td>
+      )}
+    </tr>
+  );
+}
+
+function InitiativeRow({
+  init,
+  canEdit,
+  m,
+}: {
+  init: InitiativeDTO;
+  canEdit: boolean;
+  m: ReturnType<typeof useDashboardMutations>;
+}) {
+  const del = m.deleteInitiative(init.id);
+  return (
+    <li className="flex items-start justify-between gap-3 text-sm text-foreground">
+      <span className="flex items-start gap-2 flex-1">
+        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+        <EditableText
+          className="flex-1"
+          multiline
+          value={init.text}
+          canEdit={canEdit}
+          maxLength={LIMITS.initiative}
+          onSave={(v) => m.updateInitiative(init.id, v).mutate()}
+        />
+      </span>
+      {canEdit && (
+        <button
+          type="button"
+          onClick={() => del.mutate()}
+          aria-label="Delete initiative"
+          className="mt-1 rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      )}
+    </li>
+  );
+}
+
+function RoleLabelSelect({
+  value,
+  canEdit,
+  onChange,
+}: {
+  value: RoleLabel;
+  canEdit: boolean;
+  onChange: (v: RoleLabel) => void;
+}) {
+  if (!canEdit) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white px-2 py-1 text-xs font-semibold text-primary">
+        {value}
+      </span>
+    );
+  }
+  return (
+    <span className="relative inline-flex">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as RoleLabel)}
+        className="appearance-none inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white pl-2 pr-6 py-1 text-xs font-semibold text-primary cursor-pointer hover:bg-primary/5"
+      >
+        {ROLE_LABELS.map((r) => (
+          <option key={r} value={r}>
+            {r}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
     </span>
   );
 }
 
-// ---------- Page ----------
+// ---- Alignment table ----
+
+function ContribCell({
+  value,
+  canEdit,
+  onCycle,
+}: {
+  value: Contribution;
+  canEdit: boolean;
+  onCycle: () => void;
+}) {
+  const inner =
+    value === "none" ? (
+      <span className="text-muted-foreground/40">—</span>
+    ) : (
+      <span className="inline-flex items-center gap-1">
+        <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+        {value === "primary" && (
+          <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+        )}
+      </span>
+    );
+  if (!canEdit) return inner;
+  return (
+    <button
+      type="button"
+      onClick={onCycle}
+      title="Click to cycle: none → secondary → primary"
+      className="rounded-sm px-1 py-0.5 hover:bg-primary/5"
+    >
+      {inner}
+    </button>
+  );
+}
+
+function AlignmentTable({
+  rows,
+  canEdit,
+  m,
+}: {
+  rows: AlignmentRowDTO[];
+  canEdit: boolean;
+  m: ReturnType<typeof useDashboardMutations>;
+}) {
+  const cycle = (curr: Contribution): Contribution =>
+    CONTRIBUTION_CYCLE[(CONTRIBUTION_CYCLE.indexOf(curr) + 1) % 3];
+
+  return (
+    <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
+      <h2 className="text-2xl font-bold text-foreground">Global alignment analysis</h2>
+      <p className="mt-2 text-sm text-muted-foreground">
+        How each ICFS pillar contributes to the three ICF Global 2026–2029 focus areas.{" "}
+        <span className="inline-flex items-center gap-1 align-middle">
+          <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+          <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+        </span>{" "}
+        = primary contribution,{" "}
+        <span className="inline-flex items-center align-middle">
+          <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+        </span>{" "}
+        = secondary contribution.
+        {canEdit && (
+          <span className="ml-1 text-muted-foreground/70">
+            Click a dot cell to cycle none → secondary → primary.
+          </span>
+        )}
+      </p>
+
+      <div className="mt-5 overflow-hidden rounded-xl border border-border/70">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/60">
+            <tr className="text-left text-[11px] uppercase tracking-widest text-muted-foreground">
+              <th className="py-3 pl-4 font-semibold">ICFS pillar</th>
+              <th className="w-20 py-3 font-semibold">SG</th>
+              <th className="w-20 py-3 font-semibold">OE</th>
+              <th className="w-20 py-3 font-semibold">CE</th>
+              <th className="py-3 pr-4 font-semibold">How it contributes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr
+                key={row.id}
+                className={cn(
+                  "border-t border-border/60 align-top",
+                  i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                )}
+              >
+                <td className="py-4 pl-4 font-semibold text-foreground">
+                  <EditableText
+                    value={row.pillar}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.alignmentPillar}
+                    onSave={(v) => m.updateAlignmentRow(row.id, { pillar: v }).mutate()}
+                  />
+                </td>
+                {(["sg", "oe", "ce"] as const).map((col) => (
+                  <td key={col} className="py-4">
+                    <ContribCell
+                      value={row[col]}
+                      canEdit={canEdit}
+                      onCycle={() =>
+                        m.updateAlignmentRow(row.id, { [col]: cycle(row[col]) }).mutate()
+                      }
+                    />
+                  </td>
+                ))}
+                <td className="py-4 pr-4 leading-relaxed text-muted-foreground">
+                  <EditableText
+                    multiline
+                    value={row.how}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.alignmentHow}
+                    onSave={(v) => m.updateAlignmentRow(row.id, { how: v }).mutate()}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  );
+}
+
+// ---- Page ----
 
 function Index() {
   return (
+    <Suspense fallback={<div className="p-8 text-sm text-muted-foreground">Loading…</div>}>
+      <IndexContent />
+    </Suspense>
+  );
+}
+
+function IndexContent() {
+  const { data } = useSuspenseQuery(dashboardQueryOptions);
+  const { canEdit } = useAuth();
+  const m = useDashboardMutations();
+  const addSet = m.addOkrSet();
+
+  return (
     <main className="min-h-screen">
-      {/* Hero */}
       <header className="bg-hero text-hero-foreground">
-        <div className="mx-auto max-w-6xl px-8 py-14">
+        <div className="mx-auto max-w-6xl px-8 pt-6 pb-14">
+          <div className="flex items-center justify-end mb-6">
+            <AuthBadge />
+          </div>
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-3xl">
-              <p className="eyebrow !text-accent">
-                ICF Switzerland · OKR Dashboard
-              </p>
+              <p className="eyebrow !text-accent">ICF Switzerland · OKR Dashboard</p>
               <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
                 2026 OKRs with Global Alignment
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">
                 One inspiring, customer-centric objective per strategic pillar —
-                aligned to the ICF Global Strategic Plan 2026–2029 and the Arbon
-                board retreat, 1 June 2026.
+                aligned to the ICF Global Strategic Plan 2026–2029 and the Arbon board
+                retreat, 1 June 2026.
               </p>
             </div>
-            <button className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 !text-primary shadow-sm hover:shadow transition-shadow">
-              <Plus className="h-4 w-4" /> Add OKR set
-            </button>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() => addSet.mutate()}
+                disabled={addSet.isPending}
+                className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 !text-primary shadow-sm hover:shadow transition-shadow disabled:opacity-50"
+              >
+                <Plus className="h-4 w-4" /> Add OKR set
+              </button>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Pillar summary cards */}
       <section className="mx-auto -mt-8 max-w-6xl px-8">
         <div className="grid gap-4 md:grid-cols-3">
-          {(Object.keys(pillarSummary) as Pillar[]).map((code) => {
-            const p = pillarSummary[code];
+          {PILLARS.map((code) => {
+            const p =
+              data.pillars.find((x) => x.code === code) ??
+              ({ code, label: code, description: "" } as PillarSummaryDTO);
             return (
               <div
                 key={code}
@@ -525,79 +819,49 @@ function Index() {
               >
                 <div className="flex items-center gap-3">
                   <PillarDot code={code} />
-                  <h3 className="text-[15px] font-semibold text-foreground">
-                    {p.label}
-                  </h3>
+                  <EditableText
+                    as="h3"
+                    value={p.label}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.pillarLabel}
+                    onSave={(v) => m.updatePillarSummary(code, { label: v }).mutate()}
+                    className="text-[15px] font-semibold text-foreground"
+                  />
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {p.description}
-                </p>
+                <EditableText
+                  as="p"
+                  multiline
+                  value={p.description}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.pillarDescription}
+                  onSave={(v) =>
+                    m.updatePillarSummary(code, { description: v }).mutate()
+                  }
+                  className="mt-3 text-sm leading-relaxed text-muted-foreground"
+                />
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* OKR sets */}
       <section className="mx-auto max-w-6xl space-y-10 px-8 py-12">
-        {okrSets.map((set) => (
-          <OkrCard key={set.number} set={set} />
+        {data.okr_sets.map((set) => (
+          <OkrCard key={set.id} set={set} canEdit={canEdit} m={m} />
         ))}
-
-        {/* Alignment table */}
-        <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
-          <h2 className="text-2xl font-bold text-foreground">
-            Global alignment analysis
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            How each ICFS pillar contributes to the three ICF Global 2026–2029
-            focus areas.{" "}
-            <span className="inline-flex items-center gap-1 align-middle">
-              <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
-              <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
-            </span>{" "}
-            = primary contribution,{" "}
-            <span className="inline-flex items-center align-middle">
-              <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
-            </span>{" "}
-            = secondary contribution.
-          </p>
-
-          <div className="mt-5 overflow-hidden rounded-xl border border-border/70">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/60">
-                <tr className="text-left text-[11px] uppercase tracking-widest text-muted-foreground">
-                  <th className="py-3 pl-4 font-semibold">ICFS pillar</th>
-                  <th className="w-20 py-3 font-semibold">SG</th>
-                  <th className="w-20 py-3 font-semibold">OE</th>
-                  <th className="w-20 py-3 font-semibold">CE</th>
-                  <th className="py-3 pr-4 font-semibold">How it contributes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {alignmentTable.map((row, i) => (
-                  <tr
-                    key={row.pillar}
-                    className={
-                      "border-t border-border/60 align-top " +
-                      (i % 2 === 1 ? "bg-muted/20" : "bg-white")
-                    }
-                  >
-                    <td className="py-4 pl-4 font-semibold text-foreground">
-                      {row.pillar}
-                    </td>
-                    <td className="py-4"><ContribCell v={row.sg} /></td>
-                    <td className="py-4"><ContribCell v={row.oe} /></td>
-                    <td className="py-4"><ContribCell v={row.ce} /></td>
-                    <td className="py-4 pr-4 leading-relaxed text-muted-foreground">
-                      {row.how}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {canEdit && (
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => addSet.mutate()}
+              disabled={addSet.isPending}
+              className="btn-mono inline-flex items-center gap-2 rounded-full border border-primary/25 bg-white px-5 py-2.5 text-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
+            >
+              <Plus className="h-4 w-4" /> Add OKR set
+            </button>
           </div>
-        </article>
+        )}
+        <AlignmentTable rows={data.alignment_rows} canEdit={canEdit} m={m} />
       </section>
     </main>
   );
