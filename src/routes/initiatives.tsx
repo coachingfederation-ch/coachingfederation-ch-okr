@@ -294,8 +294,15 @@ function InitiativesContent() {
                 </SelectContent>
               </Select>
             </FilterBlock>
-            <div className="ml-auto text-xs text-muted-foreground">
-              {filtered.length} / {flat.length}
+            <div className="ml-auto flex items-center gap-3">
+              <span className="text-xs text-muted-foreground">
+                {filtered.length} / {flat.length}
+              </span>
+              {canEdit && (
+                <Button size="sm" onClick={() => setCreateOpen(true)}>
+                  {t("initiatives.new")}
+                </Button>
+              )}
             </div>
           </div>
         </div>
