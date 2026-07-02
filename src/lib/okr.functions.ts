@@ -234,14 +234,20 @@ export const addInitiative = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) =>
     z
-      .object({ okr_set_id: uuidSchema, text: initiativePatchSchema.shape.text })
+      .object({ kr_id: uuidSchema, text: initiativePatchSchema.shape.text })
       .parse(raw),
   )
   .handler(async ({ data, context }) => {
+    const { data: krRow, error: krErr } = await context.supabase
+      .from("key_results")
+      .select("okr_set_id")
+      .eq("id", data.kr_id)
+      .single();
+    if (krErr) throw new Error(krErr.message);
     const { data: maxRow } = await context.supabase
       .from("initiatives")
       .select("sort_order")
-      .eq("okr_set_id", data.okr_set_id)
+      .eq("kr_id", data.kr_id)
       .order("sort_order", { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -249,7 +255,8 @@ export const addInitiative = createServerFn({ method: "POST" })
     const { data: row, error } = await context.supabase
       .from("initiatives")
       .insert({
-        okr_set_id: data.okr_set_id,
+        kr_id: data.kr_id,
+        okr_set_id: krRow.okr_set_id,
         text: data.text,
         sort_order: nextSort,
       })
@@ -258,6 +265,7 @@ export const addInitiative = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { id: row.id };
   });
+
 
 export const updateInitiative = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
