@@ -111,12 +111,20 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
     for (const r of inits.data ?? []) {
       const arr = initsByKr.get(r.kr_id) ?? [];
       arr.push({
-        ...(r as Omit<InitiativeDTO, "translations" | "source_lang">),
+        id: r.id,
+        okr_set_id: r.okr_set_id,
+        kr_id: r.kr_id,
+        text: r.text,
+        owner: r.owner ?? "",
+        description: r.description ?? "",
+        status: ((r.status as InitiativeDTO["status"]) ?? "planned"),
+        sort_order: r.sort_order,
         translations: (r as { translations?: TranslationsMap }).translations ?? {},
         source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
       });
       initsByKr.set(r.kr_id, arr);
     }
+
     const krsBySet = new Map<string, KeyResultDTO[]>();
     for (const r of krs.data ?? []) {
       const arr = krsBySet.get(r.okr_set_id) ?? [];
