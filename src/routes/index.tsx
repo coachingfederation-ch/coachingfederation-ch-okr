@@ -51,6 +51,8 @@ import {
 } from "@/components/ui/sheet";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
+import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
+import { cn } from "@/lib/utils";
 
 const dashboardQueryOptions = queryOptions({
   queryKey: ["dashboard"] as const,
