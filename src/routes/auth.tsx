@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
@@ -19,39 +18,11 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (!isLoading && user) navigate({ to: "/", replace: true });
   }, [user, isLoading, navigate]);
-
-  const onEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setBusy(true);
-    try {
-      if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        toast.success("Signed in");
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin },
-        });
-        if (error) throw error;
-        toast.success("Check your email to confirm your account");
-      }
-      navigate({ to: "/", replace: true });
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setBusy(false);
-    }
-  };
 
   const onGoogle = async () => {
     setBusy(true);
@@ -82,11 +53,9 @@ function AuthPage() {
         </Link>
         <div className="mt-4 rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
           <p className="eyebrow">ICFS · Editor access</p>
-          <h1 className="mt-2 text-2xl font-bold">
-            {mode === "signin" ? "Sign in to edit" : "Create your account"}
-          </h1>
+          <h1 className="mt-2 text-2xl font-bold">Sign in to edit</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Anyone can view the dashboard. Signing in enables inline editing.
+            Anyone can view the dashboard. Sign in with Google to enable inline editing.
           </p>
 
           <button
@@ -96,77 +65,8 @@ function AuthPage() {
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium hover:bg-muted/60 transition-colors disabled:opacity-50"
           >
             <GoogleIcon />
-            Continue with Google
+            {busy ? "Please wait…" : "Continue with Google"}
           </button>
-
-          <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="h-px flex-1 bg-border" />
-            or with email
-            <span className="h-px flex-1 bg-border" />
-          </div>
-
-          <form onSubmit={onEmailSubmit} className="space-y-3">
-            <div>
-              <label className="section-label mb-1 block">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
-                className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring/40"
-              />
-            </div>
-            <div>
-              <label className="section-label mb-1 block">Password</label>
-              <input
-                type="password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete={mode === "signin" ? "current-password" : "new-password"}
-                className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring/40"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={busy}
-              className="mt-2 w-full rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
-            >
-              {busy
-                ? "Please wait…"
-                : mode === "signin"
-                  ? "Sign in"
-                  : "Create account"}
-            </button>
-          </form>
-
-          <div className="mt-4 text-center text-xs text-muted-foreground">
-            {mode === "signin" ? (
-              <>
-                No account?{" "}
-                <button
-                  type="button"
-                  className="underline text-primary"
-                  onClick={() => setMode("signup")}
-                >
-                  Create one
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  className="underline text-primary"
-                  onClick={() => setMode("signin")}
-                >
-                  Sign in
-                </button>
-              </>
-            )}
-          </div>
         </div>
       </div>
     </main>
