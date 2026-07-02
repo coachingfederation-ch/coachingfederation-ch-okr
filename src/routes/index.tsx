@@ -179,7 +179,7 @@ function useOkrMutations() {
   });
 
   const addInit = useMutation({
-    mutationFn: (v: { okr_set_id: string; text: string }) => addInitFn({ data: v }),
+    mutationFn: (v: { kr_id: string; text: string }) => addInitFn({ data: v }),
     onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
     onSuccess: invalidate,
   });
@@ -187,10 +187,11 @@ function useOkrMutations() {
     mutationFn: (v) => updateInitFn({ data: { id: v.id, patch: { text: v.text } } }),
     onMutate: (v) =>
       optimistic((d) => {
-        for (const s of d.okr_sets) {
-          const it = s.initiatives.find((i) => i.id === v.id);
-          if (it) it.text = v.text;
-        }
+        for (const s of d.okr_sets)
+          for (const k of s.key_results) {
+            const it = k.initiatives.find((i) => i.id === v.id);
+            if (it) it.text = v.text;
+          }
       }),
     onError: onErr,
     onSettled: invalidate,
@@ -200,11 +201,13 @@ function useOkrMutations() {
     onMutate: (v) =>
       optimistic((d) => {
         for (const s of d.okr_sets)
-          s.initiatives = s.initiatives.filter((i) => i.id !== v.id);
+          for (const k of s.key_results)
+            k.initiatives = k.initiatives.filter((i) => i.id !== v.id);
       }),
     onError: onErr,
     onSettled: invalidate,
   });
+
 
   const updateAlign = useMutation<
     unknown,
