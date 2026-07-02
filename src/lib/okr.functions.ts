@@ -332,7 +332,7 @@ export const addInitiative = createServerFn({ method: "POST" })
     z
       .object({
         kr_id: uuidSchema,
-        text: initiativePatchSchema.shape.text,
+        text: initiativeCreateSchema.shape.text,
         sourceLang: localeSchema.default("en"),
       })
       .parse(raw),
