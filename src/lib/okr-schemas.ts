@@ -9,6 +9,15 @@ export const PILLARS: Pillar[] = ["SG", "OE", "CE"];
 export type Contribution = "none" | "secondary" | "primary";
 export const CONTRIBUTION_CYCLE: Contribution[] = ["none", "secondary", "primary"];
 
+export type InitiativeStatus = "planned" | "in_progress" | "done" | "canceled";
+export const INITIATIVE_STATUSES: InitiativeStatus[] = [
+  "planned",
+  "in_progress",
+  "done",
+  "canceled",
+];
+
+
 export const ROLE_LABELS = ["Owner", "Steward", "Contact"] as const;
 export type RoleLabel = (typeof ROLE_LABELS)[number];
 
