@@ -6,8 +6,9 @@ export function TopNav() {
   const { t } = useLocale();
   const base =
     "inline-flex h-8 items-center rounded-full px-3.5 text-xs font-semibold tracking-wide transition-colors";
-  const inactive = "text-white/75 hover:text-white hover:bg-white/10";
+  const inactive = "text-white/80 hover:text-white";
   const active = "bg-white text-primary shadow-sm";
+
   return (
     <nav
       aria-label="Primary"
