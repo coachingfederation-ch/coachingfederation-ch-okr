@@ -29,6 +29,10 @@ function AuthPage() {
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
+        extraParams: {
+          hd: "coachingfederation.ch",
+          prompt: "select_account",
+        },
       });
       if (result.error) {
         toast.error(
@@ -45,6 +49,7 @@ function AuthPage() {
     }
   };
 
+
   return (
     <main className="min-h-screen flex items-center justify-center px-4 py-16 bg-background">
       <div className="w-full max-w-md">
@@ -55,8 +60,11 @@ function AuthPage() {
           <p className="eyebrow">ICFS · Editor access</p>
           <h1 className="mt-2 text-2xl font-bold">Sign in to edit</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Anyone can view the dashboard. Sign in with Google to enable inline editing.
+            Anyone can view the dashboard. Sign in with your{" "}
+            <span className="font-medium text-foreground">@coachingfederation.ch</span>{" "}
+            Google account to enable inline editing.
           </p>
+
 
           <button
             type="button"

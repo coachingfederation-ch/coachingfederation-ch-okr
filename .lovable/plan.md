@@ -1,40 +1,38 @@
-## 1. Google-only sign-in
+Restrict editor access to Google accounts on `coachingfederation.ch`. Three layers so it can't be bypassed by tweaking the client.
 
-Rewrite `src/routes/auth.tsx` so the sign-in card contains only the "Continue with Google" button (plus the "Back to dashboard" link and a short explainer). Remove:
+## 1. Client — hint Google's account picker
 
-- Email / password inputs and the `onEmailSubmit` handler
-- The sign-in / sign-up mode toggle and "Create one / Already have an account" links
-- The "or with email" divider
+In `src/routes/auth.tsx`, pass the `hd` parameter so Google only lets users pick a `coachingfederation.ch` account:
 
-Also disable email as a provider via the social-auth tool so the backend matches (`providers: ["google"]`, `disable_providers: ["email"]`). Existing email accounts remain in the database but can no longer sign in through the UI.
+```ts
+lovable.auth.signInWithOAuth("google", {
+  redirect_uri: window.location.origin,
+  extraParams: { hd: "coachingfederation.ch", prompt: "select_account" },
+});
+```
 
-Copy on the page becomes: heading "Sign in to edit", subtext "Anyone can view the dashboard. Sign in with Google to enable inline editing."
+## 2. Client — reject any session whose email isn't on the domain
 
-## 2. Pillar tags: add/remove instead of always-on toggle row
+Still in `src/routes/auth.tsx`, after `signInWithOAuth` resolves with a session (and also in `useAuth`'s `onAuthStateChange` in `src/lib/auth-context.tsx`), check `user.email`. If it doesn't end with `@coachingfederation.ch`, call `supabase.auth.signOut()` and show a toast: "Sign-in is restricted to coachingfederation.ch accounts." Copy on the sign-in card is updated to say the same up-front.
 
-Today every OKR card renders all three pillar chips (SG / OE / CE) and greys out the inactive ones. Change this so a card shows only the pillars that are actually attached, with an editor affordance to add missing ones and remove attached ones.
+## 3. Database — only grant the `editor` role to verified domain matches
 
-Update the tag row in `OkrCard` (currently lines 406-421 of `src/routes/index.tsx`):
+Rewrite the existing `public.grant_editor_on_signup()` trigger (currently gives every new user the `editor` role) so it only inserts into `user_roles` when both:
+- `new.email_confirmed_at is not null` (Google always confirms), and
+- `lower(split_part(new.email, '@', 2)) = 'coachingfederation.ch'`.
 
-- Render one chip per pillar in `set.pillars` only.
-- Each chip keeps the current styling and, when `canEdit`, shows a small `×` on hover/focus that removes that pillar from `set.pillars` (via the existing `updateSet({ pillars: next })` mutation).
-- When `canEdit` and at least one pillar is not yet attached, render a `+ Add tag` button after the chips. Clicking it opens a small popover / dropdown (shadcn `DropdownMenu`, already available) listing the remaining pillars by full name:
-  - SG — Sustainable Growth & Impact
-  - OE — Org. Development & Excellence
-  - CE — Coaching Excellence & Value
-- Selecting an item appends that pillar to `set.pillars` and closes the menu. When all three are attached, the button is not rendered.
-- Read-only viewers see only the attached chips, no add button, no remove `×`.
+Also add an `AFTER UPDATE OF email_confirmed_at` trigger that grants the role when a previously-unconfirmed email later confirms with the right domain. This is the standard verified-domain pattern — a client that skips step 2 still can't edit, because they have no editor role and every write policy checks `has_role(auth.uid(),'editor')`.
 
-The pillar codes and full names live together in a small constant at the top of the file so the dropdown labels stay in sync with the pillar summaries section further down the page. No schema, RLS, or server-function changes — the existing `updateSet` mutation already accepts a new `pillars` array.
+Users outside the domain who somehow reach a session can still view the dashboard (public read), but every edit will be blocked by RLS.
 
 ## Files touched
 
-- `src/routes/auth.tsx` — strip to Google-only.
-- `src/routes/index.tsx` — new `PillarTagList` (replaces the always-on chip row) and a `PILLAR_NAMES` constant; `PillarChip` gains an optional `onRemove` for the editor `×`.
-- Social auth configuration — Google enabled, email disabled.
+- `src/routes/auth.tsx` — pass `hd`/`prompt`, post-sign-in domain check, updated copy.
+- `src/lib/auth-context.tsx` — enforce domain check in `onAuthStateChange` so a bad session anywhere in the app is signed out immediately.
+- One migration replacing `grant_editor_on_signup` and adding the confirm-update trigger.
 
 ## Out of scope
 
-- Renaming or restyling the pillar summaries section at the bottom of the dashboard.
-- Any migration on existing `okr_sets.pillars` values.
-- A separate management UI for the full pillar names — they stay hardcoded alongside the pillar codes.
+- A separate allow-list UI for exceptions.
+- Anything about who can view the dashboard (viewing stays public).
+- Removing the editor role from existing users whose email isn't on the domain — I can add a one-off cleanup step if you want, otherwise the migration only affects future sign-ups.
