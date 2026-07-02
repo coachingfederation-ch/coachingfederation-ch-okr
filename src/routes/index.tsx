@@ -1015,9 +1015,11 @@ function IndexContent() {
               className="h-20 w-auto -ml-3 -mt-2"
             />
             <div className="flex items-center gap-3">
+              <TopNav />
               <LanguageSwitcher />
               <AuthBadge />
             </div>
+
           </div>
 
           <div className="flex flex-wrap items-start justify-between gap-6">
