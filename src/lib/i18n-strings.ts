@@ -383,7 +383,26 @@ const it: Record<StringKey, string> = {
   "common.loading": "Caricamento…",
   "common.editValue": "Modifica valore",
   "common.saveFailed": "Salvataggio non riuscito",
+  "nav.okrs": "OKR",
+  "nav.initiatives": "Portfolio iniziative",
+  "initiatives.title": "Portfolio iniziative",
+  "initiatives.subtitle": "Tutte le iniziative di tutti gli OKR, raggruppate per stato.",
+  "initiatives.filterAllOkrs": "Tutti gli OKR",
+  "initiatives.filterAllKrs": "Tutti i risultati chiave",
+  "initiatives.filterOkr": "OKR",
+  "initiatives.filterKr": "Risultato chiave",
+  "initiatives.owner": "Responsabile",
+  "initiatives.description": "Descrizione",
+  "initiatives.status": "Stato",
+  "initiatives.emptyColumn": "Nessuna iniziativa",
+  "initiatives.addOwner": "Aggiungi responsabile…",
+  "initiatives.addDescription": "Aggiungi una descrizione…",
+  "initiatives.status.planned": "Pianificata",
+  "initiatives.status.in_progress": "In corso",
+  "initiatives.status.done": "Completata",
+  "initiatives.status.canceled": "Annullata",
   "lang.switcher": "Lingua",
+
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
