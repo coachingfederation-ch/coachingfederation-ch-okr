@@ -51,7 +51,7 @@ function AuthPage() {
 
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-16 bg-background">
+    <main className="min-h-dvh flex items-center justify-center px-4 py-16 bg-background">
       <div className="w-full max-w-md">
         <Link to="/" className="btn-mono text-primary/70 hover:text-primary text-xs">
           ← Back to dashboard
