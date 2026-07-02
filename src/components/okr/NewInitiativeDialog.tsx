@@ -140,14 +140,15 @@ export function NewInitiativeDialog({
           <SheetDescription>{t("initiatives.subtitle")}</SheetDescription>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-6 py-4">
-          <div className="grid gap-4">
-            <div className="grid gap-1.5">
+        <div className="flex-1 overflow-y-auto min-w-0 px-6 py-4">
+          <div className="grid gap-4 min-w-0">
+            <div className="grid gap-1.5 min-w-0">
               <Label htmlFor="ni-kr">{t("initiatives.form.kr")}</Label>
               <Select value={krId} onValueChange={setKrId}>
-                <SelectTrigger id="ni-kr">
-                  <SelectValue placeholder={t("initiatives.form.selectKr")} />
+                <SelectTrigger id="ni-kr" className="w-full min-w-0">
+                  <SelectValue placeholder={t("initiatives.form.selectKr")} className="truncate" />
                 </SelectTrigger>
+
                 <SelectContent>
                   {grouped.map((g) => (
                     <SelectGroup key={g.groupLabel}>
@@ -163,7 +164,8 @@ export function NewInitiativeDialog({
               </Select>
             </div>
 
-            <div className="grid gap-1.5">
+            <div className="grid gap-1.5 min-w-0">
+
               <Label htmlFor="ni-title">{t("initiatives.form.title")}</Label>
               <Textarea
                 id="ni-title"
@@ -176,7 +178,8 @@ export function NewInitiativeDialog({
               />
             </div>
 
-            <div className="grid gap-1.5">
+            <div className="grid gap-1.5 min-w-0">
+
               <Label htmlFor="ni-owner">{t("initiatives.form.owner")}</Label>
               <Input
                 id="ni-owner"
@@ -187,7 +190,8 @@ export function NewInitiativeDialog({
               />
             </div>
 
-            <div className="grid gap-1.5">
+            <div className="grid gap-1.5 min-w-0">
+
               <Label htmlFor="ni-desc">{t("initiatives.form.description")}</Label>
               <Textarea
                 id="ni-desc"
@@ -201,12 +205,13 @@ export function NewInitiativeDialog({
               />
             </div>
 
-            <div className="grid gap-1.5">
+            <div className="grid gap-1.5 min-w-0">
               <Label htmlFor="ni-status">{t("initiatives.form.status")}</Label>
               <Select value={status} onValueChange={(v) => setStatus(v as InitiativeStatus)}>
-                <SelectTrigger id="ni-status">
+                <SelectTrigger id="ni-status" className="w-full min-w-0">
                   <SelectValue />
                 </SelectTrigger>
+
                 <SelectContent>
                   {INITIATIVE_STATUSES.map((s) => (
                     <SelectItem key={s} value={s}>
