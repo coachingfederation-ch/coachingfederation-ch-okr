@@ -1,21 +1,29 @@
-## Problem
+# Accessibility findings review
 
-The Sheet panel renders at ~`sm:max-w-md` (~28rem), but the input fields (Key Result select, Title textarea, etc.) extend beyond the panel's right edge, overflowing outside the sheet. Root cause: the scrollable inner container is missing `min-w-0`, so its flex/grid children (full-width inputs and the long KR SelectValue text) push the container wider than the sheet.
+## 1. Viewport meta — false positive, no change
 
-## Fix
+`src/routes/__root.tsx` already sets:
 
-Constrain the form to the sheet width:
+```
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
 
-**`src/components/okr/NewInitiativeDialog.tsx`**
-- Add `min-w-0` to the scrollable body wrapper and to each `grid gap-1.5` field wrapper so inputs shrink to their container.
-- Add `w-full min-w-0` to the `SelectTrigger` elements (Key Result, Status) so the trigger cannot exceed the panel width, and add `truncate` to their `SelectValue` so long KR labels ellipsize instead of stretching the trigger.
-- Keep `SheetContent` at `w-full sm:max-w-md` — width stays the same; content now respects it.
+No `maximum-scale`, no `user-scalable=no`. This is exactly the markup the checker cites as passing. The finding is a false positive — leave as is.
 
-No changes to schemas, server functions, i18n, or the trigger button.
+## 2. `.rounded-4 > .flex-1` landmark warning — injected badge, not our code
 
-## Verification
+- `rounded-4` is not a class we use anywhere in `src/` (Tailwind's scale is `rounded-sm/md/lg/xl/2xl/3xl/full`, not `rounded-4`).
+- Our page content is already wrapped in proper landmarks:
+  - `/` → `<main>` in `src/routes/index.tsx:1008` with `<header>`, `<section>` regions.
+  - `/initiatives` → `<main>` in `src/routes/initiatives.tsx:230` with `<header>`, `<section>` regions.
+  - `<nav>` provided by `src/components/okr/TopNav.tsx`.
+- The failing element is the **"Edit with Lovable" branding badge** that Lovable injects on the published site. It renders outside our `<main>` and uses its own class names (`rounded-4`, `flex-1`). We can't edit that markup.
 
-- Open `/initiatives` → click **+ New initiative**
-- Confirm all fields sit fully inside the sheet with no horizontal overflow
-- Confirm the long KR label truncates with an ellipsis inside the select trigger
-- Confirm the sheet still opens full-width on mobile
+### Options for #2
+
+1. **Do nothing.** The badge is a known third-party overlay; most auditors accept ignoring it. Recommended.
+2. **Hide the Lovable badge** on the published site via Publish settings (requires a paid plan on some tiers). Once hidden, the `.rounded-4 > .flex-1` element disappears and the checker will pass.
+
+## Recommendation
+
+No code changes. Re-run the checker after hiding the Lovable badge if you want a clean report, otherwise both findings can be safely dismissed as false positives / third-party markup.
