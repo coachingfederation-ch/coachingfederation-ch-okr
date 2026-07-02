@@ -205,12 +205,13 @@ export function NewInitiativeDialog({
               />
             </div>
 
-            <div className="grid gap-1.5">
+            <div className="grid gap-1.5 min-w-0">
               <Label htmlFor="ni-status">{t("initiatives.form.status")}</Label>
               <Select value={status} onValueChange={(v) => setStatus(v as InitiativeStatus)}>
-                <SelectTrigger id="ni-status">
+                <SelectTrigger id="ni-status" className="w-full min-w-0">
                   <SelectValue />
                 </SelectTrigger>
+
                 <SelectContent>
                   {INITIATIVE_STATUSES.map((s) => (
                     <SelectItem key={s} value={s}>
