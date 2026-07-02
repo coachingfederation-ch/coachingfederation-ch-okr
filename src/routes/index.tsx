@@ -465,22 +465,12 @@ function OkrCard({
         )}
       </header>
 
-      <div className="mt-4 flex gap-2">
-        {PILLARS.map((p) => (
-          <PillarChip
-            key={p}
-            code={p}
-            active={set.pillars.includes(p)}
-            canEdit={canEdit}
-            onToggle={() => {
-              const next = set.pillars.includes(p)
-                ? set.pillars.filter((x) => x !== p)
-                : [...set.pillars, p];
-              updateSet({ pillars: next });
-            }}
-          />
-        ))}
-      </div>
+      <PillarTagList
+        pillars={set.pillars}
+        canEdit={canEdit}
+        onChange={(next) => updateSet({ pillars: next })}
+      />
+
 
       <section className="mt-6 rounded-2xl border border-border/70 bg-muted/40 p-5">
         <div className="eyebrow mb-2">Objective</div>
