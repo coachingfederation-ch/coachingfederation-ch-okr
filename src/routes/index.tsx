@@ -39,6 +39,8 @@ import { pickTranslation, useLocale } from "@/lib/i18n";
 import { pillarName } from "@/lib/i18n-strings";
 import { EditableText } from "@/components/okr/EditableText";
 import { AuthBadge } from "@/components/okr/AuthBadge";
+import { TopNav } from "@/components/okr/TopNav";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -1013,9 +1015,11 @@ function IndexContent() {
               className="h-20 w-auto -ml-3 -mt-2"
             />
             <div className="flex items-center gap-3">
+              <TopNav />
               <LanguageSwitcher />
               <AuthBadge />
             </div>
+
           </div>
 
           <div className="flex flex-wrap items-start justify-between gap-6">

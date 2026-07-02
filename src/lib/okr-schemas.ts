@@ -9,6 +9,15 @@ export const PILLARS: Pillar[] = ["SG", "OE", "CE"];
 export type Contribution = "none" | "secondary" | "primary";
 export const CONTRIBUTION_CYCLE: Contribution[] = ["none", "secondary", "primary"];
 
+export type InitiativeStatus = "planned" | "in_progress" | "done" | "canceled";
+export const INITIATIVE_STATUSES: InitiativeStatus[] = [
+  "planned",
+  "in_progress",
+  "done",
+  "canceled",
+];
+
+
 export const ROLE_LABELS = ["Owner", "Steward", "Contact"] as const;
 export type RoleLabel = (typeof ROLE_LABELS)[number];
 
@@ -24,11 +33,14 @@ export const LIMITS = {
   target: 200,
   lead: 100,
   initiative: 300,
+  initiativeOwner: 100,
+  initiativeDescription: 2000,
   pillarLabel: 120,
   pillarDescription: 500,
   alignmentPillar: 120,
   alignmentHow: 800,
 };
+
 
 const trimmedString = (max: number) =>
   z.string().trim().max(max, { message: `Must be ${max} characters or fewer` });
@@ -56,8 +68,16 @@ export const keyResultPatchSchema = z.object({
 });
 
 export const initiativePatchSchema = z.object({
+  text: trimmedString(LIMITS.initiative).min(1, { message: "Cannot be empty" }).optional(),
+  owner: trimmedString(LIMITS.initiativeOwner).optional(),
+  description: trimmedString(LIMITS.initiativeDescription).optional(),
+  status: z.enum(["planned", "in_progress", "done", "canceled"]).optional(),
+});
+
+export const initiativeCreateSchema = z.object({
   text: trimmedString(LIMITS.initiative).min(1, { message: "Cannot be empty" }),
 });
+
 
 export const alignmentRowPatchSchema = z.object({
   pillar: trimmedString(LIMITS.alignmentPillar).optional(),
@@ -88,8 +108,12 @@ export type InitiativeDTO = WithTranslations & {
   okr_set_id: string;
   kr_id: string;
   text: string;
+  owner: string;
+  description: string;
+  status: InitiativeStatus;
   sort_order: number;
 };
+
 export type KeyResultDTO = WithTranslations & {
   id: string;
   okr_set_id: string;
@@ -134,7 +158,7 @@ export type DashboardDTO = {
 export const TRANSLATABLE_FIELDS = {
   okr_sets: ["title", "role_name", "customer", "objective", "alignment"] as const,
   key_results: ["text", "target", "lead"] as const,
-  initiatives: ["text"] as const,
+  initiatives: ["text", "owner", "description"] as const,
   alignment_rows: ["pillar", "how"] as const,
   pillar_summaries: ["label", "description"] as const,
 } as const;

@@ -55,6 +55,26 @@ export type StringKey =
   | "pillar.SG.name"
   | "pillar.OE.name"
   | "pillar.CE.name"
+  // nav
+  | "nav.okrs"
+  | "nav.initiatives"
+  // initiative portfolio (kanban)
+  | "initiatives.title"
+  | "initiatives.subtitle"
+  | "initiatives.filterAllOkrs"
+  | "initiatives.filterAllKrs"
+  | "initiatives.filterOkr"
+  | "initiatives.filterKr"
+  | "initiatives.owner"
+  | "initiatives.description"
+  | "initiatives.status"
+  | "initiatives.emptyColumn"
+  | "initiatives.addOwner"
+  | "initiatives.addDescription"
+  | "initiatives.status.planned"
+  | "initiatives.status.in_progress"
+  | "initiatives.status.done"
+  | "initiatives.status.canceled"
   // misc
   | "tag.add"
   | "tag.remove"
@@ -63,6 +83,7 @@ export type StringKey =
   | "common.editValue"
   | "common.saveFailed"
   | "lang.switcher";
+
 
 const en: Record<StringKey, string> = {
   "hero.eyebrow": "ICF Switzerland · OKR Dashboard",
@@ -121,7 +142,26 @@ const en: Record<StringKey, string> = {
   "common.loading": "Loading…",
   "common.editValue": "Edit value",
   "common.saveFailed": "Save failed",
+  "nav.okrs": "OKRs",
+  "nav.initiatives": "Initiative Portfolio",
+  "initiatives.title": "Initiative Portfolio",
+  "initiatives.subtitle": "All initiatives across every OKR, grouped by status.",
+  "initiatives.filterAllOkrs": "All OKRs",
+  "initiatives.filterAllKrs": "All Key Results",
+  "initiatives.filterOkr": "OKR",
+  "initiatives.filterKr": "Key Result",
+  "initiatives.owner": "Owner",
+  "initiatives.description": "Description",
+  "initiatives.status": "Status",
+  "initiatives.emptyColumn": "No initiatives",
+  "initiatives.addOwner": "Add owner…",
+  "initiatives.addDescription": "Add a description…",
+  "initiatives.status.planned": "Planned",
+  "initiatives.status.in_progress": "In Progress",
+  "initiatives.status.done": "Done",
+  "initiatives.status.canceled": "Canceled",
   "lang.switcher": "Language",
+
 };
 
 const de: Record<StringKey, string> = {
@@ -183,7 +223,26 @@ const de: Record<StringKey, string> = {
   "common.loading": "Wird geladen…",
   "common.editValue": "Wert bearbeiten",
   "common.saveFailed": "Speichern fehlgeschlagen",
+  "nav.okrs": "OKRs",
+  "nav.initiatives": "Initiativen-Portfolio",
+  "initiatives.title": "Initiativen-Portfolio",
+  "initiatives.subtitle": "Alle Initiativen über alle OKRs hinweg, nach Status gruppiert.",
+  "initiatives.filterAllOkrs": "Alle OKRs",
+  "initiatives.filterAllKrs": "Alle Key Results",
+  "initiatives.filterOkr": "OKR",
+  "initiatives.filterKr": "Key Result",
+  "initiatives.owner": "Verantwortlich",
+  "initiatives.description": "Beschreibung",
+  "initiatives.status": "Status",
+  "initiatives.emptyColumn": "Keine Initiativen",
+  "initiatives.addOwner": "Verantwortliche/n hinzufügen…",
+  "initiatives.addDescription": "Beschreibung hinzufügen…",
+  "initiatives.status.planned": "Geplant",
+  "initiatives.status.in_progress": "In Arbeit",
+  "initiatives.status.done": "Erledigt",
+  "initiatives.status.canceled": "Abgebrochen",
   "lang.switcher": "Sprache",
+
 };
 
 const fr: Record<StringKey, string> = {
@@ -244,7 +303,26 @@ const fr: Record<StringKey, string> = {
   "common.loading": "Chargement…",
   "common.editValue": "Modifier la valeur",
   "common.saveFailed": "Échec de l'enregistrement",
+  "nav.okrs": "OKR",
+  "nav.initiatives": "Portefeuille d'initiatives",
+  "initiatives.title": "Portefeuille d'initiatives",
+  "initiatives.subtitle": "Toutes les initiatives, tous OKR confondus, regroupées par statut.",
+  "initiatives.filterAllOkrs": "Tous les OKR",
+  "initiatives.filterAllKrs": "Tous les résultats clés",
+  "initiatives.filterOkr": "OKR",
+  "initiatives.filterKr": "Résultat clé",
+  "initiatives.owner": "Responsable",
+  "initiatives.description": "Description",
+  "initiatives.status": "Statut",
+  "initiatives.emptyColumn": "Aucune initiative",
+  "initiatives.addOwner": "Ajouter un responsable…",
+  "initiatives.addDescription": "Ajouter une description…",
+  "initiatives.status.planned": "Planifiée",
+  "initiatives.status.in_progress": "En cours",
+  "initiatives.status.done": "Terminée",
+  "initiatives.status.canceled": "Annulée",
   "lang.switcher": "Langue",
+
 };
 
 const it: Record<StringKey, string> = {
@@ -305,7 +383,26 @@ const it: Record<StringKey, string> = {
   "common.loading": "Caricamento…",
   "common.editValue": "Modifica valore",
   "common.saveFailed": "Salvataggio non riuscito",
+  "nav.okrs": "OKR",
+  "nav.initiatives": "Portfolio iniziative",
+  "initiatives.title": "Portfolio iniziative",
+  "initiatives.subtitle": "Tutte le iniziative di tutti gli OKR, raggruppate per stato.",
+  "initiatives.filterAllOkrs": "Tutti gli OKR",
+  "initiatives.filterAllKrs": "Tutti i risultati chiave",
+  "initiatives.filterOkr": "OKR",
+  "initiatives.filterKr": "Risultato chiave",
+  "initiatives.owner": "Responsabile",
+  "initiatives.description": "Descrizione",
+  "initiatives.status": "Stato",
+  "initiatives.emptyColumn": "Nessuna iniziativa",
+  "initiatives.addOwner": "Aggiungi responsabile…",
+  "initiatives.addDescription": "Aggiungi una descrizione…",
+  "initiatives.status.planned": "Pianificata",
+  "initiatives.status.in_progress": "In corso",
+  "initiatives.status.done": "Completata",
+  "initiatives.status.canceled": "Annullata",
   "lang.switcher": "Lingua",
+
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {

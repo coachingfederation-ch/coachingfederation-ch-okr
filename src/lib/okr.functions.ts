@@ -4,7 +4,9 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
 import {
   alignmentRowPatchSchema,
+  initiativeCreateSchema,
   initiativePatchSchema,
+
   keyResultPatchSchema,
   localeSchema,
   okrSetPatchSchema,
@@ -95,7 +97,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         .order("sort_order", { ascending: true }),
       supabase
         .from("initiatives")
-        .select("id,okr_set_id,kr_id,text,sort_order,translations,source_lang")
+        .select("id,okr_set_id,kr_id,text,owner,description,status,sort_order,translations,source_lang")
         .order("sort_order", { ascending: true }),
       supabase
         .from("alignment_rows")
@@ -111,12 +113,20 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
     for (const r of inits.data ?? []) {
       const arr = initsByKr.get(r.kr_id) ?? [];
       arr.push({
-        ...(r as Omit<InitiativeDTO, "translations" | "source_lang">),
+        id: r.id,
+        okr_set_id: r.okr_set_id,
+        kr_id: r.kr_id,
+        text: r.text,
+        owner: r.owner ?? "",
+        description: r.description ?? "",
+        status: ((r.status as InitiativeDTO["status"]) ?? "planned"),
+        sort_order: r.sort_order,
         translations: (r as { translations?: TranslationsMap }).translations ?? {},
         source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
       });
       initsByKr.set(r.kr_id, arr);
     }
+
     const krsBySet = new Map<string, KeyResultDTO[]>();
     for (const r of krs.data ?? []) {
       const arr = krsBySet.get(r.okr_set_id) ?? [];
@@ -322,7 +332,7 @@ export const addInitiative = createServerFn({ method: "POST" })
     z
       .object({
         kr_id: uuidSchema,
-        text: initiativePatchSchema.shape.text,
+        text: initiativeCreateSchema.shape.text,
         sourceLang: localeSchema.default("en"),
       })
       .parse(raw),
