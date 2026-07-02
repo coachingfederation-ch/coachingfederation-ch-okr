@@ -550,11 +550,13 @@ function KrCard({
 }) {
   const count = kr.initiatives.length;
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group flex h-full flex-col rounded-2xl border border-border/70 bg-white p-4 text-left shadow-[0_1px_2px_rgba(20,20,60,0.03)] transition-all hover:border-primary/40 hover:shadow-[0_4px_16px_-8px_rgba(20,20,60,0.15)] focus:outline-none focus:ring-2 focus:ring-ring/40"
-    >
+    <div className="group relative flex h-full flex-col rounded-2xl border border-border/70 bg-white p-4 text-left shadow-[0_1px_2px_rgba(20,20,60,0.03)] transition-all hover:border-primary/40 hover:shadow-[0_4px_16px_-8px_rgba(20,20,60,0.15)] has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`Open key result ${kr.kr || ""}: ${kr.text || "no description"}`}
+        className="absolute inset-0 z-10 rounded-2xl focus:outline-none"
+      />
       <div className="flex items-center justify-between gap-2">
         <span className="inline-flex h-6 items-center rounded-md bg-primary/10 px-2 text-[11px] font-bold text-primary">
           KR {kr.kr || "—"}
@@ -580,10 +582,10 @@ function KrCard({
           </dd>
         </div>
       </dl>
-      <span className="mt-3 inline-flex text-[11px] font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+      <span className="mt-3 inline-flex text-[11px] font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
         Open details →
       </span>
-    </button>
+    </div>
   );
 }
 
@@ -797,32 +799,41 @@ function KrDetailSheet({
 // ---------- Alignment table ----------
 
 function ContribCell({
-  value, canEdit, onCycle,
+  value, canEdit, onCycle, label,
 }: {
   value: Contribution;
   canEdit: boolean;
   onCycle: () => void;
+  label: string;
 }) {
-  const inner =
+  const dots =
     value === "none" ? (
-      <span className="text-muted-foreground/40">—</span>
+      <span className="text-muted-foreground/40" aria-hidden="true">—</span>
     ) : (
-      <span className="inline-flex items-center gap-1">
+      <span className="inline-flex items-center gap-1" aria-hidden="true">
         <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
         {value === "primary" && (
           <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
         )}
       </span>
     );
-  if (!canEdit) return inner;
+  const a11yLabel = `${label}: ${value} contribution`;
+  if (!canEdit) {
+    return (
+      <span role="img" aria-label={a11yLabel}>
+        {dots}
+      </span>
+    );
+  }
   return (
     <button
       type="button"
       onClick={onCycle}
+      aria-label={`${a11yLabel}. Click to cycle`}
       title="Click to cycle: none → secondary → primary"
       className="rounded-sm px-1 py-0.5 hover:bg-primary/5"
     >
-      {inner}
+      {dots}
     </button>
   );
 }
