@@ -178,7 +178,8 @@ export function NewInitiativeDialog({
               />
             </div>
 
-            <div className="grid gap-1.5">
+            <div className="grid gap-1.5 min-w-0">
+
               <Label htmlFor="ni-owner">{t("initiatives.form.owner")}</Label>
               <Input
                 id="ni-owner"
