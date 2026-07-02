@@ -108,8 +108,12 @@ export type InitiativeDTO = WithTranslations & {
   okr_set_id: string;
   kr_id: string;
   text: string;
+  owner: string;
+  description: string;
+  status: InitiativeStatus;
   sort_order: number;
 };
+
 export type KeyResultDTO = WithTranslations & {
   id: string;
   okr_set_id: string;
