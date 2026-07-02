@@ -29,6 +29,10 @@ function AuthPage() {
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
+        extraParams: {
+          hd: "coachingfederation.ch",
+          prompt: "select_account",
+        },
       });
       if (result.error) {
         toast.error(
@@ -44,6 +48,7 @@ function AuthPage() {
       setBusy(false);
     }
   };
+
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4 py-16 bg-background">
