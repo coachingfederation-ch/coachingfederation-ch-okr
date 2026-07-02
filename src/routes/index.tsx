@@ -244,29 +244,85 @@ type OkrMutations = ReturnType<typeof useOkrMutations>;
 
 // ---------- Atoms ----------
 
+const PILLAR_NAMES: Record<Pillar, string> = {
+  SG: "Sustainable Growth & Impact",
+  OE: "Org. Development & Excellence",
+  CE: "Coaching Excellence & Value",
+};
+
 function PillarChip({
-  code, active, canEdit, onToggle,
+  code, canEdit, onRemove,
 }: {
   code: Pillar;
-  active: boolean;
   canEdit: boolean;
-  onToggle: () => void;
+  onRemove?: () => void;
 }) {
   return (
-    <button
-      type="button"
-      disabled={!canEdit}
-      onClick={onToggle}
-      className={cn(
-        "inline-flex h-7 min-w-9 items-center justify-center rounded-full border px-3 text-[11px] font-semibold tracking-wide transition-colors",
-        active
-          ? "border-[--color-chip-active-border] bg-white text-primary"
-          : "border-border bg-white text-muted-foreground",
-        canEdit ? "hover:bg-primary/5 cursor-pointer" : "cursor-default",
-      )}
+    <span
+      title={PILLAR_NAMES[code]}
+      className="inline-flex h-7 items-center gap-1 rounded-full border border-[--color-chip-active-border] bg-white pl-3 pr-2 text-[11px] font-semibold tracking-wide text-primary"
     >
       {code}
-    </button>
+      {canEdit && onRemove && (
+        <button
+          type="button"
+          aria-label={`Remove ${code}`}
+          onClick={onRemove}
+          className="inline-flex h-4 w-4 items-center justify-center rounded-full text-primary/60 hover:bg-primary/10 hover:text-primary"
+        >
+          <X className="h-3 w-3" />
+        </button>
+      )}
+    </span>
+  );
+}
+
+function PillarTagList({
+  pillars, canEdit, onChange,
+}: {
+  pillars: Pillar[];
+  canEdit: boolean;
+  onChange: (next: Pillar[]) => void;
+}) {
+  const available = PILLARS.filter((p) => !pillars.includes(p));
+  return (
+    <div className="mt-4 flex flex-wrap items-center gap-2">
+      {pillars.map((p) => (
+        <PillarChip
+          key={p}
+          code={p}
+          canEdit={canEdit}
+          onRemove={() => onChange(pillars.filter((x) => x !== p))}
+        />
+      ))}
+      {canEdit && available.length > 0 && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="inline-flex h-7 items-center gap-1 rounded-full border border-dashed border-border bg-white px-2.5 text-[11px] font-medium text-muted-foreground hover:bg-muted/60 hover:text-primary transition-colors"
+            >
+              <Plus className="h-3 w-3" />
+              Add tag
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="min-w-[16rem]">
+            {available.map((p) => (
+              <DropdownMenuItem
+                key={p}
+                onSelect={() => onChange([...pillars, p])}
+              >
+                <span className="mr-2 font-semibold text-primary">{p}</span>
+                <span className="text-muted-foreground">{PILLAR_NAMES[p]}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+      {!canEdit && pillars.length === 0 && (
+        <span className="text-xs text-muted-foreground">No tags</span>
+      )}
+    </div>
   );
 }
 
