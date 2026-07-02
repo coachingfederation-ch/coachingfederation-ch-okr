@@ -83,10 +83,10 @@ export function EditableText({
     );
   }
 
-  const shared = {
-    ref: inputRef as never,
+  const commonProps = {
     value: draft,
     maxLength,
+    placeholder,
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setDraft(e.target.value),
     onBlur: commit,
@@ -103,12 +103,19 @@ export function EditableText({
       "w-full rounded-sm border border-ring/40 bg-white px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-ring/40",
       inputClassName,
     ),
-    placeholder,
   };
 
   return multiline ? (
-    <textarea rows={3} {...(shared as never)} />
+    <textarea
+      ref={inputRef as React.RefObject<HTMLTextAreaElement>}
+      rows={3}
+      {...commonProps}
+    />
   ) : (
-    <input type="text" {...(shared as never)} />
+    <input
+      ref={inputRef as React.RefObject<HTMLInputElement>}
+      type="text"
+      {...commonProps}
+    />
   );
 }
