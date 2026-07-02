@@ -326,6 +326,13 @@ function InitiativesContent() {
           </Link>
         </p>
       </section>
+
+      <NewInitiativeDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        dashboard={data}
+        defaultKrId={krFilter !== "all" ? krFilter : undefined}
+      />
     </main>
   );
 }
