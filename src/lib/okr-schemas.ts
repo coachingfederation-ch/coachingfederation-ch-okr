@@ -68,6 +68,13 @@ export const pillarSummaryPatchSchema = z.object({
 
 // DTOs
 export type PillarSummaryDTO = { code: Pillar; label: string; description: string };
+export type InitiativeDTO = {
+  id: string;
+  okr_set_id: string;
+  kr_id: string;
+  text: string;
+  sort_order: number;
+};
 export type KeyResultDTO = {
   id: string;
   okr_set_id: string;
@@ -76,12 +83,7 @@ export type KeyResultDTO = {
   target: string;
   lead: string;
   sort_order: number;
-};
-export type InitiativeDTO = {
-  id: string;
-  okr_set_id: string;
-  text: string;
-  sort_order: number;
+  initiatives: InitiativeDTO[];
 };
 export type OkrSetDTO = {
   id: string;
@@ -95,8 +97,8 @@ export type OkrSetDTO = {
   alignment: string;
   sort_order: number;
   key_results: KeyResultDTO[];
-  initiatives: InitiativeDTO[];
 };
+
 export type AlignmentRowDTO = {
   id: string;
   pillar: string;
