@@ -55,6 +55,26 @@ export type StringKey =
   | "pillar.SG.name"
   | "pillar.OE.name"
   | "pillar.CE.name"
+  // nav
+  | "nav.okrs"
+  | "nav.initiatives"
+  // initiative portfolio (kanban)
+  | "initiatives.title"
+  | "initiatives.subtitle"
+  | "initiatives.filterAllOkrs"
+  | "initiatives.filterAllKrs"
+  | "initiatives.filterOkr"
+  | "initiatives.filterKr"
+  | "initiatives.owner"
+  | "initiatives.description"
+  | "initiatives.status"
+  | "initiatives.emptyColumn"
+  | "initiatives.addOwner"
+  | "initiatives.addDescription"
+  | "initiatives.status.planned"
+  | "initiatives.status.in_progress"
+  | "initiatives.status.done"
+  | "initiatives.status.canceled"
   // misc
   | "tag.add"
   | "tag.remove"
@@ -63,6 +83,7 @@ export type StringKey =
   | "common.editValue"
   | "common.saveFailed"
   | "lang.switcher";
+
 
 const en: Record<StringKey, string> = {
   "hero.eyebrow": "ICF Switzerland · OKR Dashboard",
