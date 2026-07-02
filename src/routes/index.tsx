@@ -902,6 +902,7 @@ function AlignmentTable({
                     <ContribCell
                       value={row[col]}
                       canEdit={canEdit}
+                      label={`${row.pillar} → ${col.toUpperCase()}`}
                       onCycle={() =>
                         m.updateAlign.mutate({ id: row.id, patch: { [col]: cycle(row[col]) } })
                       }
