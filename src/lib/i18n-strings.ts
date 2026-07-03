@@ -6,6 +6,7 @@ export type StringKey =
   | "hero.eyebrow"
   | "hero.title"
   | "hero.subtitle"
+  | "hero.pillarTitle"
   | "hero.addOkrSet"
   | "auth.signInToEdit"
   | "auth.signOut"
