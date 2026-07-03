@@ -613,14 +613,14 @@ function KrCard({
         {text || <span className="italic text-muted-foreground">{t("kr.noDescription")}</span>}
       </p>
       <dl className="mt-4 space-y-1.5 text-xs">
-        <div className="flex gap-2">
-          <dt className="w-14 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.target")}</dt>
+        <div className="flex gap-3">
+          <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.target")}</dt>
           <dd className="min-w-0 flex-1 truncate text-foreground">
             {target || <span className="italic text-muted-foreground">—</span>}
           </dd>
         </div>
-        <div className="flex gap-2">
-          <dt className="w-14 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.lead")}</dt>
+        <div className="flex gap-3">
+          <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.lead")}</dt>
           <dd className="min-w-0 flex-1 truncate text-muted-foreground">
             {lead || <span className="italic">—</span>}
           </dd>
