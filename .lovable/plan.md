@@ -1,29 +1,20 @@
-# Accessibility findings review
+Update the homepage hero to extend the blue background further down and add the section title "ICF Strategic Focus Areas (SFAs)" above the three pillar cards.
 
-## 1. Viewport meta — false positive, no change
+Changes:
+1. In `src/routes/index.tsx`:
+   - Increase the hero header's bottom padding so the blue area fills the space behind the pillar cards (currently `pb-14`, likely move to `pb-24` or `pb-28`).
+   - Add a heading "ICF Strategic Focus Areas (SFAs)" inside the hero section, above the pillar cards grid, using the existing hero-foreground color (white).
+   - Keep the pillar cards in their overlapping negative-margin section unchanged.
+2. In `src/lib/i18n-strings.ts`:
+   - Add a new string key `hero.pillarTitle` to `StringKey`.
+   - Provide translations for all four locales:
+     - EN: "ICF Strategic Focus Areas (SFAs)"
+     - DE: "ICF Strategic Focus Areas (SFAs)" (or German equivalent if preferred)
+     - FR: "Zones stratégiques de focus de l'ICF (SFAs)"
+     - IT: "Aree di focus strategiche ICF (SFAs)"
+3. Build and verify the visual result in the preview.
 
-`src/routes/__root.tsx` already sets:
-
-```
-<meta name="viewport" content="width=device-width, initial-scale=1">
-```
-
-No `maximum-scale`, no `user-scalable=no`. This is exactly the markup the checker cites as passing. The finding is a false positive — leave as is.
-
-## 2. `.rounded-4 > .flex-1` landmark warning — injected badge, not our code
-
-- `rounded-4` is not a class we use anywhere in `src/` (Tailwind's scale is `rounded-sm/md/lg/xl/2xl/3xl/full`, not `rounded-4`).
-- Our page content is already wrapped in proper landmarks:
-  - `/` → `<main>` in `src/routes/index.tsx:1008` with `<header>`, `<section>` regions.
-  - `/initiatives` → `<main>` in `src/routes/initiatives.tsx:230` with `<header>`, `<section>` regions.
-  - `<nav>` provided by `src/components/okr/TopNav.tsx`.
-- The failing element is the **"Edit with Lovable" branding badge** that Lovable injects on the published site. It renders outside our `<main>` and uses its own class names (`rounded-4`, `flex-1`). We can't edit that markup.
-
-### Options for #2
-
-1. **Do nothing.** The badge is a known third-party overlay; most auditors accept ignoring it. Recommended.
-2. **Hide the Lovable badge** on the published site via Publish settings (requires a paid plan on some tiers). Once hidden, the `.rounded-4 > .flex-1` element disappears and the checker will pass.
-
-## Recommendation
-
-No code changes. Re-run the checker after hiding the Lovable badge if you want a clean report, otherwise both findings can be safely dismissed as false positives / third-party markup.
+Technical notes:
+- Uses existing Tailwind tokens and semantic hero colors (`bg-hero`, `text-hero-foreground`).
+- No backend or data changes required.
+- Keeps the existing card overlap behavior (`-mt-8`) intact.
