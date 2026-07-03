@@ -1044,7 +1044,7 @@ function IndexContent() {
             )}
           </div>
 
-          <h2 className="mt-16 text-2xl font-bold tracking-tight text-white md:text-3xl">
+          <h2 className="mt-8 text-2xl font-bold tracking-tight text-white md:text-3xl">
             {t("hero.pillarTitle")}
           </h2>
         </div>
@@ -1093,6 +1093,9 @@ function IndexContent() {
       </section>
 
       <section className="mx-auto max-w-6xl space-y-10 px-8 py-12">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+          {t("section.okrSets")}
+        </h2>
         {data.okr_sets.map((set) => (
           <OkrCard key={set.id} set={set} canEdit={canEdit} m={m} />
         ))}
