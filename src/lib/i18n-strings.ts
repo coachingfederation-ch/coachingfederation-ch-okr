@@ -116,7 +116,7 @@ export type StringKey =
 
 
 const en: Record<StringKey, string> = {
-  "hero.eyebrow": "ICF Switzerland · OKR Dashboard",
+  "hero.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · OKR DASHBOARD",
   "hero.title": "2026 OKRs with Global Alignment",
   "hero.subtitle":
     "One inspiring, customer-centric objective per strategic pillar — aligned to the ICF Global Strategic Plan 2026–2029 and the Arbon board retreat, 1 June 2026.",
@@ -143,7 +143,7 @@ const en: Record<StringKey, string> = {
   "section.alignmentCycleHint": "Click a dot cell to cycle none → secondary → primary.",
   "section.alignmentPillar": "ICFS pillar",
   "section.alignmentHow": "How it contributes",
-  "section.okrSets": "ICF Switzerland OKR Sets",
+  "section.okrSets": "OKR Sets -\u00a0The Switzerland Chapter of ICF",
   "kr.count.one": "initiative",
   "kr.count.other": "initiatives",
   "kr.noDescription": "No description",
