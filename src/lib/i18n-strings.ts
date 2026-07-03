@@ -106,7 +106,7 @@ const en: Record<StringKey, string> = {
   "hero.title": "2026 OKRs with Global Alignment",
   "hero.subtitle":
     "One inspiring, customer-centric objective per strategic pillar — aligned to the ICF Global Strategic Plan 2026–2029 and the Arbon board retreat, 1 June 2026.",
-  "hero.pillarTitle": "ICF Strategic Focus Areas (SFAs)",
+  "hero.pillarTitle": "ICF Strategic Focus Areas (SFAs) 2026",
   "hero.addOkrSet": "Add OKR set",
   "auth.signInToEdit": "Sign in to edit",
   "auth.signOut": "Sign out",
@@ -201,7 +201,7 @@ const de: Record<StringKey, string> = {
   "hero.title": "OKRs 2026 mit globaler Ausrichtung",
   "hero.subtitle":
     "Ein inspirierendes, kundenorientiertes Ziel pro strategischer Säule — abgestimmt auf den ICF Global Strategic Plan 2026–2029 und die Vorstandsklausur in Arbon, 1. Juni 2026.",
-  "hero.pillarTitle": "ICF Strategic Focus Areas (SFAs)",
+  "hero.pillarTitle": "ICF Strategic Focus Areas (SFAs) 2026",
   "hero.addOkrSet": "OKR-Set hinzufügen",
   "auth.signInToEdit": "Anmelden zum Bearbeiten",
   "auth.signOut": "Abmelden",
@@ -298,7 +298,7 @@ const fr: Record<StringKey, string> = {
   "hero.title": "OKR 2026 avec alignement global",
   "hero.subtitle":
     "Un objectif inspirant et centré sur le client par pilier stratégique — aligné sur l'ICF Global Strategic Plan 2026–2029 et la retraite du conseil d'Arbon du 1er juin 2026.",
-  "hero.pillarTitle": "Zones stratégiques de focus de l'ICF (SFAs)",
+  "hero.pillarTitle": "Zones stratégiques de focus de l'ICF (SFAs) 2026",
   "hero.addOkrSet": "Ajouter un ensemble OKR",
   "auth.signInToEdit": "Se connecter pour éditer",
   "auth.signOut": "Se déconnecter",
@@ -394,7 +394,7 @@ const it: Record<StringKey, string> = {
   "hero.title": "OKR 2026 con allineamento globale",
   "hero.subtitle":
     "Un obiettivo ispiratore e centrato sul cliente per pilastro strategico — allineato all'ICF Global Strategic Plan 2026–2029 e al ritiro del board di Arbon del 1° giugno 2026.",
-  "hero.pillarTitle": "Aree di focus strategiche ICF (SFAs)",
+  "hero.pillarTitle": "Aree di focus strategiche ICF (SFAs) 2026",
   "hero.addOkrSet": "Aggiungi set OKR",
   "auth.signInToEdit": "Accedi per modificare",
   "auth.signOut": "Esci",
