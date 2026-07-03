@@ -119,8 +119,8 @@ export function EditInitiativeDialog({
           id: initiative.id,
           patch: {
             text: title.trim(),
-            owner: owner.trim() || null,
-            description: description.trim() || null,
+            owner: owner.trim(),
+            description: description.trim(),
             status,
           },
           sourceLang: locale,
