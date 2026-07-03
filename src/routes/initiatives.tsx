@@ -409,6 +409,7 @@ function InitiativeCard({
   item,
   canEdit,
   onUpdate,
+  onOpen,
 }: {
   item: FlatInitiative;
   canEdit: boolean;
@@ -416,6 +417,7 @@ function InitiativeCard({
     id: string,
     patch: Partial<Pick<InitiativeDTO, "text" | "owner" | "description" | "status">>,
   ) => void;
+  onOpen: (id: string) => void;
 }) {
   const { locale, t } = useLocale();
   const title = pickTranslation(item, "text", item.text, locale);
@@ -425,11 +427,11 @@ function InitiativeCard({
   return (
     <article
       className={cn(
-        "rounded-xl border border-border/70 border-l-4 bg-white p-3 shadow-[0_1px_2px_rgba(20,20,60,0.03)] transition-shadow hover:shadow-[0_4px_16px_-8px_rgba(20,20,60,0.15)]",
+        "relative rounded-xl border border-border/70 border-l-4 bg-white p-3 shadow-[0_1px_2px_rgba(20,20,60,0.03)] transition-shadow hover:shadow-[0_4px_16px_-8px_rgba(20,20,60,0.15)]",
         STATUS_ACCENT[item.status],
       )}
     >
-      <div className="mb-2 flex items-center gap-2">
+      <div className="mb-2 flex items-center gap-2 pr-7">
         <span className="inline-flex h-5 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary">
           {item.okrNumber}.{item.krLabel.includes(".") ? item.krLabel.split(".")[1] : item.krLabel}
         </span>
@@ -437,6 +439,17 @@ function InitiativeCard({
           {item.okrTitle}
         </span>
       </div>
+
+      <button
+        type="button"
+        onClick={() => onOpen(item.id)}
+        aria-label={t("initiatives.open")}
+        title={t("initiatives.open")}
+        className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground/70 transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        <Maximize2 className="h-3.5 w-3.5" />
+      </button>
+
 
       <EditableText
         multiline
