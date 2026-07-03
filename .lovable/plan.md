@@ -1,31 +1,45 @@
-# Plan
-
 ## Goal
-Apply two visual edits to the homepage:
-1. Reduce the vertical space between the "ICF Strategic Focus Areas (SFAs) 2026" title and the three pillar cards.
-2. Add a new section title "ICF Switzerland OKR Sets" above the OKR card list.
 
-## Current state
-- `src/routes/index.tsx` renders the hero title with `mt-16` (inside the blue header, just above the cards).
-- The pillar cards sit in the next `<section>` with `-mt-8`, overlapping the hero.
-- The OKR card list currently starts with `py-12` and has no section heading.
-- All UI strings live in `src/lib/i18n-strings.ts` with translations for EN/DE/FR/IT.
+Clicking an initiative card on `/initiatives` opens a side-sheet showing the same fields as the "New Initiative" dialog, pre-filled and editable, plus a "Delete initiative" action.
 
 ## Changes
 
-### 1. Tighten title-to-card spacing
-File: `src/routes/index.tsx`
-- Reduce the title's top margin from `mt-16` to `mt-8` (or similar) so the title sits closer to the cards while keeping the expanded blue hero area intact.
+### 1. New component `src/components/okr/EditInitiativeDialog.tsx`
 
-### 2. Add OKR Sets section title
-Files:
-- `src/lib/i18n-strings.ts`: add a new string key `section.okrSets` with translations:
-  - EN: "ICF Switzerland OKR Sets"
-  - DE: "ICF Switzerland OKR Sets"
-  - FR: "OKR Sets ICF Suisse"
-  - IT: "OKR Sets ICF Svizzera"
-- `src/routes/index.tsx`: insert an `<h2>` above the OKR set map using `t("section.okrSets")`, styled consistently with other section headings (e.g., `text-2xl font-bold tracking-tight md:text-3xl`).
+Sheet-based editor mirroring `NewInitiativeDialog`'s layout:
 
-## Verification
-- Run `bun run build` to confirm TypeScript and i18n key references are valid.
-- Visually verify the preview: less gap under the SFA title, and the new OKR Sets title appears above the first OKR card.
+- Fields: KR (read-only display, editing KR is out of scope), Title, Owner, Description, Status — pre-filled from the selected initiative (using `pickTranslation` for current locale).
+- Save button → calls existing `updateInitiative` server fn with a patch of changed fields, `sourceLang: locale`.
+- Delete button (destructive variant, left-aligned in footer) → confirms via `AlertDialog`, then calls existing `deleteInitiative` server fn.
+- Both actions invalidate `["dashboard"]`, toast, close sheet.
+- Only shown when `canEdit`; for viewers, open a read-only variant (same layout, inputs disabled, no Save/Delete).
+
+### 2. `src/routes/initiatives.tsx`
+
+- Add state `const [editing, setEditing] = useState<FlatInitiative | null>(null)`.
+- Make `InitiativeCard` clickable: wrap card body in a button/role, `onClick` → `setEditing(item)`. Keep the inline status `Select` and existing `EditableText` fields working (stop propagation on those controls so clicks there don't open the sheet). Alternative: remove inline editing in favor of the dialog. **Proposal: keep inline editing, add click-to-open on non-interactive areas** (card background, title area — but title is `EditableText`, so use a dedicated "Open" affordance instead: make the OKR badge row + a chevron in the top-right open the sheet). Simpler: add a small "Open" icon button (`Maximize2` / `Pencil`) top-right of each card that opens the sheet — avoids event conflicts with inline editors.
+- Render `<EditInitiativeDialog open={!!editing} onOpenChange={(v) => !v && setEditing(null)} initiative={editing} dashboard={data} />`.
+
+### 3. i18n strings (`src/lib/i18n-strings.ts`)
+
+Add keys with EN/DE/FR/IT translations:
+
+- `initiatives.editTitle` — "Edit initiative"
+- `initiatives.delete` — "Delete initiative"
+- `initiatives.deleteConfirmTitle` — "Delete this initiative?"
+- `initiatives.deleteConfirmBody` — "This action cannot be undone."
+- `initiatives.deleted` — "Initiative deleted"
+- `initiatives.updated` — "Initiative updated"
+- `common.save` / `common.saving` (if not present)
+- `initiatives.open` — aria-label for the open button
+
+### 4. Verification
+
+- `bun run build`
+- Playwright: sign in, open `/initiatives`, click open icon on a card, edit title, save → toast + card updates. Click delete → confirm → card disappears.
+
+## Open question
+
+Should the whole card be clickable (I'd remove inline `EditableText` and status `Select` from the card, moving all editing into the sheet — cleaner UX), or keep inline editing and add a small "open detail" icon button? I'll go with the **icon button** approach to preserve current inline behavior unless you prefer the full-card-clickable variant.  
+  
+Answer: Go with icon button

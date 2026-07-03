@@ -90,9 +90,21 @@ export type StringKey =
   | "initiatives.form.descriptionPlaceholder"
   | "initiatives.form.status"
   | "initiatives.created"
+  | "initiatives.editTitle"
+  | "initiatives.editDescription"
+  | "initiatives.updated"
+  | "initiatives.deleted"
+  | "initiatives.delete"
+  | "initiatives.deleteConfirmTitle"
+  | "initiatives.deleteConfirmBody"
+  | "initiatives.open"
   | "common.cancel"
   | "common.create"
   | "common.creating"
+  | "common.save"
+  | "common.saving"
+  | "common.delete"
+  | "common.deleting"
   // misc
   | "tag.add"
   | "tag.remove"
@@ -192,9 +204,21 @@ const en: Record<StringKey, string> = {
   "initiatives.form.descriptionPlaceholder": "Add more context (optional)",
   "initiatives.form.status": "Status",
   "initiatives.created": "Initiative created",
+  "initiatives.editTitle": "Edit initiative",
+  "initiatives.editDescription": "Update the initiative details or remove it.",
+  "initiatives.updated": "Initiative updated",
+  "initiatives.deleted": "Initiative deleted",
+  "initiatives.delete": "Delete initiative",
+  "initiatives.deleteConfirmTitle": "Delete this initiative?",
+  "initiatives.deleteConfirmBody": "This action cannot be undone.",
+  "initiatives.open": "Open initiative",
   "common.cancel": "Cancel",
   "common.create": "Create",
   "common.creating": "Creating…",
+  "common.save": "Save",
+  "common.saving": "Saving…",
+  "common.delete": "Delete",
+  "common.deleting": "Deleting…",
   "lang.switcher": "Language",
 
 };
@@ -290,9 +314,21 @@ const de: Record<StringKey, string> = {
   "initiatives.form.descriptionPlaceholder": "Mehr Kontext (optional)",
   "initiatives.form.status": "Status",
   "initiatives.created": "Initiative erstellt",
+  "initiatives.editTitle": "Initiative bearbeiten",
+  "initiatives.editDescription": "Details der Initiative aktualisieren oder entfernen.",
+  "initiatives.updated": "Initiative aktualisiert",
+  "initiatives.deleted": "Initiative gelöscht",
+  "initiatives.delete": "Initiative löschen",
+  "initiatives.deleteConfirmTitle": "Diese Initiative löschen?",
+  "initiatives.deleteConfirmBody": "Diese Aktion kann nicht rückgängig gemacht werden.",
+  "initiatives.open": "Initiative öffnen",
   "common.cancel": "Abbrechen",
   "common.create": "Erstellen",
   "common.creating": "Wird erstellt…",
+  "common.save": "Speichern",
+  "common.saving": "Wird gespeichert…",
+  "common.delete": "Löschen",
+  "common.deleting": "Wird gelöscht…",
   "lang.switcher": "Sprache",
 
 };
@@ -387,9 +423,21 @@ const fr: Record<StringKey, string> = {
   "initiatives.form.descriptionPlaceholder": "Ajouter du contexte (facultatif)",
   "initiatives.form.status": "Statut",
   "initiatives.created": "Initiative créée",
+  "initiatives.editTitle": "Modifier l'initiative",
+  "initiatives.editDescription": "Mettez à jour les détails ou supprimez l'initiative.",
+  "initiatives.updated": "Initiative mise à jour",
+  "initiatives.deleted": "Initiative supprimée",
+  "initiatives.delete": "Supprimer l'initiative",
+  "initiatives.deleteConfirmTitle": "Supprimer cette initiative ?",
+  "initiatives.deleteConfirmBody": "Cette action est irréversible.",
+  "initiatives.open": "Ouvrir l'initiative",
   "common.cancel": "Annuler",
   "common.create": "Créer",
   "common.creating": "Création…",
+  "common.save": "Enregistrer",
+  "common.saving": "Enregistrement…",
+  "common.delete": "Supprimer",
+  "common.deleting": "Suppression…",
   "lang.switcher": "Langue",
 
 };
@@ -484,9 +532,21 @@ const it: Record<StringKey, string> = {
   "initiatives.form.descriptionPlaceholder": "Aggiungi contesto (opzionale)",
   "initiatives.form.status": "Stato",
   "initiatives.created": "Iniziativa creata",
+  "initiatives.editTitle": "Modifica iniziativa",
+  "initiatives.editDescription": "Aggiorna i dettagli dell'iniziativa o eliminala.",
+  "initiatives.updated": "Iniziativa aggiornata",
+  "initiatives.deleted": "Iniziativa eliminata",
+  "initiatives.delete": "Elimina iniziativa",
+  "initiatives.deleteConfirmTitle": "Eliminare questa iniziativa?",
+  "initiatives.deleteConfirmBody": "Questa azione non può essere annullata.",
+  "initiatives.open": "Apri iniziativa",
   "common.cancel": "Annulla",
   "common.create": "Crea",
   "common.creating": "Creazione…",
+  "common.save": "Salva",
+  "common.saving": "Salvataggio…",
+  "common.delete": "Elimina",
+  "common.deleting": "Eliminazione…",
   "lang.switcher": "Lingua",
 
 };
