@@ -1007,7 +1007,7 @@ function IndexContent() {
   return (
     <main className="min-h-dvh">
       <header className="bg-hero text-hero-foreground">
-        <div className="mx-auto max-w-6xl px-8 pt-6 pb-14">
+        <div className="mx-auto max-w-6xl px-8 pt-6 pb-28">
           <div className="flex items-start justify-between gap-4 mb-6">
             <img
               src={icfLogo.url}
@@ -1043,8 +1043,13 @@ function IndexContent() {
               </button>
             )}
           </div>
+
+          <h2 className="mt-16 text-2xl font-bold tracking-tight text-white md:text-3xl">
+            {t("hero.pillarTitle")}
+          </h2>
         </div>
       </header>
+
 
       <section className="mx-auto -mt-8 max-w-6xl px-8">
         <div className="grid gap-4 md:grid-cols-3">
