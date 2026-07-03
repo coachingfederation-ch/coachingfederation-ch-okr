@@ -320,6 +320,7 @@ function InitiativesContent() {
               items={byStatus[status]}
               canEdit={canEdit}
               onUpdate={(id, patch) => updateInit.mutate({ id, patch })}
+              onOpen={(id) => setEditingId(id)}
             />
           ))}
         </div>
@@ -335,6 +336,14 @@ function InitiativesContent() {
         onOpenChange={setCreateOpen}
         dashboard={data}
         defaultKrId={krFilter !== "all" ? krFilter : undefined}
+      />
+
+      <EditInitiativeDialog
+        open={editingId !== null}
+        onOpenChange={(v) => !v && setEditingId(null)}
+        initiative={flat.find((i) => i.id === editingId) ?? null}
+        dashboard={data}
+        canEdit={canEdit}
       />
     </main>
   );
