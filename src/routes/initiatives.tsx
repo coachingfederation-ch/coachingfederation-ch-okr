@@ -363,6 +363,7 @@ function KanbanColumn({
   items,
   canEdit,
   onUpdate,
+  onOpen,
 }: {
   status: InitiativeStatus;
   items: FlatInitiative[];
@@ -371,6 +372,7 @@ function KanbanColumn({
     id: string,
     patch: Partial<Pick<InitiativeDTO, "text" | "owner" | "description" | "status">>,
   ) => void;
+  onOpen: (id: string) => void;
 }) {
   const { t } = useLocale();
   return (
@@ -389,7 +391,13 @@ function KanbanColumn({
           </div>
         ) : (
           items.map((it) => (
-            <InitiativeCard key={it.id} item={it} canEdit={canEdit} onUpdate={onUpdate} />
+            <InitiativeCard
+              key={it.id}
+              item={it}
+              canEdit={canEdit}
+              onUpdate={onUpdate}
+              onOpen={onOpen}
+            />
           ))
         )}
       </div>
