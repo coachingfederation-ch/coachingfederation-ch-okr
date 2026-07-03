@@ -23,6 +23,8 @@ import { EditableText } from "@/components/okr/EditableText";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { NewInitiativeDialog } from "@/components/okr/NewInitiativeDialog";
+import { EditInitiativeDialog } from "@/components/okr/EditInitiativeDialog";
+import { Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
