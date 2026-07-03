@@ -7,6 +7,7 @@ export type StringKey =
   | "hero.title"
   | "hero.subtitle"
   | "hero.pillarTitle"
+  | "section.okrSets"
   | "hero.addOkrSet"
   | "auth.signInToEdit"
   | "auth.signOut"
@@ -28,6 +29,7 @@ export type StringKey =
   | "section.alignmentCycleHint"
   | "section.alignmentPillar"
   | "section.alignmentHow"
+  | "section.okrSets"
   // KR card
   | "kr.count.one"
   | "kr.count.other"
@@ -129,6 +131,7 @@ const en: Record<StringKey, string> = {
   "section.alignmentCycleHint": "Click a dot cell to cycle none → secondary → primary.",
   "section.alignmentPillar": "ICFS pillar",
   "section.alignmentHow": "How it contributes",
+  "section.okrSets": "ICF Switzerland OKR Sets",
   "kr.count.one": "initiative",
   "kr.count.other": "initiatives",
   "kr.noDescription": "No description",
@@ -225,6 +228,7 @@ const de: Record<StringKey, string> = {
     "Klicke auf eine Punktzelle, um zwischen kein → sekundär → primär zu wechseln.",
   "section.alignmentPillar": "ICFS-Säule",
   "section.alignmentHow": "Wie sie beiträgt",
+  "section.okrSets": "ICF Switzerland OKR Sets",
   "kr.count.one": "Initiative",
   "kr.count.other": "Initiativen",
   "kr.noDescription": "Keine Beschreibung",
@@ -322,6 +326,7 @@ const fr: Record<StringKey, string> = {
     "Cliquez sur une cellule de point pour alterner aucun → secondaire → principal.",
   "section.alignmentPillar": "Pilier ICFS",
   "section.alignmentHow": "Comment il contribue",
+  "section.okrSets": "OKR Sets ICF Suisse",
   "kr.count.one": "initiative",
   "kr.count.other": "initiatives",
   "kr.noDescription": "Aucune description",
@@ -418,6 +423,7 @@ const it: Record<StringKey, string> = {
     "Clicca su una cella di punto per alternare nessuno → secondario → primario.",
   "section.alignmentPillar": "Pilastro ICFS",
   "section.alignmentHow": "Come contribuisce",
+  "section.okrSets": "OKR Sets ICF Svizzera",
   "kr.count.one": "iniziativa",
   "kr.count.other": "iniziative",
   "kr.noDescription": "Nessuna descrizione",
