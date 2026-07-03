@@ -1044,14 +1044,14 @@ function IndexContent() {
             )}
           </div>
 
-          <h2 className="mt-2 text-2xl font-bold tracking-tight text-white md:text-3xl">
+          <h2 className="mt-8 text-2xl font-bold tracking-tight text-white md:text-3xl">
             {t("hero.pillarTitle")}
           </h2>
         </div>
       </header>
 
 
-      <section className="mx-auto -mt-14 max-w-6xl px-8">
+      <section className="mx-auto -mt-8 max-w-6xl px-8">
         <div className="grid gap-4 md:grid-cols-3">
           {PILLARS.map((code) => {
             const p =
