@@ -53,6 +53,39 @@ export type Database = {
         }
         Relationships: []
       }
+      initiative_secondary_krs: {
+        Row: {
+          created_at: string
+          initiative_id: string
+          kr_id: string
+        }
+        Insert: {
+          created_at?: string
+          initiative_id: string
+          kr_id: string
+        }
+        Update: {
+          created_at?: string
+          initiative_id?: string
+          kr_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_secondary_krs_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "initiative_secondary_krs_kr_id_fkey"
+            columns: ["kr_id"]
+            isOneToOne: false
+            referencedRelation: "key_results"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       initiatives: {
         Row: {
           created_at: string
