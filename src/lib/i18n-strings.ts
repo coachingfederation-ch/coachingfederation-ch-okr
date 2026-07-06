@@ -564,6 +564,12 @@ const it: Record<StringKey, string> = {
   "initiatives.deleteConfirmTitle": "Eliminare questa iniziativa?",
   "initiatives.deleteConfirmBody": "Questa azione non può essere annullata.",
   "initiatives.open": "Apri iniziativa",
+  "initiatives.form.secondaryKrs": "Risultati chiave secondari",
+  "initiatives.form.addSecondaryKr": "Aggiungi risultato chiave",
+  "initiatives.form.noSecondaryKrs": "Nessun risultato chiave secondario.",
+  "initiatives.form.removeSecondaryKr": "Rimuovi",
+  "initiatives.form.searchKr": "Cerca risultati chiave…",
+
   "common.cancel": "Annulla",
   "common.create": "Crea",
   "common.creating": "Creazione…",
