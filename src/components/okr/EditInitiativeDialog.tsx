@@ -242,6 +242,109 @@ export function EditInitiativeDialog({
               </div>
             )}
 
+            {initiative && (
+              <div className="grid gap-1.5 min-w-0">
+                <Label>{t("initiatives.form.secondaryKrs")}</Label>
+                <div className="grid gap-1.5">
+                  {secondaryIds.length === 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      {t("initiatives.form.noSecondaryKrs")}
+                    </p>
+                  )}
+                  {secondaryIds.map((id) => {
+                    const k = allKrs.find((x) => x.id === id);
+                    if (!k) return null;
+                    return (
+                      <div
+                        key={id}
+                        className="rounded-md border border-border/70 bg-muted/40 px-3 py-2 text-sm"
+                      >
+                        <div className="flex items-start gap-2">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="inline-flex h-5 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary">
+                                {k.chip}
+                              </span>
+                              <span className="truncate text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                                {k.okrTitle}
+                              </span>
+                            </div>
+                            <p className="mt-1 text-sm text-foreground">{k.krText}</p>
+                          </div>
+                          {canEdit && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
+                              onClick={() =>
+                                setSecondaryIds((prev) => prev.filter((x) => x !== id))
+                              }
+                              aria-label={t("initiatives.form.removeSecondaryKr")}
+                            >
+                              <XIcon className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {canEdit && (
+                    <Popover open={pickerOpen} onOpenChange={setPickerOpen}>
+                      <PopoverTrigger asChild>
+                        <Button type="button" variant="outline" size="sm" className="w-full justify-start">
+                          <Plus className="h-4 w-4 mr-1" />
+                          {t("initiatives.form.addSecondaryKr")}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0 w-[--radix-popover-trigger-width]" align="start">
+                        <Command>
+                          <CommandInput placeholder={t("initiatives.form.searchKr")} />
+                          <CommandList>
+                            <CommandEmpty>—</CommandEmpty>
+                            <CommandGroup>
+                              {allKrs
+                                .filter(
+                                  (k) =>
+                                    k.id !== initiative.kr_id &&
+                                    !secondaryIds.includes(k.id),
+                                )
+                                .map((k) => (
+                                  <CommandItem
+                                    key={k.id}
+                                    value={`${k.chip} ${k.okrTitle} ${k.krText}`}
+                                    onSelect={() => {
+                                      setSecondaryIds((prev) => [...prev, k.id]);
+                                      setPickerOpen(false);
+                                    }}
+                                  >
+                                    <div className="flex flex-col gap-0.5 min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="inline-flex h-5 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary">
+                                          {k.chip}
+                                        </span>
+                                        <span className="truncate text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                                          {k.okrTitle}
+                                        </span>
+                                      </div>
+                                      <span className="text-sm text-foreground line-clamp-2">
+                                        {k.krText}
+                                      </span>
+                                    </div>
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                </div>
+              </div>
+            )}
+
+
+
             <div className="grid gap-1.5 min-w-0">
               <Label htmlFor="ei-title">{t("initiatives.form.title")}</Label>
               <Textarea
