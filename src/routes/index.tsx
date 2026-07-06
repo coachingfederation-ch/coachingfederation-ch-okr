@@ -792,42 +792,7 @@ function KrDetailSheet({
                         )}
                       </tr>
                     ))}
-                    {secondaryInitiatives.map((it, j) => {
-                      const origin = initiativeOrigin.get(it.id);
-                      const chip = origin
-                        ? `${origin.okrNumber}.${
-                            origin.krLabel.includes(".")
-                              ? origin.krLabel.split(".")[1]
-                              : origin.krLabel
-                          }`
-                        : "—";
-                      const i = kr.initiatives.length + j;
-                      return (
-                        <tr
-                          key={`sec-${it.id}`}
-                          className={cn(
-                            "border-t border-border/60 align-top",
-                            i % 2 === 1 ? "bg-muted/20" : "bg-white",
-                          )}
-                        >
-                          <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
-                            <div className="flex items-start gap-2">
-                              <span
-                                title={`${t("initiative.secondary")} — OKR ${chip}`}
-                                className="mt-0.5 inline-flex h-5 shrink-0 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary"
-                              >
-                                {chip}
-                              </span>
-                              <span className="min-w-0 flex-1">
-                                {pickTranslation(it, "text", it.text, locale)}
-                              </span>
-                            </div>
-                          </td>
-                          {canEdit && <td className="py-2.5 pr-3" />}
-                        </tr>
-                      );
-                    })}
-                    {kr.initiatives.length + secondaryInitiatives.length === 0 && (
+                    {kr.initiatives.length === 0 && (
                       <tr>
                         <td
                           colSpan={canEdit ? 2 : 1}
@@ -867,6 +832,63 @@ function KrDetailSheet({
                 </div>
               )}
             </section>
+
+            {secondaryInitiatives.length > 0 && (
+              <section className="mt-8">
+                <div className="mb-2 flex items-center justify-between">
+                  <SectionLabel>{t("section.secondaryInitiatives")}</SectionLabel>
+                  <span className="text-[11px] font-medium text-muted-foreground">
+                    {secondaryInitiatives.length}
+                  </span>
+                </div>
+                <div className="overflow-hidden rounded-xl border border-border/70">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/60 text-left">
+                      <tr className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                        <th className="py-2 pl-4 font-semibold">{t("initiative.header")}</th>
+                        {canEdit && <th className="w-10" />}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {secondaryInitiatives.map((it, i) => {
+                        const origin = initiativeOrigin.get(it.id);
+                        const chip = origin
+                          ? `${origin.okrNumber}.${
+                              origin.krLabel.includes(".")
+                                ? origin.krLabel.split(".")[1]
+                                : origin.krLabel
+                            }`
+                          : "—";
+                        return (
+                          <tr
+                            key={`sec-${it.id}`}
+                            className={cn(
+                              "border-t border-border/60 align-top",
+                              i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                            )}
+                          >
+                            <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
+                              <div className="flex items-start gap-2">
+                                <span
+                                  title={`${t("initiative.secondary")} — OKR ${chip}`}
+                                  className="mt-0.5 inline-flex h-5 shrink-0 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary"
+                                >
+                                  {chip}
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                  {pickTranslation(it, "text", it.text, locale)}
+                                </span>
+                              </div>
+                            </td>
+                            {canEdit && <td className="py-2.5 pr-3" />}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
 
             {canEdit && (
               <div className="mt-8 border-t border-border/60 pt-4">

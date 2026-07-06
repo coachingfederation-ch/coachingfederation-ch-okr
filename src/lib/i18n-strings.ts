@@ -22,6 +22,7 @@ export type StringKey =
   | "section.globalAlignment"
   | "section.keyResults"
   | "section.relatedInitiatives"
+  | "section.secondaryInitiatives"
   | "section.alignmentTitle"
   | "section.alignmentIntro"
   | "section.alignmentPrimary"
@@ -143,6 +144,7 @@ const en: Record<StringKey, string> = {
   "section.globalAlignment": "Global alignment",
   "section.keyResults": "Key results",
   "section.relatedInitiatives": "Related projects & initiatives",
+  "section.secondaryInitiatives": "Secondary Initiatives",
   "section.alignmentTitle": "Global alignment analysis",
   "section.alignmentIntro":
     "How each ICFS pillar contributes to the three ICF Global 2026–2029 focus areas.",
@@ -259,6 +261,7 @@ const de: Record<StringKey, string> = {
   "section.globalAlignment": "Globale Ausrichtung",
   "section.keyResults": "Key Results",
   "section.relatedInitiatives": "Zugehörige Projekte & Initiativen",
+  "section.secondaryInitiatives": "Sekundäre Initiativen",
   "section.alignmentTitle": "Analyse der globalen Ausrichtung",
   "section.alignmentIntro":
     "Wie jede ICFS-Säule zu den drei Schwerpunktbereichen von ICF Global 2026–2029 beiträgt.",
@@ -377,6 +380,7 @@ const fr: Record<StringKey, string> = {
   "section.globalAlignment": "Alignement global",
   "section.keyResults": "Résultats clés",
   "section.relatedInitiatives": "Projets & initiatives associés",
+  "section.secondaryInitiatives": "Initiatives secondaires",
   "section.alignmentTitle": "Analyse de l'alignement global",
   "section.alignmentIntro":
     "Comment chaque pilier ICFS contribue aux trois axes d'ICF Global 2026–2029.",
@@ -494,6 +498,7 @@ const it: Record<StringKey, string> = {
   "section.globalAlignment": "Allineamento globale",
   "section.keyResults": "Risultati chiave",
   "section.relatedInitiatives": "Progetti e iniziative correlati",
+  "section.secondaryInitiatives": "Iniziative secondarie",
   "section.alignmentTitle": "Analisi dell'allineamento globale",
   "section.alignmentIntro":
     "Come ogni pilastro ICFS contribuisce alle tre aree di focus di ICF Global 2026–2029.",
