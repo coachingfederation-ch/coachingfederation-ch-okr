@@ -449,6 +449,12 @@ const fr: Record<StringKey, string> = {
   "initiatives.deleteConfirmTitle": "Supprimer cette initiative ?",
   "initiatives.deleteConfirmBody": "Cette action est irréversible.",
   "initiatives.open": "Ouvrir l'initiative",
+  "initiatives.form.secondaryKrs": "Résultats clés secondaires",
+  "initiatives.form.addSecondaryKr": "Ajouter un résultat clé",
+  "initiatives.form.noSecondaryKrs": "Aucun résultat clé secondaire.",
+  "initiatives.form.removeSecondaryKr": "Retirer",
+  "initiatives.form.searchKr": "Rechercher des résultats clés…",
+
   "common.cancel": "Annuler",
   "common.create": "Créer",
   "common.creating": "Création…",
