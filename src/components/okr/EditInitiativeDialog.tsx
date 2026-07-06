@@ -2,8 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
+import { Plus, X as XIcon } from "lucide-react";
 
-import { updateInitiative, deleteInitiative } from "@/lib/okr.functions";
+import {
+  updateInitiative,
+  deleteInitiative,
+  setInitiativeSecondaryKrs,
+} from "@/lib/okr.functions";
 import {
   INITIATIVE_STATUSES,
   LIMITS,
@@ -12,6 +17,7 @@ import {
   type InitiativeStatus,
 } from "@/lib/okr-schemas";
 import { pickTranslation, useLocale } from "@/lib/i18n";
+
 import type { StringKey } from "@/lib/i18n-strings";
 import {
   Sheet,
