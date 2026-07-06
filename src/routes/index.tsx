@@ -749,7 +749,7 @@ function KrDetailSheet({
               <div className="mb-2 flex items-center justify-between">
                 <SectionLabel>{t("section.relatedInitiatives")}</SectionLabel>
                 <span className="text-[11px] font-medium text-muted-foreground">
-                  {kr.initiatives.length}
+                  {kr.initiatives.length + secondaryInitiatives.length}
                 </span>
               </div>
               <div className="overflow-hidden rounded-xl border border-border/70">
