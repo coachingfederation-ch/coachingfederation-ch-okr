@@ -792,7 +792,42 @@ function KrDetailSheet({
                         )}
                       </tr>
                     ))}
-                    {kr.initiatives.length === 0 && (
+                    {secondaryInitiatives.map((it, j) => {
+                      const origin = initiativeOrigin.get(it.id);
+                      const chip = origin
+                        ? `${origin.okrNumber}.${
+                            origin.krLabel.includes(".")
+                              ? origin.krLabel.split(".")[1]
+                              : origin.krLabel
+                          }`
+                        : "—";
+                      const i = kr.initiatives.length + j;
+                      return (
+                        <tr
+                          key={`sec-${it.id}`}
+                          className={cn(
+                            "border-t border-border/60 align-top",
+                            i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                          )}
+                        >
+                          <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
+                            <div className="flex items-start gap-2">
+                              <span
+                                title={`${t("initiative.secondary")} — OKR ${chip}`}
+                                className="mt-0.5 inline-flex h-5 shrink-0 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary"
+                              >
+                                {chip}
+                              </span>
+                              <span className="min-w-0 flex-1">
+                                {pickTranslation(it, "text", it.text, locale)}
+                              </span>
+                            </div>
+                          </td>
+                          {canEdit && <td className="py-2.5 pr-3" />}
+                        </tr>
+                      );
+                    })}
+                    {kr.initiatives.length + secondaryInitiatives.length === 0 && (
                       <tr>
                         <td
                           colSpan={canEdit ? 2 : 1}
