@@ -644,12 +644,14 @@ function KrCard({
 }
 
 function KrDetailSheet({
-  kr, canEdit, m, onClose,
+  kr, canEdit, m, onClose, secondaryInitiatives, initiativeOrigin,
 }: {
   kr: KeyResultDTO | null;
   canEdit: boolean;
   m: OkrMutations;
   onClose: () => void;
+  secondaryInitiatives: InitiativeDTO[];
+  initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
 }) {
   const { locale, t } = useLocale();
   const [initDraft, setInitDraft] = useState("");
