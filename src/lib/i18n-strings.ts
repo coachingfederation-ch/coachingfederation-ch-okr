@@ -291,6 +291,8 @@ const de: Record<StringKey, string> = {
   "initiative.new": "Neues Projekt oder Initiative…",
   "initiative.add": "Hinzufügen",
   "initiative.delete": "Initiative löschen",
+  "initiative.secondary": "Sekundär",
+  "initiative.secondaryFrom": "Sekundär — primär bei OKR {n}, KR {kr}",
   "pillar.SG.name": "Nachhaltiges Wachstum & Wirkung",
   "pillar.OE.name": "Organisationsentwicklung & Exzellenz",
   "pillar.CE.name": "Coaching-Exzellenz & Mehrwert",
