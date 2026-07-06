@@ -98,6 +98,12 @@ export type StringKey =
   | "initiatives.deleteConfirmTitle"
   | "initiatives.deleteConfirmBody"
   | "initiatives.open"
+  | "initiatives.form.secondaryKrs"
+  | "initiatives.form.addSecondaryKr"
+  | "initiatives.form.noSecondaryKrs"
+  | "initiatives.form.removeSecondaryKr"
+  | "initiatives.form.searchKr"
+
   | "common.cancel"
   | "common.create"
   | "common.creating"
