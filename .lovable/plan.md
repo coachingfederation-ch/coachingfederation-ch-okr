@@ -1,13 +1,49 @@
-# Fix invisible KR picker popover
+## Goal
+On each Key Result, also surface the initiatives that reference it as a **secondary** KR (their primary lives on another KR). The counter on the KR card and the count in the KR detail sheet must reflect primary + secondary together.
 
-The theme in `src/styles.css` never defines `--popover` / `--popover-foreground`, so `bg-popover` resolves to nothing and the picker renders transparent on top of the sheet — which also makes it look like scrolling is broken (the list is there, just invisible).
+## Changes (all in `src/routes/index.tsx`, plus one string key)
 
-## Change
+### 1. Build a secondary-initiatives lookup
+In the top-level `Dashboard` component (where `data: DashboardDTO` is read), compute once with `useMemo`:
 
-In `src/components/okr/EditInitiativeDialog.tsx`, on the `<PopoverContent>` used for the secondary‑KR picker:
+```ts
+// Map<kr_id, InitiativeDTO[]> — initiatives whose secondary_kr_ids include this kr
+const secondaryByKr = useMemo(() => {
+  const m = new Map<string, InitiativeDTO[]>();
+  for (const s of data.okr_sets)
+    for (const k of s.key_results)
+      for (const it of k.initiatives)
+        for (const sid of it.secondary_kr_ids ?? [])
+          (m.get(sid) ?? m.set(sid, []).get(sid)!).push(it);
+  return m;
+}, [data]);
+```
 
-- Add `bg-background text-foreground border shadow-lg z-[60]` to the existing className, so it paints an opaque surface above the sheet.
-- Wrap the inner `<Command>` with `bg-background` (overrides the component default `bg-popover`).
-- Keep the width binding but switch to Tailwind v4's `var(...)` form: `w-[var(--radix-popover-trigger-width)]`.
+Pass `secondaryByKr` down through `OkrArticle` → `KrCard` / `KrDetailSheet` (new prop on each).
 
-No changes to the underlying `ui/popover.tsx` or `ui/command.tsx` (they're shared), no data or logic changes. `CommandList` already has `max-h-[300px] overflow-y-auto`, so scrolling starts working as soon as the surface is visible.
+### 2. `KrCard` — counter
+Replace:
+```ts
+const count = kr.initiatives.length;
+```
+with:
+```ts
+const secondary = secondaryByKr.get(kr.id) ?? [];
+const count = kr.initiatives.length + secondary.length;
+```
+
+### 3. `KrDetailSheet` — related list + header count
+- Header count: use `kr.initiatives.length + secondary.length` instead of `kr.initiatives.length`.
+- After the primary rows in the `<tbody>`, render one row per secondary initiative. These are **read-only** here (no edit / no delete button), because the initiative belongs to another KR. Show them with:
+  - the same text cell (non-editable, plain `pickTranslation(it, "text", it.text, locale)`)
+  - a small chip on the right showing where it comes from, e.g. `2.a` (owning OKR number + owning KR label), styled like the existing `bg-primary/10 text-primary` chip
+  - the empty-state row now checks `kr.initiatives.length + secondary.length === 0`.
+
+To render the chip, look the initiative's owning OKR/KR up from `dashboard.okr_sets` (already available via the new prop chain — pass `dashboard` alongside `secondaryByKr`, or precompute a `Map<initiativeId, {okrNumber, krLabel}>` at the same place as `secondaryByKr` and pass that instead — preferred, avoids a nested loop per row).
+
+### 4. i18n
+Add one string key used as an aria/tooltip label on the "secondary" chip, e.g. `initiative.secondaryFrom` → `"Secondary — from OKR {n}, KR {kr}"` (EN/DE/FR/IT), interpolated at render.
+
+## Out of scope
+- No changes to the edit dialog, mutations, or server functions.
+- Secondary rows stay read-only in this view; to change them the user still opens the initiative on its owning KR.

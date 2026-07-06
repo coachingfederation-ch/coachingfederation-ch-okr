@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Suspense, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { X, Plus, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
@@ -431,11 +431,13 @@ function RoleLabelSelect({
 // ---------- OKR card ----------
 
 function OkrCard({
-  set, canEdit, m,
+  set, canEdit, m, secondaryByKr, initiativeOrigin,
 }: {
   set: OkrSetDTO;
   canEdit: boolean;
   m: OkrMutations;
+  secondaryByKr: Map<string, InitiativeDTO[]>;
+  initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
 }) {
   const { locale, t } = useLocale();
   const [openKrId, setOpenKrId] = useState<string | null>(null);
@@ -566,7 +568,12 @@ function OkrCard({
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {set.key_results.map((r) => (
-              <KrCard key={r.id} kr={r} onOpen={() => setOpenKrId(r.id)} />
+              <KrCard
+                key={r.id}
+                kr={r}
+                onOpen={() => setOpenKrId(r.id)}
+                secondaryCount={(secondaryByKr.get(r.id) ?? []).length}
+              />
             ))}
           </div>
         )}
@@ -576,6 +583,8 @@ function OkrCard({
         kr={openKr}
         canEdit={canEdit}
         m={m}
+        secondaryInitiatives={openKr ? secondaryByKr.get(openKr.id) ?? [] : []}
+        initiativeOrigin={initiativeOrigin}
         onClose={() => setOpenKrId(null)}
       />
     </article>
@@ -583,13 +592,14 @@ function OkrCard({
 }
 
 function KrCard({
-  kr, onOpen,
+  kr, onOpen, secondaryCount,
 }: {
   kr: KeyResultDTO;
   onOpen: () => void;
+  secondaryCount: number;
 }) {
   const { locale, t } = useLocale();
-  const count = kr.initiatives.length;
+  const count = kr.initiatives.length + secondaryCount;
   const text = pickTranslation(kr, "text", kr.text, locale);
   const target = pickTranslation(kr, "target", kr.target, locale);
   const lead = pickTranslation(kr, "lead", kr.lead, locale);
@@ -634,12 +644,14 @@ function KrCard({
 }
 
 function KrDetailSheet({
-  kr, canEdit, m, onClose,
+  kr, canEdit, m, onClose, secondaryInitiatives, initiativeOrigin,
 }: {
   kr: KeyResultDTO | null;
   canEdit: boolean;
   m: OkrMutations;
   onClose: () => void;
+  secondaryInitiatives: InitiativeDTO[];
+  initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
 }) {
   const { locale, t } = useLocale();
   const [initDraft, setInitDraft] = useState("");
@@ -737,7 +749,7 @@ function KrDetailSheet({
               <div className="mb-2 flex items-center justify-between">
                 <SectionLabel>{t("section.relatedInitiatives")}</SectionLabel>
                 <span className="text-[11px] font-medium text-muted-foreground">
-                  {kr.initiatives.length}
+                  {kr.initiatives.length + secondaryInitiatives.length}
                 </span>
               </div>
               <div className="overflow-hidden rounded-xl border border-border/70">
@@ -780,7 +792,42 @@ function KrDetailSheet({
                         )}
                       </tr>
                     ))}
-                    {kr.initiatives.length === 0 && (
+                    {secondaryInitiatives.map((it, j) => {
+                      const origin = initiativeOrigin.get(it.id);
+                      const chip = origin
+                        ? `${origin.okrNumber}.${
+                            origin.krLabel.includes(".")
+                              ? origin.krLabel.split(".")[1]
+                              : origin.krLabel
+                          }`
+                        : "—";
+                      const i = kr.initiatives.length + j;
+                      return (
+                        <tr
+                          key={`sec-${it.id}`}
+                          className={cn(
+                            "border-t border-border/60 align-top",
+                            i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                          )}
+                        >
+                          <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
+                            <div className="flex items-start gap-2">
+                              <span
+                                title={`${t("initiative.secondary")} — OKR ${chip}`}
+                                className="mt-0.5 inline-flex h-5 shrink-0 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary"
+                              >
+                                {chip}
+                              </span>
+                              <span className="min-w-0 flex-1">
+                                {pickTranslation(it, "text", it.text, locale)}
+                              </span>
+                            </div>
+                          </td>
+                          {canEdit && <td className="py-2.5 pr-3" />}
+                        </tr>
+                      );
+                    })}
+                    {kr.initiatives.length + secondaryInitiatives.length === 0 && (
                       <tr>
                         <td
                           colSpan={canEdit ? 2 : 1}
@@ -1004,6 +1051,24 @@ function IndexContent() {
   const { locale, t } = useLocale();
   const m = useOkrMutations(locale);
 
+  const { secondaryByKr, initiativeOrigin } = useMemo(() => {
+    const secondaryByKr = new Map<string, InitiativeDTO[]>();
+    const initiativeOrigin = new Map<string, { okrNumber: number; krLabel: string }>();
+    for (const s of data.okr_sets) {
+      for (const k of s.key_results) {
+        for (const it of k.initiatives) {
+          initiativeOrigin.set(it.id, { okrNumber: s.number, krLabel: k.kr || "—" });
+          for (const sid of it.secondary_kr_ids ?? []) {
+            const arr = secondaryByKr.get(sid);
+            if (arr) arr.push(it);
+            else secondaryByKr.set(sid, [it]);
+          }
+        }
+      }
+    }
+    return { secondaryByKr, initiativeOrigin };
+  }, [data]);
+
   return (
     <main className="min-h-dvh">
       <header className="bg-hero text-hero-foreground">
@@ -1097,7 +1162,14 @@ function IndexContent() {
           {t("section.okrSets")}
         </h2>
         {data.okr_sets.map((set) => (
-          <OkrCard key={set.id} set={set} canEdit={canEdit} m={m} />
+          <OkrCard
+            key={set.id}
+            set={set}
+            canEdit={canEdit}
+            m={m}
+            secondaryByKr={secondaryByKr}
+            initiativeOrigin={initiativeOrigin}
+          />
         ))}
         {canEdit && (
           <div className="flex justify-center">

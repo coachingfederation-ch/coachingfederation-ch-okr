@@ -54,6 +54,8 @@ export type StringKey =
   | "initiative.new"
   | "initiative.add"
   | "initiative.delete"
+  | "initiative.secondary"
+  | "initiative.secondaryFrom"
   // pillars
   | "pillar.SG.name"
   | "pillar.OE.name"
@@ -171,6 +173,8 @@ const en: Record<StringKey, string> = {
   "initiative.new": "New project or initiative…",
   "initiative.add": "Add",
   "initiative.delete": "Delete initiative",
+  "initiative.secondary": "Secondary",
+  "initiative.secondaryFrom": "Secondary — primary on OKR {n}, KR {kr}",
   "pillar.SG.name": "Sustainable Growth & Impact",
   "pillar.OE.name": "Org. Development & Excellence",
   "pillar.CE.name": "Coaching Excellence & Value",
@@ -287,6 +291,8 @@ const de: Record<StringKey, string> = {
   "initiative.new": "Neues Projekt oder Initiative…",
   "initiative.add": "Hinzufügen",
   "initiative.delete": "Initiative löschen",
+  "initiative.secondary": "Sekundär",
+  "initiative.secondaryFrom": "Sekundär — primär bei OKR {n}, KR {kr}",
   "pillar.SG.name": "Nachhaltiges Wachstum & Wirkung",
   "pillar.OE.name": "Organisationsentwicklung & Exzellenz",
   "pillar.CE.name": "Coaching-Exzellenz & Mehrwert",
@@ -402,6 +408,8 @@ const fr: Record<StringKey, string> = {
   "initiative.new": "Nouveau projet ou initiative…",
   "initiative.add": "Ajouter",
   "initiative.delete": "Supprimer l'initiative",
+  "initiative.secondary": "Secondaire",
+  "initiative.secondaryFrom": "Secondaire — primaire sur OKR {n}, KR {kr}",
   "pillar.SG.name": "Croissance durable & impact",
   "pillar.OE.name": "Développement organisationnel & excellence",
   "pillar.CE.name": "Excellence du coaching & valeur",
@@ -517,6 +525,8 @@ const it: Record<StringKey, string> = {
   "initiative.new": "Nuovo progetto o iniziativa…",
   "initiative.add": "Aggiungi",
   "initiative.delete": "Elimina iniziativa",
+  "initiative.secondary": "Secondaria",
+  "initiative.secondaryFrom": "Secondaria — primaria su OKR {n}, KR {kr}",
   "pillar.SG.name": "Crescita sostenibile & impatto",
   "pillar.OE.name": "Sviluppo organizzativo & eccellenza",
   "pillar.CE.name": "Eccellenza del coaching & valore",
