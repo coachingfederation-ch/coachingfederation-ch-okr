@@ -297,8 +297,12 @@ export function EditInitiativeDialog({
                           {t("initiatives.form.addSecondaryKr")}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="p-0 w-[--radix-popover-trigger-width]" align="start">
-                        <Command>
+                      <PopoverContent
+                        className="p-0 w-[var(--radix-popover-trigger-width)] bg-background text-foreground border shadow-lg z-[60]"
+                        align="start"
+                      >
+                        <Command className="bg-background">
+
                           <CommandInput placeholder={t("initiatives.form.searchKr")} />
                           <CommandList>
                             <CommandEmpty>—</CommandEmpty>
