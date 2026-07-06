@@ -568,7 +568,12 @@ function OkrCard({
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {set.key_results.map((r) => (
-              <KrCard key={r.id} kr={r} onOpen={() => setOpenKrId(r.id)} />
+              <KrCard
+                key={r.id}
+                kr={r}
+                onOpen={() => setOpenKrId(r.id)}
+                secondaryCount={(secondaryByKr.get(r.id) ?? []).length}
+              />
             ))}
           </div>
         )}
@@ -578,6 +583,8 @@ function OkrCard({
         kr={openKr}
         canEdit={canEdit}
         m={m}
+        secondaryInitiatives={openKr ? secondaryByKr.get(openKr.id) ?? [] : []}
+        initiativeOrigin={initiativeOrigin}
         onClose={() => setOpenKrId(null)}
       />
     </article>
