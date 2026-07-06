@@ -1162,7 +1162,14 @@ function IndexContent() {
           {t("section.okrSets")}
         </h2>
         {data.okr_sets.map((set) => (
-          <OkrCard key={set.id} set={set} canEdit={canEdit} m={m} />
+          <OkrCard
+            key={set.id}
+            set={set}
+            canEdit={canEdit}
+            m={m}
+            secondaryByKr={secondaryByKr}
+            initiativeOrigin={initiativeOrigin}
+          />
         ))}
         {canEdit && (
           <div className="flex justify-center">
