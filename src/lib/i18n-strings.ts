@@ -54,6 +54,8 @@ export type StringKey =
   | "initiative.new"
   | "initiative.add"
   | "initiative.delete"
+  | "initiative.secondary"
+  | "initiative.secondaryFrom"
   // pillars
   | "pillar.SG.name"
   | "pillar.OE.name"
