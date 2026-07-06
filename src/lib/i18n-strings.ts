@@ -173,6 +173,8 @@ const en: Record<StringKey, string> = {
   "initiative.new": "New project or initiative…",
   "initiative.add": "Add",
   "initiative.delete": "Delete initiative",
+  "initiative.secondary": "Secondary",
+  "initiative.secondaryFrom": "Secondary — primary on OKR {n}, KR {kr}",
   "pillar.SG.name": "Sustainable Growth & Impact",
   "pillar.OE.name": "Org. Development & Excellence",
   "pillar.CE.name": "Coaching Excellence & Value",
