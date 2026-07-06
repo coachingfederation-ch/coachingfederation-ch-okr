@@ -592,13 +592,14 @@ function OkrCard({
 }
 
 function KrCard({
-  kr, onOpen,
+  kr, onOpen, secondaryCount,
 }: {
   kr: KeyResultDTO;
   onOpen: () => void;
+  secondaryCount: number;
 }) {
   const { locale, t } = useLocale();
-  const count = kr.initiatives.length;
+  const count = kr.initiatives.length + secondaryCount;
   const text = pickTranslation(kr, "text", kr.text, locale);
   const target = pickTranslation(kr, "target", kr.target, locale);
   const lead = pickTranslation(kr, "lead", kr.lead, locale);
