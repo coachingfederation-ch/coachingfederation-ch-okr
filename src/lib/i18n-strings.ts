@@ -525,6 +525,8 @@ const it: Record<StringKey, string> = {
   "initiative.new": "Nuovo progetto o iniziativa…",
   "initiative.add": "Aggiungi",
   "initiative.delete": "Elimina iniziativa",
+  "initiative.secondary": "Secondaria",
+  "initiative.secondaryFrom": "Secondaria — primaria su OKR {n}, KR {kr}",
   "pillar.SG.name": "Crescita sostenibile & impatto",
   "pillar.OE.name": "Sviluppo organizzativo & eccellenza",
   "pillar.CE.name": "Eccellenza del coaching & valore",
