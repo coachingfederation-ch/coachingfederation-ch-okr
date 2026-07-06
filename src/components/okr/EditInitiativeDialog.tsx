@@ -100,10 +100,42 @@ export function EditInitiativeDialog({
     return null;
   }, [initiative, dashboard, locale]);
 
+  // Flat list of all KRs with their OKR context, for the secondary picker.
+  const allKrs = useMemo(() => {
+    const list: {
+      id: string;
+      okrNumber: number;
+      krLabel: string;
+      krText: string;
+      okrTitle: string;
+      chip: string;
+    }[] = [];
+    for (const s of dashboard.okr_sets) {
+      for (const k of s.key_results) {
+        const label = k.kr || "—";
+        const chip =
+          `${s.number}.` +
+          (label.includes(".") ? label.split(".")[1] : label);
+        list.push({
+          id: k.id,
+          okrNumber: s.number,
+          krLabel: label,
+          krText: pickTranslation(k, "text", k.text, locale) || "Untitled KR",
+          okrTitle:
+            pickTranslation(s, "title", s.title, locale) || "Untitled OKR",
+          chip,
+        });
+      }
+    }
+    return list;
+  }, [dashboard, locale]);
+
   const [title, setTitle] = useState("");
   const [owner, setOwner] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<InitiativeStatus>("planned");
+  const [secondaryIds, setSecondaryIds] = useState<string[]>([]);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
@@ -114,8 +146,10 @@ export function EditInitiativeDialog({
         pickTranslation(initiative, "description", initiative.description, locale) || "",
       );
       setStatus(initiative.status);
+      setSecondaryIds(initiative.secondary_kr_ids ?? []);
     }
   }, [open, initiative, locale]);
+
 
   const save = useMutation({
     mutationFn: () => {
