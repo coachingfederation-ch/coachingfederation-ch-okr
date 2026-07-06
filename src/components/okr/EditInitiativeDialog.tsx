@@ -150,11 +150,13 @@ export function EditInitiativeDialog({
     }
   }, [open, initiative, locale]);
 
+  const setSecondaryFn = useServerFn(setInitiativeSecondaryKrs);
+  const initialSecondaryIds = initiative?.secondary_kr_ids ?? [];
 
   const save = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!initiative) throw new Error("No initiative");
-      return updateFn({
+      await updateFn({
         data: {
           id: initiative.id,
           patch: {
@@ -166,6 +168,13 @@ export function EditInitiativeDialog({
           sourceLang: locale,
         },
       });
+      const before = [...initialSecondaryIds].sort().join(",");
+      const after = [...secondaryIds].sort().join(",");
+      if (before !== after) {
+        await setSecondaryFn({
+          data: { id: initiative.id, kr_ids: secondaryIds },
+        });
+      }
     },
     onSuccess: () => {
       toast.success(t("initiatives.updated"));
@@ -174,6 +183,7 @@ export function EditInitiativeDialog({
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
   });
+
 
   const remove = useMutation({
     mutationFn: () => {
