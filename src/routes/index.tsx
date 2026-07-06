@@ -1051,6 +1051,24 @@ function IndexContent() {
   const { locale, t } = useLocale();
   const m = useOkrMutations(locale);
 
+  const { secondaryByKr, initiativeOrigin } = useMemo(() => {
+    const secondaryByKr = new Map<string, InitiativeDTO[]>();
+    const initiativeOrigin = new Map<string, { okrNumber: number; krLabel: string }>();
+    for (const s of data.okr_sets) {
+      for (const k of s.key_results) {
+        for (const it of k.initiatives) {
+          initiativeOrigin.set(it.id, { okrNumber: s.number, krLabel: k.kr || "—" });
+          for (const sid of it.secondary_kr_ids ?? []) {
+            const arr = secondaryByKr.get(sid);
+            if (arr) arr.push(it);
+            else secondaryByKr.set(sid, [it]);
+          }
+        }
+      }
+    }
+    return { secondaryByKr, initiativeOrigin };
+  }, [data]);
+
   return (
     <main className="min-h-dvh">
       <header className="bg-hero text-hero-foreground">
