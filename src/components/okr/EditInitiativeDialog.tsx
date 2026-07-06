@@ -2,8 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
+import { Plus, X as XIcon } from "lucide-react";
 
-import { updateInitiative, deleteInitiative } from "@/lib/okr.functions";
+import {
+  updateInitiative,
+  deleteInitiative,
+  setInitiativeSecondaryKrs,
+} from "@/lib/okr.functions";
 import {
   INITIATIVE_STATUSES,
   LIMITS,
@@ -12,6 +17,7 @@ import {
   type InitiativeStatus,
 } from "@/lib/okr-schemas";
 import { pickTranslation, useLocale } from "@/lib/i18n";
+
 import type { StringKey } from "@/lib/i18n-strings";
 import {
   Sheet,
@@ -43,6 +49,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
 
 const STATUS_KEY: Record<InitiativeStatus, StringKey> = {
   planned: "initiatives.status.planned",
@@ -94,10 +110,42 @@ export function EditInitiativeDialog({
     return null;
   }, [initiative, dashboard, locale]);
 
+  // Flat list of all KRs with their OKR context, for the secondary picker.
+  const allKrs = useMemo(() => {
+    const list: {
+      id: string;
+      okrNumber: number;
+      krLabel: string;
+      krText: string;
+      okrTitle: string;
+      chip: string;
+    }[] = [];
+    for (const s of dashboard.okr_sets) {
+      for (const k of s.key_results) {
+        const label = k.kr || "—";
+        const chip =
+          `${s.number}.` +
+          (label.includes(".") ? label.split(".")[1] : label);
+        list.push({
+          id: k.id,
+          okrNumber: s.number,
+          krLabel: label,
+          krText: pickTranslation(k, "text", k.text, locale) || "Untitled KR",
+          okrTitle:
+            pickTranslation(s, "title", s.title, locale) || "Untitled OKR",
+          chip,
+        });
+      }
+    }
+    return list;
+  }, [dashboard, locale]);
+
   const [title, setTitle] = useState("");
   const [owner, setOwner] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<InitiativeStatus>("planned");
+  const [secondaryIds, setSecondaryIds] = useState<string[]>([]);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
@@ -108,13 +156,17 @@ export function EditInitiativeDialog({
         pickTranslation(initiative, "description", initiative.description, locale) || "",
       );
       setStatus(initiative.status);
+      setSecondaryIds(initiative.secondary_kr_ids ?? []);
     }
   }, [open, initiative, locale]);
 
+  const setSecondaryFn = useServerFn(setInitiativeSecondaryKrs);
+  const initialSecondaryIds = initiative?.secondary_kr_ids ?? [];
+
   const save = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!initiative) throw new Error("No initiative");
-      return updateFn({
+      await updateFn({
         data: {
           id: initiative.id,
           patch: {
@@ -126,6 +178,13 @@ export function EditInitiativeDialog({
           sourceLang: locale,
         },
       });
+      const before = [...initialSecondaryIds].sort().join(",");
+      const after = [...secondaryIds].sort().join(",");
+      if (before !== after) {
+        await setSecondaryFn({
+          data: { id: initiative.id, kr_ids: secondaryIds },
+        });
+      }
     },
     onSuccess: () => {
       toast.success(t("initiatives.updated"));
@@ -134,6 +193,7 @@ export function EditInitiativeDialog({
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
   });
+
 
   const remove = useMutation({
     mutationFn: () => {
@@ -181,6 +241,109 @@ export function EditInitiativeDialog({
                 </div>
               </div>
             )}
+
+            {initiative && (
+              <div className="grid gap-1.5 min-w-0">
+                <Label>{t("initiatives.form.secondaryKrs")}</Label>
+                <div className="grid gap-1.5">
+                  {secondaryIds.length === 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      {t("initiatives.form.noSecondaryKrs")}
+                    </p>
+                  )}
+                  {secondaryIds.map((id) => {
+                    const k = allKrs.find((x) => x.id === id);
+                    if (!k) return null;
+                    return (
+                      <div
+                        key={id}
+                        className="rounded-md border border-border/70 bg-muted/40 px-3 py-2 text-sm"
+                      >
+                        <div className="flex items-start gap-2">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="inline-flex h-5 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary">
+                                {k.chip}
+                              </span>
+                              <span className="truncate text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                                {k.okrTitle}
+                              </span>
+                            </div>
+                            <p className="mt-1 text-sm text-foreground">{k.krText}</p>
+                          </div>
+                          {canEdit && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
+                              onClick={() =>
+                                setSecondaryIds((prev) => prev.filter((x) => x !== id))
+                              }
+                              aria-label={t("initiatives.form.removeSecondaryKr")}
+                            >
+                              <XIcon className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {canEdit && (
+                    <Popover open={pickerOpen} onOpenChange={setPickerOpen}>
+                      <PopoverTrigger asChild>
+                        <Button type="button" variant="outline" size="sm" className="w-full justify-start">
+                          <Plus className="h-4 w-4 mr-1" />
+                          {t("initiatives.form.addSecondaryKr")}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0 w-[--radix-popover-trigger-width]" align="start">
+                        <Command>
+                          <CommandInput placeholder={t("initiatives.form.searchKr")} />
+                          <CommandList>
+                            <CommandEmpty>—</CommandEmpty>
+                            <CommandGroup>
+                              {allKrs
+                                .filter(
+                                  (k) =>
+                                    k.id !== initiative.kr_id &&
+                                    !secondaryIds.includes(k.id),
+                                )
+                                .map((k) => (
+                                  <CommandItem
+                                    key={k.id}
+                                    value={`${k.chip} ${k.okrTitle} ${k.krText}`}
+                                    onSelect={() => {
+                                      setSecondaryIds((prev) => [...prev, k.id]);
+                                      setPickerOpen(false);
+                                    }}
+                                  >
+                                    <div className="flex flex-col gap-0.5 min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="inline-flex h-5 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary">
+                                          {k.chip}
+                                        </span>
+                                        <span className="truncate text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                                          {k.okrTitle}
+                                        </span>
+                                      </div>
+                                      <span className="text-sm text-foreground line-clamp-2">
+                                        {k.krText}
+                                      </span>
+                                    </div>
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                </div>
+              </div>
+            )}
+
+
 
             <div className="grid gap-1.5 min-w-0">
               <Label htmlFor="ei-title">{t("initiatives.form.title")}</Label>

@@ -115,7 +115,9 @@ export type InitiativeDTO = WithTranslations & {
   description: string;
   status: InitiativeStatus;
   sort_order: number;
+  secondary_kr_ids: string[];
 };
+
 
 export type KeyResultDTO = WithTranslations & {
   id: string;

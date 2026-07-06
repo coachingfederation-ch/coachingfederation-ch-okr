@@ -81,7 +81,7 @@ async function translateRow(args: {
 export const getDashboard = createServerFn({ method: "GET" }).handler(
   async (): Promise<DashboardDTO> => {
     const supabase = serverPublicClient();
-    const [pillars, sets, krs, inits, aligns] = await Promise.all([
+    const [pillars, sets, krs, inits, aligns, secLinks] = await Promise.all([
       supabase
         .from("pillar_summaries")
         .select("code,label,description,translations,source_lang"),
@@ -103,11 +103,21 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         .from("alignment_rows")
         .select("id,pillar,sg,oe,ce,how,sort_order,translations,source_lang")
         .order("sort_order", { ascending: true }),
+      supabase
+        .from("initiative_secondary_krs")
+        .select("initiative_id,kr_id"),
     ]);
 
     const err =
-      pillars.error || sets.error || krs.error || inits.error || aligns.error;
+      pillars.error || sets.error || krs.error || inits.error || aligns.error || secLinks.error;
     if (err) throw new Error(err.message);
+
+    const secByInit = new Map<string, string[]>();
+    for (const r of secLinks.data ?? []) {
+      const arr = secByInit.get(r.initiative_id) ?? [];
+      arr.push(r.kr_id);
+      secByInit.set(r.initiative_id, arr);
+    }
 
     const initsByKr = new Map<string, InitiativeDTO[]>();
     for (const r of inits.data ?? []) {
@@ -121,11 +131,13 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         description: r.description ?? "",
         status: ((r.status as InitiativeDTO["status"]) ?? "planned"),
         sort_order: r.sort_order,
+        secondary_kr_ids: secByInit.get(r.id) ?? [],
         translations: (r as { translations?: TranslationsMap }).translations ?? {},
         source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
       });
       initsByKr.set(r.kr_id, arr);
     }
+
 
     const krsBySet = new Map<string, KeyResultDTO[]>();
     for (const r of krs.data ?? []) {
@@ -418,6 +430,41 @@ export const deleteInitiative = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const setInitiativeSecondaryKrs = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({ id: uuidSchema, kr_ids: z.array(uuidSchema).max(50) })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: initRow, error: initErr } = await context.supabase
+      .from("initiatives")
+      .select("kr_id")
+      .eq("id", data.id)
+      .single();
+    if (initErr) throw new Error(initErr.message);
+    const seen = new Set<string>();
+    const clean = data.kr_ids.filter((k) => {
+      if (k === initRow.kr_id || seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+    const { error: delErr } = await context.supabase
+      .from("initiative_secondary_krs")
+      .delete()
+      .eq("initiative_id", data.id);
+    if (delErr) throw new Error(delErr.message);
+    if (clean.length > 0) {
+      const { error: insErr } = await context.supabase
+        .from("initiative_secondary_krs")
+        .insert(clean.map((kr_id) => ({ initiative_id: data.id, kr_id })));
+      if (insErr) throw new Error(insErr.message);
+    }
+    return { ok: true };
+  });
+
 
 // Alignment rows
 export const updateAlignmentRow = createServerFn({ method: "POST" })

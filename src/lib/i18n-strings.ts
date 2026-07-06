@@ -98,6 +98,12 @@ export type StringKey =
   | "initiatives.deleteConfirmTitle"
   | "initiatives.deleteConfirmBody"
   | "initiatives.open"
+  | "initiatives.form.secondaryKrs"
+  | "initiatives.form.addSecondaryKr"
+  | "initiatives.form.noSecondaryKrs"
+  | "initiatives.form.removeSecondaryKr"
+  | "initiatives.form.searchKr"
+
   | "common.cancel"
   | "common.create"
   | "common.creating"
@@ -212,6 +218,12 @@ const en: Record<StringKey, string> = {
   "initiatives.deleteConfirmTitle": "Delete this initiative?",
   "initiatives.deleteConfirmBody": "This action cannot be undone.",
   "initiatives.open": "Open initiative",
+  "initiatives.form.secondaryKrs": "Secondary Key Results",
+  "initiatives.form.addSecondaryKr": "Add Key Result",
+  "initiatives.form.noSecondaryKrs": "No secondary Key Results yet.",
+  "initiatives.form.removeSecondaryKr": "Remove",
+  "initiatives.form.searchKr": "Search Key Results…",
+
   "common.cancel": "Cancel",
   "common.create": "Create",
   "common.creating": "Creating…",
@@ -322,6 +334,12 @@ const de: Record<StringKey, string> = {
   "initiatives.deleteConfirmTitle": "Diese Initiative löschen?",
   "initiatives.deleteConfirmBody": "Diese Aktion kann nicht rückgängig gemacht werden.",
   "initiatives.open": "Initiative öffnen",
+  "initiatives.form.secondaryKrs": "Sekundäre Key Results",
+  "initiatives.form.addSecondaryKr": "Key Result hinzufügen",
+  "initiatives.form.noSecondaryKrs": "Noch keine sekundären Key Results.",
+  "initiatives.form.removeSecondaryKr": "Entfernen",
+  "initiatives.form.searchKr": "Key Results suchen…",
+
   "common.cancel": "Abbrechen",
   "common.create": "Erstellen",
   "common.creating": "Wird erstellt…",
@@ -431,6 +449,12 @@ const fr: Record<StringKey, string> = {
   "initiatives.deleteConfirmTitle": "Supprimer cette initiative ?",
   "initiatives.deleteConfirmBody": "Cette action est irréversible.",
   "initiatives.open": "Ouvrir l'initiative",
+  "initiatives.form.secondaryKrs": "Résultats clés secondaires",
+  "initiatives.form.addSecondaryKr": "Ajouter un résultat clé",
+  "initiatives.form.noSecondaryKrs": "Aucun résultat clé secondaire.",
+  "initiatives.form.removeSecondaryKr": "Retirer",
+  "initiatives.form.searchKr": "Rechercher des résultats clés…",
+
   "common.cancel": "Annuler",
   "common.create": "Créer",
   "common.creating": "Création…",
@@ -540,6 +564,12 @@ const it: Record<StringKey, string> = {
   "initiatives.deleteConfirmTitle": "Eliminare questa iniziativa?",
   "initiatives.deleteConfirmBody": "Questa azione non può essere annullata.",
   "initiatives.open": "Apri iniziativa",
+  "initiatives.form.secondaryKrs": "Risultati chiave secondari",
+  "initiatives.form.addSecondaryKr": "Aggiungi risultato chiave",
+  "initiatives.form.noSecondaryKrs": "Nessun risultato chiave secondario.",
+  "initiatives.form.removeSecondaryKr": "Rimuovi",
+  "initiatives.form.searchKr": "Cerca risultati chiave…",
+
   "common.cancel": "Annulla",
   "common.create": "Crea",
   "common.creating": "Creazione…",
