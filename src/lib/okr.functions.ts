@@ -431,6 +431,41 @@ export const deleteInitiative = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const setInitiativeSecondaryKrs = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({ id: uuidSchema, kr_ids: z.array(uuidSchema).max(50) })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: initRow, error: initErr } = await context.supabase
+      .from("initiatives")
+      .select("kr_id")
+      .eq("id", data.id)
+      .single();
+    if (initErr) throw new Error(initErr.message);
+    const seen = new Set<string>();
+    const clean = data.kr_ids.filter((k) => {
+      if (k === initRow.kr_id || seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+    const { error: delErr } = await context.supabase
+      .from("initiative_secondary_krs")
+      .delete()
+      .eq("initiative_id", data.id);
+    if (delErr) throw new Error(delErr.message);
+    if (clean.length > 0) {
+      const { error: insErr } = await context.supabase
+        .from("initiative_secondary_krs")
+        .insert(clean.map((kr_id) => ({ initiative_id: data.id, kr_id })));
+      if (insErr) throw new Error(insErr.message);
+    }
+    return { ok: true };
+  });
+
+
 // Alignment rows
 export const updateAlignmentRow = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
