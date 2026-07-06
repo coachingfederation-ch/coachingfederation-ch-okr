@@ -431,11 +431,13 @@ function RoleLabelSelect({
 // ---------- OKR card ----------
 
 function OkrCard({
-  set, canEdit, m,
+  set, canEdit, m, secondaryByKr, initiativeOrigin,
 }: {
   set: OkrSetDTO;
   canEdit: boolean;
   m: OkrMutations;
+  secondaryByKr: Map<string, InitiativeDTO[]>;
+  initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
 }) {
   const { locale, t } = useLocale();
   const [openKrId, setOpenKrId] = useState<string | null>(null);
