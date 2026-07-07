@@ -13,12 +13,14 @@ import {
   deleteKeyResult,
   deleteOkrSet,
   getDashboard,
+  setInitiativeSecondaryKrs,
   updateAlignmentRow,
   updateInitiative,
   updateKeyResult,
   updateOkrSet,
   updatePillarSummary,
 } from "@/lib/okr.functions";
+
 import {
   CONTRIBUTION_CYCLE,
   LIMITS,
@@ -40,6 +42,8 @@ import { pillarName } from "@/lib/i18n-strings";
 import { EditableText } from "@/components/okr/EditableText";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
+import { LinkInitiativesDialog } from "@/components/okr/LinkInitiativesDialog";
+
 
 import {
   DropdownMenu,
@@ -125,8 +129,10 @@ function useOkrMutations(sourceLang: Locale) {
   const addInitFn = useServerFn(addInitiative);
   const updateInitFn = useServerFn(updateInitiative);
   const deleteInitFn = useServerFn(deleteInitiative);
+  const setInitiativeSecondaryFn = useServerFn(setInitiativeSecondaryKrs);
   const updateAlignFn = useServerFn(updateAlignmentRow);
   const updatePillarFn = useServerFn(updatePillarSummary);
+
 
   const updateSet = useMutation<
     unknown,
@@ -221,6 +227,28 @@ function useOkrMutations(sourceLang: Locale) {
     onSettled: invalidate,
   });
 
+  const setInitiativeSecondary = useMutation<
+    unknown,
+    Error,
+    { id: string; kr_ids: string[] },
+    Ctx
+  >({
+    mutationFn: (v) =>
+      setInitiativeSecondaryFn({ data: { id: v.id, kr_ids: v.kr_ids } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets)
+          for (const k of s.key_results) {
+            const it = k.initiatives.find((i) => i.id === v.id);
+            if (it) it.secondary_kr_ids = [...v.kr_ids];
+          }
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+
+
 
   const updateAlign = useMutation<
     unknown,
@@ -258,8 +286,9 @@ function useOkrMutations(sourceLang: Locale) {
   return {
     updateSet, addSet, deleteSet,
     addKr, updateKr, deleteKr,
-    addInit, updateInit, deleteInit,
+    addInit, updateInit, deleteInit, setInitiativeSecondary,
     updateAlign, updatePillar,
+
   };
 }
 type OkrMutations = ReturnType<typeof useOkrMutations>;
@@ -431,14 +460,16 @@ function RoleLabelSelect({
 // ---------- OKR card ----------
 
 function OkrCard({
-  set, canEdit, m, secondaryByKr, initiativeOrigin,
+  set, canEdit, m, dashboard, secondaryByKr, initiativeOrigin,
 }: {
   set: OkrSetDTO;
   canEdit: boolean;
   m: OkrMutations;
+  dashboard: DashboardDTO;
   secondaryByKr: Map<string, InitiativeDTO[]>;
   initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
 }) {
+
   const { locale, t } = useLocale();
   const [openKrId, setOpenKrId] = useState<string | null>(null);
   const openKr = openKrId
@@ -583,10 +614,12 @@ function OkrCard({
         kr={openKr}
         canEdit={canEdit}
         m={m}
+        dashboard={dashboard}
         secondaryInitiatives={openKr ? secondaryByKr.get(openKr.id) ?? [] : []}
         initiativeOrigin={initiativeOrigin}
         onClose={() => setOpenKrId(null)}
       />
+
     </article>
   );
 }
@@ -644,31 +677,28 @@ function KrCard({
 }
 
 function KrDetailSheet({
-  kr, canEdit, m, onClose, secondaryInitiatives, initiativeOrigin,
+  kr, canEdit, m, dashboard, onClose, secondaryInitiatives, initiativeOrigin,
 }: {
   kr: KeyResultDTO | null;
   canEdit: boolean;
   m: OkrMutations;
+  dashboard: DashboardDTO;
   onClose: () => void;
   secondaryInitiatives: InitiativeDTO[];
   initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
 }) {
   const { locale, t } = useLocale();
-  const [initDraft, setInitDraft] = useState("");
-
-  const submitInit = () => {
-    if (!kr) return;
-    const text = initDraft.trim();
-    if (!text) return;
-    m.addInit.mutate(
-      { kr_id: kr.id, text },
-      { onSuccess: () => setInitDraft("") },
-    );
-  };
+  const [linkOpen, setLinkOpen] = useState(false);
 
   const update = (patch: Partial<KeyResultDTO>) => {
     if (!kr) return;
     m.updateKr.mutate({ id: kr.id, patch });
+  };
+
+  const unlinkSecondary = (initiative: InitiativeDTO) => {
+    if (!kr) return;
+    const next = (initiative.secondary_kr_ids ?? []).filter((id) => id !== kr.id);
+    m.setInitiativeSecondary.mutate({ id: initiative.id, kr_ids: next });
   };
 
   const krText = kr ? pickTranslation(kr, "text", kr.text, locale) : "";
@@ -679,10 +709,7 @@ function KrDetailSheet({
     <Sheet
       open={!!kr}
       onOpenChange={(open) => {
-        if (!open) {
-          setInitDraft("");
-          onClose();
-        }
+        if (!open) onClose();
       }}
     >
       <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
@@ -746,18 +773,29 @@ function KrDetailSheet({
             </div>
 
             <section className="mt-8">
-              <div className="mb-2 flex items-center justify-between">
+              <div className="mb-2 flex items-center justify-between gap-2">
                 <SectionLabel>{t("section.relatedInitiatives")}</SectionLabel>
-                <span className="text-[11px] font-medium text-muted-foreground">
-                  {kr.initiatives.length + secondaryInitiatives.length}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-medium text-muted-foreground">
+                    {kr.initiatives.length + secondaryInitiatives.length}
+                  </span>
+                  {canEdit && (
+                    <button
+                      type="button"
+                      onClick={() => setLinkOpen(true)}
+                      className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-white px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      <Plus className="h-3 w-3" />
+                      {t("initiative.link")}
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="overflow-hidden rounded-xl border border-border/70">
                 <table className="w-full text-sm">
                   <thead className="bg-muted/60 text-left">
                     <tr className="text-[11px] uppercase tracking-widest text-muted-foreground">
                       <th className="py-2 pl-4 font-semibold">{t("initiative.header")}</th>
-                      {canEdit && <th className="w-10" />}
                     </tr>
                   </thead>
                   <tbody>
@@ -778,26 +816,11 @@ function KrDetailSheet({
                             onSave={(v) => m.updateInit.mutate({ id: it.id, text: v })}
                           />
                         </td>
-                        {canEdit && (
-                          <td className="py-2.5 pr-3">
-                            <button
-                              type="button"
-                              onClick={() => m.deleteInit.mutate({ id: it.id })}
-                              aria-label={t("initiative.delete")}
-                              className="rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
-                            >
-                              <X className="h-3.5 w-3.5" />
-                            </button>
-                          </td>
-                        )}
                       </tr>
                     ))}
                     {kr.initiatives.length === 0 && (
                       <tr>
-                        <td
-                          colSpan={canEdit ? 2 : 1}
-                          className="py-3 pl-4 text-sm italic text-muted-foreground bg-white"
-                        >
+                        <td className="py-3 pl-4 text-sm italic text-muted-foreground bg-white">
                           {t("initiative.none")}
                         </td>
                       </tr>
@@ -806,30 +829,9 @@ function KrDetailSheet({
                 </table>
               </div>
               {canEdit && (
-                <div className="mt-3 flex gap-2">
-                  <input
-                    type="text"
-                    value={initDraft}
-                    onChange={(e) => setInitDraft(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        submitInit();
-                      }
-                    }}
-                    maxLength={LIMITS.initiative}
-                    placeholder={t("initiative.new")}
-                    className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring/40"
-                  />
-                  <button
-                    type="button"
-                    disabled={!initDraft.trim() || m.addInit.isPending}
-                    onClick={submitInit}
-                    className="btn-mono inline-flex h-10 items-center justify-center rounded-md border border-primary/25 bg-white px-4 hover:bg-primary/5 transition-colors disabled:opacity-50"
-                  >
-                    {t("initiative.add")}
-                  </button>
-                </div>
+                <p className="mt-2 text-[11px] italic text-muted-foreground">
+                  {t("initiative.createInPortfolio")}
+                </p>
               )}
             </section>
 
@@ -880,7 +882,19 @@ function KrDetailSheet({
                                 </span>
                               </div>
                             </td>
-                            {canEdit && <td className="py-2.5 pr-3" />}
+                            {canEdit && (
+                              <td className="py-2.5 pr-3">
+                                <button
+                                  type="button"
+                                  onClick={() => unlinkSecondary(it)}
+                                  aria-label={t("initiative.unlinkSecondary")}
+                                  title={t("initiative.unlinkSecondary")}
+                                  className="rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </button>
+                              </td>
+                            )}
                           </tr>
                         );
                       })}
@@ -889,6 +903,14 @@ function KrDetailSheet({
                 </div>
               </section>
             )}
+
+            <LinkInitiativesDialog
+              open={linkOpen}
+              onOpenChange={setLinkOpen}
+              kr={kr}
+              dashboard={dashboard}
+            />
+
 
             {canEdit && (
               <div className="mt-8 border-t border-border/60 pt-4">
@@ -1189,9 +1211,11 @@ function IndexContent() {
             set={set}
             canEdit={canEdit}
             m={m}
+            dashboard={data}
             secondaryByKr={secondaryByKr}
             initiativeOrigin={initiativeOrigin}
           />
+
         ))}
         {canEdit && (
           <div className="flex justify-center">

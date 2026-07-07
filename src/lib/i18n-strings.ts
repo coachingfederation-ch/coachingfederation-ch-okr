@@ -106,6 +106,21 @@ export type StringKey =
   | "initiatives.form.noSecondaryKrs"
   | "initiatives.form.removeSecondaryKr"
   | "initiatives.form.searchKr"
+  | "initiative.link"
+  | "initiative.linkDialog.title"
+  | "initiative.linkDialog.description"
+  | "initiative.linkDialog.search"
+  | "initiative.linkDialog.empty"
+  | "initiative.linkDialog.role.none"
+  | "initiative.linkDialog.role.secondary"
+  | "initiative.linkDialog.role.primary"
+  | "initiative.linkDialog.primaryHint"
+  | "initiative.linkDialog.primaryLocked"
+  | "initiative.unlinkSecondary"
+  | "initiative.createInPortfolio"
+  | "initiative.linksUpdated"
+
+
 
   | "common.cancel"
   | "common.create"
@@ -229,6 +244,20 @@ const en: Record<StringKey, string> = {
   "initiatives.form.noSecondaryKrs": "No secondary Key Results yet.",
   "initiatives.form.removeSecondaryKr": "Remove",
   "initiatives.form.searchKr": "Search Key Results…",
+  "initiative.link": "Link initiatives",
+  "initiative.linkDialog.title": "Link initiatives to this KR",
+  "initiative.linkDialog.description": "Choose which portfolio initiatives contribute to this key result. Create new initiatives from the Portfolio.",
+  "initiative.linkDialog.search": "Search initiatives…",
+  "initiative.linkDialog.empty": "No initiatives in the portfolio yet.",
+  "initiative.linkDialog.role.none": "None",
+  "initiative.linkDialog.role.secondary": "Secondary",
+  "initiative.linkDialog.role.primary": "Primary",
+  "initiative.linkDialog.primaryHint": "Setting an initiative as Primary moves it here from its current KR.",
+  "initiative.linkDialog.primaryLocked": "Change the primary link in the target KR's dialog.",
+  "initiative.unlinkSecondary": "Remove secondary link",
+  "initiative.createInPortfolio": "New initiatives are created in the Portfolio.",
+  "initiative.linksUpdated": "Links updated",
+
 
   "common.cancel": "Cancel",
   "common.create": "Create",
@@ -348,6 +377,20 @@ const de: Record<StringKey, string> = {
   "initiatives.form.noSecondaryKrs": "Noch keine sekundären Key Results.",
   "initiatives.form.removeSecondaryKr": "Entfernen",
   "initiatives.form.searchKr": "Key Results suchen…",
+  "initiative.link": "Initiativen verknüpfen",
+  "initiative.linkDialog.title": "Initiativen mit diesem KR verknüpfen",
+  "initiative.linkDialog.description": "Wähle, welche Portfolio-Initiativen zu diesem Key Result beitragen. Neue Initiativen werden im Portfolio erstellt.",
+  "initiative.linkDialog.search": "Initiativen suchen…",
+  "initiative.linkDialog.empty": "Noch keine Initiativen im Portfolio.",
+  "initiative.linkDialog.role.none": "Keine",
+  "initiative.linkDialog.role.secondary": "Sekundär",
+  "initiative.linkDialog.role.primary": "Primär",
+  "initiative.linkDialog.primaryHint": "Wird eine Initiative als Primär gesetzt, wechselt sie von ihrem bisherigen KR hierher.",
+  "initiative.linkDialog.primaryLocked": "Ändere die primäre Verknüpfung im Dialog des Ziel-KRs.",
+  "initiative.unlinkSecondary": "Sekundäre Verknüpfung entfernen",
+  "initiative.createInPortfolio": "Neue Initiativen werden im Portfolio erstellt.",
+  "initiative.linksUpdated": "Verknüpfungen aktualisiert",
+
 
   "common.cancel": "Abbrechen",
   "common.create": "Erstellen",
@@ -466,6 +509,20 @@ const fr: Record<StringKey, string> = {
   "initiatives.form.noSecondaryKrs": "Aucun résultat clé secondaire.",
   "initiatives.form.removeSecondaryKr": "Retirer",
   "initiatives.form.searchKr": "Rechercher des résultats clés…",
+  "initiative.link": "Lier des initiatives",
+  "initiative.linkDialog.title": "Lier des initiatives à ce KR",
+  "initiative.linkDialog.description": "Choisissez quelles initiatives du portefeuille contribuent à ce résultat clé. Les nouvelles initiatives se créent dans le Portefeuille.",
+  "initiative.linkDialog.search": "Rechercher des initiatives…",
+  "initiative.linkDialog.empty": "Aucune initiative dans le portefeuille.",
+  "initiative.linkDialog.role.none": "Aucun",
+  "initiative.linkDialog.role.secondary": "Secondaire",
+  "initiative.linkDialog.role.primary": "Principal",
+  "initiative.linkDialog.primaryHint": "Définir une initiative comme Principale la déplace ici depuis son KR actuel.",
+  "initiative.linkDialog.primaryLocked": "Modifiez le lien principal dans le dialogue du KR cible.",
+  "initiative.unlinkSecondary": "Retirer le lien secondaire",
+  "initiative.createInPortfolio": "Les nouvelles initiatives se créent dans le Portefeuille.",
+  "initiative.linksUpdated": "Liens mis à jour",
+
 
   "common.cancel": "Annuler",
   "common.create": "Créer",
@@ -584,6 +641,20 @@ const it: Record<StringKey, string> = {
   "initiatives.form.noSecondaryKrs": "Nessun risultato chiave secondario.",
   "initiatives.form.removeSecondaryKr": "Rimuovi",
   "initiatives.form.searchKr": "Cerca risultati chiave…",
+  "initiative.link": "Collega iniziative",
+  "initiative.linkDialog.title": "Collega iniziative a questo KR",
+  "initiative.linkDialog.description": "Scegli quali iniziative del portfolio contribuiscono a questo risultato chiave. Le nuove iniziative si creano nel Portfolio.",
+  "initiative.linkDialog.search": "Cerca iniziative…",
+  "initiative.linkDialog.empty": "Nessuna iniziativa nel portfolio.",
+  "initiative.linkDialog.role.none": "Nessuno",
+  "initiative.linkDialog.role.secondary": "Secondaria",
+  "initiative.linkDialog.role.primary": "Primaria",
+  "initiative.linkDialog.primaryHint": "Impostare un'iniziativa come Primaria la sposta qui dal suo KR attuale.",
+  "initiative.linkDialog.primaryLocked": "Modifica il collegamento primario nel dialogo del KR di destinazione.",
+  "initiative.unlinkSecondary": "Rimuovi collegamento secondario",
+  "initiative.createInPortfolio": "Le nuove iniziative si creano nel Portfolio.",
+  "initiative.linksUpdated": "Collegamenti aggiornati",
+
 
   "common.cancel": "Annulla",
   "common.create": "Crea",
