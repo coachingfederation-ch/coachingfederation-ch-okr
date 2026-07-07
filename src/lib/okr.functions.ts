@@ -465,6 +465,30 @@ export const setInitiativeSecondaryKrs = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// Re-parent an initiative to a new primary KR. Also removes any secondary
+// link to that same KR (mutually exclusive). Used by the KR view's
+// "Link initiatives" dialog to move an initiative between KRs.
+export const setInitiativePrimaryKr = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({ id: uuidSchema, kr_id: uuidSchema }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("initiatives")
+      .update({ kr_id: data.kr_id })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    const { error: delErr } = await context.supabase
+      .from("initiative_secondary_krs")
+      .delete()
+      .eq("initiative_id", data.id)
+      .eq("kr_id", data.kr_id);
+    if (delErr) throw new Error(delErr.message);
+    return { ok: true };
+  });
+
+
 
 // Alignment rows
 export const updateAlignmentRow = createServerFn({ method: "POST" })
