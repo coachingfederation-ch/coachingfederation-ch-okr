@@ -1193,9 +1193,11 @@ function IndexContent() {
             set={set}
             canEdit={canEdit}
             m={m}
+            dashboard={data}
             secondaryByKr={secondaryByKr}
             initiativeOrigin={initiativeOrigin}
           />
+
         ))}
         {canEdit && (
           <div className="flex justify-center">
