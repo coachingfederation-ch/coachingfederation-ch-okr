@@ -106,6 +106,21 @@ export type StringKey =
   | "initiatives.form.noSecondaryKrs"
   | "initiatives.form.removeSecondaryKr"
   | "initiatives.form.searchKr"
+  | "initiative.link"
+  | "initiative.linkDialog.title"
+  | "initiative.linkDialog.description"
+  | "initiative.linkDialog.search"
+  | "initiative.linkDialog.empty"
+  | "initiative.linkDialog.role.none"
+  | "initiative.linkDialog.role.secondary"
+  | "initiative.linkDialog.role.primary"
+  | "initiative.linkDialog.primaryHint"
+  | "initiative.linkDialog.primaryLocked"
+  | "initiative.unlinkSecondary"
+  | "initiative.createInPortfolio"
+  | "initiative.linksUpdated"
+
+
 
   | "common.cancel"
   | "common.create"
