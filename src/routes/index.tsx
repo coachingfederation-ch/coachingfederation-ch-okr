@@ -227,6 +227,28 @@ function useOkrMutations(sourceLang: Locale) {
     onSettled: invalidate,
   });
 
+  const setInitiativeSecondary = useMutation<
+    unknown,
+    Error,
+    { id: string; kr_ids: string[] },
+    Ctx
+  >({
+    mutationFn: (v) =>
+      setInitiativeSecondaryFn({ data: { id: v.id, kr_ids: v.kr_ids } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets)
+          for (const k of s.key_results) {
+            const it = k.initiatives.find((i) => i.id === v.id);
+            if (it) it.secondary_kr_ids = [...v.kr_ids];
+          }
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+
+
 
   const updateAlign = useMutation<
     unknown,
