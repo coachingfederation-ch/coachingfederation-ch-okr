@@ -583,10 +583,12 @@ function OkrCard({
         kr={openKr}
         canEdit={canEdit}
         m={m}
+        dashboard={dashboard}
         secondaryInitiatives={openKr ? secondaryByKr.get(openKr.id) ?? [] : []}
         initiativeOrigin={initiativeOrigin}
         onClose={() => setOpenKrId(null)}
       />
+
     </article>
   );
 }
