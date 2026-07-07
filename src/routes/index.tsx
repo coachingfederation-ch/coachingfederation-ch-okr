@@ -129,8 +129,10 @@ function useOkrMutations(sourceLang: Locale) {
   const addInitFn = useServerFn(addInitiative);
   const updateInitFn = useServerFn(updateInitiative);
   const deleteInitFn = useServerFn(deleteInitiative);
+  const setInitiativeSecondaryFn = useServerFn(setInitiativeSecondaryKrs);
   const updateAlignFn = useServerFn(updateAlignmentRow);
   const updatePillarFn = useServerFn(updatePillarSummary);
+
 
   const updateSet = useMutation<
     unknown,
