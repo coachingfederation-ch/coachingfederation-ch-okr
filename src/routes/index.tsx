@@ -286,8 +286,9 @@ function useOkrMutations(sourceLang: Locale) {
   return {
     updateSet, addSet, deleteSet,
     addKr, updateKr, deleteKr,
-    addInit, updateInit, deleteInit,
+    addInit, updateInit, deleteInit, setInitiativeSecondary,
     updateAlign, updatePillar,
+
   };
 }
 type OkrMutations = ReturnType<typeof useOkrMutations>;
