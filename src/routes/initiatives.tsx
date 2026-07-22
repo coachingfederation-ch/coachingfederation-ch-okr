@@ -238,6 +238,11 @@ function InitiativesContent() {
               src={icfLogo.url}
               alt="ICF Switzerland Charter Chapter"
               className="h-20 w-auto -ml-3 -mt-2"
+              width={88}
+              height={80}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
             />
             <div className="flex items-center gap-3">
               <TopNav />
