@@ -36,6 +36,21 @@ function serverPublicClient() {
 
 // -------- Translation helpers (server) --------
 
+/**
+ * Keep a row's translations consistent after a write.
+ *
+ * Important: a row has ONE authoritative source language, stored in
+ * `source_lang`, and the base columns always hold text in that language.
+ * An editor may however be working in a different UI locale. In that case we
+ * must NOT re-label the row (that would make every untouched base column —
+ * still written in the old source language — be served raw to viewers of the
+ * new one, discarding their cached translations).
+ *
+ * Instead, when `editorLang !== row.source_lang`, we translate the edited
+ * fields from the editor's language back into the row's source language,
+ * write that back into the base columns, and cache the editor's own wording
+ * under `translations[editorLang]`. `source_lang` stays untouched.
+ */
 async function translateRow(args: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ctx: { supabase: any };
@@ -45,7 +60,7 @@ async function translateRow(args: {
   sourceLang: Locale;
   patch: Record<string, unknown>;
 }) {
-  const { ctx, table, id, idColumn = "id", sourceLang, patch } = args;
+  const { ctx, table, id, idColumn = "id", sourceLang: editorLang, patch } = args;
   const fieldKeys = TRANSLATABLE_FIELDS[table] as readonly string[];
   const changed: Record<string, string> = {};
   for (const k of fieldKeys) {
@@ -53,28 +68,57 @@ async function translateRow(args: {
     if (typeof v === "string") changed[k] = v;
   }
 
-  // Nothing translatable in this patch → still make sure source_lang is set.
   if (Object.keys(changed).length === 0) return;
 
-  // Read existing translations blob so we can merge non-changed fields.
+  // Read existing translations + the row's authoritative source language.
   const { data: existing } = await ctx.supabase
     .from(table)
-    .select("translations")
+    .select("translations,source_lang")
     .eq(idColumn, id)
     .maybeSingle();
 
+  const existingRow = existing as
+    | { translations?: unknown; source_lang?: string | null }
+    | null;
+  const rowSource = ((existingRow?.source_lang ?? editorLang) as Locale);
+
   const { translateFields, mergeTranslations } = await import("./translate.server");
-  const fresh = await translateFields(sourceLang, changed);
-  const merged = mergeTranslations(
-    (existing as { translations?: unknown } | null)?.translations ?? {},
-    fresh,
-  );
+  const fresh = await translateFields(editorLang, changed);
+  const merged = mergeTranslations(existingRow?.translations ?? {}, fresh);
+
+  if (rowSource === editorLang) {
+    // Base columns already hold source-language text; just cache translations.
+    delete merged[rowSource];
+    await ctx.supabase
+      .from(table)
+      .update({ translations: merged, source_lang: rowSource })
+      .eq(idColumn, id);
+    return;
+  }
+
+  // Cross-language edit: base columns must go back to the row's source
+  // language, and the editor's own wording becomes the cached translation.
+  const backToSource = fresh[rowSource] ?? {};
+  const basePatch: Record<string, string> = {};
+  for (const [k, v] of Object.entries(changed)) {
+    const translated = backToSource[k];
+    if (typeof translated === "string" && translated.trim().length > 0) {
+      basePatch[k] = translated;
+    } else {
+      // Translation unavailable — keep what the editor typed rather than
+      // losing the edit. Worst case that one field reads in editorLang.
+      basePatch[k] = v;
+    }
+  }
+  merged[editorLang] = { ...(merged[editorLang] ?? {}), ...changed };
+  delete merged[rowSource];
 
   await ctx.supabase
     .from(table)
-    .update({ translations: merged, source_lang: sourceLang })
+    .update({ ...basePatch, translations: merged, source_lang: rowSource })
     .eq(idColumn, id);
 }
+
 
 // -------- READ (public) --------
 
