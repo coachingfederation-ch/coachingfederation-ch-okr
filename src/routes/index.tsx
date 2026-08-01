@@ -1139,9 +1139,7 @@ function IndexContent() {
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-3xl">
               <p className="eyebrow !text-accent">{t("hero.eyebrow")}</p>
-              <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-                {t("hero.title")}
-              </h1>
+              <h1 className="display-xl mt-3">{t("hero.title")}</h1>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
                 {t("hero.subtitle")}
               </p>
