@@ -216,7 +216,7 @@ function StyleGuidePage() {
         <Section
           id="02"
           title="Color"
-          intro="Only use semantic tokens. Never hardcode hex or Tailwind color classes like text-white / bg-slate-500 in components."
+          intro="The official ICF palette: Deep Blue #212251, Blue #2B379B, Light Blue #5778FA, Yellow #EFCB30, Bone #F8F0E4, White. Always use the semantic tokens — never hardcode hex or Tailwind color classes in components. Yellow is used sparingly; Light Blue carries focus and selection, not body text."
         >
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -225,13 +225,16 @@ function StyleGuidePage() {
               { name: "card", cls: "bg-card border border-border", fg: "text-card-foreground" },
               { name: "muted", cls: "bg-muted", fg: "text-muted-foreground" },
               { name: "primary", cls: "bg-primary", fg: "text-primary-foreground" },
+              { name: "highlight", cls: "bg-highlight", fg: "text-highlight-foreground" },
               { name: "accent", cls: "bg-accent", fg: "text-accent-foreground" },
+              { name: "secondary", cls: "bg-secondary", fg: "text-secondary-foreground" },
               { name: "hero", cls: "bg-hero", fg: "text-hero-foreground" },
               { name: "border", cls: "bg-border", fg: "text-foreground" },
               { name: "ring", cls: "bg-ring", fg: "text-primary-foreground" },
               { name: "chip", cls: "bg-chip border border-border", fg: "text-chip-foreground" },
               { name: "pillar-sg", cls: "bg-pillar-sg", fg: "text-primary-foreground" },
               { name: "pillar-oe", cls: "bg-pillar-oe", fg: "text-primary-foreground" },
+              { name: "pillar-ce", cls: "bg-pillar-ce", fg: "text-primary-foreground" },
             ].map((c) => (
               <div key={c.name} className="overflow-hidden rounded-lg border border-border/70">
                 <div className={cn("flex h-20 items-end p-3", c.cls, c.fg)}>
