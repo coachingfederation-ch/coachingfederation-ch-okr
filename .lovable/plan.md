@@ -1,80 +1,73 @@
-# Refactor KR ↔ Initiative relationships
+# Visual alignment with the ICF Switzerland website
 
-## Goal
+Bring the OKR dashboard onto the same visual system as the public chapter site — official ICF palette, Quicksand + Plus Jakarta Sans, calmer surfaces — without touching routes, data, i18n, auth, or any component behaviour.
 
-Initiatives are created and deleted exclusively from the Portfolio view (`/initiatives`). The KR detail sheet (`/`) only **links** or **unlinks** existing initiatives — no create, no delete.
+## What I verified first
 
-## KR detail sheet changes (`src/routes/index.tsx`)
+- The dashboard's `src/styles.css` currently uses a lavender/indigo/teal palette (`--background` soft lavender, `--accent` teal) and loads **Inter + JetBrains Mono from Google Fonts** via a `<link>` in `src/routes/__root.tsx`. Quicksand and Plus Jakarta Sans are not present in this project.
+- The public site project already self-hosts both families as variable WOFF2 files in `public/fonts/` (`quicksand-variable.woff2`, `plus-jakarta-sans-variable.woff2`, plus the Quicksand OFL licence) and defines a full ICF token set in its own `styles.css`, converted from the brand HEX values to OKLCH.
+- Both projects use the **same semantic token names** — `--hero`, `--pillar-sg/oe/ce`, `--chip`, `--chip-active-border` — so focus-area meaning carries over by remapping values, with no component rewiring.
+- The dashboard is missing a few tokens its components reference indirectly (`--popover`, `--secondary`, `--destructive`); a past bug ("translucent list") was worked around because `bg-popover` was undefined.
 
-- Remove the "Add new initiative" input + button at the bottom of the Related Initiatives section.
-- Remove the per-row `X` delete button on primary initiatives.
-- Remove the `initDraft` state and `submitInit` handler.
-- Add a **"Link initiatives"** button in the section header (editor-only) that opens a new dialog.
-- Each row (primary and secondary) gets an unlink button (`X`) that:
-  - For a **secondary** row on this KR → removes the secondary link only.
-  - For a **primary** row → disabled with tooltip "Change primary KR in Link dialog" (unlinking primary would orphan the initiative).
-- Keep the two-table layout (Primary + Secondary) already in place.
+## Approach
 
-## New component: `LinkInitiativesDialog` (`src/components/okr/LinkInitiativesDialog.tsx`)
+Almost all of this lands in one file: `src/styles.css`. Component files are touched only where a hardcoded colour or font bypasses the tokens.
 
-Modal opened from the KR sheet. Shows all portfolio initiatives with:
+### 1. Self-host the fonts, drop Google Fonts
 
-- Search box (filters by initiative text, OKR title, KR label, owner).
-- One row per initiative with:
-  - Initiative title + origin chip (`OKR.KR`) + owner.
-  - A three-state selector for this KR: **None / Secondary / Primary** (radio group or segmented control).
-    - "Primary" is exclusive across KRs — picking it re-parents the initiative (moves `initiatives.kr_id` to this KR, and drops it from `initiative_secondary_krs` for this KR if present).
-    - "Secondary" adds an entry to `initiative_secondary_krs` for this KR (only allowed if the initiative's primary is a different KR).
-    - "None" removes both.
-- Save button batches the deltas into server calls; Cancel discards.
+- Copy `quicksand-variable.woff2`, `plus-jakarta-sans-variable.woff2` and `Quicksand-OFL.txt` from the chapter-site project into `public/fonts/`.
+- Add the two `@font-face` rules (variable ranges, `font-display: swap`) at the top of `src/styles.css`.
+- Set `--font-sans` / `--font-body` to Plus Jakarta Sans and `--font-heading` / `--font-display` to Quicksand; base layer applies body to `body` and Quicksand to `h1–h4`.
+- Remove the `fonts.googleapis.com` / `fonts.gstatic.com` preconnects and stylesheet link from `src/routes/__root.tsx`. This also removes a render-blocking external request, helping the FCP score raised earlier.
 
-## Server functions (`src/lib/okr.functions.ts`)
+### 2. Remap the colour tokens to the official palette
 
-Add a single new server function to keep the client simple:
+Port the chapter site's `:root` values verbatim so the two products share exact colours:
 
-```
-setKrInitiativeLinks({
-  kr_id,
-  primary_initiative_ids: string[],   // initiatives whose kr_id must equal kr_id after the call
-  secondary_initiative_ids: string[], // initiatives that must have a secondary link to kr_id after the call
-})
-```
+| Token | Role | Brand colour |
+| --- | --- | --- |
+| `--background` | warm page background | Bone `#F8F0E4` |
+| `--foreground`, `--hero` | text, header/footer surface | Deep Blue `#212251` |
+| `--primary`, `--chip-foreground` | brand, links, primary actions | Blue `#2B379B` |
+| `--highlight`, `--ring`, `--chip-active-border` | selected states, focus rings | Light Blue `#5778FA` |
+| `--accent` | selective emphasis only | Yellow `#EFCB30` |
+| `--card` | content surfaces | White |
 
-Handler (editor-only, `requireSupabaseAuth`):
+Focus-area indicators keep their tokens and meaning, restated in blues: SG → Light Blue, OE → Blue, CE → Deep Blue. Because those three differ mainly in lightness, each badge keeps its existing SG/OE/CE abbreviation as the non-colour indicator, and I'll confirm the selected/inactive/hover states stay distinguishable without relying on hue alone.
 
-1. Load current primaries for `kr_id` (from `initiatives.kr_id`) and current secondary links (`initiative_secondary_krs` where `kr_id = kr_id`).
-2. Compute diffs:
-   - Primary added → `UPDATE initiatives SET kr_id = :kr_id WHERE id IN (added)` (trigger `sync_initiative_okr_set` already keeps `okr_set_id` in sync).
-   - Primary removed → these initiatives now need a new primary. Since re-parenting only happens through this same dialog (which sets primary explicitly), the "removed" set here should always be empty; if not, reject with a clear error.
-   - Secondary added → INSERT rows into `initiative_secondary_krs`.
-   - Secondary removed → DELETE those rows.
-3. If an initiative is set as primary here, also delete its secondary row for this KR (mutually exclusive).
+Also add the missing `--popover`, `--secondary`, `--destructive` tokens and register them in `@theme inline`, then remove the `bg-background` + `z-[60]` workaround in the secondary-KR picker only if it renders correctly on the real token.
 
-Keep `deleteInitiative` as-is (Portfolio still uses it). Remove no server function.
+### 3. Surface and typography pass
 
-## Portfolio view (`src/routes/initiatives.tsx` + `EditInitiativeDialog`)
+Scoped, token-level adjustments — no layout or structural changes:
 
-- Portfolio already creates initiatives via `NewInitiativeDialog` — no change.
-- Ensure `EditInitiativeDialog` exposes **Delete initiative** (it already does, per prior turns — verify and keep).
-- No behavioral change otherwise.
+- Replace the repeated inline `shadow-[0_1px_2px_rgba(20,20,60,...)]` strings with a single `--shadow-soft` token (same values, ICF-tinted) so cards read as flat/subtly elevated rather than floating.
+- Cards sit on Bone with a defined border; keep existing radii, keep pills only for chips, filters and statuses.
+- Hierarchy in the OKR card via weight/size/line-height/tracking: objective title in Quicksand at the strongest level, steward/customer/metadata in small Plus Jakarta uppercase labels, key results and initiative counts in body type. No content, ordering or count changes.
+- Header keeps Deep Blue; nav and language toggles keep their current active/inactive logic, restyled so the active state reads as Blue-on-White and the inactive as legible white-on-Deep-Blue.
 
-## i18n strings (`src/lib/i18n-strings.ts`)
+### 4. Sweep for hardcoded colours
 
-Add EN/DE/FR/IT for:
+Search the OKR/initiative components, dialogs and `style-guide.tsx` for literal `bg-white`, `text-white`, `slate-*`, `emerald-*` and hex values, and route them through tokens. The initiative Kanban status colours (planned/in progress/done/canceled) stay semantically distinct — status also carries its text label, so colour is never the sole indicator.
 
-- `initiative.link` — "Link initiatives"
-- `initiative.linkDialog.title` — "Link initiatives to KR {kr}"
-- `initiative.linkDialog.search` — "Search initiatives…"
-- `initiative.linkDialog.role.none` / `.secondary` / `.primary`
-- `initiative.linkDialog.primaryHint` — "Setting an initiative as Primary moves it from its current KR."
-- `initiative.unlinkPrimaryDisabled` — tooltip on disabled primary unlink button.
-- `initiative.createInPortfolio` — small helper text shown where the old "Add" input used to be: "New initiatives are created in the Portfolio."
+### 5. Style guide page
 
-## Files touched
+`/style-guide` is updated to document the new palette, the two fonts and the revised surfaces, so it stays the canonical reference. No new component variants are added.
 
-- `src/routes/index.tsx` — KR sheet section rewrite, dialog wiring.
-- `src/components/okr/LinkInitiativesDialog.tsx` — new.
-- `src/lib/okr.functions.ts` — add `setKrInitiativeLinks`.
-- `src/lib/i18n-strings.ts` — new keys.
+## PR note
 
-No schema migration needed — existing `initiatives.kr_id` + `initiative_secondary_krs` cover both link types.
+**Summary** — Remaps the OKR dashboard's global design tokens and typography to the official ICF Switzerland visual system (Deep Blue / Blue / Light Blue / Yellow / Bone / White, Quicksand + Plus Jakarta Sans), matching the public chapter website. Visual only.
+
+**Changes**
+- Styles: `src/styles.css` — self-hosted `@font-face` rules, ICF OKLCH palette, added popover/secondary/destructive tokens, `--shadow-soft`.
+- Assets: three font files added to `public/fonts/`.
+- Root: `src/routes/__root.tsx` — Google Fonts links removed.
+- Components: hardcoded colour utilities in OKR/initiative components swapped for tokens; `style-guide.tsx` refreshed.
+
+**Backend / schema changes** — None.
+
+**Testing & verification** — All routes load; language switching across DE/FR/IT/EN; signed-out and edit-capable states; OKR detail, KR detail, new/edit initiative sheets and the KR link picker all open and scroll; console clean; `bunx tsgo --noEmit`, lint and build run; desktop, tablet and mobile widths screenshotted; contrast checked for body, muted text, links, buttons, badges, focus rings and status dots on Deep Blue, Blue, Bone, Yellow and White.
+
+**Risks & rollback** — Blast radius is global styling, so a bad token affects every page; no data or schema risk. Revert by restoring `src/styles.css` and the `__root.tsx` head links.
+
+**Follow-ups / known debt** — Dark mode is not defined in this project and stays out of scope. The `.dark` block on the chapter site is not ported.
