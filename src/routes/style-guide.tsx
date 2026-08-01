@@ -106,9 +106,7 @@ function StyleGuidePage() {
 
           <div className="max-w-3xl">
             <p className="eyebrow !text-accent">Design System</p>
-            <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-              Style Guide
-            </h1>
+            <h1 className="display-xl mt-3">Style Guide</h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
               The canonical typography, colors, spacing, and components used across the ICFS OKR
               dashboard. Reuse these exact patterns — do not introduce new variants.
@@ -155,25 +153,23 @@ function StyleGuidePage() {
         <Section
           id="01"
           title="Typography"
-          intro="Inter for UI and prose. JetBrains Mono for numeric/code chips. Headings are tight (-0.02em) and bold; body text stays at 14–16px."
+          intro="Quicksand for headings and display statements, Plus Jakarta Sans for everything else. Both are self-hosted variable fonts — no external font CDN. Headings are sentence case; all-caps is reserved for short metadata."
         >
           <Row label="Font family">
             <p className="text-sm">
-              Sans: <Code>Inter</Code> · Mono: <Code>JetBrains Mono</Code>
+              Headings: <Code>Quicksand</Code> · Body: <Code>Plus Jakarta Sans</Code>
             </p>
           </Row>
           <Row label="H1 · Hero">
-            <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-              The quick brown fox
-            </h1>
+            <h1 className="display-xl">The quick brown fox</h1>
             <p className="mt-1 text-xs text-muted-foreground">
-              <Code>text-4xl md:text-5xl font-bold tracking-tight</Code>
+              Utility <Code>.display-xl</Code> — fluid Quicksand 600.
             </p>
           </Row>
           <Row label="H2 · Section">
-            <h2 className="text-2xl font-bold tracking-tight">Section heading</h2>
+            <h2 className="display-lg">Section heading</h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              <Code>text-2xl font-bold tracking-tight</Code>
+              Utility <Code>.display-lg</Code>
             </p>
           </Row>
           <Row label="H3 · Subsection">
