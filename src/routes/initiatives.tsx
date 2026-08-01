@@ -106,14 +106,14 @@ function LanguageSwitcher() {
 const STATUS_ACCENT: Record<InitiativeStatus, string> = {
   planned: "border-l-muted-foreground/40",
   in_progress: "border-l-highlight",
-  done: "border-l-highlight",
-  canceled: "border-l-muted-foreground/50",
+  done: "border-l-primary",
+  canceled: "border-l-border",
 };
 const STATUS_DOT: Record<InitiativeStatus, string> = {
   planned: "bg-muted-foreground/40",
-  in_progress: "bg-primary",
+  in_progress: "bg-highlight",
   done: "bg-primary",
-  canceled: "bg-muted-foreground/50",
+  canceled: "bg-border",
 };
 const STATUS_KEY: Record<InitiativeStatus, StringKey> = {
   planned: "initiatives.status.planned",
