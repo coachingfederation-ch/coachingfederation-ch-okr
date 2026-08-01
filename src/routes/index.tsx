@@ -415,7 +415,7 @@ function PillarDot({ code }: { code: Pillar }) {
         : "var(--color-pillar-ce)";
   return (
     <span
-      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
+      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-primary-foreground"
       style={{ backgroundColor: bg }}
     >
       {code}
@@ -1158,9 +1158,7 @@ function IndexContent() {
             )}
           </div>
 
-          <h2 className="mt-5 text-2xl font-bold tracking-tight text-white md:text-3xl">
-            {t("hero.pillarTitle")}
-          </h2>
+          <h2 className="display-lg mt-5 text-hero-foreground">{t("hero.pillarTitle")}</h2>
         </div>
       </header>
 
