@@ -253,9 +253,7 @@ function InitiativesContent() {
 
           <div className="max-w-3xl">
             <p className="eyebrow !text-accent">{t("hero.eyebrow")}</p>
-            <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-              {t("initiatives.title")}
-            </h1>
+            <h1 className="display-xl mt-3">{t("initiatives.title")}</h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
               {t("initiatives.subtitle")}
             </p>
