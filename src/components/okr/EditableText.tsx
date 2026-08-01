@@ -127,7 +127,7 @@ export function EditableText({
       }
     },
     className: cn(
-      "w-full rounded-sm border border-ring/40 bg-white px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-ring/40",
+      "w-full rounded-sm border border-ring/40 bg-card px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-ring/40",
       inputClassName,
     ),
   };

@@ -58,7 +58,7 @@ function Section({
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{intro}</p>
         )}
       </div>
-      <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+      <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-soft">
         {children}
       </div>
     </section>
@@ -106,10 +106,8 @@ function StyleGuidePage() {
 
           <div className="max-w-3xl">
             <p className="eyebrow !text-accent">Design System</p>
-            <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-              Style Guide
-            </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">
+            <h1 className="display-xl mt-3">Style Guide</h1>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
               The canonical typography, colors, spacing, and components used across the ICFS OKR
               dashboard. Reuse these exact patterns — do not introduce new variants.
             </p>
@@ -121,7 +119,7 @@ function StyleGuidePage() {
       <section className="mx-auto -mt-8 max-w-7xl px-8">
         <nav
           aria-label="Style guide sections"
-          className="rounded-2xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]"
+          className="rounded-2xl border border-border/70 bg-card p-4 shadow-soft"
         >
           <ul className="flex flex-wrap gap-2 text-xs font-semibold">
             {[
@@ -155,25 +153,23 @@ function StyleGuidePage() {
         <Section
           id="01"
           title="Typography"
-          intro="Inter for UI and prose. JetBrains Mono for numeric/code chips. Headings are tight (-0.02em) and bold; body text stays at 14–16px."
+          intro="Quicksand for headings and display statements, Plus Jakarta Sans for everything else. Both are self-hosted variable fonts — no external font CDN. Headings are sentence case; all-caps is reserved for short metadata."
         >
           <Row label="Font family">
             <p className="text-sm">
-              Sans: <Code>Inter</Code> · Mono: <Code>JetBrains Mono</Code>
+              Headings: <Code>Quicksand</Code> · Body: <Code>Plus Jakarta Sans</Code>
             </p>
           </Row>
           <Row label="H1 · Hero">
-            <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-              The quick brown fox
-            </h1>
+            <h1 className="display-xl">The quick brown fox</h1>
             <p className="mt-1 text-xs text-muted-foreground">
-              <Code>text-4xl md:text-5xl font-bold tracking-tight</Code>
+              Utility <Code>.display-xl</Code> — fluid Quicksand 600.
             </p>
           </Row>
           <Row label="H2 · Section">
-            <h2 className="text-2xl font-bold tracking-tight">Section heading</h2>
+            <h2 className="display-lg">Section heading</h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              <Code>text-2xl font-bold tracking-tight</Code>
+              Utility <Code>.display-lg</Code>
             </p>
           </Row>
           <Row label="H3 · Subsection">
@@ -220,7 +216,7 @@ function StyleGuidePage() {
         <Section
           id="02"
           title="Color"
-          intro="Only use semantic tokens. Never hardcode hex or Tailwind color classes like text-white / bg-slate-500 in components."
+          intro="The official ICF palette: Deep Blue #212251, Blue #2B379B, Light Blue #5778FA, Yellow #EFCB30, Bone #F8F0E4, White. Always use the semantic tokens — never hardcode hex or Tailwind color classes in components. Yellow is used sparingly; Light Blue carries focus and selection, not body text."
         >
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -229,13 +225,16 @@ function StyleGuidePage() {
               { name: "card", cls: "bg-card border border-border", fg: "text-card-foreground" },
               { name: "muted", cls: "bg-muted", fg: "text-muted-foreground" },
               { name: "primary", cls: "bg-primary", fg: "text-primary-foreground" },
+              { name: "highlight", cls: "bg-highlight", fg: "text-highlight-foreground" },
               { name: "accent", cls: "bg-accent", fg: "text-accent-foreground" },
+              { name: "secondary", cls: "bg-secondary", fg: "text-secondary-foreground" },
               { name: "hero", cls: "bg-hero", fg: "text-hero-foreground" },
               { name: "border", cls: "bg-border", fg: "text-foreground" },
               { name: "ring", cls: "bg-ring", fg: "text-primary-foreground" },
               { name: "chip", cls: "bg-chip border border-border", fg: "text-chip-foreground" },
               { name: "pillar-sg", cls: "bg-pillar-sg", fg: "text-primary-foreground" },
               { name: "pillar-oe", cls: "bg-pillar-oe", fg: "text-primary-foreground" },
+              { name: "pillar-ce", cls: "bg-pillar-ce", fg: "text-primary-foreground" },
             ].map((c) => (
               <div key={c.name} className="overflow-hidden rounded-lg border border-border/70">
                 <div className={cn("flex h-20 items-end p-3", c.cls, c.fg)}>
@@ -294,7 +293,7 @@ function StyleGuidePage() {
             </div>
           </Row>
           <Row label="Elevation">
-            <div className="inline-block rounded-2xl border border-border/70 bg-card px-6 py-4 text-sm shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+            <div className="inline-block rounded-2xl border border-border/70 bg-card px-6 py-4 text-sm shadow-soft">
               Card shadow — the only shadow used.
             </div>
           </Row>
@@ -329,20 +328,20 @@ function StyleGuidePage() {
               <div className="mb-4 flex items-start justify-between gap-4">
                 <img src={icfLogo.url} alt="" className="h-14 w-auto" />
                 <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold">
+                  <span className="rounded-full bg-hero-foreground/10 px-3 py-1 text-[11px] font-semibold">
                     Nav
                   </span>
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold">
+                  <span className="rounded-full bg-hero-foreground/10 px-3 py-1 text-[11px] font-semibold">
                     Lang
                   </span>
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold">
+                  <span className="rounded-full bg-hero-foreground/10 px-3 py-1 text-[11px] font-semibold">
                     Auth
                   </span>
                 </div>
               </div>
               <p className="eyebrow !text-accent">Eyebrow</p>
               <h3 className="mt-2 text-2xl font-bold tracking-tight">Page title</h3>
-              <p className="mt-2 max-w-md text-sm text-white/75">
+              <p className="mt-2 max-w-md text-sm text-hero-foreground/75">
                 One-line subtitle that explains the page.
               </p>
             </div>
@@ -361,14 +360,14 @@ function StyleGuidePage() {
               <div
                 role="group"
                 aria-label="Language sample"
-                className="inline-flex items-center rounded-full bg-white/10 p-0.5 text-[11px] font-semibold"
+                className="inline-flex items-center rounded-full bg-hero-foreground/10 p-0.5 text-[11px] font-semibold"
               >
                 {["en", "de", "fr", "it"].map((l, i) => (
                   <span
                     key={l}
                     className={cn(
                       "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider",
-                      i === 0 ? "bg-white text-primary shadow-sm" : "text-white/80",
+                      i === 0 ? "bg-card text-primary shadow-sm" : "text-hero-foreground/80",
                     )}
                   >
                     {l}
@@ -421,14 +420,14 @@ function StyleGuidePage() {
           intro="Rounded 2xl card on card background, 1px border at border/70, subtle two-layer shadow. Padding p-4 for toolbars, p-6 for content."
         >
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+            <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-soft">
               <p className="section-label">Objective 1</p>
               <h3 className="mt-2 text-lg font-semibold tracking-tight">Growth &amp; Belonging</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 Standard content card. Use for OKRs, KRs, and initiative panels.
               </p>
             </div>
-            <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+            <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-soft">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold">Toolbar card</p>
                 <Button size="sm">Action</Button>
@@ -527,15 +526,15 @@ function StyleGuideFooter({ preview = false }: { preview?: boolean }) {
       )}
     >
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-8 py-6 text-xs sm:flex-row sm:items-center">
-        <p className="text-white/70">© {year} ICF Switzerland — Charter Chapter</p>
+        <p className="text-hero-foreground/70">© {year} ICF Switzerland — Charter Chapter</p>
         <nav aria-label="Footer" className="flex items-center gap-4">
-          <Link to="/" className="text-white/80 hover:text-white">
+          <Link to="/" className="text-hero-foreground/80 hover:text-hero-foreground">
             OKRs
           </Link>
-          <Link to="/initiatives" className="text-white/80 hover:text-white">
+          <Link to="/initiatives" className="text-hero-foreground/80 hover:text-hero-foreground">
             Initiatives
           </Link>
-          <Link to="/style-guide" className="text-white/80 hover:text-white">
+          <Link to="/style-guide" className="text-hero-foreground/80 hover:text-hero-foreground">
             Style guide
           </Link>
         </nav>

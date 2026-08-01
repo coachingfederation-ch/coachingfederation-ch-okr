@@ -239,7 +239,7 @@ function RoleSelector({
     { v: "primary", label: t.primary },
   ];
   return (
-    <div className="inline-flex shrink-0 items-center rounded-md border border-border/70 bg-white p-0.5 text-xs">
+    <div className="inline-flex shrink-0 items-center rounded-md border border-border/70 bg-card p-0.5 text-xs">
       {opts.map((o) => {
         const active = value === o.v;
         // If this row is currently primary, don't let the user demote it here.

@@ -9,8 +9,8 @@ export function TopNav() {
 
   const base =
     "inline-flex h-8 items-center rounded-full px-3.5 text-xs font-semibold tracking-wide transition-colors";
-  const inactive = "text-white/80 hover:text-white";
-  const active = "bg-white text-primary shadow-sm";
+  const inactive = "text-hero-foreground/80 hover:text-hero-foreground";
+  const active = "bg-card text-primary shadow-sm";
 
   const isOkrsActive = path === "/";
   const isInitiativesActive = path.startsWith("/initiatives");
@@ -18,7 +18,7 @@ export function TopNav() {
   return (
     <nav
       aria-label="Primary"
-      className="inline-flex items-center rounded-full bg-white/10 p-0.5"
+      className="inline-flex items-center rounded-full bg-hero-foreground/10 p-0.5"
     >
       <Link
         to="/"

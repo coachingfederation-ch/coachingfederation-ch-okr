@@ -301,7 +301,7 @@ function LanguageSwitcher() {
     <div
       role="group"
       aria-label="Language"
-      className="inline-flex items-center rounded-full bg-white/10 p-0.5 text-[11px] font-semibold"
+      className="inline-flex items-center rounded-full bg-hero-foreground/10 p-0.5 text-[11px] font-semibold"
     >
       {LOCALES.map((l) => {
         const active = l === locale;
@@ -315,8 +315,8 @@ function LanguageSwitcher() {
             className={cn(
               "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider transition-colors",
               active
-                ? "bg-white text-primary shadow-sm"
-                : "text-white/80 hover:text-white",
+                ? "bg-card text-primary shadow-sm"
+                : "text-hero-foreground/80 hover:text-hero-foreground",
             )}
           >
             {l}
@@ -339,7 +339,7 @@ function PillarChip({
     <span
       role="img"
       aria-label={`${code} — ${pillarName(locale, code)}`}
-      className="inline-flex h-7 items-center gap-1 rounded-full border border-[--color-chip-active-border] bg-white pl-3 pr-2 text-[11px] font-semibold tracking-wide text-primary"
+      className="inline-flex h-7 items-center gap-1 rounded-full border border-[--color-chip-active-border] bg-card pl-3 pr-2 text-[11px] font-semibold tracking-wide text-primary"
     >
       {code}
       {canEdit && onRemove && (
@@ -380,7 +380,7 @@ function PillarTagList({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="inline-flex h-7 items-center gap-1 rounded-full border border-dashed border-border bg-white px-2.5 text-[11px] font-medium text-muted-foreground hover:bg-muted/60 hover:text-primary transition-colors"
+              className="inline-flex h-7 items-center gap-1 rounded-full border border-dashed border-border bg-card px-2.5 text-[11px] font-medium text-muted-foreground hover:bg-muted/60 hover:text-primary transition-colors"
             >
               <Plus className="h-3 w-3" />
               {t("tag.add")}
@@ -415,7 +415,7 @@ function PillarDot({ code }: { code: Pillar }) {
         : "var(--color-pillar-ce)";
   return (
     <span
-      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
+      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-primary-foreground"
       style={{ backgroundColor: bg }}
     >
       {code}
@@ -436,7 +436,7 @@ function RoleLabelSelect({
 }) {
   if (!canEdit) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white px-2 py-1 text-xs font-semibold text-primary">
+      <span className="inline-flex items-center gap-1 rounded-md border border-primary/25 bg-card px-2 py-1 text-xs font-semibold text-primary">
         {value}
       </span>
     );
@@ -446,7 +446,7 @@ function RoleLabelSelect({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as RoleLabel)}
-        className="appearance-none inline-flex items-center gap-1 rounded-md border border-primary/25 bg-white pl-2 pr-6 py-1 text-xs font-semibold text-primary cursor-pointer hover:bg-primary/5"
+        className="appearance-none inline-flex items-center gap-1 rounded-md border border-primary/25 bg-card pl-2 pr-6 py-1 text-xs font-semibold text-primary cursor-pointer hover:bg-primary/5"
       >
         {ROLE_LABELS.map((r) => (
           <option key={r} value={r}>{r}</option>
@@ -486,7 +486,7 @@ function OkrCard({
   const alignmentText = pickTranslation(set, "alignment", set.alignment, locale);
 
   return (
-    <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
+    <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-soft">
       <header className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-4">
           <span className="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
@@ -637,7 +637,7 @@ function KrCard({
   const target = pickTranslation(kr, "target", kr.target, locale);
   const lead = pickTranslation(kr, "lead", kr.lead, locale);
   return (
-    <div className="group relative flex h-full flex-col rounded-2xl border border-border/70 bg-white p-4 text-left shadow-[0_1px_2px_rgba(20,20,60,0.03)] transition-all hover:border-primary/40 hover:shadow-[0_4px_16px_-8px_rgba(20,20,60,0.15)] has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
+    <div className="group relative flex h-full flex-col rounded-2xl border border-border/70 bg-card p-4 text-left shadow-soft transition-all hover:border-primary/40 hover:shadow-md has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
       <button
         type="button"
         onClick={onOpen}
@@ -783,7 +783,7 @@ function KrDetailSheet({
                     <button
                       type="button"
                       onClick={() => setLinkOpen(true)}
-                      className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-white px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+                      className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
                     >
                       <Plus className="h-3 w-3" />
                       {t("initiative.link")}
@@ -804,7 +804,7 @@ function KrDetailSheet({
                         key={it.id}
                         className={cn(
                           "border-t border-border/60 align-top",
-                          i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                          i % 2 === 1 ? "bg-muted/20" : "bg-card",
                         )}
                       >
                         <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
@@ -820,7 +820,7 @@ function KrDetailSheet({
                     ))}
                     {kr.initiatives.length === 0 && (
                       <tr>
-                        <td className="py-3 pl-4 text-sm italic text-muted-foreground bg-white">
+                        <td className="py-3 pl-4 text-sm italic text-muted-foreground bg-card">
                           {t("initiative.none")}
                         </td>
                       </tr>
@@ -866,7 +866,7 @@ function KrDetailSheet({
                             key={`sec-${it.id}`}
                             className={cn(
                               "border-t border-border/60 align-top",
-                              i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                              i % 2 === 1 ? "bg-muted/20" : "bg-card",
                             )}
                           >
                             <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
@@ -990,7 +990,7 @@ function AlignmentTable({
     CONTRIBUTION_CYCLE[(CONTRIBUTION_CYCLE.indexOf(curr) + 1) % 3];
 
   return (
-    <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
+    <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-soft">
       <h2 className="text-2xl font-bold text-foreground">{t("section.alignmentTitle")}</h2>
       <p className="mt-2 text-sm text-muted-foreground">
         {t("section.alignmentIntro")}{" "}
@@ -1030,7 +1030,7 @@ function AlignmentTable({
                   key={row.id}
                   className={cn(
                     "border-t border-border/60 align-top",
-                    i % 2 === 1 ? "bg-muted/20" : "bg-white",
+                    i % 2 === 1 ? "bg-muted/20" : "bg-card",
                   )}
                 >
                   <td className="py-4 pl-4 font-semibold text-foreground">
@@ -1139,10 +1139,8 @@ function IndexContent() {
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-3xl">
               <p className="eyebrow !text-accent">{t("hero.eyebrow")}</p>
-              <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-                {t("hero.title")}
-              </h1>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">
+              <h1 className="display-xl mt-3">{t("hero.title")}</h1>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
                 {t("hero.subtitle")}
               </p>
             </div>
@@ -1151,16 +1149,14 @@ function IndexContent() {
                 type="button"
                 onClick={() => m.addSet.mutate()}
                 disabled={m.addSet.isPending}
-                className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 !text-primary shadow-sm hover:shadow transition-shadow disabled:opacity-50"
+                className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-card px-5 !text-primary shadow-sm hover:shadow transition-shadow disabled:opacity-50"
               >
                 <Plus className="h-4 w-4" /> {t("hero.addOkrSet")}
               </button>
             )}
           </div>
 
-          <h2 className="mt-5 text-2xl font-bold tracking-tight text-white md:text-3xl">
-            {t("hero.pillarTitle")}
-          </h2>
+          <h2 className="display-lg mt-5 text-hero-foreground">{t("hero.pillarTitle")}</h2>
         </div>
       </header>
 
@@ -1176,7 +1172,7 @@ function IndexContent() {
             return (
               <div
                 key={code}
-                className="rounded-2xl border border-border/70 bg-card p-5 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]"
+                className="rounded-2xl border border-border/70 bg-card p-5 shadow-soft"
               >
                 <div className="flex items-center gap-3">
                   <PillarDot code={code} />
@@ -1228,7 +1224,7 @@ function IndexContent() {
               type="button"
               onClick={() => m.addSet.mutate()}
               disabled={m.addSet.isPending}
-              className="btn-mono inline-flex items-center gap-2 rounded-full border border-primary/25 bg-white px-5 py-2.5 text-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
+              className="btn-mono inline-flex items-center gap-2 rounded-full border border-primary/25 bg-card px-5 py-2.5 text-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
             >
               <Plus className="h-4 w-4" /> {t("okr.addOkrSet")}
             </button>
