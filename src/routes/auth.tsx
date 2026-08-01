@@ -58,7 +58,7 @@ function AuthPage() {
         <Link to="/" className="btn-mono text-primary/70 hover:text-primary text-xs">
           {t("auth.back")}
         </Link>
-        <div className="mt-4 rounded-3xl border border-border/70 bg-card p-8 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_24px_-12px_rgba(20,20,60,0.08)]">
+        <div className="mt-4 rounded-3xl border border-border/70 bg-card p-8 shadow-soft">
           <p className="eyebrow">{t("auth.editorAccess")}</p>
           <h1 className="mt-2 text-2xl font-bold">{t("auth.pageTitle")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -70,7 +70,7 @@ function AuthPage() {
             type="button"
             onClick={onGoogle}
             disabled={busy}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium hover:bg-muted/60 transition-colors disabled:opacity-50"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium hover:bg-muted/60 transition-colors disabled:opacity-50"
           >
             <GoogleIcon />
             {busy ? t("auth.pleaseWait") : t("auth.continueWithGoogle")}

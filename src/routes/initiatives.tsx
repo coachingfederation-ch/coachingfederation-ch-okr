@@ -77,7 +77,7 @@ function LanguageSwitcher() {
     <div
       role="group"
       aria-label="Language"
-      className="inline-flex items-center rounded-full bg-white/10 p-0.5 text-[11px] font-semibold"
+      className="inline-flex items-center rounded-full bg-hero-foreground/10 p-0.5 text-[11px] font-semibold"
     >
       {LOCALES.map((l) => {
         const active = l === locale;
@@ -90,7 +90,7 @@ function LanguageSwitcher() {
             aria-label={LOCALE_LABELS[l]}
             className={cn(
               "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider transition-colors",
-              active ? "bg-white text-primary shadow-sm" : "text-white/80 hover:text-white",
+              active ? "bg-card text-primary shadow-sm" : "text-hero-foreground/80 hover:text-hero-foreground",
             )}
           >
             {l}
@@ -104,15 +104,15 @@ function LanguageSwitcher() {
 // ---------- Status metadata ----------
 
 const STATUS_ACCENT: Record<InitiativeStatus, string> = {
-  planned: "border-l-slate-400",
-  in_progress: "border-l-primary",
-  done: "border-l-emerald-500",
+  planned: "border-l-muted-foreground/40",
+  in_progress: "border-l-highlight",
+  done: "border-l-highlight",
   canceled: "border-l-muted-foreground/50",
 };
 const STATUS_DOT: Record<InitiativeStatus, string> = {
-  planned: "bg-slate-400",
+  planned: "bg-muted-foreground/40",
   in_progress: "bg-primary",
-  done: "bg-emerald-500",
+  done: "bg-primary",
   canceled: "bg-muted-foreground/50",
 };
 const STATUS_KEY: Record<InitiativeStatus, StringKey> = {
@@ -256,7 +256,7 @@ function InitiativesContent() {
             <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
               {t("initiatives.title")}
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
               {t("initiatives.subtitle")}
             </p>
           </div>
@@ -264,7 +264,7 @@ function InitiativesContent() {
       </header>
 
       <section className="mx-auto -mt-8 max-w-7xl px-8">
-        <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+        <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-soft">
           <div className="flex flex-wrap items-center gap-3">
             <FilterBlock label={t("initiatives.filterOkr")}>
               <Select
@@ -323,7 +323,7 @@ function InitiativesContent() {
           const okrTitle = pickTranslation(set, "title", set.title, locale) || "Untitled";
           const krText = pickTranslation(kr, "text", kr.text, locale) || "Untitled KR";
           return (
-            <div className="mt-3 flex items-start gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-[0_1px_2px_rgba(20,20,60,0.04)]">
+            <div className="mt-3 flex items-start gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-soft">
               <span className="mt-0.5 inline-flex h-6 shrink-0 items-center rounded bg-primary/10 px-2 text-[11px] font-bold text-primary">
                 {set.number}.{kr.kr?.includes(".") ? kr.kr.split(".")[1] : kr.kr || "—"}
               </span>
@@ -421,7 +421,7 @@ function KanbanColumn({
       </div>
       <div className="flex flex-col gap-3">
         {items.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border/60 bg-white/40 px-3 py-6 text-center text-xs italic text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-border/60 bg-card/40 px-3 py-6 text-center text-xs italic text-muted-foreground">
             {t("initiatives.emptyColumn")}
           </div>
         ) : (
@@ -462,7 +462,7 @@ function InitiativeCard({
   return (
     <article
       className={cn(
-        "relative rounded-xl border border-border/70 border-l-4 bg-white p-3 shadow-[0_1px_2px_rgba(20,20,60,0.03)] transition-shadow hover:shadow-[0_4px_16px_-8px_rgba(20,20,60,0.15)]",
+        "relative rounded-xl border border-border/70 border-l-4 bg-card p-3 shadow-soft transition-shadow hover:shadow-md",
         STATUS_ACCENT[item.status],
       )}
     >

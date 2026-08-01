@@ -58,7 +58,7 @@ function Section({
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{intro}</p>
         )}
       </div>
-      <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+      <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-soft">
         {children}
       </div>
     </section>
@@ -109,7 +109,7 @@ function StyleGuidePage() {
             <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
               Style Guide
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
               The canonical typography, colors, spacing, and components used across the ICFS OKR
               dashboard. Reuse these exact patterns — do not introduce new variants.
             </p>
@@ -121,7 +121,7 @@ function StyleGuidePage() {
       <section className="mx-auto -mt-8 max-w-7xl px-8">
         <nav
           aria-label="Style guide sections"
-          className="rounded-2xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]"
+          className="rounded-2xl border border-border/70 bg-card p-4 shadow-soft"
         >
           <ul className="flex flex-wrap gap-2 text-xs font-semibold">
             {[
@@ -294,7 +294,7 @@ function StyleGuidePage() {
             </div>
           </Row>
           <Row label="Elevation">
-            <div className="inline-block rounded-2xl border border-border/70 bg-card px-6 py-4 text-sm shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+            <div className="inline-block rounded-2xl border border-border/70 bg-card px-6 py-4 text-sm shadow-soft">
               Card shadow — the only shadow used.
             </div>
           </Row>
@@ -329,20 +329,20 @@ function StyleGuidePage() {
               <div className="mb-4 flex items-start justify-between gap-4">
                 <img src={icfLogo.url} alt="" className="h-14 w-auto" />
                 <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold">
+                  <span className="rounded-full bg-hero-foreground/10 px-3 py-1 text-[11px] font-semibold">
                     Nav
                   </span>
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold">
+                  <span className="rounded-full bg-hero-foreground/10 px-3 py-1 text-[11px] font-semibold">
                     Lang
                   </span>
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold">
+                  <span className="rounded-full bg-hero-foreground/10 px-3 py-1 text-[11px] font-semibold">
                     Auth
                   </span>
                 </div>
               </div>
               <p className="eyebrow !text-accent">Eyebrow</p>
               <h3 className="mt-2 text-2xl font-bold tracking-tight">Page title</h3>
-              <p className="mt-2 max-w-md text-sm text-white/75">
+              <p className="mt-2 max-w-md text-sm text-hero-foreground/75">
                 One-line subtitle that explains the page.
               </p>
             </div>
@@ -361,14 +361,14 @@ function StyleGuidePage() {
               <div
                 role="group"
                 aria-label="Language sample"
-                className="inline-flex items-center rounded-full bg-white/10 p-0.5 text-[11px] font-semibold"
+                className="inline-flex items-center rounded-full bg-hero-foreground/10 p-0.5 text-[11px] font-semibold"
               >
                 {["en", "de", "fr", "it"].map((l, i) => (
                   <span
                     key={l}
                     className={cn(
                       "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider",
-                      i === 0 ? "bg-white text-primary shadow-sm" : "text-white/80",
+                      i === 0 ? "bg-card text-primary shadow-sm" : "text-hero-foreground/80",
                     )}
                   >
                     {l}
@@ -421,14 +421,14 @@ function StyleGuidePage() {
           intro="Rounded 2xl card on card background, 1px border at border/70, subtle two-layer shadow. Padding p-4 for toolbars, p-6 for content."
         >
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+            <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-soft">
               <p className="section-label">Objective 1</p>
               <h3 className="mt-2 text-lg font-semibold tracking-tight">Growth &amp; Belonging</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 Standard content card. Use for OKRs, KRs, and initiative panels.
               </p>
             </div>
-            <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgba(20,20,60,0.04),0_8px_20px_-14px_rgba(20,20,60,0.08)]">
+            <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-soft">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold">Toolbar card</p>
                 <Button size="sm">Action</Button>
@@ -527,15 +527,15 @@ function StyleGuideFooter({ preview = false }: { preview?: boolean }) {
       )}
     >
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-8 py-6 text-xs sm:flex-row sm:items-center">
-        <p className="text-white/70">© {year} ICF Switzerland — Charter Chapter</p>
+        <p className="text-hero-foreground/70">© {year} ICF Switzerland — Charter Chapter</p>
         <nav aria-label="Footer" className="flex items-center gap-4">
-          <Link to="/" className="text-white/80 hover:text-white">
+          <Link to="/" className="text-hero-foreground/80 hover:text-hero-foreground">
             OKRs
           </Link>
-          <Link to="/initiatives" className="text-white/80 hover:text-white">
+          <Link to="/initiatives" className="text-hero-foreground/80 hover:text-hero-foreground">
             Initiatives
           </Link>
-          <Link to="/style-guide" className="text-white/80 hover:text-white">
+          <Link to="/style-guide" className="text-hero-foreground/80 hover:text-hero-foreground">
             Style guide
           </Link>
         </nav>
