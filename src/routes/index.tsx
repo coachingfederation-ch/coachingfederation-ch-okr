@@ -947,16 +947,33 @@ function KrDetailSheet({
               <div className="mt-8 border-t border-border/60 pt-4">
                 <button
                   type="button"
-                  onClick={() => {
-                    if (confirm(t("kr.deleteConfirm"))) {
-                      m.deleteKr.mutate({ id: kr.id });
-                      onClose();
-                    }
-                  }}
+                  onClick={() => setConfirmDeleteKrOpen(true)}
                   className="text-xs font-medium text-destructive hover:underline"
                 >
                   {t("kr.delete")}
                 </button>
+                <AlertDialog open={confirmDeleteKrOpen} onOpenChange={setConfirmDeleteKrOpen}>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{t("kr.deleteConfirm")}</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {t("kr.deleteConfirmBody")}
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        onClick={() => {
+                          m.deleteKr.mutate({ id: kr.id });
+                          onClose();
+                        }}
+                      >
+                        {t("kr.delete")}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             )}
           </>
