@@ -482,6 +482,7 @@ function OkrCard({
 
   const { locale, t } = useLocale();
   const [openKrId, setOpenKrId] = useState<string | null>(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const openKr = openKrId
     ? set.key_results.find((k) => k.id === openKrId) ?? null
     : null;
