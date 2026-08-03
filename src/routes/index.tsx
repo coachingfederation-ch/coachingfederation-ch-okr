@@ -720,6 +720,7 @@ function KrDetailSheet({
 }) {
   const { locale, t } = useLocale();
   const [linkOpen, setLinkOpen] = useState(false);
+  const [confirmDeleteKrOpen, setConfirmDeleteKrOpen] = useState(false);
 
   const update = (patch: Partial<KeyResultDTO>) => {
     if (!kr) return;
