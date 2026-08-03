@@ -41,11 +41,13 @@ export type StringKey =
   | "kr.number"
   | "kr.detailDescription"
   | "kr.deleteConfirm"
+  | "kr.deleteConfirmBody"
   | "kr.delete"
   // OKR
   | "okr.customer"
   | "okr.delete"
   | "okr.deleteConfirm"
+  | "okr.deleteConfirmBody"
   | "okr.noKeyResults"
   | "okr.addKeyResult"
   | "okr.addOkrSet"
@@ -178,10 +180,12 @@ const en: Record<StringKey, string> = {
   "kr.number": "KR number",
   "kr.detailDescription": "Owned outcome and the projects that deliver it.",
   "kr.deleteConfirm": "Delete this key result and its initiatives?",
+  "kr.deleteConfirmBody": "This will permanently delete the key result and its initiatives. This action cannot be undone.",
   "kr.delete": "Delete key result",
   "okr.customer": "Customer:",
   "okr.delete": "Delete OKR set",
   "okr.deleteConfirm": "Delete OKR set",
+  "okr.deleteConfirmBody": "Deleting this OKR set also deletes its key results and initiatives. This action cannot be undone.",
   "okr.noKeyResults": "No key results yet.",
   "okr.addKeyResult": "+ Add key result",
   "okr.addOkrSet": "Add OKR set",
@@ -311,10 +315,12 @@ const de: Record<StringKey, string> = {
   "kr.detailDescription":
     "Verantwortetes Ergebnis und die Projekte, die es liefern.",
   "kr.deleteConfirm": "Dieses Key Result und seine Initiativen löschen?",
+  "kr.deleteConfirmBody": "Das Key Result und seine Initiativen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
   "kr.delete": "Key Result löschen",
   "okr.customer": "Kunde:",
   "okr.delete": "OKR-Set löschen",
   "okr.deleteConfirm": "OKR-Set löschen",
+  "okr.deleteConfirmBody": "Mit dem OKR-Set werden auch seine Key Results und Initiativen gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
   "okr.noKeyResults": "Noch keine Key Results.",
   "okr.addKeyResult": "+ Key Result hinzufügen",
   "okr.addOkrSet": "OKR-Set hinzufügen",
@@ -443,10 +449,12 @@ const fr: Record<StringKey, string> = {
   "kr.number": "Numéro KR",
   "kr.detailDescription": "Résultat piloté et projets qui le livrent.",
   "kr.deleteConfirm": "Supprimer ce résultat clé et ses initiatives ?",
+  "kr.deleteConfirmBody": "Le résultat clé et ses initiatives seront définitivement supprimés. Cette action est irréversible.",
   "kr.delete": "Supprimer le résultat clé",
   "okr.customer": "Client :",
   "okr.delete": "Supprimer l'ensemble OKR",
   "okr.deleteConfirm": "Supprimer l'ensemble OKR",
+  "okr.deleteConfirmBody": "La suppression de l'ensemble OKR supprime aussi ses résultats clés et ses initiatives. Cette action est irréversible.",
   "okr.noKeyResults": "Aucun résultat clé pour le moment.",
   "okr.addKeyResult": "+ Ajouter un résultat clé",
   "okr.addOkrSet": "Ajouter un ensemble OKR",
@@ -575,10 +583,12 @@ const it: Record<StringKey, string> = {
   "kr.number": "Numero KR",
   "kr.detailDescription": "Risultato di cui si è responsabili e i progetti che lo realizzano.",
   "kr.deleteConfirm": "Eliminare questo risultato chiave e le sue iniziative?",
+  "kr.deleteConfirmBody": "Il risultato chiave e le sue iniziative verranno eliminati definitivamente. Questa azione non può essere annullata.",
   "kr.delete": "Elimina risultato chiave",
   "okr.customer": "Cliente:",
   "okr.delete": "Elimina set OKR",
   "okr.deleteConfirm": "Elimina set OKR",
+  "okr.deleteConfirmBody": "Eliminando il set OKR vengono eliminati anche i suoi risultati chiave e le sue iniziative. Questa azione non può essere annullata.",
   "okr.noKeyResults": "Nessun risultato chiave ancora.",
   "okr.addKeyResult": "+ Aggiungi risultato chiave",
   "okr.addOkrSet": "Aggiungi set OKR",
