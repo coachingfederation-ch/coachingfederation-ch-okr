@@ -58,6 +58,16 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
@@ -472,6 +482,7 @@ function OkrCard({
 
   const { locale, t } = useLocale();
   const [openKrId, setOpenKrId] = useState<string | null>(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const openKr = openKrId
     ? set.key_results.find((k) => k.id === openKrId) ?? null
     : null;
@@ -530,17 +541,37 @@ function OkrCard({
           </div>
         </div>
         {canEdit && (
-          <button
-            type="button"
-            aria-label={t("okr.delete")}
-            onClick={() => {
-              if (confirm(`${t("okr.deleteConfirm")}: "${titleText || "Untitled"}"?`))
-                m.deleteSet.mutate({ id: set.id });
-            }}
-            className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <>
+            <button
+              type="button"
+              aria-label={t("okr.delete")}
+              onClick={() => setConfirmDeleteOpen(true)}
+              className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {`${t("okr.deleteConfirm")}: ${set.number}. ${titleText || "Untitled"}`}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {t("okr.deleteConfirmBody")}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => m.deleteSet.mutate({ id: set.id })}
+                  >
+                    {t("okr.delete")}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </>
         )}
       </header>
 
@@ -689,6 +720,7 @@ function KrDetailSheet({
 }) {
   const { locale, t } = useLocale();
   const [linkOpen, setLinkOpen] = useState(false);
+  const [confirmDeleteKrOpen, setConfirmDeleteKrOpen] = useState(false);
 
   const update = (patch: Partial<KeyResultDTO>) => {
     if (!kr) return;
@@ -916,16 +948,33 @@ function KrDetailSheet({
               <div className="mt-8 border-t border-border/60 pt-4">
                 <button
                   type="button"
-                  onClick={() => {
-                    if (confirm(t("kr.deleteConfirm"))) {
-                      m.deleteKr.mutate({ id: kr.id });
-                      onClose();
-                    }
-                  }}
+                  onClick={() => setConfirmDeleteKrOpen(true)}
                   className="text-xs font-medium text-destructive hover:underline"
                 >
                   {t("kr.delete")}
                 </button>
+                <AlertDialog open={confirmDeleteKrOpen} onOpenChange={setConfirmDeleteKrOpen}>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{t("kr.deleteConfirm")}</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {t("kr.deleteConfirmBody")}
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        onClick={() => {
+                          m.deleteKr.mutate({ id: kr.id });
+                          onClose();
+                        }}
+                      >
+                        {t("kr.delete")}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             )}
           </>
