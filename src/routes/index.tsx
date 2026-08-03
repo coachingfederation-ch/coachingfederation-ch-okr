@@ -540,17 +540,37 @@ function OkrCard({
           </div>
         </div>
         {canEdit && (
-          <button
-            type="button"
-            aria-label={t("okr.delete")}
-            onClick={() => {
-              if (confirm(`${t("okr.deleteConfirm")}: "${titleText || "Untitled"}"?`))
-                m.deleteSet.mutate({ id: set.id });
-            }}
-            className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <>
+            <button
+              type="button"
+              aria-label={t("okr.delete")}
+              onClick={() => setConfirmDeleteOpen(true)}
+              className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {`${t("okr.deleteConfirm")}: ${set.number}. ${titleText || "Untitled"}`}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {t("okr.deleteConfirmBody")}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => m.deleteSet.mutate({ id: set.id })}
+                  >
+                    {t("okr.delete")}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </>
         )}
       </header>
 
