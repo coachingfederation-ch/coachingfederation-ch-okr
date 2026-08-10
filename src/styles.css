@@ -122,6 +122,10 @@
   --accent-foreground: oklch(0.2802 0.084 278.57);
   --highlight: oklch(0.6177 0.1969 269.18);     /* Light Blue #5778FA */
   --highlight-foreground: oklch(1 0 0);
+  --warning: oklch(0.52 0.115 78);              /* darkened ICF Yellow, 4.9:1 on white */
+  --warning-surface: oklch(0.968 0.045 92);
+  --warning-border: oklch(0.88 0.09 90);
+
 
   /* Hero / header + footer surface */
   --hero: oklch(0.2802 0.084 278.57);           /* Deep Blue */
