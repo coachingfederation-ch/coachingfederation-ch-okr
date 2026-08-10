@@ -286,7 +286,35 @@ function InitiativesContent() {
 
       <section className="mx-auto -mt-8 max-w-7xl px-8">
         <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-soft">
+          <div className="mb-3 flex flex-wrap items-center gap-3 border-b border-border/60 pb-3">
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              {t("initiatives.view.label")}
+            </span>
+            <div
+              role="group"
+              aria-label={t("initiatives.view.label")}
+              className="inline-flex items-center rounded-full bg-muted p-0.5"
+            >
+              {(["board", "volunteer"] as const).map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setViewOverride(v)}
+                  aria-pressed={view === v}
+                  className={cn(
+                    "inline-flex min-h-[44px] items-center rounded-full px-4 text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    view === v
+                      ? "bg-card text-primary shadow-sm"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {v === "board" ? t("initiatives.view.board") : t("initiatives.view.volunteer")}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="flex flex-wrap items-center gap-3">
+
             <FilterBlock label={t("initiatives.filterOkr")}>
               <Select
                 value={okrFilter}
