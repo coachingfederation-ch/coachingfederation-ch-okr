@@ -175,7 +175,7 @@ export type StringKey =
 
 const en: Record<StringKey, string> = {
   "hero.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · OKR DASHBOARD",
-  "hero.title": "2026 OKRs with Global Alignment",
+  "hero.title": "2026-2027 Objectives and Keyresults with Global Alignment",
   "hero.subtitle":
     "One inspiring, customer-centric objective per strategic pillar — aligned to the ICF Global Strategic Plan 2026–2029 and the Arbon board retreat, 1 June 2026.",
   "hero.pillarTitle": "ICF Strategic Focus Areas (SFAs) 2026",
