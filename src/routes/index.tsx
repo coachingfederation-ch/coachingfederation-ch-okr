@@ -729,6 +729,9 @@ function KrDetailSheet({
   const krText = kr ? pickTranslation(kr, "text", kr.text, locale) : "";
   const krTarget = kr ? pickTranslation(kr, "target", kr.target, locale) : "";
   const krLead = kr ? pickTranslation(kr, "lead", kr.lead, locale) : "";
+  const krMeasure = kr ? pickTranslation(kr, "measure", kr.measure, locale) : "";
+  const krInstrument = kr ? pickTranslation(kr, "instrument", kr.instrument, locale) : "";
+
 
   return (
     <Sheet
