@@ -137,8 +137,11 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         .order("sort_order", { ascending: true }),
       supabase
         .from("key_results")
-        .select("id,okr_set_id,kr,text,target,lead,sort_order,translations,source_lang")
+        .select(
+          "id,okr_set_id,kr,text,target,lead,sort_order,translations,source_lang,kr_type,measure,instrument,baseline_2026,baseline_locked,current_value,current_as_of,target_2027,milestone_status,milestone_due",
+        )
         .order("sort_order", { ascending: true }),
+
       supabase
         .from("initiatives")
         .select("id,okr_set_id,kr_id,text,owner,description,status,sort_order,translations,source_lang")
@@ -187,11 +190,28 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
     for (const r of krs.data ?? []) {
       const arr = krsBySet.get(r.okr_set_id) ?? [];
       arr.push({
-        ...(r as Omit<KeyResultDTO, "initiatives" | "translations" | "source_lang">),
+        id: r.id,
+        okr_set_id: r.okr_set_id,
+        kr: r.kr,
+        text: r.text,
+        target: r.target,
+        lead: r.lead,
+        sort_order: r.sort_order,
+        kr_type: (r.kr_type ?? "metric") as KeyResultDTO["kr_type"],
+        measure: r.measure ?? "",
+        instrument: r.instrument ?? "",
+        baseline_2026: r.baseline_2026 ?? "",
+        baseline_locked: r.baseline_locked ?? false,
+        current_value: r.current_value ?? "",
+        current_as_of: r.current_as_of ?? null,
+        target_2027: r.target_2027 ?? "",
+        milestone_status: (r.milestone_status ?? "not_started") as KeyResultDTO["milestone_status"],
+        milestone_due: r.milestone_due ?? null,
         translations: (r as { translations?: TranslationsMap }).translations ?? {},
         source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
         initiatives: initsByKr.get(r.id) ?? [],
       });
+
       krsBySet.set(r.okr_set_id, arr);
     }
 

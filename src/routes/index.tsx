@@ -23,7 +23,9 @@ import {
 
 import {
   CONTRIBUTION_CYCLE,
+  KR_TYPES,
   LIMITS,
+  MILESTONE_STATUSES,
   PILLARS,
   ROLE_LABELS,
   type AlignmentRowDTO,
@@ -31,6 +33,8 @@ import {
   type DashboardDTO,
   type InitiativeDTO,
   type KeyResultDTO,
+  type KrType,
+  type MilestoneStatus,
   type OkrSetDTO,
   type Pillar,
   type PillarSummaryDTO,
@@ -40,9 +44,13 @@ import { LOCALES, LOCALE_LABELS, type Locale } from "@/lib/i18n-shared";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { pillarName } from "@/lib/i18n-strings";
 import { EditableText } from "@/components/okr/EditableText";
+import { KrMeasurement } from "@/components/okr/KrMeasurement";
+import { formatSwissDate } from "@/components/okr/kr-metrics";
+
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { LinkInitiativesDialog } from "@/components/okr/LinkInitiativesDialog";
+
 
 
 import {
@@ -467,6 +475,59 @@ function RoleLabelSelect({
   );
 }
 
+/** Small enum picker matching the RoleLabelSelect affordance. */
+function PlainSelect({
+  value, canEdit, options, onChange,
+}: {
+  value: string;
+  canEdit: boolean;
+  options: { value: string; label: string }[];
+  onChange: (v: string) => void;
+}) {
+  const current = options.find((o) => o.value === value)?.label ?? value;
+  if (!canEdit) {
+    return <span className="text-sm text-foreground">{current}</span>;
+  }
+  return (
+    <span className="relative inline-flex">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="appearance-none inline-flex items-center rounded-md border border-primary/25 bg-card pl-2 pr-6 py-1 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5"
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
+    </span>
+  );
+}
+
+/** Date field; empty string is normalised to null so the column stays nullable. */
+function PlainDate({
+  value, canEdit, onChange,
+}: {
+  value: string | null;
+  canEdit: boolean;
+  onChange: (v: string | null) => void;
+}) {
+  if (!canEdit) {
+    return (
+      <span className="text-sm text-muted-foreground">{formatSwissDate(value) || "—"}</span>
+    );
+  }
+  return (
+    <input
+      type="date"
+      value={value ?? ""}
+      onChange={(e) => onChange(e.target.value || null)}
+      className="mt-1 w-full rounded-md border border-input bg-card px-2 py-1 text-xs text-foreground"
+    />
+  );
+}
+
+
 // ---------- OKR card ----------
 
 function OkrCard({
@@ -665,7 +726,6 @@ function KrCard({
   const { locale, t } = useLocale();
   const count = kr.initiatives.length + secondaryCount;
   const text = pickTranslation(kr, "text", kr.text, locale);
-  const target = pickTranslation(kr, "target", kr.target, locale);
   const lead = pickTranslation(kr, "lead", kr.lead, locale);
   return (
     <div className="group relative flex h-full flex-col rounded-2xl border border-border/70 bg-card p-4 text-left shadow-soft transition-all hover:border-primary/40 hover:shadow-md has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
@@ -686,20 +746,14 @@ function KrCard({
       <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-foreground">
         {text || <span className="italic text-muted-foreground">{t("kr.noDescription")}</span>}
       </p>
-      <dl className="mt-4 space-y-1.5 text-xs">
-        <div className="flex gap-3">
-          <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.target")}</dt>
-          <dd className="min-w-0 flex-1 truncate text-foreground">
-            {target || <span className="italic text-muted-foreground">—</span>}
-          </dd>
-        </div>
-        <div className="flex gap-3">
-          <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.lead")}</dt>
-          <dd className="min-w-0 flex-1 truncate text-muted-foreground">
-            {lead || <span className="italic">—</span>}
-          </dd>
-        </div>
+      <KrMeasurement kr={kr} />
+      <dl className="mt-3 flex gap-3 text-xs">
+        <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.lead")}</dt>
+        <dd className="min-w-0 flex-1 truncate text-muted-foreground">
+          {lead || <span className="italic">—</span>}
+        </dd>
       </dl>
+
       <span className="mt-3 inline-flex text-[11px] font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
         {t("kr.openDetails")}
       </span>
@@ -736,6 +790,9 @@ function KrDetailSheet({
   const krText = kr ? pickTranslation(kr, "text", kr.text, locale) : "";
   const krTarget = kr ? pickTranslation(kr, "target", kr.target, locale) : "";
   const krLead = kr ? pickTranslation(kr, "lead", kr.lead, locale) : "";
+  const krMeasure = kr ? pickTranslation(kr, "measure", kr.measure, locale) : "";
+  const krInstrument = kr ? pickTranslation(kr, "instrument", kr.instrument, locale) : "";
+
 
   return (
     <Sheet
@@ -771,17 +828,6 @@ function KrDetailSheet({
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div>
-                <div className="section-label mb-1">{t("kr.target")}</div>
-                <EditableText
-                  value={krTarget}
-                  canEdit={canEdit}
-                  maxLength={LIMITS.target}
-                  onSave={(v) => update({ target: v })}
-                  placeholder={t("kr.target")}
-                  className="text-sm text-foreground"
-                />
-              </div>
-              <div>
                 <div className="section-label mb-1">{t("kr.lead")}</div>
                 <EditableText
                   value={krLead}
@@ -802,7 +848,129 @@ function KrDetailSheet({
                   className="text-sm font-medium text-primary"
                 />
               </div>
+              <div>
+                <div className="section-label mb-1">{t("kr.type")}</div>
+                <PlainSelect
+                  canEdit={canEdit}
+                  value={kr.kr_type}
+                  options={KR_TYPES.map((v) => ({ value: v, label: t(`kr.type.${v}` as const) }))}
+                  onChange={(v) => update({ kr_type: v as KrType })}
+                />
+              </div>
+              <div>
+                <div className="section-label mb-1">{t("kr.measure")}</div>
+                <EditableText
+                  multiline
+                  value={krMeasure}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.measure}
+                  onSave={(v) => update({ measure: v })}
+                  placeholder={t("kr.measurePlaceholder")}
+                  className="text-sm text-foreground"
+                />
+              </div>
+              <div>
+                <div className="section-label mb-1">{t("kr.instrument")}</div>
+                <EditableText
+                  value={krInstrument}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.instrument}
+                  onSave={(v) => update({ instrument: v })}
+                  placeholder={t("kr.instrumentPlaceholder")}
+                  className="text-sm text-foreground"
+                />
+              </div>
             </div>
+
+            {kr.kr_type === "metric" ? (
+              <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                <div>
+                  <div className="section-label mb-1">{t("kr.baseline2026")}</div>
+                  <EditableText
+                    value={kr.baseline_2026}
+                    canEdit={canEdit && !kr.baseline_locked}
+                    maxLength={LIMITS.value}
+                    onSave={(v) => update({ baseline_2026: v })}
+                    placeholder={t("kr.baselinePending")}
+                    className="text-sm font-semibold text-foreground"
+                  />
+                  {canEdit && (
+                    <label className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                      <input
+                        type="checkbox"
+                        checked={kr.baseline_locked}
+                        onChange={(e) => update({ baseline_locked: e.target.checked })}
+                        className="h-3.5 w-3.5 accent-[var(--color-primary)]"
+                      />
+                      <span title={t("kr.baselineLockedHint")}>{t("kr.baselineLocked")}</span>
+                    </label>
+                  )}
+                </div>
+                <div>
+                  <div className="section-label mb-1">{t("kr.current")}</div>
+                  <EditableText
+                    value={kr.current_value}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.value}
+                    onSave={(v) => update({ current_value: v })}
+                    placeholder="—"
+                    className="text-sm font-semibold text-foreground"
+                  />
+                  <PlainDate
+                    canEdit={canEdit}
+                    value={kr.current_as_of}
+                    onChange={(v) => update({ current_as_of: v })}
+                  />
+                </div>
+                <div>
+                  <div className="section-label mb-1">{t("kr.target2027")}</div>
+                  <EditableText
+                    value={kr.target_2027}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.value}
+                    onSave={(v) => update({ target_2027: v })}
+                    placeholder="—"
+                    className="text-sm font-semibold text-foreground"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div>
+                  <div className="section-label mb-1">{t("kr.milestoneStatus")}</div>
+                  <PlainSelect
+                    canEdit={canEdit}
+                    value={kr.milestone_status}
+                    options={MILESTONE_STATUSES.map((v) => ({
+                      value: v,
+                      label: t(`kr.milestone.${v}` as const),
+                    }))}
+                    onChange={(v) => update({ milestone_status: v as MilestoneStatus })}
+                  />
+                </div>
+                <div>
+                  <div className="section-label mb-1">{t("kr.milestoneDue")}</div>
+                  <PlainDate
+                    canEdit={canEdit}
+                    value={kr.milestone_due}
+                    onChange={(v) => update({ milestone_due: v })}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 rounded-xl border border-border/70 bg-surface p-3">
+              <div className="section-label mb-1">{t("kr.originalTarget")}</div>
+              <EditableText
+                value={krTarget}
+                canEdit={canEdit}
+                maxLength={LIMITS.target}
+                onSave={(v) => update({ target: v })}
+                placeholder="—"
+                className="text-sm text-muted-foreground"
+              />
+            </div>
+
 
             <section className="mt-8">
               <div className="mb-2 flex items-center justify-between gap-2">
@@ -1249,7 +1417,13 @@ function IndexContent() {
             );
           })}
         </div>
+
+        {/* Baselining-year context for every measurement shown below. */}
+        <p className="mt-6 rounded-xl border border-warning-border bg-warning-surface px-4 py-3 text-sm leading-relaxed text-foreground">
+          {t("banner.baselining")}
+        </p>
       </section>
+
 
       <section className="mx-auto max-w-6xl space-y-10 px-8 py-12">
         <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">

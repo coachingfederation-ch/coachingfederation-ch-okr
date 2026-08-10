@@ -138,7 +138,34 @@ export type StringKey =
   | "common.loading"
   | "common.editValue"
   | "common.saveFailed"
-  | "lang.switcher";
+  | "lang.switcher"
+  | "banner.baselining"
+  | "kr.baseline2026"
+  | "kr.current"
+  | "kr.target2027"
+  | "kr.baselinePending"
+  | "kr.asAt"
+  | "kr.neverUpdated"
+  | "kr.stale"
+  | "kr.measure"
+  | "kr.instrument"
+  | "kr.instrumentMissing"
+  | "kr.notMeasurable"
+  | "kr.progress"
+  | "kr.type"
+  | "kr.type.metric"
+  | "kr.type.milestone"
+  | "kr.milestoneStatus"
+  | "kr.milestone.not_started"
+  | "kr.milestone.in_progress"
+  | "kr.milestone.done"
+  | "kr.milestoneDue"
+  | "kr.originalTarget"
+  | "kr.baselineLocked"
+  | "kr.baselineLockedHint"
+  | "kr.measurePlaceholder"
+  | "kr.instrumentPlaceholder";
+
 
 
 const en: Record<StringKey, string> = {
@@ -271,6 +298,34 @@ const en: Record<StringKey, string> = {
   "common.delete": "Delete",
   "common.deleting": "Deleting…",
   "lang.switcher": "Language",
+  "banner.baselining":
+    "2026 is a baselining year. 2027 is the execution year. All baselines are due 30.11.2026.",
+  "kr.baseline2026": "Baseline 2026",
+  "kr.current": "Current",
+  "kr.target2027": "Target 2027",
+  "kr.baselinePending": "Baseline pending",
+  "kr.asAt": "as at {date}",
+  "kr.neverUpdated": "never updated",
+  "kr.stale": "stale",
+  "kr.measure": "Measure",
+  "kr.instrument": "Instrument",
+  "kr.instrumentMissing": "Instrument not defined",
+  "kr.notMeasurable": "not yet measurable",
+  "kr.progress": "Progress",
+  "kr.type": "Type",
+  "kr.type.metric": "Metric",
+  "kr.type.milestone": "Milestone",
+  "kr.milestoneStatus": "Milestone status",
+  "kr.milestone.not_started": "Not started",
+  "kr.milestone.in_progress": "In progress",
+  "kr.milestone.done": "Done",
+  "kr.milestoneDue": "Due",
+  "kr.originalTarget": "Original 2026 target (from source document)",
+  "kr.baselineLocked": "Baseline locked",
+  "kr.baselineLockedHint": "Freeze the 2026 baseline once it is agreed.",
+  "kr.measurePlaceholder": "What exactly is counted?",
+  "kr.instrumentPlaceholder": "e.g. Annual Membership Survey",
+
 
 };
 
@@ -406,6 +461,34 @@ const de: Record<StringKey, string> = {
   "common.delete": "Löschen",
   "common.deleting": "Wird gelöscht…",
   "lang.switcher": "Sprache",
+  "banner.baselining":
+    "2026 ist ein Baseline-Jahr. 2027 ist das Umsetzungsjahr. Alle Baselines sind bis 30.11.2026 fällig.",
+  "kr.baseline2026": "Baseline 2026",
+  "kr.current": "Aktuell",
+  "kr.target2027": "Ziel 2027",
+  "kr.baselinePending": "Baseline ausstehend",
+  "kr.asAt": "Stand {date}",
+  "kr.neverUpdated": "nie aktualisiert",
+  "kr.stale": "veraltet",
+  "kr.measure": "Messgrösse",
+  "kr.instrument": "Instrument",
+  "kr.instrumentMissing": "Instrument nicht definiert",
+  "kr.notMeasurable": "noch nicht messbar",
+  "kr.progress": "Fortschritt",
+  "kr.type": "Typ",
+  "kr.type.metric": "Kennzahl",
+  "kr.type.milestone": "Meilenstein",
+  "kr.milestoneStatus": "Meilenstein-Status",
+  "kr.milestone.not_started": "Nicht begonnen",
+  "kr.milestone.in_progress": "In Arbeit",
+  "kr.milestone.done": "Erledigt",
+  "kr.milestoneDue": "Fällig",
+  "kr.originalTarget": "Ursprüngliches Ziel 2026 (aus dem Quelldokument)",
+  "kr.baselineLocked": "Baseline gesperrt",
+  "kr.baselineLockedHint": "Die Baseline 2026 fixieren, sobald sie abgestimmt ist.",
+  "kr.measurePlaceholder": "Was genau wird gezählt?",
+  "kr.instrumentPlaceholder": "z. B. jährliche Mitgliederbefragung",
+
 
 };
 
@@ -540,6 +623,34 @@ const fr: Record<StringKey, string> = {
   "common.delete": "Supprimer",
   "common.deleting": "Suppression…",
   "lang.switcher": "Langue",
+  "banner.baselining":
+    "2026 est une année de référence. 2027 est l'année d'exécution. Toutes les valeurs de référence sont attendues pour le 30.11.2026.",
+  "kr.baseline2026": "Référence 2026",
+  "kr.current": "Actuel",
+  "kr.target2027": "Cible 2027",
+  "kr.baselinePending": "Référence en attente",
+  "kr.asAt": "au {date}",
+  "kr.neverUpdated": "jamais mis à jour",
+  "kr.stale": "obsolète",
+  "kr.measure": "Mesure",
+  "kr.instrument": "Instrument",
+  "kr.instrumentMissing": "Instrument non défini",
+  "kr.notMeasurable": "pas encore mesurable",
+  "kr.progress": "Progression",
+  "kr.type": "Type",
+  "kr.type.metric": "Métrique",
+  "kr.type.milestone": "Jalon",
+  "kr.milestoneStatus": "Statut du jalon",
+  "kr.milestone.not_started": "Non commencé",
+  "kr.milestone.in_progress": "En cours",
+  "kr.milestone.done": "Terminé",
+  "kr.milestoneDue": "Échéance",
+  "kr.originalTarget": "Cible 2026 d'origine (du document source)",
+  "kr.baselineLocked": "Référence verrouillée",
+  "kr.baselineLockedHint": "Figer la référence 2026 une fois qu'elle est validée.",
+  "kr.measurePlaceholder": "Que compte-t-on exactement ?",
+  "kr.instrumentPlaceholder": "p. ex. Enquête annuelle auprès des membres",
+
 
 };
 
@@ -674,6 +785,34 @@ const it: Record<StringKey, string> = {
   "common.delete": "Elimina",
   "common.deleting": "Eliminazione…",
   "lang.switcher": "Lingua",
+  "banner.baselining":
+    "Il 2026 è l'anno di definizione delle baseline. Il 2027 è l'anno di esecuzione. Tutte le baseline sono attese entro il 30.11.2026.",
+  "kr.baseline2026": "Baseline 2026",
+  "kr.current": "Attuale",
+  "kr.target2027": "Obiettivo 2027",
+  "kr.baselinePending": "Baseline in attesa",
+  "kr.asAt": "al {date}",
+  "kr.neverUpdated": "mai aggiornato",
+  "kr.stale": "non aggiornato",
+  "kr.measure": "Misura",
+  "kr.instrument": "Strumento",
+  "kr.instrumentMissing": "Strumento non definito",
+  "kr.notMeasurable": "non ancora misurabile",
+  "kr.progress": "Avanzamento",
+  "kr.type": "Tipo",
+  "kr.type.metric": "Metrica",
+  "kr.type.milestone": "Milestone",
+  "kr.milestoneStatus": "Stato della milestone",
+  "kr.milestone.not_started": "Non iniziata",
+  "kr.milestone.in_progress": "In corso",
+  "kr.milestone.done": "Completata",
+  "kr.milestoneDue": "Scadenza",
+  "kr.originalTarget": "Obiettivo originale 2026 (dal documento di origine)",
+  "kr.baselineLocked": "Baseline bloccata",
+  "kr.baselineLockedHint": "Blocca la baseline 2026 una volta concordata.",
+  "kr.measurePlaceholder": "Che cosa viene esattamente conteggiato?",
+  "kr.instrumentPlaceholder": "es. Sondaggio annuale dei membri",
+
 
 };
 

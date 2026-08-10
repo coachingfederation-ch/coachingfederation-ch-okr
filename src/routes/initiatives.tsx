@@ -183,10 +183,15 @@ function InitiativesContent() {
   }, [data, okrFilter]);
 
   const filtered = flat.filter((it) => {
+    if (krFilter !== "all") {
+      // Match the KR card count on the OKR page: an initiative belongs to a KR
+      // through its primary kr_id or through a secondary link.
+      return it.kr_id === krFilter || (it.secondary_kr_ids ?? []).includes(krFilter);
+    }
     if (okrFilter !== "all" && it.okr_set_id !== okrFilter) return false;
-    if (krFilter !== "all" && it.kr_id !== krFilter) return false;
     return true;
   });
+
 
   const byStatus: Record<InitiativeStatus, FlatInitiative[]> = {
     planned: [],

@@ -148,40 +148,70 @@ export type Database = {
       }
       key_results: {
         Row: {
+          baseline_2026: string
+          baseline_locked: boolean
           created_at: string
+          current_as_of: string | null
+          current_value: string
           id: string
+          instrument: string
           kr: string
+          kr_type: Database["public"]["Enums"]["kr_type"]
           lead: string
+          measure: string
+          milestone_due: string | null
+          milestone_status: Database["public"]["Enums"]["milestone_status"]
           okr_set_id: string
           sort_order: number
           source_lang: string
           target: string
+          target_2027: string
           text: string
           translations: Json
           updated_at: string
         }
         Insert: {
+          baseline_2026?: string
+          baseline_locked?: boolean
           created_at?: string
+          current_as_of?: string | null
+          current_value?: string
           id?: string
+          instrument?: string
           kr?: string
+          kr_type?: Database["public"]["Enums"]["kr_type"]
           lead?: string
+          measure?: string
+          milestone_due?: string | null
+          milestone_status?: Database["public"]["Enums"]["milestone_status"]
           okr_set_id: string
           sort_order?: number
           source_lang?: string
           target?: string
+          target_2027?: string
           text?: string
           translations?: Json
           updated_at?: string
         }
         Update: {
+          baseline_2026?: string
+          baseline_locked?: boolean
           created_at?: string
+          current_as_of?: string | null
+          current_value?: string
           id?: string
+          instrument?: string
           kr?: string
+          kr_type?: Database["public"]["Enums"]["kr_type"]
           lead?: string
+          measure?: string
+          milestone_due?: string | null
+          milestone_status?: Database["public"]["Enums"]["milestone_status"]
           okr_set_id?: string
           sort_order?: number
           source_lang?: string
           target?: string
+          target_2027?: string
           text?: string
           translations?: Json
           updated_at?: string
@@ -311,6 +341,8 @@ export type Database = {
     Enums: {
       app_role: "editor" | "admin"
       contribution: "none" | "secondary" | "primary"
+      kr_type: "metric" | "milestone"
+      milestone_status: "not_started" | "in_progress" | "done"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -440,6 +472,8 @@ export const Constants = {
     Enums: {
       app_role: ["editor", "admin"],
       contribution: ["none", "secondary", "primary"],
+      kr_type: ["metric", "milestone"],
+      milestone_status: ["not_started", "in_progress", "done"],
     },
   },
 } as const

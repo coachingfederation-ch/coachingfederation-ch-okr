@@ -17,6 +17,17 @@ export const INITIATIVE_STATUSES: InitiativeStatus[] = [
   "canceled",
 ];
 
+export type KrType = "metric" | "milestone";
+export const KR_TYPES: KrType[] = ["metric", "milestone"];
+
+export type MilestoneStatus = "not_started" | "in_progress" | "done";
+export const MILESTONE_STATUSES: MilestoneStatus[] = [
+  "not_started",
+  "in_progress",
+  "done",
+];
+
+
 
 export const ROLE_LABELS = ["Owner", "Steward", "Contact"] as const;
 export type RoleLabel = (typeof ROLE_LABELS)[number];
@@ -32,6 +43,10 @@ export const LIMITS = {
   krText: 500,
   target: 200,
   lead: 100,
+  measure: 300,
+  instrument: 200,
+  value: 60,
+
   initiative: 300,
   initiativeOwner: 100,
   initiativeDescription: 2000,
@@ -60,12 +75,27 @@ export const okrSetPatchSchema = z.object({
   alignment: trimmedString(LIMITS.alignment).optional(),
 });
 
+const dateOrNull = z
+  .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal(""), z.null()])
+  .transform((v) => (v ? v : null));
+
 export const keyResultPatchSchema = z.object({
   kr: trimmedString(LIMITS.kr).optional(),
   text: trimmedString(LIMITS.krText).optional(),
   target: trimmedString(LIMITS.target).optional(),
   lead: trimmedString(LIMITS.lead).optional(),
+  kr_type: z.enum(["metric", "milestone"]).optional(),
+  measure: trimmedString(LIMITS.measure).optional(),
+  instrument: trimmedString(LIMITS.instrument).optional(),
+  baseline_2026: trimmedString(LIMITS.value).optional(),
+  baseline_locked: z.boolean().optional(),
+  current_value: trimmedString(LIMITS.value).optional(),
+  current_as_of: dateOrNull.optional(),
+  target_2027: trimmedString(LIMITS.value).optional(),
+  milestone_status: z.enum(["not_started", "in_progress", "done"]).optional(),
+  milestone_due: dateOrNull.optional(),
 });
+
 
 export const initiativePatchSchema = z.object({
   text: trimmedString(LIMITS.initiative).min(1, { message: "Cannot be empty" }).optional(),
@@ -124,11 +154,23 @@ export type KeyResultDTO = WithTranslations & {
   okr_set_id: string;
   kr: string;
   text: string;
+  /** Legacy free-text target from the source document. Kept for reference only. */
   target: string;
   lead: string;
+  kr_type: KrType;
+  measure: string;
+  instrument: string;
+  baseline_2026: string;
+  baseline_locked: boolean;
+  current_value: string;
+  current_as_of: string | null;
+  target_2027: string;
+  milestone_status: MilestoneStatus;
+  milestone_due: string | null;
   sort_order: number;
   initiatives: InitiativeDTO[];
 };
+
 export type OkrSetDTO = WithTranslations & {
   id: string;
   number: number;
@@ -162,7 +204,10 @@ export type DashboardDTO = {
 // to know which fields to send through the translator.
 export const TRANSLATABLE_FIELDS = {
   okr_sets: ["title", "role_name", "customer", "objective", "alignment"] as const,
-  key_results: ["text", "target", "lead"] as const,
+  // Numeric fields (baseline_2026, current_value, target_2027) are deliberately
+  // NOT translatable — they must never be sent through the translator.
+  key_results: ["text", "target", "lead", "measure", "instrument"] as const,
+
   initiatives: ["text", "owner", "description"] as const,
   alignment_rows: ["pillar", "how"] as const,
   pillar_summaries: ["label", "description"] as const,
