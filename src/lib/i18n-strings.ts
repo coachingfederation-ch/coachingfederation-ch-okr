@@ -630,6 +630,11 @@ const fr: Record<StringKey, string> = {
   "lang.switcher": "Langue",
   "banner.baselining":
     "2026 est une année de référence. 2027 est l'année d'exécution. Toutes les valeurs de référence sont attendues pour le 30.11.2026.",
+  "scorecard.title": "État de la mesure 2026",
+  "scorecard.instrument": "Instrument défini",
+  "scorecard.baseline": "Référence enregistrée",
+  "scorecard.current": "Valeur actuelle datée",
+  "scorecard.of": "sur {total} résultats clés",
   "kr.baseline2026": "Référence 2026",
   "kr.current": "Actuel",
   "kr.target2027": "Cible 2027",
