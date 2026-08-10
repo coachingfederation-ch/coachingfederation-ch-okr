@@ -435,11 +435,11 @@ const en: Record<StringKey, string> = {
 };
 
 const de: Record<StringKey, string> = {
-  "hero.eyebrow": "ICF Schweiz · OKR-Dashboard",
-  "hero.title": "OKRs 2026 mit globaler Ausrichtung",
+  "hero.eyebrow": "DAS SCHWEIZER CHAPTER DER ICF · OKR-DASHBOARD",
+  "hero.title": "Objectives und Key Results 2026-2027 mit globaler Ausrichtung",
   "hero.subtitle":
     "Ein inspirierendes, kundenorientiertes Ziel pro strategischer Säule — abgestimmt auf den ICF Global Strategic Plan 2026–2029 und die Vorstandsklausur in Arbon, 1. Juni 2026.",
-  "hero.pillarTitle": "ICF Strategic Focus Areas (SFAs) 2026",
+  "hero.pillarTitle": "ICF Strategic Focus Areas (SFAs) 2026-2029",
   "hero.addOkrSet": "OKR-Set hinzufügen",
   "auth.signInToEdit": "Anmelden zum Bearbeiten",
   "auth.signOut": "Abmelden",
@@ -464,7 +464,7 @@ const de: Record<StringKey, string> = {
     "Klicke auf eine Punktzelle, um zwischen kein → sekundär → primär zu wechseln.",
   "section.alignmentPillar": "ICFS-Säule",
   "section.alignmentHow": "Wie sie beiträgt",
-  "section.okrSets": "ICF Switzerland OKR Sets",
+  "section.okrSets": "OKR-Sets -\u00a0Das Schweizer Chapter der ICF",
   "kr.count.one": "Initiative",
   "kr.count.other": "Initiativen",
   "kr.noDescription": "Keine Beschreibung",
@@ -651,11 +651,11 @@ const de: Record<StringKey, string> = {
 };
 
 const fr: Record<StringKey, string> = {
-  "hero.eyebrow": "ICF Suisse · Tableau de bord OKR",
-  "hero.title": "OKR 2026 avec alignement global",
+  "hero.eyebrow": "LE CHAPITRE SUISSE DE L'ICF · TABLEAU DE BORD OKR",
+  "hero.title": "Objectifs et key results 2026-2027 avec alignement global",
   "hero.subtitle":
     "Un objectif inspirant et centré sur le client par pilier stratégique — aligné sur l'ICF Global Strategic Plan 2026–2029 et la retraite du conseil d'Arbon du 1er juin 2026.",
-  "hero.pillarTitle": "Zones stratégiques de focus de l'ICF (SFAs) 2026",
+  "hero.pillarTitle": "Axes stratégiques de l'ICF (SFAs) 2026-2029",
   "hero.addOkrSet": "Ajouter un ensemble OKR",
   "auth.signInToEdit": "Se connecter pour éditer",
   "auth.signOut": "Se déconnecter",
@@ -680,7 +680,7 @@ const fr: Record<StringKey, string> = {
     "Cliquez sur une cellule de point pour alterner aucun → secondaire → principal.",
   "section.alignmentPillar": "Pilier ICFS",
   "section.alignmentHow": "Comment il contribue",
-  "section.okrSets": "OKR Sets ICF Suisse",
+  "section.okrSets": "OKR Sets -\u00a0Le Chapitre Suisse de l'ICF",
   "kr.count.one": "initiative",
   "kr.count.other": "initiatives",
   "kr.noDescription": "Aucune description",
@@ -866,11 +866,11 @@ const fr: Record<StringKey, string> = {
 };
 
 const it: Record<StringKey, string> = {
-  "hero.eyebrow": "ICF Svizzera · Dashboard OKR",
-  "hero.title": "OKR 2026 con allineamento globale",
+  "hero.eyebrow": "IL CHAPTER SVIZZERO DI ICF · DASHBOARD OKR",
+  "hero.title": "Obiettivi e key result 2026-2027 con allineamento globale",
   "hero.subtitle":
     "Un obiettivo ispiratore e centrato sul cliente per pilastro strategico — allineato all'ICF Global Strategic Plan 2026–2029 e al ritiro del board di Arbon del 1° giugno 2026.",
-  "hero.pillarTitle": "Aree di focus strategiche ICF (SFAs) 2026",
+  "hero.pillarTitle": "Aree di focus strategiche ICF (SFAs) 2026-2029",
   "hero.addOkrSet": "Aggiungi set OKR",
   "auth.signInToEdit": "Accedi per modificare",
   "auth.signOut": "Esci",
@@ -895,7 +895,7 @@ const it: Record<StringKey, string> = {
     "Clicca su una cella di punto per alternare nessuno → secondario → primario.",
   "section.alignmentPillar": "Pilastro ICFS",
   "section.alignmentHow": "Come contribuisce",
-  "section.okrSets": "OKR Sets ICF Svizzera",
+  "section.okrSets": "OKR Sets -\u00a0Il Chapter Svizzero di ICF",
   "kr.count.one": "iniziativa",
   "kr.count.other": "iniziative",
   "kr.noDescription": "Nessuna descrizione",
