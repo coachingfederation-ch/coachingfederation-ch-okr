@@ -484,14 +484,24 @@ function InitiativeCard({
         STATUS_ACCENT[item.status],
       )}
     >
-      <div className="mb-2 flex items-center gap-2 pr-7">
+      <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1 pr-7">
         <span className="inline-flex h-5 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary">
           {item.okrNumber}.{item.krLabel.includes(".") ? item.krLabel.split(".")[1] : item.krLabel}
         </span>
+        {item.secondaryLabels.map((label) => (
+          <span
+            key={label}
+            title={t("initiative.secondaryKr")}
+            className="inline-flex h-5 items-center rounded border border-primary/30 px-1.5 text-[10px] font-semibold text-primary/80"
+          >
+            {label}
+          </span>
+        ))}
         <span className="truncate text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
           {item.okrTitle}
         </span>
       </div>
+
 
       <button
         type="button"
