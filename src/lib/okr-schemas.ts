@@ -79,6 +79,8 @@ export const LIMITS = {
   initiative: 300,
   initiativeOwner: 100,
   initiativeDescription: 2000,
+  initiativeBlockedReason: 300,
+  initiativeSkillNote: 300,
   pillarLabel: 120,
   pillarDescription: 500,
   alignmentPillar: 120,
@@ -131,6 +133,11 @@ export const initiativePatchSchema = z.object({
   owner: trimmedString(LIMITS.initiativeOwner).optional(),
   description: trimmedString(LIMITS.initiativeDescription).optional(),
   status: z.enum(["planned", "in_progress", "done", "canceled"]).optional(),
+  availability: z.enum(["open", "blocked", "parked"]).optional(),
+  blocked_reason: trimmedString(LIMITS.initiativeBlockedReason).optional(),
+  commitment: z.enum(["one_off", "recurring", "workstream"]).nullable().optional(),
+  help_needed: z.enum(["lead", "helpers", "skill"]).nullable().optional(),
+  skill_note: trimmedString(LIMITS.initiativeSkillNote).optional(),
 });
 
 export const initiativeCreateSchema = z.object({
@@ -138,6 +145,11 @@ export const initiativeCreateSchema = z.object({
   owner: trimmedString(LIMITS.initiativeOwner).optional(),
   description: trimmedString(LIMITS.initiativeDescription).optional(),
   status: z.enum(["planned", "in_progress", "done", "canceled"]).optional(),
+  availability: z.enum(["open", "blocked", "parked"]).optional(),
+  blocked_reason: trimmedString(LIMITS.initiativeBlockedReason).optional(),
+  commitment: z.enum(["one_off", "recurring", "workstream"]).nullable().optional(),
+  help_needed: z.enum(["lead", "helpers", "skill"]).nullable().optional(),
+  skill_note: trimmedString(LIMITS.initiativeSkillNote).optional(),
 });
 
 
@@ -173,6 +185,14 @@ export type InitiativeDTO = WithTranslations & {
   owner: string;
   description: string;
   status: InitiativeStatus;
+  /** Only meaningful while `status` is 'planned'. */
+  availability: InitiativeAvailability;
+  blocked_reason: string;
+  commitment: InitiativeCommitment | null;
+  help_needed: InitiativeHelpNeeded | null;
+  skill_note: string;
+  /** ISO timestamp, surfaced so stale volunteer cards visibly decay. */
+  updated_at: string | null;
   sort_order: number;
   secondary_kr_ids: string[];
 };
@@ -237,7 +257,9 @@ export const TRANSLATABLE_FIELDS = {
   // NOT translatable — they must never be sent through the translator.
   key_results: ["text", "target", "lead", "measure", "instrument"] as const,
 
-  initiatives: ["text", "owner", "description"] as const,
+    // Enum fields (availability, commitment, help_needed) are NOT translatable —
+  // their labels come from the i18n strings.
+  initiatives: ["text", "owner", "description", "blocked_reason", "skill_note"] as const,
   alignment_rows: ["pillar", "how"] as const,
   pillar_summaries: ["label", "description"] as const,
 } as const;
