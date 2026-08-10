@@ -137,8 +137,11 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         .order("sort_order", { ascending: true }),
       supabase
         .from("key_results")
-        .select("id,okr_set_id,kr,text,target,lead,sort_order,translations,source_lang")
+        .select(
+          "id,okr_set_id,kr,text,target,lead,sort_order,translations,source_lang,kr_type,measure,instrument,baseline_2026,baseline_locked,current_value,current_as_of,target_2027,milestone_status,milestone_due",
+        )
         .order("sort_order", { ascending: true }),
+
       supabase
         .from("initiatives")
         .select("id,okr_set_id,kr_id,text,owner,description,status,sort_order,translations,source_lang")
