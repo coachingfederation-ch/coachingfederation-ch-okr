@@ -210,7 +210,7 @@ function ReportSection({
 }) {
   return (
     <section className={`mt-10 ${breakBefore ? "report-page" : ""}`}>
-      <h2 className="display-sm mb-3">{title}</h2>
+      <h2 className="font-display text-xl font-semibold tracking-tight mb-3">{title}</h2>
       {children}
     </section>
   );
@@ -271,7 +271,7 @@ function ObjectiveSection({
 
   return (
     <section className={`mt-10 ${first ? "" : "report-page"}`}>
-      <h2 className="display-sm">
+      <h2 className="font-display text-xl font-semibold tracking-tight">
         {set.number}. {title}
       </h2>
       <p className="mt-1 text-xs text-muted-foreground">
