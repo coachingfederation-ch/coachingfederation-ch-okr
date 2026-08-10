@@ -1422,6 +1422,10 @@ function IndexContent() {
         <p className="mt-6 rounded-xl border border-warning-border bg-warning-surface px-4 py-3 text-sm leading-relaxed text-foreground">
           {t("banner.baselining")}
         </p>
+
+        {/* 2026 scorecard: how much of the measurement system actually exists yet. */}
+        <MeasurementScorecard data={data} t={t} />
+
       </section>
 
 
