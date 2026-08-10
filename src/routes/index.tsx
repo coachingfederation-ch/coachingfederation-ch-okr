@@ -665,7 +665,6 @@ function KrCard({
   const { locale, t } = useLocale();
   const count = kr.initiatives.length + secondaryCount;
   const text = pickTranslation(kr, "text", kr.text, locale);
-  const target = pickTranslation(kr, "target", kr.target, locale);
   const lead = pickTranslation(kr, "lead", kr.lead, locale);
   return (
     <div className="group relative flex h-full flex-col rounded-2xl border border-border/70 bg-card p-4 text-left shadow-soft transition-all hover:border-primary/40 hover:shadow-md has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
@@ -686,20 +685,14 @@ function KrCard({
       <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-foreground">
         {text || <span className="italic text-muted-foreground">{t("kr.noDescription")}</span>}
       </p>
-      <dl className="mt-4 space-y-1.5 text-xs">
-        <div className="flex gap-3">
-          <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.target")}</dt>
-          <dd className="min-w-0 flex-1 truncate text-foreground">
-            {target || <span className="italic text-muted-foreground">—</span>}
-          </dd>
-        </div>
-        <div className="flex gap-3">
-          <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.lead")}</dt>
-          <dd className="min-w-0 flex-1 truncate text-muted-foreground">
-            {lead || <span className="italic">—</span>}
-          </dd>
-        </div>
+      <KrMeasurement kr={kr} />
+      <dl className="mt-3 flex gap-3 text-xs">
+        <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.lead")}</dt>
+        <dd className="min-w-0 flex-1 truncate text-muted-foreground">
+          {lead || <span className="italic">—</span>}
+        </dd>
       </dl>
+
       <span className="mt-3 inline-flex text-[11px] font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
         {t("kr.openDetails")}
       </span>
