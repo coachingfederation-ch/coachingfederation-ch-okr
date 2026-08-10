@@ -154,7 +154,10 @@ function InitiativesContent() {
   const [editingId, setEditingId] = useState<string | null>(null);
   // Editors arrive to run the board; everyone else arrives asking what they
   // could pick up, so each audience lands on the view that answers them.
-  const [view, setView] = useState<"board" | "volunteer">(canEdit ? "board" : "volunteer");
+  // Kept as an override so the default still follows `canEdit` once the auth
+  // state resolves after first render.
+  const [viewOverride, setViewOverride] = useState<"board" | "volunteer" | null>(null);
+  const view = viewOverride ?? (canEdit ? "board" : "volunteer");
 
   const flat: FlatInitiative[] = useMemo(() => {
     // An initiative can serve several key results (one primary + secondary
