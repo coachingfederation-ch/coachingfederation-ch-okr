@@ -204,7 +204,10 @@ export type DashboardDTO = {
 // to know which fields to send through the translator.
 export const TRANSLATABLE_FIELDS = {
   okr_sets: ["title", "role_name", "customer", "objective", "alignment"] as const,
-  key_results: ["text", "target", "lead"] as const,
+  // Numeric fields (baseline_2026, current_value, target_2027) are deliberately
+  // NOT translatable — they must never be sent through the translator.
+  key_results: ["text", "target", "lead", "measure", "instrument"] as const,
+
   initiatives: ["text", "owner", "description"] as const,
   alignment_rows: ["pillar", "how"] as const,
   pillar_summaries: ["label", "description"] as const,
