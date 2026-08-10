@@ -10,12 +10,24 @@ import {
   setInitiativeSecondaryKrs,
 } from "@/lib/okr.functions";
 import {
+  INITIATIVE_AVAILABILITIES,
+  INITIATIVE_COMMITMENTS,
+  INITIATIVE_HELP_NEEDED,
   INITIATIVE_STATUSES,
   LIMITS,
   type DashboardDTO,
+  type InitiativeAvailability,
+  type InitiativeCommitment,
   type InitiativeDTO,
+  type InitiativeHelpNeeded,
   type InitiativeStatus,
 } from "@/lib/okr-schemas";
+import {
+  AMBER_NOTE,
+  AVAILABILITY_KEY,
+  COMMITMENT_KEY,
+  HELP_NEEDED_KEY,
+} from "./initiative-meta";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 
 import type { StringKey } from "@/lib/i18n-strings";
@@ -144,6 +156,11 @@ export function EditInitiativeDialog({
   const [owner, setOwner] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<InitiativeStatus>("planned");
+  const [availability, setAvailability] = useState<InitiativeAvailability>("open");
+  const [blockedReason, setBlockedReason] = useState("");
+  const [commitment, setCommitment] = useState<InitiativeCommitment | null>(null);
+  const [helpNeeded, setHelpNeeded] = useState<InitiativeHelpNeeded | null>(null);
+  const [skillNote, setSkillNote] = useState("");
   const [secondaryIds, setSecondaryIds] = useState<string[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -156,6 +173,15 @@ export function EditInitiativeDialog({
         pickTranslation(initiative, "description", initiative.description, locale) || "",
       );
       setStatus(initiative.status);
+      setAvailability(initiative.availability ?? "open");
+      setBlockedReason(
+        pickTranslation(initiative, "blocked_reason", initiative.blocked_reason, locale) || "",
+      );
+      setCommitment(initiative.commitment ?? null);
+      setHelpNeeded(initiative.help_needed ?? null);
+      setSkillNote(
+        pickTranslation(initiative, "skill_note", initiative.skill_note, locale) || "",
+      );
       setSecondaryIds(initiative.secondary_kr_ids ?? []);
     }
   }, [open, initiative, locale]);
@@ -174,6 +200,11 @@ export function EditInitiativeDialog({
             owner: owner.trim(),
             description: description.trim(),
             status,
+            availability,
+            blocked_reason: blockedReason.trim(),
+            commitment,
+            help_needed: helpNeeded,
+            skill_note: skillNote.trim(),
           },
           sourceLang: locale,
         },
@@ -412,6 +443,125 @@ export function EditInitiativeDialog({
                 </SelectContent>
               </Select>
             </div>
+
+            {status === "planned" && (
+              <>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-availability">{t("initiatives.form.availability")}</Label>
+                  <Select
+                    value={availability}
+                    onValueChange={(v) => setAvailability(v as InitiativeAvailability)}
+                    disabled={!canEdit}
+                  >
+                    <SelectTrigger id="ei-availability" className="w-full min-w-0">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {INITIATIVE_AVAILABILITIES.map((a) => (
+                        <SelectItem key={a} value={a}>
+                          {t(AVAILABILITY_KEY[a])}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    {t("initiatives.form.availabilityHint")}
+                  </p>
+                </div>
+
+                {availability === "blocked" && (
+                  <div className="grid gap-1.5 min-w-0">
+                    <Label htmlFor="ei-blocked">{t("initiatives.form.blockedReason")}</Label>
+                    <Textarea
+                      id="ei-blocked"
+                      value={blockedReason}
+                      onChange={(e) =>
+                        setBlockedReason(e.target.value.slice(0, LIMITS.initiativeBlockedReason))
+                      }
+                      placeholder={t("initiatives.form.blockedReasonPlaceholder")}
+                      rows={2}
+                      maxLength={LIMITS.initiativeBlockedReason}
+                      disabled={!canEdit}
+                    />
+                    {blockedReason.trim().length === 0 && (
+                      <span className={AMBER_NOTE}>{t("volunteer.noReason")}</span>
+                    )}
+                  </div>
+                )}
+
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-commitment">{t("initiatives.form.commitment")}</Label>
+                  <Select
+                    value={commitment ?? "__none__"}
+                    onValueChange={(v) =>
+                      setCommitment(v === "__none__" ? null : (v as InitiativeCommitment))
+                    }
+                    disabled={!canEdit}
+                  >
+                    <SelectTrigger id="ei-commitment" className="w-full min-w-0">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">{t("initiatives.form.unspecified")}</SelectItem>
+                      {INITIATIVE_COMMITMENTS.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {t(COMMITMENT_KEY[c])}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-help">{t("initiatives.form.helpNeeded")}</Label>
+                  <Select
+                    value={helpNeeded ?? "__none__"}
+                    onValueChange={(v) =>
+                      setHelpNeeded(v === "__none__" ? null : (v as InitiativeHelpNeeded))
+                    }
+                    disabled={!canEdit}
+                  >
+                    <SelectTrigger id="ei-help" className="w-full min-w-0">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">{t("initiatives.form.unspecified")}</SelectItem>
+                      {INITIATIVE_HELP_NEEDED.map((h) => (
+                        <SelectItem key={h} value={h}>
+                          {t(HELP_NEEDED_KEY[h])}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {/* Consistency hint, deliberately not hard validation. */}
+                  {helpNeeded === "helpers" && owner.trim().length === 0 && (
+                    <p className="text-xs text-amber-700">
+                      {t("initiatives.form.helpersOwnerHint")}
+                    </p>
+                  )}
+                </div>
+
+                {helpNeeded === "skill" && (
+                  <div className="grid gap-1.5 min-w-0">
+                    <Label htmlFor="ei-skill">{t("initiatives.form.skillNote")}</Label>
+                    <Input
+                      id="ei-skill"
+                      value={skillNote}
+                      onChange={(e) =>
+                        setSkillNote(e.target.value.slice(0, LIMITS.initiativeSkillNote))
+                      }
+                      placeholder={t("initiatives.form.skillNotePlaceholder")}
+                      maxLength={LIMITS.initiativeSkillNote}
+                      disabled={!canEdit}
+                    />
+                  </div>
+                )}
+
+                {availability === "open" && (!commitment || !helpNeeded) && (
+                  <span className={AMBER_NOTE}>{t("volunteer.scopeMissing")}</span>
+                )}
+              </>
+            )}
           </div>
         </div>
 

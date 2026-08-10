@@ -144,7 +144,9 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
 
       supabase
         .from("initiatives")
-        .select("id,okr_set_id,kr_id,text,owner,description,status,sort_order,translations,source_lang")
+        .select(
+          "id,okr_set_id,kr_id,text,owner,description,status,availability,blocked_reason,commitment,help_needed,skill_note,updated_at,sort_order,translations,source_lang",
+        )
         .order("sort_order", { ascending: true }),
       supabase
         .from("alignment_rows")
@@ -177,6 +179,12 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         owner: r.owner ?? "",
         description: r.description ?? "",
         status: ((r.status as InitiativeDTO["status"]) ?? "planned"),
+        availability: ((r.availability as InitiativeDTO["availability"]) ?? "open"),
+        blocked_reason: r.blocked_reason ?? "",
+        commitment: (r.commitment as InitiativeDTO["commitment"]) ?? null,
+        help_needed: (r.help_needed as InitiativeDTO["help_needed"]) ?? null,
+        skill_note: r.skill_note ?? "",
+        updated_at: r.updated_at ?? null,
         sort_order: r.sort_order,
         secondary_kr_ids: secByInit.get(r.id) ?? [],
         translations: (r as { translations?: TranslationsMap }).translations ?? {},

@@ -24,6 +24,12 @@ import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { NewInitiativeDialog } from "@/components/okr/NewInitiativeDialog";
 import { EditInitiativeDialog } from "@/components/okr/EditInitiativeDialog";
+import { VolunteerView } from "@/components/okr/VolunteerView";
+import {
+  AVAILABILITY_CHIP,
+  AVAILABILITY_KEY,
+  type FlatInitiative,
+} from "@/components/okr/initiative-meta";
 import { Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -137,15 +143,6 @@ function InitiativesFallback() {
   return <div className="p-8 text-sm text-muted-foreground">{t("common.loading")}</div>;
 }
 
-type FlatInitiative = InitiativeDTO & {
-  okrTitle: string;
-  okrId: string;
-  okrNumber: number;
-  krLabel: string;
-  /** Labels of the key results this initiative also contributes to (secondary links). */
-  secondaryLabels: string[];
-};
-
 function InitiativesContent() {
   const { data } = useSuspenseQuery(dashboardQueryOptions);
   const { canEdit } = useAuth();
@@ -155,6 +152,12 @@ function InitiativesContent() {
   const [krFilter, setKrFilter] = useState<string>("all");
   const [createOpen, setCreateOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  // Editors arrive to run the board; everyone else arrives asking what they
+  // could pick up, so each audience lands on the view that answers them.
+  // Kept as an override so the default still follows `canEdit` once the auth
+  // state resolves after first render.
+  const [viewOverride, setViewOverride] = useState<"board" | "volunteer" | null>(null);
+  const view = viewOverride ?? (canEdit ? "board" : "volunteer");
 
   const flat: FlatInitiative[] = useMemo(() => {
     // An initiative can serve several key results (one primary + secondary
@@ -283,7 +286,35 @@ function InitiativesContent() {
 
       <section className="mx-auto -mt-8 max-w-7xl px-8">
         <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-soft">
+          <div className="mb-3 flex flex-wrap items-center gap-3 border-b border-border/60 pb-3">
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              {t("initiatives.view.label")}
+            </span>
+            <div
+              role="group"
+              aria-label={t("initiatives.view.label")}
+              className="inline-flex items-center rounded-full bg-muted p-0.5"
+            >
+              {(["board", "volunteer"] as const).map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setViewOverride(v)}
+                  aria-pressed={view === v}
+                  className={cn(
+                    "inline-flex min-h-[44px] items-center rounded-full px-4 text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    view === v
+                      ? "bg-card text-primary shadow-sm"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {v === "board" ? t("initiatives.view.board") : t("initiatives.view.volunteer")}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="flex flex-wrap items-center gap-3">
+
             <FilterBlock label={t("initiatives.filterOkr")}>
               <Select
                 value={okrFilter}
@@ -365,18 +396,23 @@ function InitiativesContent() {
 
 
       <section className="mx-auto max-w-7xl px-8 py-8">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {INITIATIVE_STATUSES.map((status) => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              items={byStatus[status]}
-              canEdit={canEdit}
-              onUpdate={(id, patch) => updateInit.mutate({ id, patch })}
-              onOpen={(id) => setEditingId(id)}
-            />
-          ))}
-        </div>
+        {view === "board" ? (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {INITIATIVE_STATUSES.map((status) => (
+              <KanbanColumn
+                key={status}
+                status={status}
+                items={byStatus[status]}
+                canEdit={canEdit}
+                onUpdate={(id, patch) => updateInit.mutate({ id, patch })}
+                onOpen={(id) => setEditingId(id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <VolunteerView items={filtered} onOpen={(id) => setEditingId(id)} />
+        )}
+
         <p className="mt-8 text-center text-xs text-muted-foreground">
           <Link to="/" className="hover:text-primary hover:underline">
             ← {t("nav.okrs")}
@@ -500,6 +536,17 @@ function InitiativeCard({
         <span className="truncate text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
           {item.okrTitle}
         </span>
+        {/* Availability only carries meaning while the initiative is planned. */}
+        {item.status === "planned" && (
+          <span
+            className={cn(
+              "inline-flex h-5 items-center rounded-full border px-2 text-[10px] font-semibold",
+              AVAILABILITY_CHIP[item.availability],
+            )}
+          >
+            {t(AVAILABILITY_KEY[item.availability])}
+          </span>
+        )}
       </div>
 
 
