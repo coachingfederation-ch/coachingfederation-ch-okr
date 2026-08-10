@@ -14,6 +14,7 @@ export function TopNav() {
 
   const isOkrsActive = path === "/";
   const isInitiativesActive = path.startsWith("/initiatives");
+  const isReportActive = path.startsWith("/report");
 
   return (
     <nav
@@ -34,7 +35,15 @@ export function TopNav() {
       >
         {t("nav.initiatives")}
       </Link>
+      <Link
+        to="/report"
+        className={cn(base, isReportActive ? active : inactive)}
+        aria-current={isReportActive ? "page" : undefined}
+      >
+        {t("report.nav")}
+      </Link>
     </nav>
   );
+
 }
 
