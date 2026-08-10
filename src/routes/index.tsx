@@ -473,6 +473,59 @@ function RoleLabelSelect({
   );
 }
 
+/** Small enum picker matching the RoleLabelSelect affordance. */
+function PlainSelect({
+  value, canEdit, options, onChange,
+}: {
+  value: string;
+  canEdit: boolean;
+  options: { value: string; label: string }[];
+  onChange: (v: string) => void;
+}) {
+  const current = options.find((o) => o.value === value)?.label ?? value;
+  if (!canEdit) {
+    return <span className="text-sm text-foreground">{current}</span>;
+  }
+  return (
+    <span className="relative inline-flex">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="appearance-none inline-flex items-center rounded-md border border-primary/25 bg-card pl-2 pr-6 py-1 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5"
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
+    </span>
+  );
+}
+
+/** Date field; empty string is normalised to null so the column stays nullable. */
+function PlainDate({
+  value, canEdit, onChange,
+}: {
+  value: string | null;
+  canEdit: boolean;
+  onChange: (v: string | null) => void;
+}) {
+  if (!canEdit) {
+    return (
+      <span className="text-sm text-muted-foreground">{formatSwissDate(value) || "—"}</span>
+    );
+  }
+  return (
+    <input
+      type="date"
+      value={value ?? ""}
+      onChange={(e) => onChange(e.target.value || null)}
+      className="mt-1 w-full rounded-md border border-input bg-card px-2 py-1 text-xs text-foreground"
+    />
+  );
+}
+
+
 // ---------- OKR card ----------
 
 function OkrCard({
