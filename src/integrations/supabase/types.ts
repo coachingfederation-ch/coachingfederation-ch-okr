@@ -88,12 +88,21 @@ export type Database = {
       }
       initiatives: {
         Row: {
+          availability: Database["public"]["Enums"]["initiative_availability"]
+          blocked_reason: string
+          commitment:
+            | Database["public"]["Enums"]["initiative_commitment"]
+            | null
           created_at: string
           description: string
+          help_needed:
+            | Database["public"]["Enums"]["initiative_help_needed"]
+            | null
           id: string
           kr_id: string
           okr_set_id: string
           owner: string
+          skill_note: string
           sort_order: number
           source_lang: string
           status: string
@@ -102,12 +111,21 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          availability?: Database["public"]["Enums"]["initiative_availability"]
+          blocked_reason?: string
+          commitment?:
+            | Database["public"]["Enums"]["initiative_commitment"]
+            | null
           created_at?: string
           description?: string
+          help_needed?:
+            | Database["public"]["Enums"]["initiative_help_needed"]
+            | null
           id?: string
           kr_id: string
           okr_set_id: string
           owner?: string
+          skill_note?: string
           sort_order?: number
           source_lang?: string
           status?: string
@@ -116,12 +134,21 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          availability?: Database["public"]["Enums"]["initiative_availability"]
+          blocked_reason?: string
+          commitment?:
+            | Database["public"]["Enums"]["initiative_commitment"]
+            | null
           created_at?: string
           description?: string
+          help_needed?:
+            | Database["public"]["Enums"]["initiative_help_needed"]
+            | null
           id?: string
           kr_id?: string
           okr_set_id?: string
           owner?: string
+          skill_note?: string
           sort_order?: number
           source_lang?: string
           status?: string
@@ -341,6 +368,9 @@ export type Database = {
     Enums: {
       app_role: "editor" | "admin"
       contribution: "none" | "secondary" | "primary"
+      initiative_availability: "open" | "blocked" | "parked"
+      initiative_commitment: "one_off" | "recurring" | "workstream"
+      initiative_help_needed: "lead" | "helpers" | "skill"
       kr_type: "metric" | "milestone"
       milestone_status: "not_started" | "in_progress" | "done"
     }
@@ -472,6 +502,9 @@ export const Constants = {
     Enums: {
       app_role: ["editor", "admin"],
       contribution: ["none", "secondary", "primary"],
+      initiative_availability: ["open", "blocked", "parked"],
+      initiative_commitment: ["one_off", "recurring", "workstream"],
+      initiative_help_needed: ["lead", "helpers", "skill"],
       kr_type: ["metric", "milestone"],
       milestone_status: ["not_started", "in_progress", "done"],
     },
