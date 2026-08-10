@@ -23,7 +23,9 @@ import {
 
 import {
   CONTRIBUTION_CYCLE,
+  KR_TYPES,
   LIMITS,
+  MILESTONE_STATUSES,
   PILLARS,
   ROLE_LABELS,
   type AlignmentRowDTO,
@@ -31,6 +33,8 @@ import {
   type DashboardDTO,
   type InitiativeDTO,
   type KeyResultDTO,
+  type KrType,
+  type MilestoneStatus,
   type OkrSetDTO,
   type Pillar,
   type PillarSummaryDTO,
@@ -40,9 +44,11 @@ import { LOCALES, LOCALE_LABELS, type Locale } from "@/lib/i18n-shared";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { pillarName } from "@/lib/i18n-strings";
 import { EditableText } from "@/components/okr/EditableText";
+import { KrMeasurement } from "@/components/okr/KrMeasurement";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { LinkInitiativesDialog } from "@/components/okr/LinkInitiativesDialog";
+
 
 
 import {
