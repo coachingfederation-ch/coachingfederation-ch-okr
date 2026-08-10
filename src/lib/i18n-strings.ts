@@ -138,7 +138,34 @@ export type StringKey =
   | "common.loading"
   | "common.editValue"
   | "common.saveFailed"
-  | "lang.switcher";
+  | "lang.switcher"
+  | "banner.baselining"
+  | "kr.baseline2026"
+  | "kr.current"
+  | "kr.target2027"
+  | "kr.baselinePending"
+  | "kr.asAt"
+  | "kr.neverUpdated"
+  | "kr.stale"
+  | "kr.measure"
+  | "kr.instrument"
+  | "kr.instrumentMissing"
+  | "kr.notMeasurable"
+  | "kr.progress"
+  | "kr.type"
+  | "kr.type.metric"
+  | "kr.type.milestone"
+  | "kr.milestoneStatus"
+  | "kr.milestone.not_started"
+  | "kr.milestone.in_progress"
+  | "kr.milestone.done"
+  | "kr.milestoneDue"
+  | "kr.originalTarget"
+  | "kr.baselineLocked"
+  | "kr.baselineLockedHint"
+  | "kr.measurePlaceholder"
+  | "kr.instrumentPlaceholder";
+
 
 
 const en: Record<StringKey, string> = {
