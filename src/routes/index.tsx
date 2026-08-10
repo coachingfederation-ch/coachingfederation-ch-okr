@@ -764,17 +764,6 @@ function KrDetailSheet({
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div>
-                <div className="section-label mb-1">{t("kr.target")}</div>
-                <EditableText
-                  value={krTarget}
-                  canEdit={canEdit}
-                  maxLength={LIMITS.target}
-                  onSave={(v) => update({ target: v })}
-                  placeholder={t("kr.target")}
-                  className="text-sm text-foreground"
-                />
-              </div>
-              <div>
                 <div className="section-label mb-1">{t("kr.lead")}</div>
                 <EditableText
                   value={krLead}
@@ -795,7 +784,129 @@ function KrDetailSheet({
                   className="text-sm font-medium text-primary"
                 />
               </div>
+              <div>
+                <div className="section-label mb-1">{t("kr.type")}</div>
+                <PlainSelect
+                  canEdit={canEdit}
+                  value={kr.kr_type}
+                  options={KR_TYPES.map((v) => ({ value: v, label: t(`kr.type.${v}` as const) }))}
+                  onChange={(v) => update({ kr_type: v as KrType })}
+                />
+              </div>
+              <div>
+                <div className="section-label mb-1">{t("kr.measure")}</div>
+                <EditableText
+                  multiline
+                  value={krMeasure}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.measure}
+                  onSave={(v) => update({ measure: v })}
+                  placeholder={t("kr.measurePlaceholder")}
+                  className="text-sm text-foreground"
+                />
+              </div>
+              <div>
+                <div className="section-label mb-1">{t("kr.instrument")}</div>
+                <EditableText
+                  value={krInstrument}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.instrument}
+                  onSave={(v) => update({ instrument: v })}
+                  placeholder={t("kr.instrumentPlaceholder")}
+                  className="text-sm text-foreground"
+                />
+              </div>
             </div>
+
+            {kr.kr_type === "metric" ? (
+              <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                <div>
+                  <div className="section-label mb-1">{t("kr.baseline2026")}</div>
+                  <EditableText
+                    value={kr.baseline_2026}
+                    canEdit={canEdit && !kr.baseline_locked}
+                    maxLength={LIMITS.value}
+                    onSave={(v) => update({ baseline_2026: v })}
+                    placeholder={t("kr.baselinePending")}
+                    className="text-sm font-semibold text-foreground"
+                  />
+                  {canEdit && (
+                    <label className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                      <input
+                        type="checkbox"
+                        checked={kr.baseline_locked}
+                        onChange={(e) => update({ baseline_locked: e.target.checked })}
+                        className="h-3.5 w-3.5 accent-[var(--color-primary)]"
+                      />
+                      <span title={t("kr.baselineLockedHint")}>{t("kr.baselineLocked")}</span>
+                    </label>
+                  )}
+                </div>
+                <div>
+                  <div className="section-label mb-1">{t("kr.current")}</div>
+                  <EditableText
+                    value={kr.current_value}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.value}
+                    onSave={(v) => update({ current_value: v })}
+                    placeholder="—"
+                    className="text-sm font-semibold text-foreground"
+                  />
+                  <PlainDate
+                    canEdit={canEdit}
+                    value={kr.current_as_of}
+                    onChange={(v) => update({ current_as_of: v })}
+                  />
+                </div>
+                <div>
+                  <div className="section-label mb-1">{t("kr.target2027")}</div>
+                  <EditableText
+                    value={kr.target_2027}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.value}
+                    onSave={(v) => update({ target_2027: v })}
+                    placeholder="—"
+                    className="text-sm font-semibold text-foreground"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div>
+                  <div className="section-label mb-1">{t("kr.milestoneStatus")}</div>
+                  <PlainSelect
+                    canEdit={canEdit}
+                    value={kr.milestone_status}
+                    options={MILESTONE_STATUSES.map((v) => ({
+                      value: v,
+                      label: t(`kr.milestone.${v}` as const),
+                    }))}
+                    onChange={(v) => update({ milestone_status: v as MilestoneStatus })}
+                  />
+                </div>
+                <div>
+                  <div className="section-label mb-1">{t("kr.milestoneDue")}</div>
+                  <PlainDate
+                    canEdit={canEdit}
+                    value={kr.milestone_due}
+                    onChange={(v) => update({ milestone_due: v })}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 rounded-xl border border-border/70 bg-surface p-3">
+              <div className="section-label mb-1">{t("kr.originalTarget")}</div>
+              <EditableText
+                value={krTarget}
+                canEdit={canEdit}
+                maxLength={LIMITS.target}
+                onSave={(v) => update({ target: v })}
+                placeholder="—"
+                className="text-sm text-muted-foreground"
+              />
+            </div>
+
 
             <section className="mt-8">
               <div className="mb-2 flex items-center justify-between gap-2">
