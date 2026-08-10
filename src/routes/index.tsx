@@ -1507,7 +1507,7 @@ function MeasurementScorecard({ data }: { data: DashboardDTO }) {
             >
               <div
                 className={`text-3xl font-bold leading-none ${
-                  complete ? "text-foreground" : "text-warning-foreground"
+                  complete ? "text-foreground" : "text-warning"
                 }`}
               >
                 {count}
