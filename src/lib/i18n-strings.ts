@@ -121,6 +121,42 @@ export type StringKey =
   | "initiative.unlinkSecondary"
   | "initiative.createInPortfolio"
   | "initiative.linksUpdated"
+  | "initiatives.view.label"
+  | "initiatives.view.board"
+  | "initiatives.view.volunteer"
+  | "volunteer.openLead"
+  | "volunteer.group.lead"
+  | "volunteer.group.helpers"
+  | "volunteer.group.skill"
+  | "volunteer.group.unscoped"
+  | "volunteer.blocked"
+  | "volunteer.parked"
+  | "volunteer.blockedEmpty"
+  | "volunteer.parkedEmpty"
+  | "volunteer.lastUpdated"
+  | "volunteer.scopeMissing"
+  | "volunteer.noReason"
+  | "volunteer.empty"
+  | "volunteer.groupEmpty"
+  | "initiative.availability.open"
+  | "initiative.availability.blocked"
+  | "initiative.availability.parked"
+  | "initiative.commitment.one_off"
+  | "initiative.commitment.recurring"
+  | "initiative.commitment.workstream"
+  | "initiative.helpNeeded.lead"
+  | "initiative.helpNeeded.helpers"
+  | "initiative.helpNeeded.skill"
+  | "initiatives.form.availability"
+  | "initiatives.form.blockedReason"
+  | "initiatives.form.blockedReasonPlaceholder"
+  | "initiatives.form.commitment"
+  | "initiatives.form.helpNeeded"
+  | "initiatives.form.skillNote"
+  | "initiatives.form.skillNotePlaceholder"
+  | "initiatives.form.unspecified"
+  | "initiatives.form.helpersOwnerHint"
+  | "initiatives.form.availabilityHint"
 
 
 
@@ -340,6 +376,42 @@ const en: Record<StringKey, string> = {
   "initiative.unlinkSecondary": "Remove secondary link",
   "initiative.createInPortfolio": "New initiatives are created in the Portfolio.",
   "initiative.linksUpdated": "Links updated",
+  "initiatives.view.label": "View",
+  "initiatives.view.board": "Board view",
+  "initiatives.view.volunteer": "Volunteer view",
+  "volunteer.openLead": "{n} initiatives are open and looking for someone.",
+  "volunteer.group.lead": "Needs a lead",
+  "volunteer.group.helpers": "Needs helpers",
+  "volunteer.group.skill": "Needs a specific skill",
+  "volunteer.group.unscoped": "Not yet scoped",
+  "volunteer.blocked": "Blocked",
+  "volunteer.parked": "Parked",
+  "volunteer.blockedEmpty": "Nothing is blocked.",
+  "volunteer.parkedEmpty": "Nothing is parked.",
+  "volunteer.lastUpdated": "Last updated {date}",
+  "volunteer.scopeMissing": "Scope not specified",
+  "volunteer.noReason": "Reason not given",
+  "volunteer.empty": "Nothing is open right now.",
+  "volunteer.groupEmpty": "Nothing here",
+  "initiative.availability.open": "Open",
+  "initiative.availability.blocked": "Blocked",
+  "initiative.availability.parked": "Parked",
+  "initiative.commitment.one_off": "One-off, a few hours",
+  "initiative.commitment.recurring": "Recurring, a few hours a month",
+  "initiative.commitment.workstream": "Workstream, leads it over months",
+  "initiative.helpNeeded.lead": "Needs a lead",
+  "initiative.helpNeeded.helpers": "Needs helpers alongside the lead",
+  "initiative.helpNeeded.skill": "Needs a specific skill",
+  "initiatives.form.availability": "Availability",
+  "initiatives.form.blockedReason": "What is it waiting on?",
+  "initiatives.form.blockedReasonPlaceholder": "e.g. waiting on a board decision",
+  "initiatives.form.commitment": "Commitment",
+  "initiatives.form.helpNeeded": "Help needed",
+  "initiatives.form.skillNote": "Which skill?",
+  "initiatives.form.skillNotePlaceholder": "e.g. graphic design, legal review",
+  "initiatives.form.unspecified": "Not specified",
+  "initiatives.form.helpersOwnerHint": "Helpers join a lead. Consider naming an owner first.",
+  "initiatives.form.availabilityHint": "Availability applies while the initiative is planned.",
 
 
   "common.cancel": "Cancel",
@@ -556,6 +628,42 @@ const de: Record<StringKey, string> = {
   "initiative.unlinkSecondary": "Sekundäre Verknüpfung entfernen",
   "initiative.createInPortfolio": "Neue Initiativen werden im Portfolio erstellt.",
   "initiative.linksUpdated": "Verknüpfungen aktualisiert",
+  "initiatives.view.label": "Ansicht",
+  "initiatives.view.board": "Vorstandsansicht",
+  "initiatives.view.volunteer": "Freiwilligenansicht",
+  "volunteer.openLead": "{n} Initiativen sind offen und suchen jemanden.",
+  "volunteer.group.lead": "Braucht eine Leitung",
+  "volunteer.group.helpers": "Braucht Mitwirkende",
+  "volunteer.group.skill": "Braucht eine bestimmte Kompetenz",
+  "volunteer.group.unscoped": "Noch nicht definiert",
+  "volunteer.blocked": "Blockiert",
+  "volunteer.parked": "Zur\u00fcckgestellt",
+  "volunteer.blockedEmpty": "Nichts ist blockiert.",
+  "volunteer.parkedEmpty": "Nichts ist zur\u00fcckgestellt.",
+  "volunteer.lastUpdated": "Zuletzt aktualisiert {date}",
+  "volunteer.scopeMissing": "Umfang nicht angegeben",
+  "volunteer.noReason": "Grund nicht angegeben",
+  "volunteer.empty": "Derzeit ist nichts offen.",
+  "volunteer.groupEmpty": "Nichts vorhanden",
+  "initiative.availability.open": "Offen",
+  "initiative.availability.blocked": "Blockiert",
+  "initiative.availability.parked": "Zur\u00fcckgestellt",
+  "initiative.commitment.one_off": "Einmalig, einige Stunden",
+  "initiative.commitment.recurring": "Wiederkehrend, einige Stunden pro Monat",
+  "initiative.commitment.workstream": "Arbeitsstrang, Leitung \u00fcber Monate",
+  "initiative.helpNeeded.lead": "Braucht eine Leitung",
+  "initiative.helpNeeded.helpers": "Braucht Mitwirkende an der Seite der Leitung",
+  "initiative.helpNeeded.skill": "Braucht eine bestimmte Kompetenz",
+  "initiatives.form.availability": "Verf\u00fcgbarkeit",
+  "initiatives.form.blockedReason": "Worauf wartet die Initiative?",
+  "initiatives.form.blockedReasonPlaceholder": "z. B. wartet auf einen Vorstandsentscheid",
+  "initiatives.form.commitment": "Aufwand",
+  "initiatives.form.helpNeeded": "Ben\u00f6tigte Unterst\u00fctzung",
+  "initiatives.form.skillNote": "Welche Kompetenz?",
+  "initiatives.form.skillNotePlaceholder": "z. B. Grafikdesign, juristische Pr\u00fcfung",
+  "initiatives.form.unspecified": "Nicht angegeben",
+  "initiatives.form.helpersOwnerHint": "Mitwirkende unterst\u00fctzen eine Leitung. Bitte zuerst eine verantwortliche Person eintragen.",
+  "initiatives.form.availabilityHint": "Die Verf\u00fcgbarkeit gilt, solange die Initiative geplant ist.",
 
 
   "common.cancel": "Abbrechen",
@@ -771,6 +879,42 @@ const fr: Record<StringKey, string> = {
   "initiative.unlinkSecondary": "Retirer le lien secondaire",
   "initiative.createInPortfolio": "Les nouvelles initiatives se créent dans le Portefeuille.",
   "initiative.linksUpdated": "Liens mis à jour",
+  "initiatives.view.label": "Vue",
+  "initiatives.view.board": "Vue comit\u00e9",
+  "initiatives.view.volunteer": "Vue b\u00e9n\u00e9vole",
+  "volunteer.openLead": "{n} initiatives sont ouvertes et cherchent quelqu'un.",
+  "volunteer.group.lead": "Cherche une personne responsable",
+  "volunteer.group.helpers": "Cherche des renforts",
+  "volunteer.group.skill": "Cherche une comp\u00e9tence sp\u00e9cifique",
+  "volunteer.group.unscoped": "Pas encore cadr\u00e9",
+  "volunteer.blocked": "Bloqu\u00e9",
+  "volunteer.parked": "Report\u00e9",
+  "volunteer.blockedEmpty": "Rien n'est bloqu\u00e9.",
+  "volunteer.parkedEmpty": "Rien n'est report\u00e9.",
+  "volunteer.lastUpdated": "Derni\u00e8re mise \u00e0 jour {date}",
+  "volunteer.scopeMissing": "Cadrage non pr\u00e9cis\u00e9",
+  "volunteer.noReason": "Raison non indiqu\u00e9e",
+  "volunteer.empty": "Rien n'est ouvert pour le moment.",
+  "volunteer.groupEmpty": "Rien ici",
+  "initiative.availability.open": "Ouvert",
+  "initiative.availability.blocked": "Bloqu\u00e9",
+  "initiative.availability.parked": "Report\u00e9",
+  "initiative.commitment.one_off": "Ponctuel, quelques heures",
+  "initiative.commitment.recurring": "R\u00e9current, quelques heures par mois",
+  "initiative.commitment.workstream": "Chantier, pilotage sur plusieurs mois",
+  "initiative.helpNeeded.lead": "Cherche une personne responsable",
+  "initiative.helpNeeded.helpers": "Cherche des renforts aux c\u00f4t\u00e9s de la personne responsable",
+  "initiative.helpNeeded.skill": "Cherche une comp\u00e9tence sp\u00e9cifique",
+  "initiatives.form.availability": "Disponibilit\u00e9",
+  "initiatives.form.blockedReason": "Qu'est-ce qui bloque ?",
+  "initiatives.form.blockedReasonPlaceholder": "p. ex. en attente d'une d\u00e9cision du comit\u00e9",
+  "initiatives.form.commitment": "Engagement",
+  "initiatives.form.helpNeeded": "Aide recherch\u00e9e",
+  "initiatives.form.skillNote": "Quelle comp\u00e9tence ?",
+  "initiatives.form.skillNotePlaceholder": "p. ex. graphisme, relecture juridique",
+  "initiatives.form.unspecified": "Non pr\u00e9cis\u00e9",
+  "initiatives.form.helpersOwnerHint": "Les renforts rejoignent une personne responsable. Indiquez-en une d'abord.",
+  "initiatives.form.availabilityHint": "La disponibilit\u00e9 s'applique tant que l'initiative est planifi\u00e9e.",
 
 
   "common.cancel": "Annuler",
@@ -986,6 +1130,42 @@ const it: Record<StringKey, string> = {
   "initiative.unlinkSecondary": "Rimuovi collegamento secondario",
   "initiative.createInPortfolio": "Le nuove iniziative si creano nel Portfolio.",
   "initiative.linksUpdated": "Collegamenti aggiornati",
+  "initiatives.view.label": "Vista",
+  "initiatives.view.board": "Vista consiglio",
+  "initiatives.view.volunteer": "Vista volontari",
+  "volunteer.openLead": "{n} iniziative sono aperte e cercano una persona.",
+  "volunteer.group.lead": "Cerca una persona responsabile",
+  "volunteer.group.helpers": "Cerca collaboratori",
+  "volunteer.group.skill": "Cerca una competenza specifica",
+  "volunteer.group.unscoped": "Non ancora definito",
+  "volunteer.blocked": "Bloccate",
+  "volunteer.parked": "Rinviate",
+  "volunteer.blockedEmpty": "Nulla \u00e8 bloccato.",
+  "volunteer.parkedEmpty": "Nulla \u00e8 rinviato.",
+  "volunteer.lastUpdated": "Ultimo aggiornamento {date}",
+  "volunteer.scopeMissing": "Ambito non specificato",
+  "volunteer.noReason": "Motivo non indicato",
+  "volunteer.empty": "Al momento non c'\u00e8 nulla di aperto.",
+  "volunteer.groupEmpty": "Nessun elemento",
+  "initiative.availability.open": "Aperta",
+  "initiative.availability.blocked": "Bloccata",
+  "initiative.availability.parked": "Rinviata",
+  "initiative.commitment.one_off": "Una tantum, poche ore",
+  "initiative.commitment.recurring": "Ricorrente, poche ore al mese",
+  "initiative.commitment.workstream": "Filone di lavoro, guida per mesi",
+  "initiative.helpNeeded.lead": "Cerca una persona responsabile",
+  "initiative.helpNeeded.helpers": "Cerca collaboratori accanto alla persona responsabile",
+  "initiative.helpNeeded.skill": "Cerca una competenza specifica",
+  "initiatives.form.availability": "Disponibilit\u00e0",
+  "initiatives.form.blockedReason": "Che cosa si sta aspettando?",
+  "initiatives.form.blockedReasonPlaceholder": "p. es. in attesa di una decisione del consiglio",
+  "initiatives.form.commitment": "Impegno",
+  "initiatives.form.helpNeeded": "Aiuto richiesto",
+  "initiatives.form.skillNote": "Quale competenza?",
+  "initiatives.form.skillNotePlaceholder": "p. es. grafica, revisione legale",
+  "initiatives.form.unspecified": "Non specificato",
+  "initiatives.form.helpersOwnerHint": "I collaboratori affiancano una persona responsabile. Indicane una prima.",
+  "initiatives.form.availabilityHint": "La disponibilit\u00e0 vale finch\u00e9 l'iniziativa \u00e8 pianificata.",
 
 
   "common.cancel": "Annulla",
