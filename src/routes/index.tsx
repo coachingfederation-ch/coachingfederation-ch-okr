@@ -1417,7 +1417,13 @@ function IndexContent() {
             );
           })}
         </div>
+
+        {/* Baselining-year context for every measurement shown below. */}
+        <p className="mt-6 rounded-xl border border-warning-border bg-warning-surface px-4 py-3 text-sm leading-relaxed text-foreground">
+          {t("banner.baselining")}
+        </p>
       </section>
+
 
       <section className="mx-auto max-w-6xl space-y-10 px-8 py-12">
         <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
