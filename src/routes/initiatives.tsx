@@ -142,6 +142,8 @@ type FlatInitiative = InitiativeDTO & {
   okrId: string;
   okrNumber: number;
   krLabel: string;
+  /** Labels of the key results this initiative also contributes to (secondary links). */
+  secondaryLabels: string[];
 };
 
 function InitiativesContent() {
@@ -155,6 +157,15 @@ function InitiativesContent() {
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const flat: FlatInitiative[] = useMemo(() => {
+    // An initiative can serve several key results (one primary + secondary
+    // links). The OKR page counts it under each of them, so the portfolio card
+    // must show every link too — otherwise the two views disagree.
+    const krLabelById = new Map<string, string>();
+    for (const set of data.okr_sets) {
+      for (const kr of set.key_results) {
+        krLabelById.set(kr.id, kr.kr || `${set.number}`);
+      }
+    }
     const rows: FlatInitiative[] = [];
     for (const set of data.okr_sets) {
       const okrTitle = pickTranslation(set, "title", set.title, locale);
@@ -166,12 +177,16 @@ function InitiativesContent() {
             okrId: set.id,
             okrNumber: set.number,
             krLabel: kr.kr || "—",
+            secondaryLabels: (it.secondary_kr_ids ?? [])
+              .map((id) => krLabelById.get(id))
+              .filter((v): v is string => !!v),
           });
         }
       }
     }
     return rows;
   }, [data, locale]);
+
 
   // Reset KR filter when OKR filter changes and current KR isn't in scope.
   const krsForFilter = useMemo(() => {
@@ -469,14 +484,24 @@ function InitiativeCard({
         STATUS_ACCENT[item.status],
       )}
     >
-      <div className="mb-2 flex items-center gap-2 pr-7">
+      <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1 pr-7">
         <span className="inline-flex h-5 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary">
           {item.okrNumber}.{item.krLabel.includes(".") ? item.krLabel.split(".")[1] : item.krLabel}
         </span>
+        {item.secondaryLabels.map((label) => (
+          <span
+            key={label}
+            title={t("initiative.secondary")}
+            className="inline-flex h-5 items-center rounded border border-primary/30 px-1.5 text-[10px] font-semibold text-primary/80"
+          >
+            {label}
+          </span>
+        ))}
         <span className="truncate text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
           {item.okrTitle}
         </span>
       </div>
+
 
       <button
         type="button"
