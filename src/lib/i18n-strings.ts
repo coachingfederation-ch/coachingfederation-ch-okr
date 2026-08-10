@@ -169,7 +169,54 @@ export type StringKey =
   | "kr.baselineLocked"
   | "kr.baselineLockedHint"
   | "kr.measurePlaceholder"
-  | "kr.instrumentPlaceholder";
+  | "kr.instrumentPlaceholder"
+  // board report
+  | "report.nav"
+  | "report.eyebrow"
+  | "report.title"
+  | "report.subtitle"
+  | "report.generated"
+  | "report.download"
+  | "report.summary.objectives"
+  | "report.summary.keyResults"
+  | "report.summary.metric"
+  | "report.summary.milestone"
+  | "report.summary.initiatives"
+  | "report.readiness.title"
+  | "report.readiness.context"
+  | "report.readiness.axis"
+  | "report.byObjective.title"
+  | "report.byObjective.total"
+  | "report.byObjective.instrument"
+  | "report.byObjective.baseline"
+  | "report.portfolio.title"
+  | "report.portfolio.gap"
+  | "report.portfolio.noGap"
+  | "report.sfa.title"
+  | "report.sfa.legend"
+  | "report.sfa.pillar"
+  | "report.sfa.how"
+  | "report.table.kr"
+  | "report.table.keyResult"
+  | "report.table.baseline"
+  | "report.table.target"
+  | "report.table.lead"
+  | "report.meta.steward"
+  | "report.meta.focus"
+  | "report.objective.footer"
+  | "report.open.title"
+  | "report.open.noInstrument"
+  | "report.open.noBaseline"
+  | "report.open.noLead"
+  | "report.open.noInitiatives"
+  | "report.open.none"
+  | "report.provenance"
+  | "report.value.pending"
+  | "report.value.afterBaseline"
+  | "report.value.notDefined"
+  | "report.value.unassigned"
+  | "report.kr.milestone"
+  | "report.kr.due";
 
 
 
@@ -335,6 +382,54 @@ const en: Record<StringKey, string> = {
   "kr.baselineLockedHint": "Freeze the 2026 baseline once it is agreed.",
   "kr.measurePlaceholder": "What exactly is counted?",
   "kr.instrumentPlaceholder": "e.g. Annual Membership Survey",
+
+  // board report
+  "report.nav": "Report",
+  "report.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · BOARD REPORT",
+  "report.title": "OKR board report 2026–2027",
+  "report.subtitle": "A printable snapshot of objectives, key results, measurement readiness and the initiative portfolio.",
+  "report.generated": "Generated from the ICFS OKR dashboard on {date} at {time}. The dashboard is the system of record. This document is a snapshot and is superseded by the dashboard whenever the two disagree.",
+  "report.download": "Download PDF",
+  "report.summary.objectives": "Objectives",
+  "report.summary.keyResults": "Key results",
+  "report.summary.metric": "Metric key results",
+  "report.summary.milestone": "Milestone key results",
+  "report.summary.initiatives": "Initiatives",
+  "report.readiness.title": "Measurement readiness",
+  "report.readiness.context": "2026 is a baselining year. This report shows how much of the measurement system exists, not how far execution has progressed — progress figures would read zero by design. Baselines are due 30.11.2026.",
+  "report.readiness.axis": "count of {total} metric key results",
+  "report.byObjective.title": "Readiness by objective",
+  "report.byObjective.total": "Metric key results",
+  "report.byObjective.instrument": "With instrument",
+  "report.byObjective.baseline": "With baseline",
+  "report.portfolio.title": "Initiative portfolio by objective",
+  "report.portfolio.gap": "{count} key results have no initiative: {list}",
+  "report.portfolio.noGap": "Every key result has at least one initiative.",
+  "report.sfa.title": "Strategic focus area contribution",
+  "report.sfa.legend": "Filled = primary contribution · Outline = secondary contribution · Dash = none",
+  "report.sfa.pillar": "ICFS pillar",
+  "report.sfa.how": "How it contributes",
+  "report.table.kr": "KR",
+  "report.table.keyResult": "Key result",
+  "report.table.baseline": "Baseline 2026",
+  "report.table.target": "Target 2027",
+  "report.table.lead": "Lead",
+  "report.meta.steward": "Steward",
+  "report.meta.focus": "Strategic focus areas",
+  "report.objective.footer": "{initiatives} initiatives · {gap} key results without an initiative",
+  "report.open.title": "Open items",
+  "report.open.noInstrument": "Key results without an instrument",
+  "report.open.noBaseline": "Metric key results without a 2026 baseline",
+  "report.open.noLead": "Key results without a lead",
+  "report.open.noInitiatives": "Key results without an initiative",
+  "report.open.none": "None",
+  "report.provenance": "Generated on {date} at {time} · Source: {url}",
+  "report.value.pending": "Pending",
+  "report.value.afterBaseline": "Set after baseline",
+  "report.value.notDefined": "Not yet defined",
+  "report.value.unassigned": "Unassigned",
+  "report.kr.milestone": "Milestone",
+  "report.kr.due": "Due {date}",
 
 
 };
@@ -504,6 +599,54 @@ const de: Record<StringKey, string> = {
   "kr.measurePlaceholder": "Was genau wird gezählt?",
   "kr.instrumentPlaceholder": "z. B. jährliche Mitgliederbefragung",
 
+  // board report
+  "report.nav": "Bericht",
+  "report.eyebrow": "DAS SCHWEIZER CHAPTER DER ICF · VORSTANDSBERICHT",
+  "report.title": "OKR-Vorstandsbericht 2026–2027",
+  "report.subtitle": "Eine druckbare Momentaufnahme von Zielen, Key Results, Messbereitschaft und Initiativenportfolio.",
+  "report.generated": "Erstellt aus dem ICFS-OKR-Dashboard am {date} um {time}. Das Dashboard ist die massgebliche Quelle. Dieses Dokument ist eine Momentaufnahme und wird durch das Dashboard ersetzt, sobald beide voneinander abweichen.",
+  "report.download": "PDF herunterladen",
+  "report.summary.objectives": "Ziele",
+  "report.summary.keyResults": "Key Results",
+  "report.summary.metric": "Metrische Key Results",
+  "report.summary.milestone": "Milestone-Key-Results",
+  "report.summary.initiatives": "Initiativen",
+  "report.readiness.title": "Messbereitschaft",
+  "report.readiness.context": "2026 ist ein Baselining-Jahr. Dieser Bericht zeigt, wie weit das Messsystem aufgebaut ist, nicht den Umsetzungsfortschritt — Fortschrittswerte wären bewusst null. Baselines sind bis 30.11.2026 fällig.",
+  "report.readiness.axis": "Anzahl von {total} metrischen Key Results",
+  "report.byObjective.title": "Bereitschaft nach Ziel",
+  "report.byObjective.total": "Metrische Key Results",
+  "report.byObjective.instrument": "Mit Instrument",
+  "report.byObjective.baseline": "Mit Baseline",
+  "report.portfolio.title": "Initiativenportfolio nach Ziel",
+  "report.portfolio.gap": "{count} Key Results ohne Initiative: {list}",
+  "report.portfolio.noGap": "Jedes Key Result hat mindestens eine Initiative.",
+  "report.sfa.title": "Beitrag zu den strategischen Fokusbereichen",
+  "report.sfa.legend": "Gefüllt = primärer Beitrag · Kontur = sekundärer Beitrag · Strich = keiner",
+  "report.sfa.pillar": "ICFS-Säule",
+  "report.sfa.how": "Wie sie beiträgt",
+  "report.table.kr": "KR",
+  "report.table.keyResult": "Key Result",
+  "report.table.baseline": "Baseline 2026",
+  "report.table.target": "Ziel 2027",
+  "report.table.lead": "Lead",
+  "report.meta.steward": "Steward",
+  "report.meta.focus": "Strategische Fokusbereiche",
+  "report.objective.footer": "{initiatives} Initiativen · {gap} Key Results ohne Initiative",
+  "report.open.title": "Offene Punkte",
+  "report.open.noInstrument": "Key Results ohne Instrument",
+  "report.open.noBaseline": "Metrische Key Results ohne Baseline 2026",
+  "report.open.noLead": "Key Results ohne Lead",
+  "report.open.noInitiatives": "Key Results ohne Initiative",
+  "report.open.none": "Keine",
+  "report.provenance": "Erstellt am {date} um {time} · Quelle: {url}",
+  "report.value.pending": "Ausstehend",
+  "report.value.afterBaseline": "Wird nach der Baseline festgelegt",
+  "report.value.notDefined": "Noch nicht definiert",
+  "report.value.unassigned": "Nicht zugewiesen",
+  "report.kr.milestone": "Milestone",
+  "report.kr.due": "Fällig {date}",
+
 
 };
 
@@ -671,6 +814,54 @@ const fr: Record<StringKey, string> = {
   "kr.measurePlaceholder": "Que compte-t-on exactement ?",
   "kr.instrumentPlaceholder": "p. ex. Enquête annuelle auprès des membres",
 
+  // board report
+  "report.nav": "Rapport",
+  "report.eyebrow": "LE CHAPITRE SUISSE DE L'ICF · RAPPORT AU COMITÉ",
+  "report.title": "Rapport OKR au comité 2026–2027",
+  "report.subtitle": "Un instantané imprimable des objectifs, des key results, de la maturité de mesure et du portefeuille d'initiatives.",
+  "report.generated": "Généré depuis le tableau de bord OKR ICFS le {date} à {time}. Le tableau de bord fait foi. Ce document est un instantané et est remplacé par le tableau de bord en cas de divergence.",
+  "report.download": "Télécharger le PDF",
+  "report.summary.objectives": "Objectifs",
+  "report.summary.keyResults": "Key results",
+  "report.summary.metric": "Key results métriques",
+  "report.summary.milestone": "Key results jalons",
+  "report.summary.initiatives": "Initiatives",
+  "report.readiness.title": "Maturité de la mesure",
+  "report.readiness.context": "2026 est une année de référence. Ce rapport montre l'état du système de mesure, et non l'avancement de l'exécution — les taux d'avancement seraient nuls par construction. Les références sont dues au 30.11.2026.",
+  "report.readiness.axis": "nombre sur {total} key results métriques",
+  "report.byObjective.title": "Maturité par objectif",
+  "report.byObjective.total": "Key results métriques",
+  "report.byObjective.instrument": "Avec instrument",
+  "report.byObjective.baseline": "Avec référence",
+  "report.portfolio.title": "Portefeuille d'initiatives par objectif",
+  "report.portfolio.gap": "{count} key results sans initiative : {list}",
+  "report.portfolio.noGap": "Chaque key result a au moins une initiative.",
+  "report.sfa.title": "Contribution aux axes stratégiques",
+  "report.sfa.legend": "Plein = contribution principale · Contour = contribution secondaire · Tiret = aucune",
+  "report.sfa.pillar": "Pilier ICFS",
+  "report.sfa.how": "Comment il contribue",
+  "report.table.kr": "KR",
+  "report.table.keyResult": "Key result",
+  "report.table.baseline": "Référence 2026",
+  "report.table.target": "Cible 2027",
+  "report.table.lead": "Responsable",
+  "report.meta.steward": "Steward",
+  "report.meta.focus": "Axes stratégiques",
+  "report.objective.footer": "{initiatives} initiatives · {gap} key results sans initiative",
+  "report.open.title": "Points ouverts",
+  "report.open.noInstrument": "Key results sans instrument",
+  "report.open.noBaseline": "Key results métriques sans référence 2026",
+  "report.open.noLead": "Key results sans responsable",
+  "report.open.noInitiatives": "Key results sans initiative",
+  "report.open.none": "Aucun",
+  "report.provenance": "Généré le {date} à {time} · Source : {url}",
+  "report.value.pending": "En attente",
+  "report.value.afterBaseline": "Défini après la référence",
+  "report.value.notDefined": "Pas encore défini",
+  "report.value.unassigned": "Non attribué",
+  "report.kr.milestone": "Jalon",
+  "report.kr.due": "Échéance {date}",
+
 
 };
 
@@ -837,6 +1028,54 @@ const it: Record<StringKey, string> = {
   "kr.baselineLockedHint": "Blocca la baseline 2026 una volta concordata.",
   "kr.measurePlaceholder": "Che cosa viene esattamente conteggiato?",
   "kr.instrumentPlaceholder": "es. Sondaggio annuale dei membri",
+
+  // board report
+  "report.nav": "Rapporto",
+  "report.eyebrow": "IL CHAPTER SVIZZERO DI ICF · RAPPORTO AL CONSIGLIO",
+  "report.title": "Rapporto OKR al consiglio 2026–2027",
+  "report.subtitle": "Un'istantanea stampabile di obiettivi, key result, maturità della misurazione e portafoglio di iniziative.",
+  "report.generated": "Generato dalla dashboard OKR ICFS il {date} alle {time}. La dashboard è la fonte ufficiale. Questo documento è un'istantanea ed è superato dalla dashboard in caso di divergenza.",
+  "report.download": "Scarica PDF",
+  "report.summary.objectives": "Obiettivi",
+  "report.summary.keyResults": "Key result",
+  "report.summary.metric": "Key result metrici",
+  "report.summary.milestone": "Key result milestone",
+  "report.summary.initiatives": "Iniziative",
+  "report.readiness.title": "Maturità della misurazione",
+  "report.readiness.context": "Il 2026 è un anno di baseline. Questo rapporto mostra quanto del sistema di misurazione esiste, non l'avanzamento dell'esecuzione — le percentuali sarebbero pari a zero per costruzione. Le baseline sono attese entro il 30.11.2026.",
+  "report.readiness.axis": "conteggio su {total} key result metrici",
+  "report.byObjective.title": "Maturità per obiettivo",
+  "report.byObjective.total": "Key result metrici",
+  "report.byObjective.instrument": "Con strumento",
+  "report.byObjective.baseline": "Con baseline",
+  "report.portfolio.title": "Portafoglio di iniziative per obiettivo",
+  "report.portfolio.gap": "{count} key result senza iniziativa: {list}",
+  "report.portfolio.noGap": "Ogni key result ha almeno un'iniziativa.",
+  "report.sfa.title": "Contributo alle aree strategiche",
+  "report.sfa.legend": "Pieno = contributo primario · Contorno = contributo secondario · Trattino = nessuno",
+  "report.sfa.pillar": "Pilastro ICFS",
+  "report.sfa.how": "Come contribuisce",
+  "report.table.kr": "KR",
+  "report.table.keyResult": "Key result",
+  "report.table.baseline": "Baseline 2026",
+  "report.table.target": "Target 2027",
+  "report.table.lead": "Lead",
+  "report.meta.steward": "Steward",
+  "report.meta.focus": "Aree strategiche",
+  "report.objective.footer": "{initiatives} iniziative · {gap} key result senza iniziativa",
+  "report.open.title": "Punti aperti",
+  "report.open.noInstrument": "Key result senza strumento",
+  "report.open.noBaseline": "Key result metrici senza baseline 2026",
+  "report.open.noLead": "Key result senza lead",
+  "report.open.noInitiatives": "Key result senza iniziativa",
+  "report.open.none": "Nessuno",
+  "report.provenance": "Generato il {date} alle {time} · Fonte: {url}",
+  "report.value.pending": "In attesa",
+  "report.value.afterBaseline": "Definito dopo la baseline",
+  "report.value.notDefined": "Non ancora definito",
+  "report.value.unassigned": "Non assegnato",
+  "report.kr.milestone": "Milestone",
+  "report.kr.due": "Scadenza {date}",
 
 
 };
