@@ -536,6 +536,17 @@ function InitiativeCard({
         <span className="truncate text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
           {item.okrTitle}
         </span>
+        {/* Availability only carries meaning while the initiative is planned. */}
+        {item.status === "planned" && (
+          <span
+            className={cn(
+              "inline-flex h-5 items-center rounded-full border px-2 text-[10px] font-semibold",
+              AVAILABILITY_CHIP[item.availability],
+            )}
+          >
+            {t(AVAILABILITY_KEY[item.availability])}
+          </span>
+        )}
       </div>
 
 
