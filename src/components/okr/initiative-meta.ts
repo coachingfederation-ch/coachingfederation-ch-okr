@@ -57,3 +57,13 @@ export function formatUpdated(iso: string | null, locale: string): string {
   if (Number.isNaN(d.getTime())) return "—";
   return d.toLocaleDateString(locale, { day: "2-digit", month: "short", year: "numeric" });
 }
+
+/** An initiative flattened with its OKR/KR context, shared by both portfolio views. */
+export type FlatInitiative = import("@/lib/okr-schemas").InitiativeDTO & {
+  okrTitle: string;
+  okrId: string;
+  okrNumber: number;
+  krLabel: string;
+  /** Labels of the key results this initiative also contributes to (secondary links). */
+  secondaryLabels: string[];
+};
