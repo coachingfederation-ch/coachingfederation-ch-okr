@@ -140,6 +140,11 @@ export type StringKey =
   | "common.saveFailed"
   | "lang.switcher"
   | "banner.baselining"
+  | "scorecard.title"
+  | "scorecard.instrument"
+  | "scorecard.baseline"
+  | "scorecard.current"
+  | "scorecard.of"
   | "kr.baseline2026"
   | "kr.current"
   | "kr.target2027"
@@ -300,6 +305,11 @@ const en: Record<StringKey, string> = {
   "lang.switcher": "Language",
   "banner.baselining":
     "2026 is a baselining year. 2027 is the execution year. All baselines are due 30.11.2026.",
+  "scorecard.title": "2026 measurement status",
+  "scorecard.instrument": "Instrument defined",
+  "scorecard.baseline": "Baseline recorded",
+  "scorecard.current": "Current value with a date",
+  "scorecard.of": "of {total} key results",
   "kr.baseline2026": "Baseline 2026",
   "kr.current": "Current",
   "kr.target2027": "Target 2027",
@@ -463,6 +473,11 @@ const de: Record<StringKey, string> = {
   "lang.switcher": "Sprache",
   "banner.baselining":
     "2026 ist ein Baseline-Jahr. 2027 ist das Umsetzungsjahr. Alle Baselines sind bis 30.11.2026 fällig.",
+  "scorecard.title": "Messstand 2026",
+  "scorecard.instrument": "Instrument definiert",
+  "scorecard.baseline": "Baseline erfasst",
+  "scorecard.current": "Aktueller Wert mit Datum",
+  "scorecard.of": "von {total} Key Results",
   "kr.baseline2026": "Baseline 2026",
   "kr.current": "Aktuell",
   "kr.target2027": "Ziel 2027",
@@ -625,6 +640,11 @@ const fr: Record<StringKey, string> = {
   "lang.switcher": "Langue",
   "banner.baselining":
     "2026 est une année de référence. 2027 est l'année d'exécution. Toutes les valeurs de référence sont attendues pour le 30.11.2026.",
+  "scorecard.title": "État de la mesure 2026",
+  "scorecard.instrument": "Instrument défini",
+  "scorecard.baseline": "Référence enregistrée",
+  "scorecard.current": "Valeur actuelle datée",
+  "scorecard.of": "sur {total} résultats clés",
   "kr.baseline2026": "Référence 2026",
   "kr.current": "Actuel",
   "kr.target2027": "Cible 2027",
@@ -787,6 +807,11 @@ const it: Record<StringKey, string> = {
   "lang.switcher": "Lingua",
   "banner.baselining":
     "Il 2026 è l'anno di definizione delle baseline. Il 2027 è l'anno di esecuzione. Tutte le baseline sono attese entro il 30.11.2026.",
+  "scorecard.title": "Stato di misurazione 2026",
+  "scorecard.instrument": "Strumento definito",
+  "scorecard.baseline": "Baseline registrata",
+  "scorecard.current": "Valore attuale con data",
+  "scorecard.of": "di {total} key result",
   "kr.baseline2026": "Baseline 2026",
   "kr.current": "Attuale",
   "kr.target2027": "Obiettivo 2027",

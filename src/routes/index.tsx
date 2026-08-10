@@ -1422,6 +1422,10 @@ function IndexContent() {
         <p className="mt-6 rounded-xl border border-warning-border bg-warning-surface px-4 py-3 text-sm leading-relaxed text-foreground">
           {t("banner.baselining")}
         </p>
+
+        {/* 2026 scorecard: how much of the measurement system actually exists yet. */}
+        <MeasurementScorecard data={data} />
+
       </section>
 
 
@@ -1456,5 +1460,69 @@ function IndexContent() {
         <AlignmentTable rows={data.alignment_rows} canEdit={canEdit} m={m} />
       </section>
     </main>
+  );
+}
+
+/**
+ * 2026 measurement scorecard.
+ *
+ * Counts how many key results actually have the three prerequisites of a
+ * measurable OKR: a named instrument, a recorded baseline, and a current
+ * value carrying a date. Deliberately shown as raw counts — a percentage
+ * would soften a gap that should stay visible during the baselining year.
+ */
+function MeasurementScorecard({ data }: { data: DashboardDTO }) {
+  const { t } = useLocale();
+  const krs = data.okr_sets.flatMap((s) => s.key_results);
+  const total = krs.length;
+  const stats = [
+    {
+      key: "scorecard.instrument" as const,
+      count: krs.filter((k) => k.instrument.trim() !== "").length,
+    },
+    {
+      key: "scorecard.baseline" as const,
+      count: krs.filter((k) => k.baseline_2026.trim() !== "").length,
+    },
+    {
+      key: "scorecard.current" as const,
+      count: krs.filter((k) => k.current_value.trim() !== "" && !!k.current_as_of).length,
+    },
+  ];
+
+  return (
+    <section aria-label={t("scorecard.title")} className="mt-4">
+      <div className="section-label mb-2">{t("scorecard.title")}</div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        {stats.map(({ key, count }) => {
+          const complete = total > 0 && count === total;
+          return (
+            <div
+              key={key}
+              className={`rounded-xl border px-4 py-3 ${
+                complete
+                  ? "border-border bg-card"
+                  : "border-warning-border bg-warning-surface"
+              }`}
+            >
+              <div
+                className={`text-3xl font-bold leading-none ${
+                  complete ? "text-foreground" : "text-warning"
+                }`}
+              >
+                {count}
+                <span className="ml-1 text-base font-medium text-muted-foreground">
+                  / {total}
+                </span>
+              </div>
+              <div className="mt-1.5 text-sm font-medium text-foreground">{t(key)}</div>
+              <div className="text-xs text-muted-foreground">
+                {t("scorecard.of").replace("{total}", String(total))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
