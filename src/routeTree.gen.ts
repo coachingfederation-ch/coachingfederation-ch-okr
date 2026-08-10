@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StyleGuideRouteImport } from './routes/style-guide'
+import { Route as ReportRouteImport } from './routes/report'
 import { Route as InitiativesRouteImport } from './routes/initiatives'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +18,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const StyleGuideRoute = StyleGuideRouteImport.update({
   id: '/style-guide',
   path: '/style-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InitiativesRoute = InitiativesRouteImport.update({
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/initiatives': typeof InitiativesRoute
+  '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/initiatives': typeof InitiativesRoute
+  '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/initiatives': typeof InitiativesRoute
+  '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/initiatives' | '/style-guide'
+  fullPaths: '/' | '/auth' | '/initiatives' | '/report' | '/style-guide'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/initiatives' | '/style-guide'
-  id: '__root__' | '/' | '/auth' | '/initiatives' | '/style-guide'
+  to: '/' | '/auth' | '/initiatives' | '/report' | '/style-guide'
+  id: '__root__' | '/' | '/auth' | '/initiatives' | '/report' | '/style-guide'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   InitiativesRoute: typeof InitiativesRoute
+  ReportRoute: typeof ReportRoute
   StyleGuideRoute: typeof StyleGuideRoute
 }
 
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/style-guide'
       fullPath: '/style-guide'
       preLoaderRoute: typeof StyleGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/initiatives': {
@@ -106,18 +123,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   InitiativesRoute: InitiativesRoute,
+  ReportRoute: ReportRoute,
   StyleGuideRoute: StyleGuideRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

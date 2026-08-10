@@ -229,3 +229,64 @@
 @utility card-soft {
   box-shadow: var(--shadow-soft);
 }
+
+/* ---------- Board report print stylesheet ---------- */
+/* The report is designed to be saved as A4 PDF via the browser's print
+   dialog; charts stay vector SVG and text stays selectable. */
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+  }
+
+  html,
+  body {
+    background: #fff;
+  }
+
+  .report-doc {
+    max-width: none;
+    padding: 0;
+    font-size: 10.5pt;
+  }
+
+  /* Chrome (nav, language switcher, auth badge, editing controls, buttons)
+     never belongs in the printed document. */
+  header.print\:hidden,
+  nav[aria-label="Primary"],
+  [role="group"][aria-label="Language"],
+  .report-doc button {
+    display: none !important;
+  }
+
+  .print-fill,
+  .recharts-surface {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Each objective and the focus-area grid start on a fresh page; the first
+     section must not push a blank leading page. */
+  .report-page {
+    break-before: page;
+  }
+  .report-page:first-of-type {
+    break-before: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr,
+  .chart-block,
+  figure {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
