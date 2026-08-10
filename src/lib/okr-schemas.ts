@@ -154,11 +154,23 @@ export type KeyResultDTO = WithTranslations & {
   okr_set_id: string;
   kr: string;
   text: string;
+  /** Legacy free-text target from the source document. Kept for reference only. */
   target: string;
   lead: string;
+  kr_type: KrType;
+  measure: string;
+  instrument: string;
+  baseline_2026: string;
+  baseline_locked: boolean;
+  current_value: string;
+  current_as_of: string | null;
+  target_2027: string;
+  milestone_status: MilestoneStatus;
+  milestone_due: string | null;
   sort_order: number;
   initiatives: InitiativeDTO[];
 };
+
 export type OkrSetDTO = WithTranslations & {
   id: string;
   number: number;
