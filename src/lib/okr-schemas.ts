@@ -43,6 +43,10 @@ export const LIMITS = {
   krText: 500,
   target: 200,
   lead: 100,
+  measure: 300,
+  instrument: 200,
+  value: 60,
+
   initiative: 300,
   initiativeOwner: 100,
   initiativeDescription: 2000,
