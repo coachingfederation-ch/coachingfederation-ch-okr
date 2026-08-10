@@ -17,6 +17,35 @@ export const INITIATIVE_STATUSES: InitiativeStatus[] = [
   "canceled",
 ];
 
+/**
+ * Why a *planned* initiative is or is not moving. Deliberately separate from
+ * `status` (delivery progress): availability only carries meaning while the
+ * status is 'planned' and must be ignored everywhere else.
+ */
+export type InitiativeAvailability = "open" | "blocked" | "parked";
+export const INITIATIVE_AVAILABILITIES: InitiativeAvailability[] = [
+  "open",
+  "blocked",
+  "parked",
+];
+
+/** What a volunteer is signing up for, in time. */
+export type InitiativeCommitment = "one_off" | "recurring" | "workstream";
+export const INITIATIVE_COMMITMENTS: InitiativeCommitment[] = [
+  "one_off",
+  "recurring",
+  "workstream",
+];
+
+/** What kind of person the initiative is looking for. */
+export type InitiativeHelpNeeded = "lead" | "helpers" | "skill";
+export const INITIATIVE_HELP_NEEDED: InitiativeHelpNeeded[] = [
+  "lead",
+  "helpers",
+  "skill",
+];
+
+
 export type KrType = "metric" | "milestone";
 export const KR_TYPES: KrType[] = ["metric", "milestone"];
 
