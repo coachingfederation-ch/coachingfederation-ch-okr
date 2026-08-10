@@ -491,7 +491,7 @@ function InitiativeCard({
         {item.secondaryLabels.map((label) => (
           <span
             key={label}
-            title={t("initiative.secondaryKr")}
+            title={t("initiative.secondary")}
             className="inline-flex h-5 items-center rounded border border-primary/30 px-1.5 text-[10px] font-semibold text-primary/80"
           >
             {label}
