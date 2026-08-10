@@ -276,7 +276,7 @@ function ObjectiveSection({
       </h2>
       <p className="mt-1 text-xs text-muted-foreground">
         {t("report.meta.steward")}: {roleName || t("report.value.unassigned")} ·{" "}
-        {t("card.customer")}: {customer || t("report.value.notDefined")} ·{" "}
+        {t("okr.customer")} {customer || t("report.value.notDefined")} ·{" "}
         {t("report.meta.focus")}:{" "}
         {set.pillars.length ? set.pillars.join(" · ") : t("report.value.notDefined")}
       </p>
@@ -389,7 +389,7 @@ function AlignmentGrid({ rows }: { rows: AlignmentRowDTO[] }) {
             </th>
             {PILLARS.map((p) => (
               <th key={p} scope="col" className="w-20 py-2 text-center font-semibold">
-                {pillarName(p, locale)}
+                {pillarName(locale, p)}
               </th>
             ))}
             <th scope="col" className="py-2 pl-3 font-semibold">
