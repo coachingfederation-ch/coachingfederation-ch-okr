@@ -24,6 +24,12 @@ import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { NewInitiativeDialog } from "@/components/okr/NewInitiativeDialog";
 import { EditInitiativeDialog } from "@/components/okr/EditInitiativeDialog";
+import { VolunteerView } from "@/components/okr/VolunteerView";
+import {
+  AVAILABILITY_CHIP,
+  AVAILABILITY_KEY,
+  type FlatInitiative,
+} from "@/components/okr/initiative-meta";
 import { Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -137,15 +143,6 @@ function InitiativesFallback() {
   return <div className="p-8 text-sm text-muted-foreground">{t("common.loading")}</div>;
 }
 
-type FlatInitiative = InitiativeDTO & {
-  okrTitle: string;
-  okrId: string;
-  okrNumber: number;
-  krLabel: string;
-  /** Labels of the key results this initiative also contributes to (secondary links). */
-  secondaryLabels: string[];
-};
-
 function InitiativesContent() {
   const { data } = useSuspenseQuery(dashboardQueryOptions);
   const { canEdit } = useAuth();
@@ -155,6 +152,9 @@ function InitiativesContent() {
   const [krFilter, setKrFilter] = useState<string>("all");
   const [createOpen, setCreateOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  // Editors arrive to run the board; everyone else arrives asking what they
+  // could pick up, so each audience lands on the view that answers them.
+  const [view, setView] = useState<"board" | "volunteer">(canEdit ? "board" : "volunteer");
 
   const flat: FlatInitiative[] = useMemo(() => {
     // An initiative can serve several key results (one primary + secondary
