@@ -1424,7 +1424,7 @@ function IndexContent() {
         </p>
 
         {/* 2026 scorecard: how much of the measurement system actually exists yet. */}
-        <MeasurementScorecard data={data} t={t} />
+        <MeasurementScorecard data={data} />
 
       </section>
 
