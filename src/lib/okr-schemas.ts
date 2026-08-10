@@ -75,12 +75,27 @@ export const okrSetPatchSchema = z.object({
   alignment: trimmedString(LIMITS.alignment).optional(),
 });
 
+const dateOrNull = z
+  .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal(""), z.null()])
+  .transform((v) => (v ? v : null));
+
 export const keyResultPatchSchema = z.object({
   kr: trimmedString(LIMITS.kr).optional(),
   text: trimmedString(LIMITS.krText).optional(),
   target: trimmedString(LIMITS.target).optional(),
   lead: trimmedString(LIMITS.lead).optional(),
+  kr_type: z.enum(["metric", "milestone"]).optional(),
+  measure: trimmedString(LIMITS.measure).optional(),
+  instrument: trimmedString(LIMITS.instrument).optional(),
+  baseline_2026: trimmedString(LIMITS.value).optional(),
+  baseline_locked: z.boolean().optional(),
+  current_value: trimmedString(LIMITS.value).optional(),
+  current_as_of: dateOrNull.optional(),
+  target_2027: trimmedString(LIMITS.value).optional(),
+  milestone_status: z.enum(["not_started", "in_progress", "done"]).optional(),
+  milestone_due: dateOrNull.optional(),
 });
+
 
 export const initiativePatchSchema = z.object({
   text: trimmedString(LIMITS.initiative).min(1, { message: "Cannot be empty" }).optional(),
