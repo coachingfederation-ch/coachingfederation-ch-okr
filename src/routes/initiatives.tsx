@@ -396,18 +396,23 @@ function InitiativesContent() {
 
 
       <section className="mx-auto max-w-7xl px-8 py-8">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {INITIATIVE_STATUSES.map((status) => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              items={byStatus[status]}
-              canEdit={canEdit}
-              onUpdate={(id, patch) => updateInit.mutate({ id, patch })}
-              onOpen={(id) => setEditingId(id)}
-            />
-          ))}
-        </div>
+        {view === "board" ? (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {INITIATIVE_STATUSES.map((status) => (
+              <KanbanColumn
+                key={status}
+                status={status}
+                items={byStatus[status]}
+                canEdit={canEdit}
+                onUpdate={(id, patch) => updateInit.mutate({ id, patch })}
+                onOpen={(id) => setEditingId(id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <VolunteerView items={filtered} onOpen={(id) => setEditingId(id)} />
+        )}
+
         <p className="mt-8 text-center text-xs text-muted-foreground">
           <Link to="/" className="hover:text-primary hover:underline">
             ← {t("nav.okrs")}
