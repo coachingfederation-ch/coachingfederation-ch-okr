@@ -45,7 +45,7 @@ import { pickTranslation, useLocale } from "@/lib/i18n";
 import { pillarName } from "@/lib/i18n-strings";
 import { EditableText } from "@/components/okr/EditableText";
 import { KrMeasurement } from "@/components/okr/KrMeasurement";
-import { formatSwissDate, BASELINE_DUE_LABEL } from "@/components/okr/kr-metrics";
+import { formatSwissDate } from "@/components/okr/kr-metrics";
 
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
