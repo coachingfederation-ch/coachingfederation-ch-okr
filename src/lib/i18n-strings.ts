@@ -792,6 +792,11 @@ const it: Record<StringKey, string> = {
   "lang.switcher": "Lingua",
   "banner.baselining":
     "Il 2026 è l'anno di definizione delle baseline. Il 2027 è l'anno di esecuzione. Tutte le baseline sono attese entro il 30.11.2026.",
+  "scorecard.title": "Stato di misurazione 2026",
+  "scorecard.instrument": "Strumento definito",
+  "scorecard.baseline": "Baseline registrata",
+  "scorecard.current": "Valore attuale con data",
+  "scorecard.of": "di {total} key result",
   "kr.baseline2026": "Baseline 2026",
   "kr.current": "Attuale",
   "kr.target2027": "Obiettivo 2027",
