@@ -17,6 +17,17 @@ export const INITIATIVE_STATUSES: InitiativeStatus[] = [
   "canceled",
 ];
 
+export type KrType = "metric" | "milestone";
+export const KR_TYPES: KrType[] = ["metric", "milestone"];
+
+export type MilestoneStatus = "not_started" | "in_progress" | "done";
+export const MILESTONE_STATUSES: MilestoneStatus[] = [
+  "not_started",
+  "in_progress",
+  "done",
+];
+
+
 
 export const ROLE_LABELS = ["Owner", "Steward", "Contact"] as const;
 export type RoleLabel = (typeof ROLE_LABELS)[number];
