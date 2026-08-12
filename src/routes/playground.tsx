@@ -103,7 +103,9 @@ function PlaygroundPage() {
     setAnswers(EMPTY_ANSWERS);
     setResults([]);
     setStatus("idle");
+    setResetKey((k) => k + 1);
   };
+
 
   const answer = answers[step] ?? "";
   const canAdvance = answer.trim().length > 0;
