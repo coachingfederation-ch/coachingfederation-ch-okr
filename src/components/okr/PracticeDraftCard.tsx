@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/lib/i18n";
@@ -31,11 +31,23 @@ export function PracticeDraftCard({
   card,
   mode,
   answers,
+  selected,
+  selectLabel,
+  selectedLabel,
+  onSelect,
+  onStatementChange,
 }: {
   card: DraftCard;
   mode: PlaygroundMode;
   /** The three wizard answers, used by the baseline / instrument / owner checks. */
   answers: string[];
+  /** Chain selection state; omitted for standalone practice. */
+  selected?: boolean;
+  selectLabel?: string;
+  selectedLabel?: string;
+  onSelect?: (statement: string) => void;
+  /** Called while selected, whenever the shown statement changes. */
+  onStatementChange?: (statement: string) => void;
 }) {
   const { t } = useLocale();
   const [variantIndex, setVariantIndex] = useState(0);
@@ -50,6 +62,12 @@ export function PracticeDraftCard({
   const quality = qualityForVariant(variantIndex);
   const headingId = `${card.id}-title`;
 
+  // Keep the chain context in sync with local edits / variant cycling.
+  useEffect(() => {
+    if (selected) onStatementChange?.(statement);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statement, selected]);
+
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(statement);
@@ -62,7 +80,10 @@ export function PracticeDraftCard({
 
   return (
     <article
-      className="flex flex-col rounded-xl border border-border/70 bg-background p-4 shadow-soft"
+      className={cn(
+        "flex flex-col rounded-xl border bg-background p-4 shadow-soft",
+        selected ? "border-primary ring-1 ring-primary/30" : "border-border/70",
+      )}
       aria-labelledby={headingId}
     >
       <div className="flex flex-wrap items-start justify-between gap-2">
@@ -144,6 +165,17 @@ export function PracticeDraftCard({
       <QualityChecks mode={mode} statement={statement} answers={answers} />
 
       <div className="mt-4 flex flex-wrap gap-2">
+        {selectLabel && onSelect && (
+          <Button
+            type="button"
+            variant={selected ? "default" : "outline"}
+            className="h-11"
+            aria-pressed={Boolean(selected)}
+            onClick={() => onSelect(statement)}
+          >
+            {selected ? (selectedLabel ?? selectLabel) : selectLabel}
+          </Button>
+        )}
         <Button
           type="button"
           variant="outline"
