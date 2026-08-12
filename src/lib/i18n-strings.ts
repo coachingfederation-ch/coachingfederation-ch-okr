@@ -1463,7 +1463,7 @@ const de: Record<StringKey, string> = {
   "playground.chain.confirm.objective":
     "Wenn du das Objective änderst, werden die Key Results und Initiativen dieser Übungskette gelöscht. Fortfahren?",
   "playground.chain.confirm.kr":
-    "Wenn du das Key Result änderst, werden die Initiativen dieser Übungskette gelöscht. Fortfahren?",
+    "Wenn du dieses Key Result entfernst, werden auch die dafür gewählten Initiativen entfernt. Fortfahren?",
   "playground.chain.confirm.continue": "Fortfahren",
   "playground.chain.confirm.cancel": "Aktuelle Auswahl behalten",
   "playground.chain.confirm.new.title": "Neue Kette starten?",
@@ -1993,7 +1993,7 @@ const fr: Record<StringKey, string> = {
   "playground.chain.confirm.objective":
     "Modifier l’Objective effacera les Key Results et les Initiatives de cette chaîne d’entraînement. Continuer ?",
   "playground.chain.confirm.kr":
-    "Modifier le Key Result effacera les Initiatives de cette chaîne d’entraînement. Continuer ?",
+    "Retirer ce Key Result supprimera aussi les initiatives que vous avez choisies pour lui. Continuer ?",
   "playground.chain.confirm.continue": "Continuer",
   "playground.chain.confirm.cancel": "Conserver la sélection actuelle",
   "playground.chain.confirm.new.title": "Démarrer une nouvelle chaîne ?",
@@ -2520,7 +2520,7 @@ const it: Record<StringKey, string> = {
   "playground.chain.confirm.objective":
     "Modificando l’Objective verranno cancellati i Key Result e le Iniziative di questa catena di pratica. Continuare?",
   "playground.chain.confirm.kr":
-    "Modificando il Key Result verranno cancellate le Iniziative di questa catena di pratica. Continuare?",
+    "Rimuovendo questo Key Result verranno rimosse anche le iniziative scelte per esso. Continuare?",
   "playground.chain.confirm.continue": "Continua",
   "playground.chain.confirm.cancel": "Mantieni la selezione attuale",
   "playground.chain.confirm.new.title": "Avviare una nuova catena?",
