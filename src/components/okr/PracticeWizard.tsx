@@ -286,30 +286,28 @@ export function PracticeWizard({
           <h4 className="text-base font-semibold text-foreground">
             {t("playground.result.heading")}
           </h4>
-          <div className={cn("mt-4 grid gap-4", showGuidance && "lg:grid-cols-3")}>
-            <div className={cn("grid gap-4 sm:grid-cols-2", showGuidance && "lg:col-span-2")}>
-              {results.map((card) => (
-                <PracticeDraftCard
-                  key={`${resetKey}-${card.id}`}
-                  card={card}
-                  mode={mode}
-                  answers={effective}
-                  showHandoff={showHandoff}
-                  selected={selection?.isSelected(card.id)}
-                  selectLabel={selection?.selectLabel}
-                  selectedLabel={selection?.selectedLabel}
-                  {...(selection
-                    ? {
-                        onSelect: (statement: string) => selection.onSelect(card.id, statement),
-                        onStatementChange: (statement: string) =>
-                          selection.onStatementChange?.(card.id, statement),
-                      }
-                    : {})}
-                />
-              ))}
-            </div>
-            {showGuidance && <PlaygroundGuidance />}
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {results.map((card) => (
+              <PracticeDraftCard
+                key={`${resetKey}-${card.id}`}
+                card={card}
+                mode={mode}
+                answers={effective}
+                showHandoff={showHandoff}
+                selected={selection?.isSelected(card.id)}
+                selectLabel={selection?.selectLabel}
+                selectedLabel={selection?.selectedLabel}
+                {...(selection
+                  ? {
+                      onSelect: (statement: string) => selection.onSelect(card.id, statement),
+                      onStatementChange: (statement: string) =>
+                        selection.onStatementChange?.(card.id, statement),
+                    }
+                  : {})}
+              />
+            ))}
           </div>
+          {showGuidance && <PlaygroundGuidance />}
           {nextQuestions.length > 0 && (
             <div className="mt-4 rounded-xl border border-border/70 bg-muted/40 p-4">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
