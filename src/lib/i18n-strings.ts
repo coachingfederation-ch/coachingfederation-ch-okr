@@ -325,6 +325,49 @@ export type StringKey =
   | "playground.check.init.owner.body"
   | "playground.check.ok.title"
   | "playground.check.ok.body"
+  | "playground.chain.cta.title"
+  | "playground.chain.cta.desc"
+  | "playground.chain.cta.start"
+  | "playground.chain.cta.resume"
+  | "playground.chain.standalone.title"
+  | "playground.chain.standalone.desc"
+  | "playground.chain.step.objective"
+  | "playground.chain.step.kr"
+  | "playground.chain.step.initiatives"
+  | "playground.chain.step.review"
+  | "playground.chain.step.done"
+  | "playground.chain.step.current"
+  | "playground.chain.step.locked"
+  | "playground.chain.use"
+  | "playground.chain.selectedObjective"
+  | "playground.chain.selectedKr"
+  | "playground.chain.includedInitiative"
+  | "playground.chain.continueKr"
+  | "playground.chain.continueInit"
+  | "playground.chain.continueReview"
+  | "playground.chain.contextObjective"
+  | "playground.chain.contextKr"
+  | "playground.chain.summary.heading"
+  | "playground.chain.summary.badge"
+  | "playground.chain.summary.initiatives"
+  | "playground.chain.edit.objective"
+  | "playground.chain.edit.kr"
+  | "playground.chain.edit.initiatives"
+  | "playground.chain.copy"
+  | "playground.chain.copied"
+  | "playground.chain.copyFailed"
+  | "playground.chain.new"
+  | "playground.chain.confirm.title"
+  | "playground.chain.confirm.objective"
+  | "playground.chain.confirm.kr"
+  | "playground.chain.confirm.continue"
+  | "playground.chain.confirm.cancel"
+  | "playground.chain.note.objToKr"
+  | "playground.chain.note.krToInit"
+  | "playground.chain.note.review"
+  | "playground.chain.wizard.objective"
+  | "playground.chain.wizard.kr"
+  | "playground.chain.wizard.initiative"
   | "report.eyebrow"
   | "report.title"
   | "report.subtitle"
@@ -775,6 +818,56 @@ const en: Record<StringKey, string> = {
   "playground.check.ok.title": "No issues detected",
   "playground.check.ok.body":
     "These simple checks found nothing to flag. That is a good sign, not a guarantee of quality.",
+  "playground.chain.cta.title": "Build an OKR chain",
+  "playground.chain.cta.desc":
+    "Start with an Objective, create measurable Key Results, then explore Initiatives that could move them.",
+  "playground.chain.cta.start": "Build an OKR chain",
+  "playground.chain.cta.resume": "Continue your OKR chain",
+  "playground.chain.standalone.title": "Start a standalone exercise",
+  "playground.chain.standalone.desc":
+    "Practise a single building block on its own, without connecting it to a chain.",
+  "playground.chain.step.objective": "Objective",
+  "playground.chain.step.kr": "Key Results",
+  "playground.chain.step.initiatives": "Initiatives",
+  "playground.chain.step.review": "Review",
+  "playground.chain.step.done": "Completed",
+  "playground.chain.step.current": "Current step",
+  "playground.chain.step.locked": "Not available yet",
+  "playground.chain.use": "Use for this OKR chain",
+  "playground.chain.selectedObjective": "Selected Objective",
+  "playground.chain.selectedKr": "Selected Key Result",
+  "playground.chain.includedInitiative": "Included Initiative",
+  "playground.chain.continueKr": "Create Key Results for this Objective",
+  "playground.chain.continueInit": "Ideate Initiatives for this Key Result",
+  "playground.chain.continueReview": "Review your practice chain",
+  "playground.chain.contextObjective": "Objective",
+  "playground.chain.contextKr": "Key Result",
+  "playground.chain.summary.heading": "Your practice OKR chain",
+  "playground.chain.summary.badge": "Practice chain · Not saved",
+  "playground.chain.summary.initiatives": "Included Initiatives",
+  "playground.chain.edit.objective": "Edit Objective",
+  "playground.chain.edit.kr": "Edit Key Result",
+  "playground.chain.edit.initiatives": "Edit Initiatives",
+  "playground.chain.copy": "Copy full chain",
+  "playground.chain.copied": "Chain copied",
+  "playground.chain.copyFailed": "Copy not available",
+  "playground.chain.new": "Start a new chain",
+  "playground.chain.confirm.title": "Change this selection?",
+  "playground.chain.confirm.objective":
+    "Changing the Objective will clear the Key Results and Initiatives in this practice chain. Continue?",
+  "playground.chain.confirm.kr":
+    "Changing the Key Result will clear the Initiatives in this practice chain. Continue?",
+  "playground.chain.confirm.continue": "Continue",
+  "playground.chain.confirm.cancel": "Keep current selection",
+  "playground.chain.note.objToKr":
+    "Key Results make success on this Objective observable and measurable.",
+  "playground.chain.note.krToInit":
+    "Initiatives are possible work that may move this Key Result; they are not success measures themselves.",
+  "playground.chain.note.review":
+    "A useful OKR chain connects a meaningful change, evidence of progress, and focused work.",
+  "playground.chain.wizard.objective": "Objective step",
+  "playground.chain.wizard.kr": "Key Result step",
+  "playground.chain.wizard.initiative": "Initiative step",
 };
 
 const de: Record<StringKey, string> = {
@@ -1191,6 +1284,56 @@ const de: Record<StringKey, string> = {
   "playground.check.ok.title": "Keine Auffälligkeiten gefunden",
   "playground.check.ok.body":
     "Diese einfachen Prüfungen haben nichts markiert. Das ist ein gutes Zeichen, aber keine Qualitätsgarantie.",
+  "playground.chain.cta.title": "OKR-Kette aufbauen",
+  "playground.chain.cta.desc":
+    "Beginne mit einem Objective, formuliere messbare Key Results und erkunde anschliessend Initiativen, die sie bewegen könnten.",
+  "playground.chain.cta.start": "OKR-Kette aufbauen",
+  "playground.chain.cta.resume": "OKR-Kette fortsetzen",
+  "playground.chain.standalone.title": "Einzelübung starten",
+  "playground.chain.standalone.desc":
+    "Übe einen einzelnen Baustein für sich, ohne ihn mit einer Kette zu verbinden.",
+  "playground.chain.step.objective": "Objective",
+  "playground.chain.step.kr": "Key Results",
+  "playground.chain.step.initiatives": "Initiativen",
+  "playground.chain.step.review": "Überblick",
+  "playground.chain.step.done": "Abgeschlossen",
+  "playground.chain.step.current": "Aktueller Schritt",
+  "playground.chain.step.locked": "Noch nicht verfügbar",
+  "playground.chain.use": "Für diese OKR-Kette verwenden",
+  "playground.chain.selectedObjective": "Ausgewähltes Objective",
+  "playground.chain.selectedKr": "Ausgewähltes Key Result",
+  "playground.chain.includedInitiative": "Aufgenommene Initiative",
+  "playground.chain.continueKr": "Key Results für dieses Objective erstellen",
+  "playground.chain.continueInit": "Initiativen für dieses Key Result entwickeln",
+  "playground.chain.continueReview": "Übungskette überprüfen",
+  "playground.chain.contextObjective": "Objective",
+  "playground.chain.contextKr": "Key Result",
+  "playground.chain.summary.heading": "Deine OKR-Übungskette",
+  "playground.chain.summary.badge": "Übungskette · Nicht gespeichert",
+  "playground.chain.summary.initiatives": "Aufgenommene Initiativen",
+  "playground.chain.edit.objective": "Objective bearbeiten",
+  "playground.chain.edit.kr": "Key Result bearbeiten",
+  "playground.chain.edit.initiatives": "Initiativen bearbeiten",
+  "playground.chain.copy": "Ganze Kette kopieren",
+  "playground.chain.copied": "Kette kopiert",
+  "playground.chain.copyFailed": "Kopieren nicht verfügbar",
+  "playground.chain.new": "Neue Kette starten",
+  "playground.chain.confirm.title": "Auswahl ändern?",
+  "playground.chain.confirm.objective":
+    "Wenn du das Objective änderst, werden die Key Results und Initiativen dieser Übungskette gelöscht. Fortfahren?",
+  "playground.chain.confirm.kr":
+    "Wenn du das Key Result änderst, werden die Initiativen dieser Übungskette gelöscht. Fortfahren?",
+  "playground.chain.confirm.continue": "Fortfahren",
+  "playground.chain.confirm.cancel": "Aktuelle Auswahl behalten",
+  "playground.chain.note.objToKr":
+    "Key Results machen den Erfolg dieses Objectives sichtbar und messbar.",
+  "playground.chain.note.krToInit":
+    "Initiativen sind mögliche Arbeit, die dieses Key Result bewegen kann; sie sind selbst keine Erfolgsmessung.",
+  "playground.chain.note.review":
+    "Eine nützliche OKR-Kette verbindet eine bedeutsame Veränderung, Belege für Fortschritt und fokussierte Arbeit.",
+  "playground.chain.wizard.objective": "Objective-Schritt",
+  "playground.chain.wizard.kr": "Key-Result-Schritt",
+  "playground.chain.wizard.initiative": "Initiativen-Schritt",
 };
 
 const fr: Record<StringKey, string> = {
@@ -1609,6 +1752,56 @@ const fr: Record<StringKey, string> = {
   "playground.check.ok.title": "Aucun point signalé",
   "playground.check.ok.body":
     "Ces contrôles simples n'ont rien signalé. C'est bon signe, sans être une garantie de qualité.",
+  "playground.chain.cta.title": "Construire une chaîne OKR",
+  "playground.chain.cta.desc":
+    "Commencez par un Objective, créez des Key Results mesurables, puis explorez les Initiatives qui pourraient les faire avancer.",
+  "playground.chain.cta.start": "Construire une chaîne OKR",
+  "playground.chain.cta.resume": "Poursuivre votre chaîne OKR",
+  "playground.chain.standalone.title": "Démarrer un exercice indépendant",
+  "playground.chain.standalone.desc":
+    "Entraînez-vous sur un seul élément, sans le relier à une chaîne.",
+  "playground.chain.step.objective": "Objective",
+  "playground.chain.step.kr": "Key Results",
+  "playground.chain.step.initiatives": "Initiatives",
+  "playground.chain.step.review": "Synthèse",
+  "playground.chain.step.done": "Terminé",
+  "playground.chain.step.current": "Étape en cours",
+  "playground.chain.step.locked": "Pas encore disponible",
+  "playground.chain.use": "Utiliser pour cette chaîne OKR",
+  "playground.chain.selectedObjective": "Objective sélectionné",
+  "playground.chain.selectedKr": "Key Result sélectionné",
+  "playground.chain.includedInitiative": "Initiative retenue",
+  "playground.chain.continueKr": "Créer des Key Results pour cet Objective",
+  "playground.chain.continueInit": "Imaginer des Initiatives pour ce Key Result",
+  "playground.chain.continueReview": "Passer en revue votre chaîne d’entraînement",
+  "playground.chain.contextObjective": "Objective",
+  "playground.chain.contextKr": "Key Result",
+  "playground.chain.summary.heading": "Votre chaîne OKR d’entraînement",
+  "playground.chain.summary.badge": "Chaîne d’entraînement · Non enregistrée",
+  "playground.chain.summary.initiatives": "Initiatives retenues",
+  "playground.chain.edit.objective": "Modifier l’Objective",
+  "playground.chain.edit.kr": "Modifier le Key Result",
+  "playground.chain.edit.initiatives": "Modifier les Initiatives",
+  "playground.chain.copy": "Copier toute la chaîne",
+  "playground.chain.copied": "Chaîne copiée",
+  "playground.chain.copyFailed": "Copie indisponible",
+  "playground.chain.new": "Démarrer une nouvelle chaîne",
+  "playground.chain.confirm.title": "Modifier cette sélection ?",
+  "playground.chain.confirm.objective":
+    "Modifier l’Objective effacera les Key Results et les Initiatives de cette chaîne d’entraînement. Continuer ?",
+  "playground.chain.confirm.kr":
+    "Modifier le Key Result effacera les Initiatives de cette chaîne d’entraînement. Continuer ?",
+  "playground.chain.confirm.continue": "Continuer",
+  "playground.chain.confirm.cancel": "Conserver la sélection actuelle",
+  "playground.chain.note.objToKr":
+    "Les Key Results rendent le succès de cet Objective observable et mesurable.",
+  "playground.chain.note.krToInit":
+    "Les Initiatives sont des travaux possibles qui peuvent faire avancer ce Key Result ; elles ne sont pas des mesures de succès.",
+  "playground.chain.note.review":
+    "Une chaîne OKR utile relie un changement significatif, des preuves de progrès et un travail ciblé.",
+  "playground.chain.wizard.objective": "Étape Objective",
+  "playground.chain.wizard.kr": "Étape Key Result",
+  "playground.chain.wizard.initiative": "Étape Initiative",
 };
 
 const it: Record<StringKey, string> = {
@@ -2024,6 +2217,56 @@ const it: Record<StringKey, string> = {
   "playground.check.ok.title": "Nessun elemento segnalato",
   "playground.check.ok.body":
     "Questi controlli semplici non hanno segnalato nulla. È un buon segno, ma non una garanzia di qualità.",
+  "playground.chain.cta.title": "Costruisci una catena OKR",
+  "playground.chain.cta.desc":
+    "Parti da un Objective, crea Key Result misurabili e poi esplora le Iniziative che potrebbero farli avanzare.",
+  "playground.chain.cta.start": "Costruisci una catena OKR",
+  "playground.chain.cta.resume": "Continua la tua catena OKR",
+  "playground.chain.standalone.title": "Avvia un esercizio autonomo",
+  "playground.chain.standalone.desc":
+    "Esercitati su un singolo elemento, senza collegarlo a una catena.",
+  "playground.chain.step.objective": "Objective",
+  "playground.chain.step.kr": "Key Result",
+  "playground.chain.step.initiatives": "Iniziative",
+  "playground.chain.step.review": "Riepilogo",
+  "playground.chain.step.done": "Completato",
+  "playground.chain.step.current": "Passaggio attuale",
+  "playground.chain.step.locked": "Non ancora disponibile",
+  "playground.chain.use": "Usa per questa catena OKR",
+  "playground.chain.selectedObjective": "Objective selezionato",
+  "playground.chain.selectedKr": "Key Result selezionato",
+  "playground.chain.includedInitiative": "Iniziativa inclusa",
+  "playground.chain.continueKr": "Crea Key Result per questo Objective",
+  "playground.chain.continueInit": "Idea Iniziative per questo Key Result",
+  "playground.chain.continueReview": "Rivedi la tua catena di pratica",
+  "playground.chain.contextObjective": "Objective",
+  "playground.chain.contextKr": "Key Result",
+  "playground.chain.summary.heading": "La tua catena OKR di pratica",
+  "playground.chain.summary.badge": "Catena di pratica · Non salvata",
+  "playground.chain.summary.initiatives": "Iniziative incluse",
+  "playground.chain.edit.objective": "Modifica Objective",
+  "playground.chain.edit.kr": "Modifica Key Result",
+  "playground.chain.edit.initiatives": "Modifica Iniziative",
+  "playground.chain.copy": "Copia l’intera catena",
+  "playground.chain.copied": "Catena copiata",
+  "playground.chain.copyFailed": "Copia non disponibile",
+  "playground.chain.new": "Avvia una nuova catena",
+  "playground.chain.confirm.title": "Modificare questa selezione?",
+  "playground.chain.confirm.objective":
+    "Modificando l’Objective verranno cancellati i Key Result e le Iniziative di questa catena di pratica. Continuare?",
+  "playground.chain.confirm.kr":
+    "Modificando il Key Result verranno cancellate le Iniziative di questa catena di pratica. Continuare?",
+  "playground.chain.confirm.continue": "Continua",
+  "playground.chain.confirm.cancel": "Mantieni la selezione attuale",
+  "playground.chain.note.objToKr":
+    "I Key Result rendono osservabile e misurabile il successo di questo Objective.",
+  "playground.chain.note.krToInit":
+    "Le Iniziative sono possibili attività che possono far avanzare questo Key Result; non sono di per sé misure di successo.",
+  "playground.chain.note.review":
+    "Una catena OKR utile collega un cambiamento significativo, prove di progresso e lavoro mirato.",
+  "playground.chain.wizard.objective": "Passaggio Objective",
+  "playground.chain.wizard.kr": "Passaggio Key Result",
+  "playground.chain.wizard.initiative": "Passaggio Iniziativa",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
