@@ -156,9 +156,6 @@ export function PracticeWizard({
           </p>
           <h3 className="mt-1 text-base font-semibold text-foreground">{title}</h3>
         </div>
-        <Button type="button" variant="outline" className="h-11" onClick={restart}>
-          {t("playground.wizard.restart")}
-        </Button>
       </div>
 
       {/* Progress */}
