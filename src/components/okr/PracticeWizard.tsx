@@ -183,7 +183,10 @@ export function PracticeWizard({
       )}
 
       {busy && (
-        <div aria-live="polite" className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
+        <div
+          aria-live="polite"
+          className="mt-6 flex items-center gap-3 text-sm text-muted-foreground"
+        >
           <span
             aria-hidden="true"
             className="h-4 w-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary motion-reduce:animate-none"
@@ -198,9 +201,7 @@ export function PracticeWizard({
             {t("playground.result.heading")}
           </h4>
           <div className={cn("mt-4 grid gap-4", showGuidance && "lg:grid-cols-3")}>
-            <div
-              className={cn("grid gap-4 sm:grid-cols-2", showGuidance && "lg:col-span-2")}
-            >
+            <div className={cn("grid gap-4 sm:grid-cols-2", showGuidance && "lg:col-span-2")}>
               {results.map((card) => (
                 <PracticeDraftCard
                   key={`${resetKey}-${card.id}`}
