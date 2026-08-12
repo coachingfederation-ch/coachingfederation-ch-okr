@@ -99,13 +99,14 @@ export function OkrChain() {
     setPending(null);
   };
 
-  const startNewChain = () => {
+  const performReset = () => {
     setObjective(null);
     setKr(null);
     setInitiatives([]);
     setStep(0);
     setChainKey((k) => k + 1);
     setCopyState("idle");
+    setResetOpen(false);
   };
 
   const chainText = () =>
