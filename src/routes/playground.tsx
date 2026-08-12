@@ -5,6 +5,9 @@ import { useLocale } from "@/lib/i18n";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
+import { PracticeDraftCard } from "@/components/okr/PracticeDraftCard";
+import { PlaygroundGuidance } from "@/components/okr/PlaygroundGuidance";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
@@ -74,6 +77,9 @@ function PlaygroundPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
   const [results, setResults] = useState<DraftCard[]>([]);
   const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  // Bumped on reset so draft cards remount and drop their local edits.
+  const [resetKey, setResetKey] = useState(0);
+
 
   // Believable latency for the mock generator; a real AI call replaces this later.
   useEffect(() => {
