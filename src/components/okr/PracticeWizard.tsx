@@ -78,6 +78,7 @@ export function PracticeWizard({
   const [usedFallback, setUsedFallback] = useState(false);
   const [nextQuestions, setNextQuestions] = useState<string[]>([]);
   const [resetKey, setResetKey] = useState(0);
+  const [restartOpen, setRestartOpen] = useState(false);
   const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
   const effective =
@@ -324,13 +325,33 @@ export function PracticeWizard({
             <p className="mt-4 text-sm text-muted-foreground">{t("playground.ai.fallbackNote")}</p>
           )}
           <p className="mt-4 text-sm text-muted-foreground">{t("playground.result.note")}</p>
-          <Button type="button" variant="outline" className="mt-4 h-11" onClick={restart}>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4 h-11"
+            onClick={() => setRestartOpen(true)}
+          >
             {t("playground.wizard.restart")}
           </Button>
         </div>
       )}
 
       <p className="mt-5 text-xs text-muted-foreground">{t("playground.notSaved")}</p>
+
+      <AlertDialog open={restartOpen} onOpenChange={setRestartOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("playground.wizard.confirm.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("playground.wizard.confirm.body")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("playground.wizard.confirm.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={restart}>
+              {t("playground.wizard.confirm.continue")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
