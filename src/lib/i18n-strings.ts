@@ -368,6 +368,16 @@ export type StringKey =
   | "playground.chain.wizard.objective"
   | "playground.chain.wizard.kr"
   | "playground.chain.wizard.initiative"
+  | "playground.handoff.signIn"
+  | "playground.handoff.noRights"
+  | "playground.handoff.use"
+  | "playground.handoff.editorHint"
+  | "playground.handoff.openDashboard"
+  | "playground.handoff.notSavedNote"
+  | "playground.handoff.close"
+  | "playground.handoff.restored.title"
+  | "playground.handoff.restored.body"
+  | "playground.handoff.restored.dismiss"
   | "report.eyebrow"
   | "report.title"
   | "report.subtitle"
@@ -868,6 +878,20 @@ const en: Record<StringKey, string> = {
   "playground.chain.wizard.objective": "Objective step",
   "playground.chain.wizard.kr": "Key Result step",
   "playground.chain.wizard.initiative": "Initiative step",
+  "playground.handoff.signIn": "Sign in to use this draft in an OKR set",
+  "playground.handoff.noRights":
+    "You can copy this draft; edit permission is required to use it in a live OKR set",
+  "playground.handoff.use": "Use this draft in an OKR set",
+  "playground.handoff.editorHint":
+    "Choose an OKR Set, Objective, or Key Result from the live dashboard to insert this draft.",
+  "playground.handoff.openDashboard": "Open the OKR dashboard",
+  "playground.handoff.notSavedNote":
+    "Signing in does not save this draft. Nothing here is written to live OKR data.",
+  "playground.handoff.close": "Close",
+  "playground.handoff.restored.title": "Practice draft kept for this session",
+  "playground.handoff.restored.body":
+    "This draft was kept in your browser only, so you could find it again after signing in. It is not saved to any OKR set.",
+  "playground.handoff.restored.dismiss": "Dismiss",
 };
 
 const de: Record<StringKey, string> = {
@@ -1334,6 +1358,20 @@ const de: Record<StringKey, string> = {
   "playground.chain.wizard.objective": "Objective-Schritt",
   "playground.chain.wizard.kr": "Key-Result-Schritt",
   "playground.chain.wizard.initiative": "Initiativen-Schritt",
+  "playground.handoff.signIn": "Anmelden, um diesen Entwurf in einem OKR-Set zu verwenden",
+  "playground.handoff.noRights":
+    "Du kannst diesen Entwurf kopieren; für die Verwendung in einem Live-OKR-Set ist eine Bearbeitungsberechtigung nötig",
+  "playground.handoff.use": "Diesen Entwurf in einem OKR-Set verwenden",
+  "playground.handoff.editorHint":
+    "Wähle im Live-Dashboard ein OKR-Set, ein Objective oder ein Key Result, um diesen Entwurf einzufügen.",
+  "playground.handoff.openDashboard": "OKR-Dashboard öffnen",
+  "playground.handoff.notSavedNote":
+    "Die Anmeldung speichert diesen Entwurf nicht. Hier wird nichts in die Live-OKR-Daten geschrieben.",
+  "playground.handoff.close": "Schliessen",
+  "playground.handoff.restored.title": "Übungsentwurf für diese Sitzung behalten",
+  "playground.handoff.restored.body":
+    "Dieser Entwurf wurde nur in deinem Browser behalten, damit du ihn nach der Anmeldung wiederfindest. Er ist in keinem OKR-Set gespeichert.",
+  "playground.handoff.restored.dismiss": "Ausblenden",
 };
 
 const fr: Record<StringKey, string> = {
@@ -1802,6 +1840,20 @@ const fr: Record<StringKey, string> = {
   "playground.chain.wizard.objective": "Étape Objective",
   "playground.chain.wizard.kr": "Étape Key Result",
   "playground.chain.wizard.initiative": "Étape Initiative",
+  "playground.handoff.signIn": "Connectez-vous pour utiliser ce brouillon dans un OKR Set",
+  "playground.handoff.noRights":
+    "Vous pouvez copier ce brouillon ; une autorisation de modification est requise pour l’utiliser dans un OKR Set actif",
+  "playground.handoff.use": "Utiliser ce brouillon dans un OKR Set",
+  "playground.handoff.editorHint":
+    "Choisissez un OKR Set, un Objective ou un Key Result dans le tableau de bord pour insérer ce brouillon.",
+  "playground.handoff.openDashboard": "Ouvrir le tableau de bord OKR",
+  "playground.handoff.notSavedNote":
+    "La connexion n’enregistre pas ce brouillon. Rien ici n’est écrit dans les données OKR actives.",
+  "playground.handoff.close": "Fermer",
+  "playground.handoff.restored.title": "Brouillon d’entraînement conservé pour cette session",
+  "playground.handoff.restored.body":
+    "Ce brouillon a été conservé uniquement dans votre navigateur, afin que vous puissiez le retrouver après la connexion. Il n’est enregistré dans aucun OKR Set.",
+  "playground.handoff.restored.dismiss": "Masquer",
 };
 
 const it: Record<StringKey, string> = {
@@ -2267,6 +2319,20 @@ const it: Record<StringKey, string> = {
   "playground.chain.wizard.objective": "Passaggio Objective",
   "playground.chain.wizard.kr": "Passaggio Key Result",
   "playground.chain.wizard.initiative": "Passaggio Iniziativa",
+  "playground.handoff.signIn": "Accedi per usare questa bozza in un OKR Set",
+  "playground.handoff.noRights":
+    "Puoi copiare questa bozza; per usarla in un OKR Set attivo serve l’autorizzazione di modifica",
+  "playground.handoff.use": "Usa questa bozza in un OKR Set",
+  "playground.handoff.editorHint":
+    "Scegli un OKR Set, un Objective o un Key Result dalla dashboard attiva per inserire questa bozza.",
+  "playground.handoff.openDashboard": "Apri la dashboard OKR",
+  "playground.handoff.notSavedNote":
+    "L’accesso non salva questa bozza. Nulla qui viene scritto nei dati OKR attivi.",
+  "playground.handoff.close": "Chiudi",
+  "playground.handoff.restored.title": "Bozza di pratica conservata per questa sessione",
+  "playground.handoff.restored.body":
+    "Questa bozza è stata conservata solo nel tuo browser, così puoi ritrovarla dopo l’accesso. Non è salvata in alcun OKR Set.",
+  "playground.handoff.restored.dismiss": "Nascondi",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
