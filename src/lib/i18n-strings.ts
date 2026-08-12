@@ -226,6 +226,10 @@ export type StringKey =
   | "playground.wizard.back"
   | "playground.wizard.continue"
   | "playground.wizard.restart"
+  | "playground.wizard.confirm.title"
+  | "playground.wizard.confirm.body"
+  | "playground.wizard.confirm.continue"
+  | "playground.wizard.confirm.cancel"
   | "playground.wizard.generate"
   | "playground.wizard.generating"
   | "playground.ai.option"
@@ -687,6 +691,11 @@ const en: Record<StringKey, string> = {
   "playground.wizard.back": "Back",
   "playground.wizard.continue": "Continue",
   "playground.wizard.restart": "Start again",
+  "playground.wizard.confirm.title": "Start again?",
+  "playground.wizard.confirm.body":
+    "This clears your current drafts and answers and returns to the first question. This cannot be undone.",
+  "playground.wizard.confirm.continue": "Start again",
+  "playground.wizard.confirm.cancel": "Keep drafts",
   "playground.wizard.generate": "Generate practice drafts",
   "playground.wizard.generating": "Drafting suggestions…",
   "playground.ai.option": "Option",
@@ -1195,6 +1204,11 @@ const de: Record<StringKey, string> = {
   "playground.wizard.back": "Zurück",
   "playground.wizard.continue": "Weiter",
   "playground.wizard.restart": "Neu beginnen",
+  "playground.wizard.confirm.title": "Neu beginnen?",
+  "playground.wizard.confirm.body":
+    "Damit werden Ihre aktuellen Entwürfe und Antworten gelöscht und zur ersten Frage zurückgekehrt. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+  "playground.wizard.confirm.continue": "Neu beginnen",
+  "playground.wizard.confirm.cancel": "Entwürfe behalten",
   "playground.wizard.generate": "Übungsentwürfe erzeugen",
   "playground.wizard.generating": "Vorschläge werden entworfen…",
   "playground.ai.option": "Option",
@@ -1712,6 +1726,11 @@ const fr: Record<StringKey, string> = {
   "playground.wizard.back": "Retour",
   "playground.wizard.continue": "Continuer",
   "playground.wizard.restart": "Recommencer",
+  "playground.wizard.confirm.title": "Recommencer ?",
+  "playground.wizard.confirm.body":
+    "Cela efface vos brouillons et réponses actuels et revient à la première question. Cette action ne peut pas être annulée.",
+  "playground.wizard.confirm.continue": "Recommencer",
+  "playground.wizard.confirm.cancel": "Conserver les brouillons",
   "playground.wizard.generate": "Générer des brouillons d'exercice",
   "playground.wizard.generating": "Rédaction des suggestions…",
   "playground.ai.option": "Option",
@@ -2228,6 +2247,11 @@ const it: Record<StringKey, string> = {
   "playground.wizard.back": "Indietro",
   "playground.wizard.continue": "Continua",
   "playground.wizard.restart": "Ricomincia",
+  "playground.wizard.confirm.title": "Ricominciare?",
+  "playground.wizard.confirm.body":
+    "Questo cancella le bozze e le risposte attuali e torna alla prima domanda. L'operazione non può essere annullata.",
+  "playground.wizard.confirm.continue": "Ricomincia",
+  "playground.wizard.confirm.cancel": "Mantieni le bozze",
   "playground.wizard.generate": "Genera bozze di esercitazione",
   "playground.wizard.generating": "Sto preparando i suggerimenti…",
   "playground.ai.option": "Opzione",

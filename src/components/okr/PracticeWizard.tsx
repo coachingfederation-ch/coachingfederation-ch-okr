@@ -3,6 +3,16 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { useServerFn } from "@tanstack/react-start";
 
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useLocale } from "@/lib/i18n";
 import type { StringKey } from "@/lib/i18n-strings";
 import { cn } from "@/lib/utils";
@@ -68,6 +78,7 @@ export function PracticeWizard({
   const [usedFallback, setUsedFallback] = useState(false);
   const [nextQuestions, setNextQuestions] = useState<string[]>([]);
   const [resetKey, setResetKey] = useState(0);
+  const [restartOpen, setRestartOpen] = useState(false);
   const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
   const effective =
@@ -133,6 +144,7 @@ export function PracticeWizard({
     setUsedFallback(false);
     setStatus("idle");
     setResetKey((k) => k + 1);
+    setRestartOpen(false);
   };
 
   const questionIndex = questionIndices[step] ?? 0;
@@ -314,13 +326,33 @@ export function PracticeWizard({
             <p className="mt-4 text-sm text-muted-foreground">{t("playground.ai.fallbackNote")}</p>
           )}
           <p className="mt-4 text-sm text-muted-foreground">{t("playground.result.note")}</p>
-          <Button type="button" variant="outline" className="mt-4 h-11" onClick={restart}>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4 h-11"
+            onClick={() => setRestartOpen(true)}
+          >
             {t("playground.wizard.restart")}
           </Button>
         </div>
       )}
 
       <p className="mt-5 text-xs text-muted-foreground">{t("playground.notSaved")}</p>
+
+      <AlertDialog open={restartOpen} onOpenChange={setRestartOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("playground.wizard.confirm.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("playground.wizard.confirm.body")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("playground.wizard.confirm.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={restart}>
+              {t("playground.wizard.confirm.continue")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
