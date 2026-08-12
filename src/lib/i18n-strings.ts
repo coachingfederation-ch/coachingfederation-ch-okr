@@ -268,6 +268,42 @@ export type StringKey =
   | "playground.tpl.smallStep"
   | "playground.metaTitle"
   | "playground.metaDescription"
+  | "playground.card.why"
+  | "playground.card.watch"
+  | "playground.card.tryAnother"
+  | "playground.card.edit"
+  | "playground.card.save"
+  | "playground.card.cancel"
+  | "playground.card.copy"
+  | "playground.card.copied"
+  | "playground.card.copyFailed"
+  | "playground.card.variant"
+  | "playground.quality.strong"
+  | "playground.quality.usable"
+  | "playground.quality.refine"
+  | "playground.edu.heading"
+  | "playground.edu.objective"
+  | "playground.edu.kr"
+  | "playground.edu.initiative"
+  | "playground.example.heading"
+  | "playground.example.weakLabel"
+  | "playground.example.weak"
+  | "playground.example.feedbackLabel"
+  | "playground.example.feedback"
+  | "playground.example.improvedLabel"
+  | "playground.example.improved"
+  | "playground.why.objective-a"
+  | "playground.why.objective-b"
+  | "playground.why.kr-metric"
+  | "playground.why.kr-milestone"
+  | "playground.why.initiative-a"
+  | "playground.why.initiative-b"
+  | "playground.watch.objective-a"
+  | "playground.watch.objective-b"
+  | "playground.watch.kr-metric"
+  | "playground.watch.kr-milestone"
+  | "playground.watch.initiative-a"
+  | "playground.watch.initiative-b"
   | "report.eyebrow"
   | "report.title"
   | "report.subtitle"
@@ -624,6 +660,42 @@ const en: Record<StringKey, string> = {
   "report.kr.due": "Due {date}",
 
 
+  "playground.card.why": "Why this works",
+  "playground.card.watch": "Watch for",
+  "playground.card.tryAnother": "Try another version",
+  "playground.card.edit": "Edit this draft",
+  "playground.card.save": "Apply",
+  "playground.card.cancel": "Cancel",
+  "playground.card.copy": "Copy draft",
+  "playground.card.copied": "Copied",
+  "playground.card.copyFailed": "Copy not available",
+  "playground.card.variant": "Version",
+  "playground.quality.strong": "Strong",
+  "playground.quality.usable": "Usable with edits",
+  "playground.quality.refine": "Needs refinement",
+  "playground.edu.heading": "How these pieces differ",
+  "playground.edu.objective": "An Objective describes meaningful change. It is not a task list.",
+  "playground.edu.kr": "A Key Result describes measurable evidence of progress or success. It is not an activity.",
+  "playground.edu.initiative": "An Initiative is work that may help move a Key Result. It is not the result itself.",
+  "playground.example.heading": "Weak versus improved",
+  "playground.example.weakLabel": "Weak",
+  "playground.example.weak": "Launch community events",
+  "playground.example.feedbackLabel": "Feedback",
+  "playground.example.feedback": "This describes work, so it is an Initiative rather than a Key Result.",
+  "playground.example.improvedLabel": "Improved",
+  "playground.example.improved": "Increase unique member participation in community events by 25% by year-end.",
+  "playground.why.objective-a": "It names the change and the people it is for, so the outcome stays clear.",
+  "playground.why.objective-b": "It describes an end state, which makes progress easier to recognise.",
+  "playground.why.kr-metric": "It points to something observable, so progress can be checked.",
+  "playground.why.kr-milestone": "It fixes a visible step, which helps when no number is available yet.",
+  "playground.why.initiative-a": "It links concrete work to the result it is meant to move.",
+  "playground.why.initiative-b": "It is small enough to start, which keeps momentum realistic.",
+  "playground.watch.objective-a": "Check that this is an outcome and not a list of activities.",
+  "playground.watch.objective-b": "Make sure the end state is visible by the end of the period.",
+  "playground.watch.kr-metric": "Add a baseline and a target, and agree who reads the number.",
+  "playground.watch.kr-milestone": "A milestone should still show evidence, not only that work happened.",
+  "playground.watch.initiative-a": "An initiative is not the result itself; keep the key result separate.",
+  "playground.watch.initiative-b": "Name who takes it on, otherwise the step stays an idea.",
 };
 
 const de: Record<StringKey, string> = {
@@ -936,6 +1008,42 @@ const de: Record<StringKey, string> = {
   "report.kr.due": "Fällig {date}",
 
 
+  "playground.card.why": "Warum das funktioniert",
+  "playground.card.watch": "Worauf zu achten ist",
+  "playground.card.tryAnother": "Andere Version zeigen",
+  "playground.card.edit": "Entwurf bearbeiten",
+  "playground.card.save": "Übernehmen",
+  "playground.card.cancel": "Abbrechen",
+  "playground.card.copy": "Entwurf kopieren",
+  "playground.card.copied": "Kopiert",
+  "playground.card.copyFailed": "Kopieren nicht möglich",
+  "playground.card.variant": "Version",
+  "playground.quality.strong": "Stark",
+  "playground.quality.usable": "Mit Anpassungen nutzbar",
+  "playground.quality.refine": "Muss geschärft werden",
+  "playground.edu.heading": "Wie sich diese Bausteine unterscheiden",
+  "playground.edu.objective": "Ein Objective beschreibt eine bedeutsame Veränderung. Es ist keine Aufgabenliste.",
+  "playground.edu.kr": "Ein Key Result beschreibt messbare Belege für Fortschritt oder Erfolg. Es ist keine Aktivität.",
+  "playground.edu.initiative": "Eine Initiative ist Arbeit, die ein Key Result voranbringen kann. Sie ist nicht das Ergebnis selbst.",
+  "playground.example.heading": "Schwach gegenüber verbessert",
+  "playground.example.weakLabel": "Schwach",
+  "playground.example.weak": "Community-Events durchführen",
+  "playground.example.feedbackLabel": "Rückmeldung",
+  "playground.example.feedback": "Das beschreibt Arbeit und ist damit eine Initiative und kein Key Result.",
+  "playground.example.improvedLabel": "Verbessert",
+  "playground.example.improved": "Die Zahl der teilnehmenden Mitglieder an Community-Events bis Jahresende um 25 % steigern.",
+  "playground.why.objective-a": "Es benennt die Veränderung und die Zielgruppe, dadurch bleibt das Ergebnis klar.",
+  "playground.why.objective-b": "Es beschreibt einen Zielzustand, dadurch lässt sich Fortschritt leichter erkennen.",
+  "playground.why.kr-metric": "Es verweist auf etwas Beobachtbares, dadurch ist Fortschritt überprüfbar.",
+  "playground.why.kr-milestone": "Es hält einen sichtbaren Schritt fest, was hilft, wenn noch keine Zahl vorliegt.",
+  "playground.why.initiative-a": "Es verbindet konkrete Arbeit mit dem Ergebnis, das sie bewegen soll.",
+  "playground.why.initiative-b": "Es ist klein genug, um zu starten, und bleibt damit realistisch.",
+  "playground.watch.objective-a": "Prüfen Sie, ob das ein Ergebnis ist und keine Liste von Aktivitäten.",
+  "playground.watch.objective-b": "Stellen Sie sicher, dass der Zielzustand bis zum Ende der Periode sichtbar ist.",
+  "playground.watch.kr-metric": "Ergänzen Sie Ausgangswert und Zielwert und klären Sie, wer die Zahl liest.",
+  "playground.watch.kr-milestone": "Auch ein Meilenstein sollte Belege zeigen, nicht nur, dass gearbeitet wurde.",
+  "playground.watch.initiative-a": "Eine Initiative ist nicht das Ergebnis selbst; halten Sie das Key Result getrennt.",
+  "playground.watch.initiative-b": "Benennen Sie, wer das übernimmt, sonst bleibt der Schritt eine Idee.",
 };
 
 const fr: Record<StringKey, string> = {
@@ -1247,6 +1355,42 @@ const fr: Record<StringKey, string> = {
   "report.kr.due": "Échéance {date}",
 
 
+  "playground.card.why": "Pourquoi cela fonctionne",
+  "playground.card.watch": "À surveiller",
+  "playground.card.tryAnother": "Essayer une autre version",
+  "playground.card.edit": "Modifier ce brouillon",
+  "playground.card.save": "Appliquer",
+  "playground.card.cancel": "Annuler",
+  "playground.card.copy": "Copier le brouillon",
+  "playground.card.copied": "Copié",
+  "playground.card.copyFailed": "Copie indisponible",
+  "playground.card.variant": "Version",
+  "playground.quality.strong": "Solide",
+  "playground.quality.usable": "Utilisable après retouches",
+  "playground.quality.refine": "À affiner",
+  "playground.edu.heading": "En quoi ces éléments diffèrent",
+  "playground.edu.objective": "Un Objectif décrit un changement significatif. Ce n'est pas une liste de tâches.",
+  "playground.edu.kr": "Un Résultat clé décrit une preuve mesurable de progrès ou de succès. Ce n'est pas une activité.",
+  "playground.edu.initiative": "Une Initiative est un travail susceptible de faire avancer un Résultat clé. Ce n'est pas le résultat lui-même.",
+  "playground.example.heading": "Faible et amélioré",
+  "playground.example.weakLabel": "Faible",
+  "playground.example.weak": "Lancer des événements communautaires",
+  "playground.example.feedbackLabel": "Retour",
+  "playground.example.feedback": "Cela décrit un travail : il s'agit donc d'une Initiative et non d'un Résultat clé.",
+  "playground.example.improvedLabel": "Amélioré",
+  "playground.example.improved": "Augmenter de 25 % la participation de membres uniques aux événements communautaires d'ici la fin de l'année.",
+  "playground.why.objective-a": "Il nomme le changement et les personnes concernées, le résultat reste donc clair.",
+  "playground.why.objective-b": "Il décrit un état final, ce qui rend le progrès plus facile à reconnaître.",
+  "playground.why.kr-metric": "Il désigne quelque chose d'observable, le progrès peut donc être vérifié.",
+  "playground.why.kr-milestone": "Il fixe une étape visible, utile lorsqu'aucun chiffre n'est encore disponible.",
+  "playground.why.initiative-a": "Il relie un travail concret au résultat qu'il doit faire avancer.",
+  "playground.why.initiative-b": "Il est assez petit pour démarrer, ce qui garde une dynamique réaliste.",
+  "playground.watch.objective-a": "Vérifiez qu'il s'agit d'un résultat et non d'une liste d'activités.",
+  "playground.watch.objective-b": "Assurez-vous que l'état final est visible d'ici la fin de la période.",
+  "playground.watch.kr-metric": "Ajoutez une valeur de départ et une cible, et convenez de qui lit le chiffre.",
+  "playground.watch.kr-milestone": "Un jalon doit aussi montrer une preuve, pas seulement qu'un travail a eu lieu.",
+  "playground.watch.initiative-a": "Une initiative n'est pas le résultat ; gardez le résultat clé distinct.",
+  "playground.watch.initiative-b": "Précisez qui s'en charge, sinon l'étape reste une idée.",
 };
 
 const it: Record<StringKey, string> = {
@@ -1558,6 +1702,42 @@ const it: Record<StringKey, string> = {
   "report.kr.due": "Scadenza {date}",
 
 
+  "playground.card.why": "Perché funziona",
+  "playground.card.watch": "A cosa fare attenzione",
+  "playground.card.tryAnother": "Prova un'altra versione",
+  "playground.card.edit": "Modifica questa bozza",
+  "playground.card.save": "Applica",
+  "playground.card.cancel": "Annulla",
+  "playground.card.copy": "Copia la bozza",
+  "playground.card.copied": "Copiato",
+  "playground.card.copyFailed": "Copia non disponibile",
+  "playground.card.variant": "Versione",
+  "playground.quality.strong": "Solido",
+  "playground.quality.usable": "Utilizzabile con modifiche",
+  "playground.quality.refine": "Da affinare",
+  "playground.edu.heading": "In cosa differiscono questi elementi",
+  "playground.edu.objective": "Un Obiettivo descrive un cambiamento significativo. Non è un elenco di attività.",
+  "playground.edu.kr": "Un Risultato chiave descrive prove misurabili di progresso o successo. Non è un'attività.",
+  "playground.edu.initiative": "Un'Iniziativa è un lavoro che può contribuire a muovere un Risultato chiave. Non è il risultato stesso.",
+  "playground.example.heading": "Debole e migliorato",
+  "playground.example.weakLabel": "Debole",
+  "playground.example.weak": "Lanciare eventi per la community",
+  "playground.example.feedbackLabel": "Riscontro",
+  "playground.example.feedback": "Questo descrive un lavoro, quindi è un'Iniziativa e non un Risultato chiave.",
+  "playground.example.improvedLabel": "Migliorato",
+  "playground.example.improved": "Aumentare del 25% la partecipazione di membri unici agli eventi della community entro fine anno.",
+  "playground.why.objective-a": "Nomina il cambiamento e le persone coinvolte, così il risultato resta chiaro.",
+  "playground.why.objective-b": "Descrive uno stato finale, il che rende il progresso più facile da riconoscere.",
+  "playground.why.kr-metric": "Indica qualcosa di osservabile, quindi il progresso può essere verificato.",
+  "playground.why.kr-milestone": "Fissa un passo visibile, utile quando non è ancora disponibile un numero.",
+  "playground.why.initiative-a": "Collega un lavoro concreto al risultato che deve muovere.",
+  "playground.why.initiative-b": "È abbastanza piccolo da iniziare, mantenendo un ritmo realistico.",
+  "playground.watch.objective-a": "Verifica che sia un risultato e non un elenco di attività.",
+  "playground.watch.objective-b": "Assicurati che lo stato finale sia visibile entro la fine del periodo.",
+  "playground.watch.kr-metric": "Aggiungi un valore di partenza e uno obiettivo, e stabilisci chi legge il numero.",
+  "playground.watch.kr-milestone": "Anche una milestone deve mostrare prove, non solo che il lavoro è avvenuto.",
+  "playground.watch.initiative-a": "Un'iniziativa non è il risultato; mantieni distinto il risultato chiave.",
+  "playground.watch.initiative-b": "Indica chi se ne occupa, altrimenti il passo resta un'idea.",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
