@@ -164,6 +164,8 @@ export function PracticeDraftCard({
 
       <QualityChecks mode={mode} statement={statement} answers={answers} />
 
+      <DraftHandoff mode={mode} statement={statement} />
+
       <div className="mt-4 flex flex-wrap gap-2">
         {selectLabel && onSelect && (
           <Button
