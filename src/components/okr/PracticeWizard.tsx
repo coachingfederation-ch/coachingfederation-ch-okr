@@ -144,6 +144,7 @@ export function PracticeWizard({
     setUsedFallback(false);
     setStatus("idle");
     setResetKey((k) => k + 1);
+    setRestartOpen(false);
   };
 
   const questionIndex = questionIndices[step] ?? 0;
