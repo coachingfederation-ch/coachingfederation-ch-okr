@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { QualityChecks } from "@/components/okr/QualityChecks";
+import { DraftHandoff } from "@/components/okr/DraftHandoff";
 import {
   qualityForVariant,
   type DraftCard,
