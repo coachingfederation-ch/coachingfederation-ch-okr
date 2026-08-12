@@ -31,11 +31,23 @@ export function PracticeDraftCard({
   card,
   mode,
   answers,
+  selected,
+  selectLabel,
+  selectedLabel,
+  onSelect,
+  onStatementChange,
 }: {
   card: DraftCard;
   mode: PlaygroundMode;
   /** The three wizard answers, used by the baseline / instrument / owner checks. */
   answers: string[];
+  /** Chain selection state; omitted for standalone practice. */
+  selected?: boolean;
+  selectLabel?: string;
+  selectedLabel?: string;
+  onSelect?: (statement: string) => void;
+  /** Called while selected, whenever the shown statement changes. */
+  onStatementChange?: (statement: string) => void;
 }) {
   const { t } = useLocale();
   const [variantIndex, setVariantIndex] = useState(0);
@@ -49,6 +61,13 @@ export function PracticeDraftCard({
   const statement = edits[variantIndex] ?? base;
   const quality = qualityForVariant(variantIndex);
   const headingId = `${card.id}-title`;
+
+  // Keep the chain context in sync with local edits / variant cycling.
+  useEffect(() => {
+    if (selected) onStatementChange?.(statement);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statement, selected]);
+
 
   const copy = async () => {
     try {
