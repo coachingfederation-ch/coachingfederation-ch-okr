@@ -405,88 +405,132 @@ export function OkrChain() {
 
       {/* Step 4 — Review */}
       {step === 3 && objective && hasKrs && totalInitiatives > 0 && (
-        <div className="mt-6 rounded-2xl border border-border/70 bg-background p-5 shadow-soft">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h3 className="text-base font-semibold text-foreground">
-              {t("playground.chain.summary.heading")}
-            </h3>
+        <div className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-soft">
+          {/* Header — the summary announces itself before the chain starts. */}
+          <div className="flex flex-wrap items-start justify-between gap-3 p-6 pb-0">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-primary">
+                {t("playground.chain.summary.eyebrow")}
+              </p>
+              <h3 className="mt-1 text-2xl font-bold leading-tight text-foreground">
+                {t("playground.chain.summary.heading")}
+              </h3>
+            </div>
             <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
               {t("playground.chain.summary.badge")}
             </span>
           </div>
 
-          <dl className="mt-4 space-y-3">
-            <div>
-              <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                {t("playground.chain.contextObjective")}
-              </dt>
-              <dd className="text-sm font-medium text-foreground">{objective.statement}</dd>
-            </div>
-            {krs.map((k) => (
-              <div key={k.cardId} className="border-l-2 border-primary/40 pl-4">
-                <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {t("playground.chain.contextKr")}
-                </dt>
-                <dd className="text-sm text-foreground/90">{k.statement}</dd>
-                {(initiativesByKr[k.cardId] ?? []).length > 0 && (
-                  <div className="ml-2 mt-2 border-l-2 border-accent/60 pl-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                      {t("playground.chain.summary.initiatives")}
-                    </p>
-                    <ul className="mt-1 list-disc space-y-1 pl-4 text-sm text-foreground/90">
-                      {(initiativesByKr[k.cardId] ?? []).map((i) => (
-                        <li key={i.cardId}>{i.statement}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+          <dl className="p-6">
+            {/* Level 1 — Objective: strongest type, badged, no rail above it. */}
+            <div className="flex items-start gap-4">
+              <div
+                aria-hidden="true"
+                className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-base font-bold text-primary-foreground shadow-soft"
+              >
+                O
               </div>
-            ))}
+              <div className="min-w-0">
+                <dt className="text-[11px] font-semibold uppercase tracking-wider text-primary">
+                  {t("playground.chain.contextObjective")}
+                </dt>
+                <dd className="mt-0.5 text-xl font-bold leading-snug text-foreground">
+                  {objective.statement}
+                </dd>
+              </div>
+            </div>
+
+            {/* Level 2 — Key Results hang off a single indexed rail. */}
+            <div className="relative mt-8 ml-5 space-y-8 border-l-2 border-highlight/30 pl-9">
+              {krs.map((k, i) => {
+                const inits = initiativesByKr[k.cardId] ?? [];
+                return (
+                  <div key={k.cardId} className="relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[45px] top-1.5 size-4 rounded-full border-4 border-card bg-highlight"
+                    />
+                    <dt className="text-[11px] font-semibold uppercase tracking-wider text-primary">
+                      {t("playground.chain.contextKr")} {String(i + 1).padStart(2, "0")}
+                    </dt>
+                    <dd className="mt-0.5 text-base font-semibold leading-snug text-foreground">
+                      {k.statement}
+                    </dd>
+                    {inits.length > 0 && (
+                      <div className="mt-4">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          {t("playground.chain.summary.initiatives")}
+                        </p>
+                        {/* Level 3 — Initiatives read as discrete work items, not prose. */}
+                        <ul className="mt-2 space-y-2">
+                          {inits.map((init) => (
+                            <li
+                              key={init.cardId}
+                              className="flex items-start gap-3 rounded-xl border border-border/60 bg-surface px-4 py-3 text-sm font-medium text-foreground"
+                            >
+                              <span
+                                aria-hidden="true"
+                                className="mt-1.5 size-2 shrink-0 rounded-full bg-accent"
+                              />
+                              <span className="min-w-0">{init.statement}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </dl>
 
-          <p className="mt-4 text-sm text-muted-foreground">{t("playground.chain.note.review")}</p>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button type="button" variant="outline" className="h-11" onClick={() => goTo(0)}>
-              {t("playground.chain.edit.objective")}
-            </Button>
-            <Button type="button" variant="outline" className="h-11" onClick={() => goTo(1)}>
-              {t("playground.chain.edit.kr")}
-            </Button>
-            <Button type="button" variant="outline" className="h-11" onClick={() => goTo(2)}>
-              {t("playground.chain.edit.initiatives")}
-            </Button>
-            <Button type="button" className="h-11" onClick={copyChain}>
-              {t("playground.chain.copy")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="h-11"
-              onClick={() => setResetOpen(true)}
-            >
-              {t("playground.chain.new")}
-            </Button>
+          {/* Action bar — separated from the content it acts on. */}
+          <div className="border-t border-border/60 bg-muted/40 px-6 py-4">
+            <p className="text-sm text-muted-foreground">{t("playground.chain.note.review")}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button type="button" className="h-11" onClick={copyChain}>
+                {t("playground.chain.copy")}
+              </Button>
+              <Button type="button" variant="outline" className="h-11" onClick={() => goTo(0)}>
+                {t("playground.chain.edit.objective")}
+              </Button>
+              <Button type="button" variant="outline" className="h-11" onClick={() => goTo(1)}>
+                {t("playground.chain.edit.kr")}
+              </Button>
+              <Button type="button" variant="outline" className="h-11" onClick={() => goTo(2)}>
+                {t("playground.chain.edit.initiatives")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11"
+                onClick={() => setResetOpen(true)}
+              >
+                {t("playground.chain.new")}
+              </Button>
+            </div>
+            <p aria-live="polite" className="mt-2 text-xs font-medium text-primary">
+              {copyState === "copied"
+                ? t("playground.chain.copied")
+                : copyState === "failed"
+                  ? t("playground.chain.copyFailed")
+                  : ""}
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground">{t("playground.notSaved")}</p>
           </div>
-          <p aria-live="polite" className="mt-2 text-xs font-medium text-primary">
-            {copyState === "copied"
-              ? t("playground.chain.copied")
-              : copyState === "failed"
-                ? t("playground.chain.copyFailed")
-                : ""}
-          </p>
-          <p className="mt-2 text-xs text-muted-foreground">{t("playground.notSaved")}</p>
 
           {/* The sign-in handoff belongs at the end of the chain only, where the
-              full Objective → Key Results → Initiatives scope is explicit. */}
-          <div className="mt-5 rounded-xl border border-border/70 bg-muted/30 p-4">
-            <p className="text-sm font-semibold text-foreground">
+              full Objective → Key Results → Initiatives scope is explicit. It stays
+              on a light surface so the outline CTA and its note keep AA contrast. */}
+          <div className="border-t-2 border-accent/60 bg-surface px-6 py-5">
+            <p className="text-base font-semibold text-foreground">
               {t("playground.chain.handoff.title")}
             </p>
             <p className="mt-1 text-sm text-foreground/90">{t("playground.chain.handoff.body")}</p>
             <DraftHandoff mode="objective" statement={chainText()} />
           </div>
         </div>
+
       )}
 
       <AlertDialog open={pending !== null} onOpenChange={(open) => !open && setPending(null)}>
