@@ -222,19 +222,50 @@ export type StringKey =
   | "playground.clear"
   | "playground.notSaved"
   | "playground.draftLabel"
-  | "playground.field.objectiveTitle"
-  | "playground.field.customer"
-  | "playground.field.outcome"
-  | "playground.field.krTitle"
-  | "playground.field.baseline"
-  | "playground.field.current"
-  | "playground.field.target"
-  | "playground.field.initiativeTitle"
-  | "playground.field.owner"
-  | "playground.field.description"
-  | "playground.addInitiative"
-  | "playground.initiativeListEmpty"
-  | "playground.remove"
+  | "playground.wizard.step"
+  | "playground.wizard.of"
+  | "playground.wizard.hint"
+  | "playground.wizard.placeholder"
+  | "playground.wizard.back"
+  | "playground.wizard.continue"
+  | "playground.wizard.restart"
+  | "playground.wizard.generate"
+  | "playground.wizard.generating"
+  | "playground.q.objective.1"
+  | "playground.q.objective.2"
+  | "playground.q.objective.3"
+  | "playground.q.kr.1"
+  | "playground.q.kr.2"
+  | "playground.q.kr.3"
+  | "playground.q.initiative.1"
+  | "playground.q.initiative.2"
+  | "playground.q.initiative.3"
+  | "playground.result.heading"
+  | "playground.result.note"
+  | "playground.result.tag"
+  | "playground.result.objective.a.title"
+  | "playground.result.objective.b.title"
+  | "playground.result.objective.note.title"
+  | "playground.result.objective.note.body"
+  | "playground.result.kr.metric.title"
+  | "playground.result.kr.milestone.title"
+  | "playground.result.kr.note.title"
+  | "playground.result.kr.note.body"
+  | "playground.result.initiative.a.title"
+  | "playground.result.initiative.b.title"
+  | "playground.result.initiative.note.title"
+  | "playground.result.initiative.note.body"
+  | "playground.tpl.for"
+  | "playground.tpl.by"
+  | "playground.tpl.who"
+  | "playground.tpl.byEnd"
+  | "playground.tpl.measure"
+  | "playground.tpl.evidence"
+  | "playground.tpl.supports"
+  | "playground.tpl.milestone"
+  | "playground.tpl.moves"
+  | "playground.tpl.constraints"
+  | "playground.tpl.smallStep"
   | "playground.metaTitle"
   | "playground.metaDescription"
   | "report.eyebrow"
@@ -500,19 +531,50 @@ const en: Record<StringKey, string> = {
   "playground.clear": "Clear",
   "playground.notSaved": "Nothing on this page is saved.",
   "playground.draftLabel": "Practice draft",
-  "playground.field.objectiveTitle": "Objective title",
-  "playground.field.customer": "Customer",
-  "playground.field.outcome": "Outcome statement",
-  "playground.field.krTitle": "Key result title",
-  "playground.field.baseline": "Baseline",
-  "playground.field.current": "Current",
-  "playground.field.target": "Target",
-  "playground.field.initiativeTitle": "Initiative title",
-  "playground.field.owner": "Owner",
-  "playground.field.description": "Short description",
-  "playground.addInitiative": "Add to list",
-  "playground.initiativeListEmpty": "No practice initiatives yet.",
-  "playground.remove": "Remove",
+  "playground.wizard.step": "Step",
+  "playground.wizard.of": "of",
+  "playground.wizard.hint": "Short and plain language is fine — this is practice.",
+  "playground.wizard.placeholder": "Write a sentence or two…",
+  "playground.wizard.back": "Back",
+  "playground.wizard.continue": "Continue",
+  "playground.wizard.restart": "Start again",
+  "playground.wizard.generate": "Generate practice drafts",
+  "playground.wizard.generating": "Drafting suggestions…",
+  "playground.q.objective.1": "What strategic change do you want to create?",
+  "playground.q.objective.2": "Who should benefit from that change?",
+  "playground.q.objective.3": "What should be different by the end of the period?",
+  "playground.q.kr.1": "What Objective does this support?",
+  "playground.q.kr.2": "What evidence would show success?",
+  "playground.q.kr.3": "How could this be measured or observed?",
+  "playground.q.initiative.1": "What Key Result should this help move?",
+  "playground.q.initiative.2": "What kind of work could contribute?",
+  "playground.q.initiative.3": "What constraints, skills, or capacity matter?",
+  "playground.result.heading": "Practice drafts",
+  "playground.result.note": "These examples are generated locally from your answers. Nothing is saved and no live OKR is affected.",
+  "playground.result.tag": "Practice draft",
+  "playground.result.objective.a.title": "Outcome-style objective",
+  "playground.result.objective.b.title": "End-state phrasing",
+  "playground.result.objective.note.title": "What to sharpen",
+  "playground.result.objective.note.body": "Name one customer group, describe an outcome rather than an activity, and make sure the change is visible by the end of the period.",
+  "playground.result.kr.metric.title": "Metric-style key result",
+  "playground.result.kr.milestone.title": "Milestone-style key result",
+  "playground.result.kr.note.title": "Measurement note",
+  "playground.result.kr.note.body": "Set a baseline before the target, agree who reads the number, and state how often it is updated.",
+  "playground.result.initiative.a.title": "Initiative idea",
+  "playground.result.initiative.b.title": "Smaller first step",
+  "playground.result.initiative.note.title": "Commitment and help",
+  "playground.result.initiative.note.body": "Decide whether this is a one-off, recurring or a workstream, and whether it needs a lead, helpers or a specific skill.",
+  "playground.tpl.for": "for",
+  "playground.tpl.by": "By the end of the period",
+  "playground.tpl.who": "Who benefits",
+  "playground.tpl.byEnd": "By the end of the period",
+  "playground.tpl.measure": "Measured by",
+  "playground.tpl.evidence": "Evidence",
+  "playground.tpl.supports": "Supports",
+  "playground.tpl.milestone": "Milestone",
+  "playground.tpl.moves": "moves",
+  "playground.tpl.constraints": "Constraints",
+  "playground.tpl.smallStep": "First step",
   "playground.metaTitle": "OKR Playground — The Switzerland Chapter of ICF",
   "playground.metaDescription": "A public practice area for drafting objectives, key results and initiatives. Nothing is saved and no live data is affected.",
   "report.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · BOARD REPORT",
@@ -781,19 +843,50 @@ const de: Record<StringKey, string> = {
   "playground.clear": "Zurücksetzen",
   "playground.notSaved": "Auf dieser Seite wird nichts gespeichert.",
   "playground.draftLabel": "Übungsentwurf",
-  "playground.field.objectiveTitle": "Titel des Objectives",
-  "playground.field.customer": "Zielgruppe",
-  "playground.field.outcome": "Ergebnisaussage",
-  "playground.field.krTitle": "Titel des Key Results",
-  "playground.field.baseline": "Ausgangswert",
-  "playground.field.current": "Aktuell",
-  "playground.field.target": "Zielwert",
-  "playground.field.initiativeTitle": "Titel der Initiative",
-  "playground.field.owner": "Verantwortlich",
-  "playground.field.description": "Kurzbeschreibung",
-  "playground.addInitiative": "Zur Liste hinzufügen",
-  "playground.initiativeListEmpty": "Noch keine Übungsinitiativen.",
-  "playground.remove": "Entfernen",
+  "playground.wizard.step": "Schritt",
+  "playground.wizard.of": "von",
+  "playground.wizard.hint": "Kurz und in einfacher Sprache genügt — das ist eine Übung.",
+  "playground.wizard.placeholder": "Schreiben Sie ein bis zwei Sätze…",
+  "playground.wizard.back": "Zurück",
+  "playground.wizard.continue": "Weiter",
+  "playground.wizard.restart": "Neu beginnen",
+  "playground.wizard.generate": "Übungsentwürfe erzeugen",
+  "playground.wizard.generating": "Vorschläge werden entworfen…",
+  "playground.q.objective.1": "Welche strategische Veränderung wollen Sie bewirken?",
+  "playground.q.objective.2": "Wer soll von dieser Veränderung profitieren?",
+  "playground.q.objective.3": "Was soll am Ende der Periode anders sein?",
+  "playground.q.kr.1": "Welches Objective unterstützt dieses Key Result?",
+  "playground.q.kr.2": "Welche Belege würden Erfolg zeigen?",
+  "playground.q.kr.3": "Wie liesse sich das messen oder beobachten?",
+  "playground.q.initiative.1": "Welches Key Result soll diese Initiative voranbringen?",
+  "playground.q.initiative.2": "Welche Art von Arbeit könnte dazu beitragen?",
+  "playground.q.initiative.3": "Welche Rahmenbedingungen, Fähigkeiten oder Kapazitäten sind wichtig?",
+  "playground.result.heading": "Übungsentwürfe",
+  "playground.result.note": "Diese Beispiele entstehen lokal aus Ihren Antworten. Nichts wird gespeichert, echte OKR bleiben unberührt.",
+  "playground.result.tag": "Übungsentwurf",
+  "playground.result.objective.a.title": "Objective als Ergebnis formuliert",
+  "playground.result.objective.b.title": "Formulierung als Zielzustand",
+  "playground.result.objective.note.title": "Was noch schärfer werden kann",
+  "playground.result.objective.note.body": "Nennen Sie eine Zielgruppe, beschreiben Sie ein Ergebnis statt einer Aktivität und stellen Sie sicher, dass die Veränderung bis zum Ende der Periode sichtbar ist.",
+  "playground.result.kr.metric.title": "Key Result mit Kennzahl",
+  "playground.result.kr.milestone.title": "Key Result als Meilenstein",
+  "playground.result.kr.note.title": "Hinweis zur Messung",
+  "playground.result.kr.note.body": "Legen Sie zuerst einen Ausgangswert fest, klären Sie, wer die Zahl liest, und halten Sie fest, wie oft sie aktualisiert wird.",
+  "playground.result.initiative.a.title": "Idee für eine Initiative",
+  "playground.result.initiative.b.title": "Kleinerer erster Schritt",
+  "playground.result.initiative.note.title": "Aufwand und Unterstützung",
+  "playground.result.initiative.note.body": "Entscheiden Sie, ob es sich um eine einmalige, wiederkehrende oder laufende Arbeit handelt und ob eine Leitung, Mithilfe oder eine bestimmte Fähigkeit nötig ist.",
+  "playground.tpl.for": "für",
+  "playground.tpl.by": "Bis zum Ende der Periode",
+  "playground.tpl.who": "Zielgruppe",
+  "playground.tpl.byEnd": "Bis zum Ende der Periode",
+  "playground.tpl.measure": "Gemessen an",
+  "playground.tpl.evidence": "Belege",
+  "playground.tpl.supports": "Unterstützt",
+  "playground.tpl.milestone": "Meilenstein",
+  "playground.tpl.moves": "bewegt",
+  "playground.tpl.constraints": "Rahmenbedingungen",
+  "playground.tpl.smallStep": "Erster Schritt",
   "playground.metaTitle": "OKR-Playground — The Switzerland Chapter of ICF",
   "playground.metaDescription": "Ein öffentlicher Übungsbereich für Objectives, Key Results und Initiativen. Nichts wird gespeichert, echte Daten bleiben unberührt.",
   "report.eyebrow": "DAS SCHWEIZER CHAPTER DER ICF · VORSTANDSBERICHT",
@@ -1061,19 +1154,50 @@ const fr: Record<StringKey, string> = {
   "playground.clear": "Effacer",
   "playground.notSaved": "Rien n'est enregistré sur cette page.",
   "playground.draftLabel": "Brouillon d'exercice",
-  "playground.field.objectiveTitle": "Titre de l'objectif",
-  "playground.field.customer": "Public concerné",
-  "playground.field.outcome": "Énoncé du résultat",
-  "playground.field.krTitle": "Titre du résultat clé",
-  "playground.field.baseline": "Valeur de départ",
-  "playground.field.current": "Actuel",
-  "playground.field.target": "Cible",
-  "playground.field.initiativeTitle": "Titre de l'initiative",
-  "playground.field.owner": "Responsable",
-  "playground.field.description": "Brève description",
-  "playground.addInitiative": "Ajouter à la liste",
-  "playground.initiativeListEmpty": "Aucune initiative d'exercice pour l'instant.",
-  "playground.remove": "Retirer",
+  "playground.wizard.step": "Étape",
+  "playground.wizard.of": "sur",
+  "playground.wizard.hint": "Une formulation courte et simple suffit — c'est un exercice.",
+  "playground.wizard.placeholder": "Écrivez une ou deux phrases…",
+  "playground.wizard.back": "Retour",
+  "playground.wizard.continue": "Continuer",
+  "playground.wizard.restart": "Recommencer",
+  "playground.wizard.generate": "Générer des brouillons d'exercice",
+  "playground.wizard.generating": "Rédaction des suggestions…",
+  "playground.q.objective.1": "Quel changement stratégique voulez-vous créer ?",
+  "playground.q.objective.2": "Qui doit bénéficier de ce changement ?",
+  "playground.q.objective.3": "Qu'est-ce qui devra être différent à la fin de la période ?",
+  "playground.q.kr.1": "Quel objectif ce résultat clé soutient-il ?",
+  "playground.q.kr.2": "Quels éléments montreraient la réussite ?",
+  "playground.q.kr.3": "Comment cela pourrait-il être mesuré ou observé ?",
+  "playground.q.initiative.1": "Quel résultat clé cette initiative doit-elle faire avancer ?",
+  "playground.q.initiative.2": "Quel type de travail pourrait y contribuer ?",
+  "playground.q.initiative.3": "Quelles contraintes, compétences ou capacités comptent ?",
+  "playground.result.heading": "Brouillons d'exercice",
+  "playground.result.note": "Ces exemples sont générés localement à partir de vos réponses. Rien n'est enregistré et aucun OKR réel n'est modifié.",
+  "playground.result.tag": "Brouillon d'exercice",
+  "playground.result.objective.a.title": "Objectif formulé comme résultat",
+  "playground.result.objective.b.title": "Formulation en état final",
+  "playground.result.objective.note.title": "À préciser",
+  "playground.result.objective.note.body": "Nommez un public, décrivez un résultat plutôt qu'une activité et assurez-vous que le changement soit visible à la fin de la période.",
+  "playground.result.kr.metric.title": "Résultat clé chiffré",
+  "playground.result.kr.milestone.title": "Résultat clé sous forme de jalon",
+  "playground.result.kr.note.title": "Note de mesure",
+  "playground.result.kr.note.body": "Fixez d'abord une valeur de départ, précisez qui lit le chiffre et à quelle fréquence il est mis à jour.",
+  "playground.result.initiative.a.title": "Idée d'initiative",
+  "playground.result.initiative.b.title": "Premier pas plus modeste",
+  "playground.result.initiative.note.title": "Engagement et soutien",
+  "playground.result.initiative.note.body": "Déterminez s'il s'agit d'une action ponctuelle, récurrente ou d'un chantier, et s'il faut un responsable, des volontaires ou une compétence précise.",
+  "playground.tpl.for": "pour",
+  "playground.tpl.by": "D'ici la fin de la période",
+  "playground.tpl.who": "Public concerné",
+  "playground.tpl.byEnd": "D'ici la fin de la période",
+  "playground.tpl.measure": "Mesuré par",
+  "playground.tpl.evidence": "Éléments de preuve",
+  "playground.tpl.supports": "Soutient",
+  "playground.tpl.milestone": "Jalon",
+  "playground.tpl.moves": "fait avancer",
+  "playground.tpl.constraints": "Contraintes",
+  "playground.tpl.smallStep": "Premier pas",
   "playground.metaTitle": "Espace d'essai OKR — The Switzerland Chapter of ICF",
   "playground.metaDescription": "Un espace public pour s'exercer à rédiger objectifs, résultats clés et initiatives. Rien n'est enregistré et aucune donnée réelle n'est touchée.",
   "report.eyebrow": "LE CHAPITRE SUISSE DE L'ICF · RAPPORT AU COMITÉ",
@@ -1341,19 +1465,50 @@ const it: Record<StringKey, string> = {
   "playground.clear": "Azzera",
   "playground.notSaved": "Su questa pagina non viene salvato nulla.",
   "playground.draftLabel": "Bozza di esercitazione",
-  "playground.field.objectiveTitle": "Titolo dell'obiettivo",
-  "playground.field.customer": "Pubblico di riferimento",
-  "playground.field.outcome": "Dichiarazione di risultato",
-  "playground.field.krTitle": "Titolo del risultato chiave",
-  "playground.field.baseline": "Valore iniziale",
-  "playground.field.current": "Attuale",
-  "playground.field.target": "Obiettivo",
-  "playground.field.initiativeTitle": "Titolo dell'iniziativa",
-  "playground.field.owner": "Responsabile",
-  "playground.field.description": "Breve descrizione",
-  "playground.addInitiative": "Aggiungi all'elenco",
-  "playground.initiativeListEmpty": "Nessuna iniziativa di esercitazione.",
-  "playground.remove": "Rimuovi",
+  "playground.wizard.step": "Passo",
+  "playground.wizard.of": "di",
+  "playground.wizard.hint": "Bastano poche parole semplici — è un'esercitazione.",
+  "playground.wizard.placeholder": "Scrivi una o due frasi…",
+  "playground.wizard.back": "Indietro",
+  "playground.wizard.continue": "Continua",
+  "playground.wizard.restart": "Ricomincia",
+  "playground.wizard.generate": "Genera bozze di esercitazione",
+  "playground.wizard.generating": "Sto preparando i suggerimenti…",
+  "playground.q.objective.1": "Quale cambiamento strategico vuoi creare?",
+  "playground.q.objective.2": "Chi dovrebbe beneficiare di questo cambiamento?",
+  "playground.q.objective.3": "Che cosa dovrà essere diverso alla fine del periodo?",
+  "playground.q.kr.1": "Quale obiettivo sostiene questo risultato chiave?",
+  "playground.q.kr.2": "Quali elementi mostrerebbero il successo?",
+  "playground.q.kr.3": "Come si potrebbe misurare o osservare?",
+  "playground.q.initiative.1": "Quale risultato chiave dovrebbe far avanzare?",
+  "playground.q.initiative.2": "Che tipo di lavoro potrebbe contribuire?",
+  "playground.q.initiative.3": "Quali vincoli, competenze o capacità contano?",
+  "playground.result.heading": "Bozze di esercitazione",
+  "playground.result.note": "Questi esempi sono generati localmente dalle tue risposte. Nulla viene salvato e nessun OKR reale viene modificato.",
+  "playground.result.tag": "Bozza di esercitazione",
+  "playground.result.objective.a.title": "Obiettivo formulato come risultato",
+  "playground.result.objective.b.title": "Formulazione come stato finale",
+  "playground.result.objective.note.title": "Che cosa affinare",
+  "playground.result.objective.note.body": "Indica un pubblico, descrivi un risultato invece di un'attività e assicurati che il cambiamento sia visibile alla fine del periodo.",
+  "playground.result.kr.metric.title": "Risultato chiave con metrica",
+  "playground.result.kr.milestone.title": "Risultato chiave come traguardo",
+  "playground.result.kr.note.title": "Nota sulla misurazione",
+  "playground.result.kr.note.body": "Definisci prima un valore iniziale, chiarisci chi legge il dato e con quale frequenza viene aggiornato.",
+  "playground.result.initiative.a.title": "Idea di iniziativa",
+  "playground.result.initiative.b.title": "Primo passo più piccolo",
+  "playground.result.initiative.note.title": "Impegno e supporto",
+  "playground.result.initiative.note.body": "Stabilisci se si tratta di un'attività una tantum, ricorrente o di un filone di lavoro, e se servono una guida, aiutanti o una competenza specifica.",
+  "playground.tpl.for": "per",
+  "playground.tpl.by": "Entro la fine del periodo",
+  "playground.tpl.who": "Pubblico",
+  "playground.tpl.byEnd": "Entro la fine del periodo",
+  "playground.tpl.measure": "Misurato da",
+  "playground.tpl.evidence": "Evidenze",
+  "playground.tpl.supports": "Sostiene",
+  "playground.tpl.milestone": "Traguardo",
+  "playground.tpl.moves": "fa avanzare",
+  "playground.tpl.constraints": "Vincoli",
+  "playground.tpl.smallStep": "Primo passo",
   "playground.metaTitle": "Spazio di prova OKR — The Switzerland Chapter of ICF",
   "playground.metaDescription": "Un'area pubblica per esercitarsi con obiettivi, risultati chiave e iniziative. Nulla viene salvato e nessun dato reale viene modificato.",
   "report.eyebrow": "IL CHAPTER SVIZZERO DI ICF · RAPPORTO AL CONSIGLIO",

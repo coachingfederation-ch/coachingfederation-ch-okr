@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useLocale } from "@/lib/i18n";
 import { AuthBadge } from "@/components/okr/AuthBadge";
@@ -8,6 +8,12 @@ import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
+import {
+  buildDrafts,
+  QUESTION_KEYS,
+  type DraftCard,
+  type PlaygroundMode,
+} from "@/lib/playground-drafts";
 
 export const Route = createFileRoute("/playground")({
   head: () => ({
@@ -31,9 +37,17 @@ export const Route = createFileRoute("/playground")({
   component: PlaygroundPage,
 });
 
-type Mode = "objective" | "kr" | "initiative";
-
-const MODES: { id: Mode; titleKey: "playground.mode.objective.title" | "playground.mode.kr.title" | "playground.mode.initiative.title"; descKey: "playground.mode.objective.desc" | "playground.mode.kr.desc" | "playground.mode.initiative.desc" }[] = [
+const MODES: {
+  id: PlaygroundMode;
+  titleKey:
+    | "playground.mode.objective.title"
+    | "playground.mode.kr.title"
+    | "playground.mode.initiative.title";
+  descKey:
+    | "playground.mode.objective.desc"
+    | "playground.mode.kr.desc"
+    | "playground.mode.initiative.desc";
+}[] = [
   {
     id: "objective",
     titleKey: "playground.mode.objective.title",
@@ -47,68 +61,49 @@ const MODES: { id: Mode; titleKey: "playground.mode.objective.title" | "playgrou
   },
 ];
 
-/** Session-only text field — value lives in React state and dies with the tab. */
-function Field({
-  label,
-  value,
-  onChange,
-  multiline,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  multiline?: boolean;
-}) {
-  const base =
-    "w-full min-w-0 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40";
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        {label}
-      </span>
-      {multiline ? (
-        <textarea
-          rows={3}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={base}
-        />
-      ) : (
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={cn(base, "h-11")}
-        />
-      )}
-    </label>
-  );
-}
+const TOTAL_STEPS = 3;
+const EMPTY_ANSWERS = ["", "", ""];
 
 function PlaygroundPage() {
   const { t } = useLocale();
-  const [mode, setMode] = useState<Mode | null>(null);
 
-  // All drafts are component state only: no storage, no network, no persistence.
-  const [objective, setObjective] = useState({ title: "", customer: "", outcome: "" });
-  const [kr, setKr] = useState({ title: "", baseline: "", current: "", target: "" });
-  const [draftInitiative, setDraftInitiative] = useState({
-    title: "",
-    owner: "",
-    description: "",
-  });
-  const [initiatives, setInitiatives] = useState<
-    { id: number; title: string; owner: string; description: string }[]
-  >([]);
+  // Everything below is component state only: no storage, no network, no writes.
+  const [mode, setMode] = useState<PlaygroundMode | null>(null);
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<string[]>(EMPTY_ANSWERS);
+  const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
+  const [results, setResults] = useState<DraftCard[]>([]);
+  const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
-  const clear = () => {
-    if (mode === "objective") setObjective({ title: "", customer: "", outcome: "" });
-    if (mode === "kr") setKr({ title: "", baseline: "", current: "", target: "" });
-    if (mode === "initiative") {
-      setDraftInitiative({ title: "", owner: "", description: "" });
-      setInitiatives([]);
-    }
+  // Believable latency for the mock generator; a real AI call replaces this later.
+  useEffect(() => {
+    if (status !== "loading" || !mode) return;
+    const id = window.setTimeout(() => {
+      setResults(buildDrafts(mode, answers, t));
+      setStatus("done");
+    }, 1200);
+    return () => window.clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, mode]);
+
+  // Move focus to the new question so keyboard and screen-reader users follow along.
+  useEffect(() => {
+    if (mode && status === "idle") stepHeadingRef.current?.focus();
+  }, [step, mode, status]);
+
+  const reset = (next: PlaygroundMode | null) => {
+    setMode(next);
+    setStep(0);
+    setAnswers(EMPTY_ANSWERS);
+    setResults([]);
+    setStatus("idle");
   };
+
+  const answer = answers[step] ?? "";
+  const canAdvance = answer.trim().length > 0;
+  const isLastStep = step === TOTAL_STEPS - 1;
+  const busy = status === "loading";
+  const activeMode = MODES.find((m) => m.id === mode);
 
   return (
     <main className="min-h-dvh">
@@ -170,7 +165,7 @@ function PlaygroundPage() {
                   variant={active ? "default" : "outline"}
                   className="mt-4 h-11 self-start"
                   aria-pressed={active}
-                  onClick={() => setMode(m.id)}
+                  onClick={() => reset(m.id)}
                 >
                   {t("playground.start")}
                 </Button>
@@ -179,140 +174,165 @@ function PlaygroundPage() {
           })}
         </div>
 
-        {mode && (
-          <div className="mt-8 rounded-2xl border border-border/70 bg-card p-6 shadow-soft">
+        {mode && activeMode && (
+          <div
+            role="group"
+            aria-label={t(activeMode.titleKey)}
+            className="mt-8 rounded-2xl border border-border/70 bg-card p-6 shadow-soft"
+          >
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   {t("playground.draftLabel")}
                 </p>
                 <h3 className="mt-1 text-base font-semibold text-foreground">
-                  {t(MODES.find((m) => m.id === mode)!.titleKey)}
+                  {t(activeMode.titleKey)}
                 </h3>
               </div>
-              <Button type="button" variant="outline" className="h-11" onClick={clear}>
-                {t("playground.clear")}
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11"
+                onClick={() => reset(mode)}
+              >
+                {t("playground.wizard.restart")}
               </Button>
             </div>
 
-            {mode === "objective" && (
-              <div className="grid gap-4 md:grid-cols-2">
-                <Field
-                  label={t("playground.field.objectiveTitle")}
-                  value={objective.title}
-                  onChange={(v) => setObjective((o) => ({ ...o, title: v }))}
+            {/* Progress */}
+            <p aria-live="polite" className="text-xs font-medium tracking-wide text-muted-foreground">
+              {t("playground.wizard.step")} {Math.min(step + 1, TOTAL_STEPS)}{" "}
+              {t("playground.wizard.of")} {TOTAL_STEPS}
+            </p>
+            <div className="mt-2 flex gap-1.5" aria-hidden="true">
+              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    "h-1.5 flex-1 rounded-full transition-colors",
+                    i <= step || status !== "idle" ? "bg-primary" : "bg-border",
+                  )}
                 />
-                <Field
-                  label={t("playground.field.customer")}
-                  value={objective.customer}
-                  onChange={(v) => setObjective((o) => ({ ...o, customer: v }))}
+              ))}
+            </div>
+
+            {status === "idle" && (
+              <div className="mt-5">
+                <h4
+                  ref={stepHeadingRef}
+                  tabIndex={-1}
+                  id="playground-question"
+                  className="text-base font-semibold text-foreground focus:outline-none"
+                >
+                  {t(QUESTION_KEYS[mode][step]!)}
+                </h4>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t("playground.wizard.hint")}
+                </p>
+                <textarea
+                  rows={4}
+                  value={answer}
+                  aria-labelledby="playground-question"
+                  placeholder={t("playground.wizard.placeholder")}
+                  onChange={(e) =>
+                    setAnswers((prev) => prev.map((v, i) => (i === step ? e.target.value : v)))
+                  }
+                  className="mt-3 w-full min-w-0 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
                 />
-                <div className="md:col-span-2">
-                  <Field
-                    label={t("playground.field.outcome")}
-                    value={objective.outcome}
-                    onChange={(v) => setObjective((o) => ({ ...o, outcome: v }))}
-                    multiline
-                  />
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {step > 0 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-11"
+                      onClick={() => setStep((s) => Math.max(0, s - 1))}
+                    >
+                      {t("playground.wizard.back")}
+                    </Button>
+                  )}
+                  {isLastStep ? (
+                    <Button
+                      type="button"
+                      className="h-11"
+                      disabled={!canAdvance}
+                      onClick={() => setStatus("loading")}
+                    >
+                      {t("playground.wizard.generate")}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      className="h-11"
+                      disabled={!canAdvance}
+                      onClick={() => setStep((s) => Math.min(TOTAL_STEPS - 1, s + 1))}
+                    >
+                      {t("playground.wizard.continue")}
+                    </Button>
+                  )}
                 </div>
               </div>
             )}
 
-            {mode === "kr" && (
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="md:col-span-2">
-                  <Field
-                    label={t("playground.field.krTitle")}
-                    value={kr.title}
-                    onChange={(v) => setKr((k) => ({ ...k, title: v }))}
-                  />
-                </div>
-                <Field
-                  label={t("playground.field.baseline")}
-                  value={kr.baseline}
-                  onChange={(v) => setKr((k) => ({ ...k, baseline: v }))}
+            {busy && (
+              <div
+                aria-live="polite"
+                className="mt-6 flex items-center gap-3 text-sm text-muted-foreground"
+              >
+                <span
+                  aria-hidden="true"
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary motion-reduce:animate-none"
                 />
-                <Field
-                  label={t("playground.field.current")}
-                  value={kr.current}
-                  onChange={(v) => setKr((k) => ({ ...k, current: v }))}
-                />
-                <Field
-                  label={t("playground.field.target")}
-                  value={kr.target}
-                  onChange={(v) => setKr((k) => ({ ...k, target: v }))}
-                />
+                {t("playground.wizard.generating")}
               </div>
             )}
 
-            {mode === "initiative" && (
-              <div className="space-y-5">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field
-                    label={t("playground.field.initiativeTitle")}
-                    value={draftInitiative.title}
-                    onChange={(v) => setDraftInitiative((d) => ({ ...d, title: v }))}
-                  />
-                  <Field
-                    label={t("playground.field.owner")}
-                    value={draftInitiative.owner}
-                    onChange={(v) => setDraftInitiative((d) => ({ ...d, owner: v }))}
-                  />
-                  <div className="md:col-span-2">
-                    <Field
-                      label={t("playground.field.description")}
-                      value={draftInitiative.description}
-                      onChange={(v) => setDraftInitiative((d) => ({ ...d, description: v }))}
-                      multiline
-                    />
-                  </div>
+            {status === "done" && (
+              <div aria-live="polite" className="mt-6">
+                <h4 className="text-base font-semibold text-foreground">
+                  {t("playground.result.heading")}
+                </h4>
+                <div className="mt-4 grid gap-4 md:grid-cols-3">
+                  {results.map((card) => (
+                    <article
+                      key={card.id}
+                      className="rounded-xl border border-border/70 bg-background p-4"
+                    >
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        {t("playground.result.tag")}
+                      </p>
+                      <h5 className="mt-1 text-sm font-semibold text-foreground">
+                        {card.title}
+                      </h5>
+                      <p className="mt-2 text-sm leading-relaxed text-foreground/90">
+                        {card.headline}
+                      </p>
+                      {card.lines.length > 0 && (
+                        <dl className="mt-3 space-y-1.5">
+                          {card.lines.map((line) => (
+                            <div key={line.label}>
+                              <dt className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                                {line.label}
+                              </dt>
+                              <dd className="text-sm text-foreground/90">{line.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      )}
+                    </article>
+                  ))}
                 </div>
+                <p className="mt-4 text-sm text-muted-foreground">
+                  {t("playground.result.note")}
+                </p>
                 <Button
                   type="button"
-                  className="h-11"
-                  disabled={draftInitiative.title.trim().length === 0}
-                  onClick={() => {
-                    setInitiatives((list) => [...list, { id: Date.now(), ...draftInitiative }]);
-                    setDraftInitiative({ title: "", owner: "", description: "" });
-                  }}
+                  variant="outline"
+                  className="mt-4 h-11"
+                  onClick={() => reset(mode)}
                 >
-                  {t("playground.addInitiative")}
+                  {t("playground.wizard.restart")}
                 </Button>
-
-                {initiatives.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    {t("playground.initiativeListEmpty")}
-                  </p>
-                ) : (
-                  <ul className="space-y-2">
-                    {initiatives.map((i) => (
-                      <li
-                        key={i.id}
-                        className="flex items-start justify-between gap-3 rounded-xl border border-border/70 bg-background px-4 py-3"
-                      >
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-foreground">{i.title}</p>
-                          {i.owner && (
-                            <p className="text-xs text-muted-foreground">{i.owner}</p>
-                          )}
-                          {i.description && (
-                            <p className="mt-1 text-sm text-muted-foreground">{i.description}</p>
-                          )}
-                        </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className="h-11 shrink-0"
-                          onClick={() =>
-                            setInitiatives((list) => list.filter((x) => x.id !== i.id))
-                          }
-                        >
-                          {t("playground.remove")}
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
               </div>
             )}
 
