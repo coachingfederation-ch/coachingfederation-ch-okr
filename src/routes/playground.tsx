@@ -7,6 +7,11 @@ import { TopNav } from "@/components/okr/TopNav";
 import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { PracticeWizard } from "@/components/okr/PracticeWizard";
 import { OkrChain } from "@/components/okr/OkrChain";
+import {
+  clearHandoffDraft,
+  readHandoffDraft,
+  type HandoffDraft,
+} from "@/components/okr/DraftHandoff";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
