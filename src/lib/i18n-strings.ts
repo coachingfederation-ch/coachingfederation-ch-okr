@@ -208,6 +208,35 @@ export type StringKey =
   | "kr.instrumentPlaceholder"
   // board report
   | "report.nav"
+  | "playground.nav"
+  | "playground.title"
+  | "playground.intro"
+  | "playground.badge"
+  | "playground.mode.objective.title"
+  | "playground.mode.objective.desc"
+  | "playground.mode.kr.title"
+  | "playground.mode.kr.desc"
+  | "playground.mode.initiative.title"
+  | "playground.mode.initiative.desc"
+  | "playground.start"
+  | "playground.clear"
+  | "playground.notSaved"
+  | "playground.draftLabel"
+  | "playground.field.objectiveTitle"
+  | "playground.field.customer"
+  | "playground.field.outcome"
+  | "playground.field.krTitle"
+  | "playground.field.baseline"
+  | "playground.field.current"
+  | "playground.field.target"
+  | "playground.field.initiativeTitle"
+  | "playground.field.owner"
+  | "playground.field.description"
+  | "playground.addInitiative"
+  | "playground.initiativeListEmpty"
+  | "playground.remove"
+  | "playground.metaTitle"
+  | "playground.metaDescription"
   | "report.eyebrow"
   | "report.title"
   | "report.subtitle"
@@ -457,6 +486,35 @@ const en: Record<StringKey, string> = {
 
   // board report
   "report.nav": "Report",
+  "playground.nav": "OKR Playground",
+  "playground.title": "OKR Playground",
+  "playground.intro": "Explore how Objectives, Key Results, and Initiatives work. Your practice drafts are not saved and do not affect the live ICFS OKR dashboard.",
+  "playground.badge": "Practice area · Nothing you do here changes live OKRs",
+  "playground.mode.objective.title": "Create an Objective",
+  "playground.mode.objective.desc": "An objective states, as an outcome, what the chapter wants to achieve for a specific customer.",
+  "playground.mode.kr.title": "Create a Key Result",
+  "playground.mode.kr.desc": "A key result makes progress on an objective measurable, from a baseline towards a target.",
+  "playground.mode.initiative.title": "Ideate Initiatives",
+  "playground.mode.initiative.desc": "An initiative is the concrete piece of work someone takes on to move a key result.",
+  "playground.start": "Start exploring",
+  "playground.clear": "Clear",
+  "playground.notSaved": "Nothing on this page is saved.",
+  "playground.draftLabel": "Practice draft",
+  "playground.field.objectiveTitle": "Objective title",
+  "playground.field.customer": "Customer",
+  "playground.field.outcome": "Outcome statement",
+  "playground.field.krTitle": "Key result title",
+  "playground.field.baseline": "Baseline",
+  "playground.field.current": "Current",
+  "playground.field.target": "Target",
+  "playground.field.initiativeTitle": "Initiative title",
+  "playground.field.owner": "Owner",
+  "playground.field.description": "Short description",
+  "playground.addInitiative": "Add to list",
+  "playground.initiativeListEmpty": "No practice initiatives yet.",
+  "playground.remove": "Remove",
+  "playground.metaTitle": "OKR Playground — The Switzerland Chapter of ICF",
+  "playground.metaDescription": "A public practice area for drafting objectives, key results and initiatives. Nothing is saved and no live data is affected.",
   "report.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · BOARD REPORT",
   "report.title": "OKR board report 2026–2027",
   "report.subtitle": "A printable snapshot of objectives, key results, measurement readiness and the initiative portfolio.",
@@ -709,6 +767,35 @@ const de: Record<StringKey, string> = {
 
   // board report
   "report.nav": "Bericht",
+  "playground.nav": "OKR-Playground",
+  "playground.title": "OKR-Playground",
+  "playground.intro": "Entdecken Sie, wie Objectives, Key Results und Initiativen zusammenspielen. Ihre Übungsentwürfe werden nicht gespeichert und wirken sich nicht auf das ICFS-OKR-Dashboard aus.",
+  "playground.badge": "Übungsbereich · Nichts hier verändert die echten OKR",
+  "playground.mode.objective.title": "Ein Objective erstellen",
+  "playground.mode.objective.desc": "Ein Objective beschreibt als Ergebnis, was das Chapter für eine bestimmte Zielgruppe erreichen will.",
+  "playground.mode.kr.title": "Ein Key Result erstellen",
+  "playground.mode.kr.desc": "Ein Key Result macht den Fortschritt eines Objectives messbar, von einem Ausgangswert bis zum Zielwert.",
+  "playground.mode.initiative.title": "Initiativen entwickeln",
+  "playground.mode.initiative.desc": "Eine Initiative ist die konkrete Arbeit, die jemand übernimmt, um ein Key Result voranzubringen.",
+  "playground.start": "Jetzt ausprobieren",
+  "playground.clear": "Zurücksetzen",
+  "playground.notSaved": "Auf dieser Seite wird nichts gespeichert.",
+  "playground.draftLabel": "Übungsentwurf",
+  "playground.field.objectiveTitle": "Titel des Objectives",
+  "playground.field.customer": "Zielgruppe",
+  "playground.field.outcome": "Ergebnisaussage",
+  "playground.field.krTitle": "Titel des Key Results",
+  "playground.field.baseline": "Ausgangswert",
+  "playground.field.current": "Aktuell",
+  "playground.field.target": "Zielwert",
+  "playground.field.initiativeTitle": "Titel der Initiative",
+  "playground.field.owner": "Verantwortlich",
+  "playground.field.description": "Kurzbeschreibung",
+  "playground.addInitiative": "Zur Liste hinzufügen",
+  "playground.initiativeListEmpty": "Noch keine Übungsinitiativen.",
+  "playground.remove": "Entfernen",
+  "playground.metaTitle": "OKR-Playground — The Switzerland Chapter of ICF",
+  "playground.metaDescription": "Ein öffentlicher Übungsbereich für Objectives, Key Results und Initiativen. Nichts wird gespeichert, echte Daten bleiben unberührt.",
   "report.eyebrow": "DAS SCHWEIZER CHAPTER DER ICF · VORSTANDSBERICHT",
   "report.title": "OKR-Vorstandsbericht 2026–2027",
   "report.subtitle": "Eine druckbare Momentaufnahme von Zielen, Key Results, Messbereitschaft und Initiativenportfolio.",
@@ -960,6 +1047,35 @@ const fr: Record<StringKey, string> = {
 
   // board report
   "report.nav": "Rapport",
+  "playground.nav": "Espace d'essai OKR",
+  "playground.title": "Espace d'essai OKR",
+  "playground.intro": "Découvrez comment fonctionnent les objectifs, les résultats clés et les initiatives. Vos brouillons d'exercice ne sont pas enregistrés et n'affectent pas le tableau de bord OKR d'ICFS.",
+  "playground.badge": "Espace d'essai · Rien ici ne modifie les OKR réels",
+  "playground.mode.objective.title": "Créer un objectif",
+  "playground.mode.objective.desc": "Un objectif exprime, sous forme de résultat, ce que le chapitre veut atteindre pour un public donné.",
+  "playground.mode.kr.title": "Créer un résultat clé",
+  "playground.mode.kr.desc": "Un résultat clé rend mesurable la progression d'un objectif, d'une valeur de départ vers une cible.",
+  "playground.mode.initiative.title": "Imaginer des initiatives",
+  "playground.mode.initiative.desc": "Une initiative est le travail concret qu'une personne prend en charge pour faire avancer un résultat clé.",
+  "playground.start": "Commencer l'exploration",
+  "playground.clear": "Effacer",
+  "playground.notSaved": "Rien n'est enregistré sur cette page.",
+  "playground.draftLabel": "Brouillon d'exercice",
+  "playground.field.objectiveTitle": "Titre de l'objectif",
+  "playground.field.customer": "Public concerné",
+  "playground.field.outcome": "Énoncé du résultat",
+  "playground.field.krTitle": "Titre du résultat clé",
+  "playground.field.baseline": "Valeur de départ",
+  "playground.field.current": "Actuel",
+  "playground.field.target": "Cible",
+  "playground.field.initiativeTitle": "Titre de l'initiative",
+  "playground.field.owner": "Responsable",
+  "playground.field.description": "Brève description",
+  "playground.addInitiative": "Ajouter à la liste",
+  "playground.initiativeListEmpty": "Aucune initiative d'exercice pour l'instant.",
+  "playground.remove": "Retirer",
+  "playground.metaTitle": "Espace d'essai OKR — The Switzerland Chapter of ICF",
+  "playground.metaDescription": "Un espace public pour s'exercer à rédiger objectifs, résultats clés et initiatives. Rien n'est enregistré et aucune donnée réelle n'est touchée.",
   "report.eyebrow": "LE CHAPITRE SUISSE DE L'ICF · RAPPORT AU COMITÉ",
   "report.title": "Rapport OKR au comité 2026–2027",
   "report.subtitle": "Un instantané imprimable des objectifs, des key results, de la maturité de mesure et du portefeuille d'initiatives.",
@@ -1211,6 +1327,35 @@ const it: Record<StringKey, string> = {
 
   // board report
   "report.nav": "Rapporto",
+  "playground.nav": "Spazio di prova OKR",
+  "playground.title": "Spazio di prova OKR",
+  "playground.intro": "Scopri come funzionano obiettivi, risultati chiave e iniziative. Le tue bozze di esercitazione non vengono salvate e non influiscono sulla dashboard OKR di ICFS.",
+  "playground.badge": "Area di prova · Nulla qui modifica gli OKR reali",
+  "playground.mode.objective.title": "Creare un obiettivo",
+  "playground.mode.objective.desc": "Un obiettivo descrive, come risultato, ciò che il chapter vuole ottenere per un pubblico specifico.",
+  "playground.mode.kr.title": "Creare un risultato chiave",
+  "playground.mode.kr.desc": "Un risultato chiave rende misurabile il progresso di un obiettivo, da un valore iniziale a un valore obiettivo.",
+  "playground.mode.initiative.title": "Ideare iniziative",
+  "playground.mode.initiative.desc": "Un'iniziativa è il lavoro concreto che qualcuno assume per far avanzare un risultato chiave.",
+  "playground.start": "Inizia a esplorare",
+  "playground.clear": "Azzera",
+  "playground.notSaved": "Su questa pagina non viene salvato nulla.",
+  "playground.draftLabel": "Bozza di esercitazione",
+  "playground.field.objectiveTitle": "Titolo dell'obiettivo",
+  "playground.field.customer": "Pubblico di riferimento",
+  "playground.field.outcome": "Dichiarazione di risultato",
+  "playground.field.krTitle": "Titolo del risultato chiave",
+  "playground.field.baseline": "Valore iniziale",
+  "playground.field.current": "Attuale",
+  "playground.field.target": "Obiettivo",
+  "playground.field.initiativeTitle": "Titolo dell'iniziativa",
+  "playground.field.owner": "Responsabile",
+  "playground.field.description": "Breve descrizione",
+  "playground.addInitiative": "Aggiungi all'elenco",
+  "playground.initiativeListEmpty": "Nessuna iniziativa di esercitazione.",
+  "playground.remove": "Rimuovi",
+  "playground.metaTitle": "Spazio di prova OKR — The Switzerland Chapter of ICF",
+  "playground.metaDescription": "Un'area pubblica per esercitarsi con obiettivi, risultati chiave e iniziative. Nulla viene salvato e nessun dato reale viene modificato.",
   "report.eyebrow": "IL CHAPTER SVIZZERO DI ICF · RAPPORTO AL CONSIGLIO",
   "report.title": "Rapporto OKR al consiglio 2026–2027",
   "report.subtitle": "Un'istantanea stampabile di obiettivi, key result, maturità della misurazione e portafoglio di iniziative.",
