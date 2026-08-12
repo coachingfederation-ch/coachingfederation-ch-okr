@@ -371,6 +371,7 @@ export type StringKey =
   | "playground.chain.contextObjective"
   | "playground.chain.contextKr"
   | "playground.chain.summary.heading"
+  | "playground.chain.summary.eyebrow"
   | "playground.chain.summary.badge"
   | "playground.chain.summary.initiatives"
   | "playground.chain.edit.objective"
@@ -922,6 +923,7 @@ const en: Record<StringKey, string> = {
   "playground.chain.contextObjective": "Objective",
   "playground.chain.contextKr": "Key Result",
   "playground.chain.summary.heading": "Your practice OKR chain",
+  "playground.chain.summary.eyebrow": "Review summary",
   "playground.chain.summary.badge": "Practice chain · Not saved",
   "playground.chain.summary.initiatives": "Included Initiatives",
   "playground.chain.edit.objective": "Edit Objective",
@@ -1450,6 +1452,7 @@ const de: Record<StringKey, string> = {
   "playground.chain.contextObjective": "Objective",
   "playground.chain.contextKr": "Key Result",
   "playground.chain.summary.heading": "Deine OKR-Übungskette",
+  "playground.chain.summary.eyebrow": "Zusammenfassung",
   "playground.chain.summary.badge": "Übungskette · Nicht gespeichert",
   "playground.chain.summary.initiatives": "Aufgenommene Initiativen",
   "playground.chain.edit.objective": "Objective bearbeiten",
@@ -1980,6 +1983,7 @@ const fr: Record<StringKey, string> = {
   "playground.chain.contextObjective": "Objective",
   "playground.chain.contextKr": "Key Result",
   "playground.chain.summary.heading": "Votre chaîne OKR d’entraînement",
+  "playground.chain.summary.eyebrow": "Résumé de révision",
   "playground.chain.summary.badge": "Chaîne d’entraînement · Non enregistrée",
   "playground.chain.summary.initiatives": "Initiatives retenues",
   "playground.chain.edit.objective": "Modifier l’Objective",
@@ -2507,6 +2511,7 @@ const it: Record<StringKey, string> = {
   "playground.chain.contextObjective": "Objective",
   "playground.chain.contextKr": "Key Result",
   "playground.chain.summary.heading": "La tua catena OKR di pratica",
+  "playground.chain.summary.eyebrow": "Riepilogo di revisione",
   "playground.chain.summary.badge": "Catena di pratica · Non salvata",
   "playground.chain.summary.initiatives": "Iniziative incluse",
   "playground.chain.edit.objective": "Modifica Objective",
