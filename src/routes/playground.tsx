@@ -179,39 +179,43 @@ function PlaygroundPage() {
           </div>
         )}
 
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {MODES.map((m) => {
-            const active = mode === m.id;
-            return (
-              <div
-                key={m.id}
-                className={cn(
-                  "flex flex-col rounded-2xl border bg-card p-5 shadow-soft transition-colors",
-                  active ? "border-primary/50" : "border-border/70",
-                )}
-              >
-                <h3 className="text-lg font-semibold text-foreground">{t(m.titleKey)}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                  {t(m.descKey)}
-                </p>
-                <Button
-                  type="button"
-                  variant={active ? "default" : "outline"}
-                  className="mt-4 h-11 self-start"
-                  aria-pressed={active}
-                  onClick={() => setMode(m.id)}
-                >
-                  {t("playground.start")}
-                </Button>
-              </div>
-            );
-          })}
-        </div>
+        {!chainOpen && (
+          <>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {MODES.map((m) => {
+                const active = mode === m.id;
+                return (
+                  <div
+                    key={m.id}
+                    className={cn(
+                      "flex flex-col rounded-2xl border bg-card p-5 shadow-soft transition-colors",
+                      active ? "border-primary/50" : "border-border/70",
+                    )}
+                  >
+                    <h3 className="text-lg font-semibold text-foreground">{t(m.titleKey)}</h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+                      {t(m.descKey)}
+                    </p>
+                    <Button
+                      type="button"
+                      variant={active ? "default" : "outline"}
+                      className="mt-4 h-11 self-start"
+                      aria-pressed={active}
+                      onClick={() => setMode(m.id)}
+                    >
+                      {t("playground.start")}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
 
-        {mode && activeMode && (
-          <div className="mt-8">
-            <PracticeWizard key={mode} mode={mode} title={t(activeMode.titleKey)} />
-          </div>
+            {mode && activeMode && (
+              <div className="mt-8">
+                <PracticeWizard key={mode} mode={mode} title={t(activeMode.titleKey)} />
+              </div>
+            )}
+          </>
         )}
       </section>
     </main>
