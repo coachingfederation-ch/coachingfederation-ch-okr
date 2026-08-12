@@ -143,7 +143,6 @@ export function PracticeDraftCard({
 
       <QualityChecks mode={mode} statement={statement} answers={answers} />
 
-
       <div className="mt-4 flex flex-wrap gap-2">
         <Button
           type="button"

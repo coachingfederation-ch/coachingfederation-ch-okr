@@ -39,10 +39,7 @@ export function QualityChecks({
       </h6>
       <ul className="mt-2 space-y-2">
         {checks.map((c) => (
-          <li
-            key={c.id}
-            className={cn("rounded-lg border px-3 py-2", TONE_STYLES[c.tone])}
-          >
+          <li key={c.id} className={cn("rounded-lg border px-3 py-2", TONE_STYLES[c.tone])}>
             <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
               <span
                 aria-hidden="true"

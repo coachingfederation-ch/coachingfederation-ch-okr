@@ -157,9 +157,6 @@ export type StringKey =
   | "initiatives.form.unspecified"
   | "initiatives.form.helpersOwnerHint"
   | "initiatives.form.availabilityHint"
-
-
-
   | "common.cancel"
   | "common.create"
   | "common.creating"
@@ -374,8 +371,6 @@ export type StringKey =
   | "report.kr.milestone"
   | "report.kr.due";
 
-
-
 const en: Record<StringKey, string> = {
   "hero.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · OKR DASHBOARD",
   "hero.title": "2026-2027 Objectives and Keyresults with Global Alignment",
@@ -415,12 +410,14 @@ const en: Record<StringKey, string> = {
   "kr.number": "KR number",
   "kr.detailDescription": "Owned outcome and the projects that deliver it.",
   "kr.deleteConfirm": "Delete this key result and its initiatives?",
-  "kr.deleteConfirmBody": "This will permanently delete the key result and its initiatives. This action cannot be undone.",
+  "kr.deleteConfirmBody":
+    "This will permanently delete the key result and its initiatives. This action cannot be undone.",
   "kr.delete": "Delete key result",
   "okr.customer": "Customer:",
   "okr.delete": "Delete OKR set",
   "okr.deleteConfirm": "Delete OKR set",
-  "okr.deleteConfirmBody": "Deleting this OKR set also deletes its key results and initiatives. This action cannot be undone.",
+  "okr.deleteConfirmBody":
+    "Deleting this OKR set also deletes its key results and initiatives. This action cannot be undone.",
   "okr.noKeyResults": "No key results yet.",
   "okr.addKeyResult": "+ Add key result",
   "okr.addOkrSet": "Add OKR set",
@@ -485,13 +482,15 @@ const en: Record<StringKey, string> = {
   "initiatives.form.searchKr": "Search Key Results…",
   "initiative.link": "Link initiatives",
   "initiative.linkDialog.title": "Link initiatives to this KR",
-  "initiative.linkDialog.description": "Choose which portfolio initiatives contribute to this key result. Create new initiatives from the Portfolio.",
+  "initiative.linkDialog.description":
+    "Choose which portfolio initiatives contribute to this key result. Create new initiatives from the Portfolio.",
   "initiative.linkDialog.search": "Search initiatives…",
   "initiative.linkDialog.empty": "No initiatives in the portfolio yet.",
   "initiative.linkDialog.role.none": "None",
   "initiative.linkDialog.role.secondary": "Secondary",
   "initiative.linkDialog.role.primary": "Primary",
-  "initiative.linkDialog.primaryHint": "Setting an initiative as Primary moves it here from its current KR.",
+  "initiative.linkDialog.primaryHint":
+    "Setting an initiative as Primary moves it here from its current KR.",
   "initiative.linkDialog.primaryLocked": "Change the primary link in the target KR's dialog.",
   "initiative.unlinkSecondary": "Remove secondary link",
   "initiative.createInPortfolio": "New initiatives are created in the Portfolio.",
@@ -532,7 +531,6 @@ const en: Record<StringKey, string> = {
   "initiatives.form.unspecified": "Not specified",
   "initiatives.form.helpersOwnerHint": "Helpers join a lead. Consider naming an owner first.",
   "initiatives.form.availabilityHint": "Availability applies while the initiative is planned.",
-
 
   "common.cancel": "Cancel",
   "common.create": "Create",
@@ -579,14 +577,18 @@ const en: Record<StringKey, string> = {
   "report.nav": "Report",
   "playground.nav": "OKR Playground",
   "playground.title": "OKR Playground",
-  "playground.intro": "Explore how Objectives, Key Results, and Initiatives work. Your practice drafts are not saved and do not affect the live ICFS OKR dashboard.",
+  "playground.intro":
+    "Explore how Objectives, Key Results, and Initiatives work. Your practice drafts are not saved and do not affect the live ICFS OKR dashboard.",
   "playground.badge": "Practice area · Nothing you do here changes live OKRs",
   "playground.mode.objective.title": "Create an Objective",
-  "playground.mode.objective.desc": "An objective states, as an outcome, what the chapter wants to achieve for a specific customer.",
+  "playground.mode.objective.desc":
+    "An objective states, as an outcome, what the chapter wants to achieve for a specific customer.",
   "playground.mode.kr.title": "Create a Key Result",
-  "playground.mode.kr.desc": "A key result makes progress on an objective measurable, from a baseline towards a target.",
+  "playground.mode.kr.desc":
+    "A key result makes progress on an objective measurable, from a baseline towards a target.",
   "playground.mode.initiative.title": "Ideate Initiatives",
-  "playground.mode.initiative.desc": "An initiative is the concrete piece of work someone takes on to move a key result.",
+  "playground.mode.initiative.desc":
+    "An initiative is the concrete piece of work someone takes on to move a key result.",
   "playground.start": "Start exploring",
   "playground.clear": "Clear",
   "playground.notSaved": "Nothing on this page is saved.",
@@ -610,20 +612,24 @@ const en: Record<StringKey, string> = {
   "playground.q.initiative.2": "What kind of work could contribute?",
   "playground.q.initiative.3": "What constraints, skills, or capacity matter?",
   "playground.result.heading": "Practice drafts",
-  "playground.result.note": "These examples are generated locally from your answers. Nothing is saved and no live OKR is affected.",
+  "playground.result.note":
+    "These examples are generated locally from your answers. Nothing is saved and no live OKR is affected.",
   "playground.result.tag": "Practice draft",
   "playground.result.objective.a.title": "Outcome-style objective",
   "playground.result.objective.b.title": "End-state phrasing",
   "playground.result.objective.note.title": "What to sharpen",
-  "playground.result.objective.note.body": "Name one customer group, describe an outcome rather than an activity, and make sure the change is visible by the end of the period.",
+  "playground.result.objective.note.body":
+    "Name one customer group, describe an outcome rather than an activity, and make sure the change is visible by the end of the period.",
   "playground.result.kr.metric.title": "Metric-style key result",
   "playground.result.kr.milestone.title": "Milestone-style key result",
   "playground.result.kr.note.title": "Measurement note",
-  "playground.result.kr.note.body": "Set a baseline before the target, agree who reads the number, and state how often it is updated.",
+  "playground.result.kr.note.body":
+    "Set a baseline before the target, agree who reads the number, and state how often it is updated.",
   "playground.result.initiative.a.title": "Initiative idea",
   "playground.result.initiative.b.title": "Smaller first step",
   "playground.result.initiative.note.title": "Commitment and help",
-  "playground.result.initiative.note.body": "Decide whether this is a one-off, recurring or a workstream, and whether it needs a lead, helpers or a specific skill.",
+  "playground.result.initiative.note.body":
+    "Decide whether this is a one-off, recurring or a workstream, and whether it needs a lead, helpers or a specific skill.",
   "playground.tpl.for": "for",
   "playground.tpl.by": "By the end of the period",
   "playground.tpl.who": "Who benefits",
@@ -636,11 +642,14 @@ const en: Record<StringKey, string> = {
   "playground.tpl.constraints": "Constraints",
   "playground.tpl.smallStep": "First step",
   "playground.metaTitle": "OKR Playground — The Switzerland Chapter of ICF",
-  "playground.metaDescription": "A public practice area for drafting objectives, key results and initiatives. Nothing is saved and no live data is affected.",
+  "playground.metaDescription":
+    "A public practice area for drafting objectives, key results and initiatives. Nothing is saved and no live data is affected.",
   "report.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · BOARD REPORT",
   "report.title": "OKR board report 2026–2027",
-  "report.subtitle": "A printable snapshot of objectives, key results, measurement readiness and the initiative portfolio.",
-  "report.generated": "Generated from the ICFS OKR dashboard on {date} at {time}. The dashboard is the system of record. This document is a snapshot and is superseded by the dashboard whenever the two disagree.",
+  "report.subtitle":
+    "A printable snapshot of objectives, key results, measurement readiness and the initiative portfolio.",
+  "report.generated":
+    "Generated from the ICFS OKR dashboard on {date} at {time}. The dashboard is the system of record. This document is a snapshot and is superseded by the dashboard whenever the two disagree.",
   "report.download": "Download PDF",
   "report.summary.objectives": "Objectives",
   "report.summary.keyResults": "Key results",
@@ -648,7 +657,8 @@ const en: Record<StringKey, string> = {
   "report.summary.milestone": "Milestone key results",
   "report.summary.initiatives": "Initiatives",
   "report.readiness.title": "Measurement readiness",
-  "report.readiness.context": "2026 is a baselining year. This report shows how much of the measurement system exists, not how far execution has progressed — progress figures would read zero by design. Baselines are due 30.11.2026.",
+  "report.readiness.context":
+    "2026 is a baselining year. This report shows how much of the measurement system exists, not how far execution has progressed — progress figures would read zero by design. Baselines are due 30.11.2026.",
   "report.readiness.axis": "count of {total} metric key results",
   "report.byObjective.title": "Readiness by objective",
   "report.byObjective.total": "Metric key results",
@@ -658,7 +668,8 @@ const en: Record<StringKey, string> = {
   "report.portfolio.gap": "{count} key results have no initiative: {list}",
   "report.portfolio.noGap": "Every key result has at least one initiative.",
   "report.sfa.title": "Strategic focus area contribution",
-  "report.sfa.legend": "Filled = primary contribution · Outline = secondary contribution · Dash = none",
+  "report.sfa.legend":
+    "Filled = primary contribution · Outline = secondary contribution · Dash = none",
   "report.sfa.pillar": "ICFS pillar",
   "report.sfa.how": "How it contributes",
   "report.table.kr": "KR",
@@ -683,7 +694,6 @@ const en: Record<StringKey, string> = {
   "report.kr.milestone": "Milestone",
   "report.kr.due": "Due {date}",
 
-
   "playground.card.why": "Why this works",
   "playground.card.watch": "Watch for",
   "playground.card.tryAnother": "Try another version",
@@ -699,51 +709,72 @@ const en: Record<StringKey, string> = {
   "playground.quality.refine": "Needs refinement",
   "playground.edu.heading": "How these pieces differ",
   "playground.edu.objective": "An Objective describes meaningful change. It is not a task list.",
-  "playground.edu.kr": "A Key Result describes measurable evidence of progress or success. It is not an activity.",
-  "playground.edu.initiative": "An Initiative is work that may help move a Key Result. It is not the result itself.",
+  "playground.edu.kr":
+    "A Key Result describes measurable evidence of progress or success. It is not an activity.",
+  "playground.edu.initiative":
+    "An Initiative is work that may help move a Key Result. It is not the result itself.",
   "playground.example.heading": "Weak versus improved",
   "playground.example.weakLabel": "Weak",
   "playground.example.weak": "Launch community events",
   "playground.example.feedbackLabel": "Feedback",
-  "playground.example.feedback": "This describes work, so it is an Initiative rather than a Key Result.",
+  "playground.example.feedback":
+    "This describes work, so it is an Initiative rather than a Key Result.",
   "playground.example.improvedLabel": "Improved",
-  "playground.example.improved": "Increase unique member participation in community events by 25% by year-end.",
-  "playground.why.objective-a": "It names the change and the people it is for, so the outcome stays clear.",
-  "playground.why.objective-b": "It describes an end state, which makes progress easier to recognise.",
+  "playground.example.improved":
+    "Increase unique member participation in community events by 25% by year-end.",
+  "playground.why.objective-a":
+    "It names the change and the people it is for, so the outcome stays clear.",
+  "playground.why.objective-b":
+    "It describes an end state, which makes progress easier to recognise.",
   "playground.why.kr-metric": "It points to something observable, so progress can be checked.",
-  "playground.why.kr-milestone": "It fixes a visible step, which helps when no number is available yet.",
+  "playground.why.kr-milestone":
+    "It fixes a visible step, which helps when no number is available yet.",
   "playground.why.initiative-a": "It links concrete work to the result it is meant to move.",
   "playground.why.initiative-b": "It is small enough to start, which keeps momentum realistic.",
   "playground.watch.objective-a": "Check that this is an outcome and not a list of activities.",
   "playground.watch.objective-b": "Make sure the end state is visible by the end of the period.",
   "playground.watch.kr-metric": "Add a baseline and a target, and agree who reads the number.",
-  "playground.watch.kr-milestone": "A milestone should still show evidence, not only that work happened.",
-  "playground.watch.initiative-a": "An initiative is not the result itself; keep the key result separate.",
+  "playground.watch.kr-milestone":
+    "A milestone should still show evidence, not only that work happened.",
+  "playground.watch.initiative-a":
+    "An initiative is not the result itself; keep the key result separate.",
   "playground.watch.initiative-b": "Name who takes it on, otherwise the step stays an idea.",
   "playground.check.heading": "Quality checks",
-  "playground.check.disclaimer": "These checks are simple pattern hints, not a verdict. Use your judgement.",
+  "playground.check.disclaimer":
+    "These checks are simple pattern hints, not a verdict. Use your judgement.",
   "playground.check.obj.task.title": "Possible task language",
-  "playground.check.obj.task.body": "Words such as launch, build, create, run or deliver often describe work. An Objective usually describes the change you want to see.",
+  "playground.check.obj.task.body":
+    "Words such as launch, build, create, run or deliver often describe work. An Objective usually describes the change you want to see.",
   "playground.check.obj.multi.title": "Possibly several changes at once",
-  "playground.check.obj.multi.body": "This draft seems to join several changes. Consider splitting it so each Objective carries one clear intent.",
+  "playground.check.obj.multi.body":
+    "This draft seems to join several changes. Consider splitting it so each Objective carries one clear intent.",
   "playground.check.obj.beneficiary.title": "Beneficiary not evident",
-  "playground.check.obj.beneficiary.body": "No audience or stakeholder is visible. Naming who benefits, as the Customer of this Objective, makes the intent easier to share.",
+  "playground.check.obj.beneficiary.body":
+    "No audience or stakeholder is visible. Naming who benefits, as the Customer of this Objective, makes the intent easier to share.",
   "playground.check.kr.activity.title": "Possible activity language",
-  "playground.check.kr.activity.body": "Words such as launch, create, hold, run, develop, publish or organise usually describe an Initiative. A Key Result describes the evidence of progress.",
+  "playground.check.kr.activity.body":
+    "Words such as launch, create, hold, run, develop, publish or organise usually describe an Initiative. A Key Result describes the evidence of progress.",
   "playground.check.kr.measure.title": "Measurement logic unclear",
-  "playground.check.kr.measure.body": "No number, percentage, count, score, date, milestone or observable evidence is visible. Consider how progress would be recognised.",
+  "playground.check.kr.measure.body":
+    "No number, percentage, count, score, date, milestone or observable evidence is visible. Consider how progress would be recognised.",
   "playground.check.kr.baseline.title": "Baseline missing",
-  "playground.check.kr.baseline.body": "No starting point was entered. A Baseline makes the Target meaningful.",
+  "playground.check.kr.baseline.body":
+    "No starting point was entered. A Baseline makes the Target meaningful.",
   "playground.check.kr.instrument.title": "Instrument not defined",
-  "playground.check.kr.instrument.body": "No evidence source or observation method was entered. Naming the Instrument shows where the value will come from.",
+  "playground.check.kr.instrument.body":
+    "No evidence source or observation method was entered. Naming the Instrument shows where the value will come from.",
   "playground.check.init.target.title": "Looks like a measurable target",
-  "playground.check.init.target.body": "This reads like a Key Result rather than work. An Initiative describes what will be done to move a Key Result.",
+  "playground.check.init.target.body":
+    "This reads like a Key Result rather than work. An Initiative describes what will be done to move a Key Result.",
   "playground.check.init.parent.title": "Parent Key Result missing",
-  "playground.check.init.parent.body": "No Key Result was named. Linking an Initiative to a Key Result keeps the contribution visible.",
+  "playground.check.init.parent.body":
+    "No Key Result was named. Linking an Initiative to a Key Result keeps the contribution visible.",
   "playground.check.init.owner.title": "Owner or effort not stated",
-  "playground.check.init.owner.body": "No Steward, role or effort estimate is visible. A rough owner and size make the work easier to plan.",
+  "playground.check.init.owner.body":
+    "No Steward, role or effort estimate is visible. A rough owner and size make the work easier to plan.",
   "playground.check.ok.title": "No issues detected",
-  "playground.check.ok.body": "These simple checks found nothing to flag. That is a good sign, not a guarantee of quality.",
+  "playground.check.ok.body":
+    "These simple checks found nothing to flag. That is a good sign, not a guarantee of quality.",
 };
 
 const de: Record<StringKey, string> = {
@@ -784,15 +815,16 @@ const de: Record<StringKey, string> = {
   "kr.lead": "Verantwortlich",
   "kr.openDetails": "Details öffnen →",
   "kr.number": "KR-Nummer",
-  "kr.detailDescription":
-    "Verantwortetes Ergebnis und die Projekte, die es liefern.",
+  "kr.detailDescription": "Verantwortetes Ergebnis und die Projekte, die es liefern.",
   "kr.deleteConfirm": "Dieses Key Result und seine Initiativen löschen?",
-  "kr.deleteConfirmBody": "Das Key Result und seine Initiativen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "kr.deleteConfirmBody":
+    "Das Key Result und seine Initiativen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
   "kr.delete": "Key Result löschen",
   "okr.customer": "Kunde:",
   "okr.delete": "OKR-Set löschen",
   "okr.deleteConfirm": "OKR-Set löschen",
-  "okr.deleteConfirmBody": "Mit dem OKR-Set werden auch seine Key Results und Initiativen gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "okr.deleteConfirmBody":
+    "Mit dem OKR-Set werden auch seine Key Results und Initiativen gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
   "okr.noKeyResults": "Noch keine Key Results.",
   "okr.addKeyResult": "+ Key Result hinzufügen",
   "okr.addOkrSet": "OKR-Set hinzufügen",
@@ -857,13 +889,15 @@ const de: Record<StringKey, string> = {
   "initiatives.form.searchKr": "Key Results suchen…",
   "initiative.link": "Initiativen verknüpfen",
   "initiative.linkDialog.title": "Initiativen mit diesem KR verknüpfen",
-  "initiative.linkDialog.description": "Wähle, welche Portfolio-Initiativen zu diesem Key Result beitragen. Neue Initiativen werden im Portfolio erstellt.",
+  "initiative.linkDialog.description":
+    "Wähle, welche Portfolio-Initiativen zu diesem Key Result beitragen. Neue Initiativen werden im Portfolio erstellt.",
   "initiative.linkDialog.search": "Initiativen suchen…",
   "initiative.linkDialog.empty": "Noch keine Initiativen im Portfolio.",
   "initiative.linkDialog.role.none": "Keine",
   "initiative.linkDialog.role.secondary": "Sekundär",
   "initiative.linkDialog.role.primary": "Primär",
-  "initiative.linkDialog.primaryHint": "Wird eine Initiative als Primär gesetzt, wechselt sie von ihrem bisherigen KR hierher.",
+  "initiative.linkDialog.primaryHint":
+    "Wird eine Initiative als Primär gesetzt, wechselt sie von ihrem bisherigen KR hierher.",
   "initiative.linkDialog.primaryLocked": "Ändere die primäre Verknüpfung im Dialog des Ziel-KRs.",
   "initiative.unlinkSecondary": "Sekundäre Verknüpfung entfernen",
   "initiative.createInPortfolio": "Neue Initiativen werden im Portfolio erstellt.",
@@ -902,9 +936,10 @@ const de: Record<StringKey, string> = {
   "initiatives.form.skillNote": "Welche Kompetenz?",
   "initiatives.form.skillNotePlaceholder": "z. B. Grafikdesign, juristische Pr\u00fcfung",
   "initiatives.form.unspecified": "Nicht angegeben",
-  "initiatives.form.helpersOwnerHint": "Mitwirkende unterst\u00fctzen eine Leitung. Bitte zuerst eine verantwortliche Person eintragen.",
-  "initiatives.form.availabilityHint": "Die Verf\u00fcgbarkeit gilt, solange die Initiative geplant ist.",
-
+  "initiatives.form.helpersOwnerHint":
+    "Mitwirkende unterst\u00fctzen eine Leitung. Bitte zuerst eine verantwortliche Person eintragen.",
+  "initiatives.form.availabilityHint":
+    "Die Verf\u00fcgbarkeit gilt, solange die Initiative geplant ist.",
 
   "common.cancel": "Abbrechen",
   "common.create": "Erstellen",
@@ -951,14 +986,18 @@ const de: Record<StringKey, string> = {
   "report.nav": "Bericht",
   "playground.nav": "OKR-Playground",
   "playground.title": "OKR-Playground",
-  "playground.intro": "Entdecken Sie, wie Objectives, Key Results und Initiativen zusammenspielen. Ihre Übungsentwürfe werden nicht gespeichert und wirken sich nicht auf das ICFS-OKR-Dashboard aus.",
+  "playground.intro":
+    "Entdecken Sie, wie Objectives, Key Results und Initiativen zusammenspielen. Ihre Übungsentwürfe werden nicht gespeichert und wirken sich nicht auf das ICFS-OKR-Dashboard aus.",
   "playground.badge": "Übungsbereich · Nichts hier verändert die echten OKR",
   "playground.mode.objective.title": "Ein Objective erstellen",
-  "playground.mode.objective.desc": "Ein Objective beschreibt als Ergebnis, was das Chapter für eine bestimmte Zielgruppe erreichen will.",
+  "playground.mode.objective.desc":
+    "Ein Objective beschreibt als Ergebnis, was das Chapter für eine bestimmte Zielgruppe erreichen will.",
   "playground.mode.kr.title": "Ein Key Result erstellen",
-  "playground.mode.kr.desc": "Ein Key Result macht den Fortschritt eines Objectives messbar, von einem Ausgangswert bis zum Zielwert.",
+  "playground.mode.kr.desc":
+    "Ein Key Result macht den Fortschritt eines Objectives messbar, von einem Ausgangswert bis zum Zielwert.",
   "playground.mode.initiative.title": "Initiativen entwickeln",
-  "playground.mode.initiative.desc": "Eine Initiative ist die konkrete Arbeit, die jemand übernimmt, um ein Key Result voranzubringen.",
+  "playground.mode.initiative.desc":
+    "Eine Initiative ist die konkrete Arbeit, die jemand übernimmt, um ein Key Result voranzubringen.",
   "playground.start": "Jetzt ausprobieren",
   "playground.clear": "Zurücksetzen",
   "playground.notSaved": "Auf dieser Seite wird nichts gespeichert.",
@@ -980,22 +1019,27 @@ const de: Record<StringKey, string> = {
   "playground.q.kr.3": "Wie liesse sich das messen oder beobachten?",
   "playground.q.initiative.1": "Welches Key Result soll diese Initiative voranbringen?",
   "playground.q.initiative.2": "Welche Art von Arbeit könnte dazu beitragen?",
-  "playground.q.initiative.3": "Welche Rahmenbedingungen, Fähigkeiten oder Kapazitäten sind wichtig?",
+  "playground.q.initiative.3":
+    "Welche Rahmenbedingungen, Fähigkeiten oder Kapazitäten sind wichtig?",
   "playground.result.heading": "Übungsentwürfe",
-  "playground.result.note": "Diese Beispiele entstehen lokal aus Ihren Antworten. Nichts wird gespeichert, echte OKR bleiben unberührt.",
+  "playground.result.note":
+    "Diese Beispiele entstehen lokal aus Ihren Antworten. Nichts wird gespeichert, echte OKR bleiben unberührt.",
   "playground.result.tag": "Übungsentwurf",
   "playground.result.objective.a.title": "Objective als Ergebnis formuliert",
   "playground.result.objective.b.title": "Formulierung als Zielzustand",
   "playground.result.objective.note.title": "Was noch schärfer werden kann",
-  "playground.result.objective.note.body": "Nennen Sie eine Zielgruppe, beschreiben Sie ein Ergebnis statt einer Aktivität und stellen Sie sicher, dass die Veränderung bis zum Ende der Periode sichtbar ist.",
+  "playground.result.objective.note.body":
+    "Nennen Sie eine Zielgruppe, beschreiben Sie ein Ergebnis statt einer Aktivität und stellen Sie sicher, dass die Veränderung bis zum Ende der Periode sichtbar ist.",
   "playground.result.kr.metric.title": "Key Result mit Kennzahl",
   "playground.result.kr.milestone.title": "Key Result als Meilenstein",
   "playground.result.kr.note.title": "Hinweis zur Messung",
-  "playground.result.kr.note.body": "Legen Sie zuerst einen Ausgangswert fest, klären Sie, wer die Zahl liest, und halten Sie fest, wie oft sie aktualisiert wird.",
+  "playground.result.kr.note.body":
+    "Legen Sie zuerst einen Ausgangswert fest, klären Sie, wer die Zahl liest, und halten Sie fest, wie oft sie aktualisiert wird.",
   "playground.result.initiative.a.title": "Idee für eine Initiative",
   "playground.result.initiative.b.title": "Kleinerer erster Schritt",
   "playground.result.initiative.note.title": "Aufwand und Unterstützung",
-  "playground.result.initiative.note.body": "Entscheiden Sie, ob es sich um eine einmalige, wiederkehrende oder laufende Arbeit handelt und ob eine Leitung, Mithilfe oder eine bestimmte Fähigkeit nötig ist.",
+  "playground.result.initiative.note.body":
+    "Entscheiden Sie, ob es sich um eine einmalige, wiederkehrende oder laufende Arbeit handelt und ob eine Leitung, Mithilfe oder eine bestimmte Fähigkeit nötig ist.",
   "playground.tpl.for": "für",
   "playground.tpl.by": "Bis zum Ende der Periode",
   "playground.tpl.who": "Zielgruppe",
@@ -1008,11 +1052,14 @@ const de: Record<StringKey, string> = {
   "playground.tpl.constraints": "Rahmenbedingungen",
   "playground.tpl.smallStep": "Erster Schritt",
   "playground.metaTitle": "OKR-Playground — The Switzerland Chapter of ICF",
-  "playground.metaDescription": "Ein öffentlicher Übungsbereich für Objectives, Key Results und Initiativen. Nichts wird gespeichert, echte Daten bleiben unberührt.",
+  "playground.metaDescription":
+    "Ein öffentlicher Übungsbereich für Objectives, Key Results und Initiativen. Nichts wird gespeichert, echte Daten bleiben unberührt.",
   "report.eyebrow": "DAS SCHWEIZER CHAPTER DER ICF · VORSTANDSBERICHT",
   "report.title": "OKR-Vorstandsbericht 2026–2027",
-  "report.subtitle": "Eine druckbare Momentaufnahme von Zielen, Key Results, Messbereitschaft und Initiativenportfolio.",
-  "report.generated": "Erstellt aus dem ICFS-OKR-Dashboard am {date} um {time}. Das Dashboard ist die massgebliche Quelle. Dieses Dokument ist eine Momentaufnahme und wird durch das Dashboard ersetzt, sobald beide voneinander abweichen.",
+  "report.subtitle":
+    "Eine druckbare Momentaufnahme von Zielen, Key Results, Messbereitschaft und Initiativenportfolio.",
+  "report.generated":
+    "Erstellt aus dem ICFS-OKR-Dashboard am {date} um {time}. Das Dashboard ist die massgebliche Quelle. Dieses Dokument ist eine Momentaufnahme und wird durch das Dashboard ersetzt, sobald beide voneinander abweichen.",
   "report.download": "PDF herunterladen",
   "report.summary.objectives": "Ziele",
   "report.summary.keyResults": "Key Results",
@@ -1020,7 +1067,8 @@ const de: Record<StringKey, string> = {
   "report.summary.milestone": "Milestone-Key-Results",
   "report.summary.initiatives": "Initiativen",
   "report.readiness.title": "Messbereitschaft",
-  "report.readiness.context": "2026 ist ein Baselining-Jahr. Dieser Bericht zeigt, wie weit das Messsystem aufgebaut ist, nicht den Umsetzungsfortschritt — Fortschrittswerte wären bewusst null. Baselines sind bis 30.11.2026 fällig.",
+  "report.readiness.context":
+    "2026 ist ein Baselining-Jahr. Dieser Bericht zeigt, wie weit das Messsystem aufgebaut ist, nicht den Umsetzungsfortschritt — Fortschrittswerte wären bewusst null. Baselines sind bis 30.11.2026 fällig.",
   "report.readiness.axis": "Anzahl von {total} metrischen Key Results",
   "report.byObjective.title": "Bereitschaft nach Ziel",
   "report.byObjective.total": "Metrische Key Results",
@@ -1055,7 +1103,6 @@ const de: Record<StringKey, string> = {
   "report.kr.milestone": "Milestone",
   "report.kr.due": "Fällig {date}",
 
-
   "playground.card.why": "Warum das funktioniert",
   "playground.card.watch": "Worauf zu achten ist",
   "playground.card.tryAnother": "Andere Version zeigen",
@@ -1070,52 +1117,80 @@ const de: Record<StringKey, string> = {
   "playground.quality.usable": "Mit Anpassungen nutzbar",
   "playground.quality.refine": "Muss geschärft werden",
   "playground.edu.heading": "Wie sich diese Bausteine unterscheiden",
-  "playground.edu.objective": "Ein Objective beschreibt eine bedeutsame Veränderung. Es ist keine Aufgabenliste.",
-  "playground.edu.kr": "Ein Key Result beschreibt messbare Belege für Fortschritt oder Erfolg. Es ist keine Aktivität.",
-  "playground.edu.initiative": "Eine Initiative ist Arbeit, die ein Key Result voranbringen kann. Sie ist nicht das Ergebnis selbst.",
+  "playground.edu.objective":
+    "Ein Objective beschreibt eine bedeutsame Veränderung. Es ist keine Aufgabenliste.",
+  "playground.edu.kr":
+    "Ein Key Result beschreibt messbare Belege für Fortschritt oder Erfolg. Es ist keine Aktivität.",
+  "playground.edu.initiative":
+    "Eine Initiative ist Arbeit, die ein Key Result voranbringen kann. Sie ist nicht das Ergebnis selbst.",
   "playground.example.heading": "Schwach gegenüber verbessert",
   "playground.example.weakLabel": "Schwach",
   "playground.example.weak": "Community-Events durchführen",
   "playground.example.feedbackLabel": "Rückmeldung",
-  "playground.example.feedback": "Das beschreibt Arbeit und ist damit eine Initiative und kein Key Result.",
+  "playground.example.feedback":
+    "Das beschreibt Arbeit und ist damit eine Initiative und kein Key Result.",
   "playground.example.improvedLabel": "Verbessert",
-  "playground.example.improved": "Die Zahl der teilnehmenden Mitglieder an Community-Events bis Jahresende um 25 % steigern.",
-  "playground.why.objective-a": "Es benennt die Veränderung und die Zielgruppe, dadurch bleibt das Ergebnis klar.",
-  "playground.why.objective-b": "Es beschreibt einen Zielzustand, dadurch lässt sich Fortschritt leichter erkennen.",
-  "playground.why.kr-metric": "Es verweist auf etwas Beobachtbares, dadurch ist Fortschritt überprüfbar.",
-  "playground.why.kr-milestone": "Es hält einen sichtbaren Schritt fest, was hilft, wenn noch keine Zahl vorliegt.",
-  "playground.why.initiative-a": "Es verbindet konkrete Arbeit mit dem Ergebnis, das sie bewegen soll.",
+  "playground.example.improved":
+    "Die Zahl der teilnehmenden Mitglieder an Community-Events bis Jahresende um 25 % steigern.",
+  "playground.why.objective-a":
+    "Es benennt die Veränderung und die Zielgruppe, dadurch bleibt das Ergebnis klar.",
+  "playground.why.objective-b":
+    "Es beschreibt einen Zielzustand, dadurch lässt sich Fortschritt leichter erkennen.",
+  "playground.why.kr-metric":
+    "Es verweist auf etwas Beobachtbares, dadurch ist Fortschritt überprüfbar.",
+  "playground.why.kr-milestone":
+    "Es hält einen sichtbaren Schritt fest, was hilft, wenn noch keine Zahl vorliegt.",
+  "playground.why.initiative-a":
+    "Es verbindet konkrete Arbeit mit dem Ergebnis, das sie bewegen soll.",
   "playground.why.initiative-b": "Es ist klein genug, um zu starten, und bleibt damit realistisch.",
-  "playground.watch.objective-a": "Prüfen Sie, ob das ein Ergebnis ist und keine Liste von Aktivitäten.",
-  "playground.watch.objective-b": "Stellen Sie sicher, dass der Zielzustand bis zum Ende der Periode sichtbar ist.",
-  "playground.watch.kr-metric": "Ergänzen Sie Ausgangswert und Zielwert und klären Sie, wer die Zahl liest.",
-  "playground.watch.kr-milestone": "Auch ein Meilenstein sollte Belege zeigen, nicht nur, dass gearbeitet wurde.",
-  "playground.watch.initiative-a": "Eine Initiative ist nicht das Ergebnis selbst; halten Sie das Key Result getrennt.",
-  "playground.watch.initiative-b": "Benennen Sie, wer das übernimmt, sonst bleibt der Schritt eine Idee.",
+  "playground.watch.objective-a":
+    "Prüfen Sie, ob das ein Ergebnis ist und keine Liste von Aktivitäten.",
+  "playground.watch.objective-b":
+    "Stellen Sie sicher, dass der Zielzustand bis zum Ende der Periode sichtbar ist.",
+  "playground.watch.kr-metric":
+    "Ergänzen Sie Ausgangswert und Zielwert und klären Sie, wer die Zahl liest.",
+  "playground.watch.kr-milestone":
+    "Auch ein Meilenstein sollte Belege zeigen, nicht nur, dass gearbeitet wurde.",
+  "playground.watch.initiative-a":
+    "Eine Initiative ist nicht das Ergebnis selbst; halten Sie das Key Result getrennt.",
+  "playground.watch.initiative-b":
+    "Benennen Sie, wer das übernimmt, sonst bleibt der Schritt eine Idee.",
   "playground.check.heading": "Qualitätsprüfungen",
-  "playground.check.disclaimer": "Diese Prüfungen sind einfache Muster-Hinweise, kein Urteil. Nutzen Sie Ihr eigenes Urteilsvermögen.",
+  "playground.check.disclaimer":
+    "Diese Prüfungen sind einfache Muster-Hinweise, kein Urteil. Nutzen Sie Ihr eigenes Urteilsvermögen.",
   "playground.check.obj.task.title": "Möglicherweise Aufgaben-Sprache",
-  "playground.check.obj.task.body": "Wörter wie lancieren, aufbauen, erstellen, durchführen oder liefern beschreiben oft Arbeit. Ein Objective beschreibt in der Regel die angestrebte Veränderung.",
+  "playground.check.obj.task.body":
+    "Wörter wie lancieren, aufbauen, erstellen, durchführen oder liefern beschreiben oft Arbeit. Ein Objective beschreibt in der Regel die angestrebte Veränderung.",
   "playground.check.obj.multi.title": "Möglicherweise mehrere Veränderungen zugleich",
-  "playground.check.obj.multi.body": "Dieser Entwurf verbindet offenbar mehrere Veränderungen. Erwägen Sie eine Aufteilung, damit jedes Objective eine klare Absicht trägt.",
+  "playground.check.obj.multi.body":
+    "Dieser Entwurf verbindet offenbar mehrere Veränderungen. Erwägen Sie eine Aufteilung, damit jedes Objective eine klare Absicht trägt.",
   "playground.check.obj.beneficiary.title": "Zielgruppe nicht erkennbar",
-  "playground.check.obj.beneficiary.body": "Es ist keine Zielgruppe oder Anspruchsgruppe sichtbar. Wer als Customer profitiert, macht die Absicht leichter vermittelbar.",
+  "playground.check.obj.beneficiary.body":
+    "Es ist keine Zielgruppe oder Anspruchsgruppe sichtbar. Wer als Customer profitiert, macht die Absicht leichter vermittelbar.",
   "playground.check.kr.activity.title": "Möglicherweise Aktivitäts-Sprache",
-  "playground.check.kr.activity.body": "Wörter wie lancieren, erstellen, durchführen, entwickeln, veröffentlichen oder organisieren beschreiben meist eine Initiative. Ein Key Result beschreibt den Beleg für Fortschritt.",
+  "playground.check.kr.activity.body":
+    "Wörter wie lancieren, erstellen, durchführen, entwickeln, veröffentlichen oder organisieren beschreiben meist eine Initiative. Ein Key Result beschreibt den Beleg für Fortschritt.",
   "playground.check.kr.measure.title": "Messlogik unklar",
-  "playground.check.kr.measure.body": "Es ist keine Zahl, kein Prozentwert, keine Anzahl, kein Score, kein Datum, kein Meilenstein und kein beobachtbarer Beleg sichtbar. Überlegen Sie, woran Fortschritt erkennbar wäre.",
+  "playground.check.kr.measure.body":
+    "Es ist keine Zahl, kein Prozentwert, keine Anzahl, kein Score, kein Datum, kein Meilenstein und kein beobachtbarer Beleg sichtbar. Überlegen Sie, woran Fortschritt erkennbar wäre.",
   "playground.check.kr.baseline.title": "Baseline fehlt",
-  "playground.check.kr.baseline.body": "Es wurde kein Ausgangspunkt erfasst. Eine Baseline macht das Target aussagekräftig.",
+  "playground.check.kr.baseline.body":
+    "Es wurde kein Ausgangspunkt erfasst. Eine Baseline macht das Target aussagekräftig.",
   "playground.check.kr.instrument.title": "Instrument nicht definiert",
-  "playground.check.kr.instrument.body": "Es wurde keine Belegquelle oder Beobachtungsmethode erfasst. Ein benanntes Instrument zeigt, woher der Wert stammt.",
+  "playground.check.kr.instrument.body":
+    "Es wurde keine Belegquelle oder Beobachtungsmethode erfasst. Ein benanntes Instrument zeigt, woher der Wert stammt.",
   "playground.check.init.target.title": "Wirkt wie ein messbares Ziel",
-  "playground.check.init.target.body": "Das liest sich eher wie ein Key Result als wie Arbeit. Eine Initiative beschreibt, was getan wird, um ein Key Result zu bewegen.",
+  "playground.check.init.target.body":
+    "Das liest sich eher wie ein Key Result als wie Arbeit. Eine Initiative beschreibt, was getan wird, um ein Key Result zu bewegen.",
   "playground.check.init.parent.title": "Übergeordnetes Key Result fehlt",
-  "playground.check.init.parent.body": "Es wurde kein Key Result genannt. Die Verknüpfung hält den Beitrag der Initiative sichtbar.",
+  "playground.check.init.parent.body":
+    "Es wurde kein Key Result genannt. Die Verknüpfung hält den Beitrag der Initiative sichtbar.",
   "playground.check.init.owner.title": "Verantwortung oder Aufwand nicht genannt",
-  "playground.check.init.owner.body": "Es sind weder Steward oder Rolle noch eine Aufwandsschätzung sichtbar. Eine grobe Zuordnung erleichtert die Planung.",
+  "playground.check.init.owner.body":
+    "Es sind weder Steward oder Rolle noch eine Aufwandsschätzung sichtbar. Eine grobe Zuordnung erleichtert die Planung.",
   "playground.check.ok.title": "Keine Auffälligkeiten gefunden",
-  "playground.check.ok.body": "Diese einfachen Prüfungen haben nichts markiert. Das ist ein gutes Zeichen, aber keine Qualitätsgarantie.",
+  "playground.check.ok.body":
+    "Diese einfachen Prüfungen haben nichts markiert. Das ist ein gutes Zeichen, aber keine Qualitätsgarantie.",
 };
 
 const fr: Record<StringKey, string> = {
@@ -1158,12 +1233,14 @@ const fr: Record<StringKey, string> = {
   "kr.number": "Numéro KR",
   "kr.detailDescription": "Résultat piloté et projets qui le livrent.",
   "kr.deleteConfirm": "Supprimer ce résultat clé et ses initiatives ?",
-  "kr.deleteConfirmBody": "Le résultat clé et ses initiatives seront définitivement supprimés. Cette action est irréversible.",
+  "kr.deleteConfirmBody":
+    "Le résultat clé et ses initiatives seront définitivement supprimés. Cette action est irréversible.",
   "kr.delete": "Supprimer le résultat clé",
   "okr.customer": "Client :",
   "okr.delete": "Supprimer l'ensemble OKR",
   "okr.deleteConfirm": "Supprimer l'ensemble OKR",
-  "okr.deleteConfirmBody": "La suppression de l'ensemble OKR supprime aussi ses résultats clés et ses initiatives. Cette action est irréversible.",
+  "okr.deleteConfirmBody":
+    "La suppression de l'ensemble OKR supprime aussi ses résultats clés et ses initiatives. Cette action est irréversible.",
   "okr.noKeyResults": "Aucun résultat clé pour le moment.",
   "okr.addKeyResult": "+ Ajouter un résultat clé",
   "okr.addOkrSet": "Ajouter un ensemble OKR",
@@ -1228,13 +1305,15 @@ const fr: Record<StringKey, string> = {
   "initiatives.form.searchKr": "Rechercher des résultats clés…",
   "initiative.link": "Lier des initiatives",
   "initiative.linkDialog.title": "Lier des initiatives à ce KR",
-  "initiative.linkDialog.description": "Choisissez quelles initiatives du portefeuille contribuent à ce résultat clé. Les nouvelles initiatives se créent dans le Portefeuille.",
+  "initiative.linkDialog.description":
+    "Choisissez quelles initiatives du portefeuille contribuent à ce résultat clé. Les nouvelles initiatives se créent dans le Portefeuille.",
   "initiative.linkDialog.search": "Rechercher des initiatives…",
   "initiative.linkDialog.empty": "Aucune initiative dans le portefeuille.",
   "initiative.linkDialog.role.none": "Aucun",
   "initiative.linkDialog.role.secondary": "Secondaire",
   "initiative.linkDialog.role.primary": "Principal",
-  "initiative.linkDialog.primaryHint": "Définir une initiative comme Principale la déplace ici depuis son KR actuel.",
+  "initiative.linkDialog.primaryHint":
+    "Définir une initiative comme Principale la déplace ici depuis son KR actuel.",
   "initiative.linkDialog.primaryLocked": "Modifiez le lien principal dans le dialogue du KR cible.",
   "initiative.unlinkSecondary": "Retirer le lien secondaire",
   "initiative.createInPortfolio": "Les nouvelles initiatives se créent dans le Portefeuille.",
@@ -1263,19 +1342,22 @@ const fr: Record<StringKey, string> = {
   "initiative.commitment.recurring": "R\u00e9current, quelques heures par mois",
   "initiative.commitment.workstream": "Chantier, pilotage sur plusieurs mois",
   "initiative.helpNeeded.lead": "Cherche une personne responsable",
-  "initiative.helpNeeded.helpers": "Cherche des renforts aux c\u00f4t\u00e9s de la personne responsable",
+  "initiative.helpNeeded.helpers":
+    "Cherche des renforts aux c\u00f4t\u00e9s de la personne responsable",
   "initiative.helpNeeded.skill": "Cherche une comp\u00e9tence sp\u00e9cifique",
   "initiatives.form.availability": "Disponibilit\u00e9",
   "initiatives.form.blockedReason": "Qu'est-ce qui bloque ?",
-  "initiatives.form.blockedReasonPlaceholder": "p. ex. en attente d'une d\u00e9cision du comit\u00e9",
+  "initiatives.form.blockedReasonPlaceholder":
+    "p. ex. en attente d'une d\u00e9cision du comit\u00e9",
   "initiatives.form.commitment": "Engagement",
   "initiatives.form.helpNeeded": "Aide recherch\u00e9e",
   "initiatives.form.skillNote": "Quelle comp\u00e9tence ?",
   "initiatives.form.skillNotePlaceholder": "p. ex. graphisme, relecture juridique",
   "initiatives.form.unspecified": "Non pr\u00e9cis\u00e9",
-  "initiatives.form.helpersOwnerHint": "Les renforts rejoignent une personne responsable. Indiquez-en une d'abord.",
-  "initiatives.form.availabilityHint": "La disponibilit\u00e9 s'applique tant que l'initiative est planifi\u00e9e.",
-
+  "initiatives.form.helpersOwnerHint":
+    "Les renforts rejoignent une personne responsable. Indiquez-en une d'abord.",
+  "initiatives.form.availabilityHint":
+    "La disponibilit\u00e9 s'applique tant que l'initiative est planifi\u00e9e.",
 
   "common.cancel": "Annuler",
   "common.create": "Créer",
@@ -1322,14 +1404,18 @@ const fr: Record<StringKey, string> = {
   "report.nav": "Rapport",
   "playground.nav": "Espace d'essai OKR",
   "playground.title": "Espace d'essai OKR",
-  "playground.intro": "Découvrez comment fonctionnent les objectifs, les résultats clés et les initiatives. Vos brouillons d'exercice ne sont pas enregistrés et n'affectent pas le tableau de bord OKR d'ICFS.",
+  "playground.intro":
+    "Découvrez comment fonctionnent les objectifs, les résultats clés et les initiatives. Vos brouillons d'exercice ne sont pas enregistrés et n'affectent pas le tableau de bord OKR d'ICFS.",
   "playground.badge": "Espace d'essai · Rien ici ne modifie les OKR réels",
   "playground.mode.objective.title": "Créer un objectif",
-  "playground.mode.objective.desc": "Un objectif exprime, sous forme de résultat, ce que le chapitre veut atteindre pour un public donné.",
+  "playground.mode.objective.desc":
+    "Un objectif exprime, sous forme de résultat, ce que le chapitre veut atteindre pour un public donné.",
   "playground.mode.kr.title": "Créer un résultat clé",
-  "playground.mode.kr.desc": "Un résultat clé rend mesurable la progression d'un objectif, d'une valeur de départ vers une cible.",
+  "playground.mode.kr.desc":
+    "Un résultat clé rend mesurable la progression d'un objectif, d'une valeur de départ vers une cible.",
   "playground.mode.initiative.title": "Imaginer des initiatives",
-  "playground.mode.initiative.desc": "Une initiative est le travail concret qu'une personne prend en charge pour faire avancer un résultat clé.",
+  "playground.mode.initiative.desc":
+    "Une initiative est le travail concret qu'une personne prend en charge pour faire avancer un résultat clé.",
   "playground.start": "Commencer l'exploration",
   "playground.clear": "Effacer",
   "playground.notSaved": "Rien n'est enregistré sur cette page.",
@@ -1353,20 +1439,24 @@ const fr: Record<StringKey, string> = {
   "playground.q.initiative.2": "Quel type de travail pourrait y contribuer ?",
   "playground.q.initiative.3": "Quelles contraintes, compétences ou capacités comptent ?",
   "playground.result.heading": "Brouillons d'exercice",
-  "playground.result.note": "Ces exemples sont générés localement à partir de vos réponses. Rien n'est enregistré et aucun OKR réel n'est modifié.",
+  "playground.result.note":
+    "Ces exemples sont générés localement à partir de vos réponses. Rien n'est enregistré et aucun OKR réel n'est modifié.",
   "playground.result.tag": "Brouillon d'exercice",
   "playground.result.objective.a.title": "Objectif formulé comme résultat",
   "playground.result.objective.b.title": "Formulation en état final",
   "playground.result.objective.note.title": "À préciser",
-  "playground.result.objective.note.body": "Nommez un public, décrivez un résultat plutôt qu'une activité et assurez-vous que le changement soit visible à la fin de la période.",
+  "playground.result.objective.note.body":
+    "Nommez un public, décrivez un résultat plutôt qu'une activité et assurez-vous que le changement soit visible à la fin de la période.",
   "playground.result.kr.metric.title": "Résultat clé chiffré",
   "playground.result.kr.milestone.title": "Résultat clé sous forme de jalon",
   "playground.result.kr.note.title": "Note de mesure",
-  "playground.result.kr.note.body": "Fixez d'abord une valeur de départ, précisez qui lit le chiffre et à quelle fréquence il est mis à jour.",
+  "playground.result.kr.note.body":
+    "Fixez d'abord une valeur de départ, précisez qui lit le chiffre et à quelle fréquence il est mis à jour.",
   "playground.result.initiative.a.title": "Idée d'initiative",
   "playground.result.initiative.b.title": "Premier pas plus modeste",
   "playground.result.initiative.note.title": "Engagement et soutien",
-  "playground.result.initiative.note.body": "Déterminez s'il s'agit d'une action ponctuelle, récurrente ou d'un chantier, et s'il faut un responsable, des volontaires ou une compétence précise.",
+  "playground.result.initiative.note.body":
+    "Déterminez s'il s'agit d'une action ponctuelle, récurrente ou d'un chantier, et s'il faut un responsable, des volontaires ou une compétence précise.",
   "playground.tpl.for": "pour",
   "playground.tpl.by": "D'ici la fin de la période",
   "playground.tpl.who": "Public concerné",
@@ -1379,11 +1469,14 @@ const fr: Record<StringKey, string> = {
   "playground.tpl.constraints": "Contraintes",
   "playground.tpl.smallStep": "Premier pas",
   "playground.metaTitle": "Espace d'essai OKR — The Switzerland Chapter of ICF",
-  "playground.metaDescription": "Un espace public pour s'exercer à rédiger objectifs, résultats clés et initiatives. Rien n'est enregistré et aucune donnée réelle n'est touchée.",
+  "playground.metaDescription":
+    "Un espace public pour s'exercer à rédiger objectifs, résultats clés et initiatives. Rien n'est enregistré et aucune donnée réelle n'est touchée.",
   "report.eyebrow": "LE CHAPITRE SUISSE DE L'ICF · RAPPORT AU COMITÉ",
   "report.title": "Rapport OKR au comité 2026–2027",
-  "report.subtitle": "Un instantané imprimable des objectifs, des key results, de la maturité de mesure et du portefeuille d'initiatives.",
-  "report.generated": "Généré depuis le tableau de bord OKR ICFS le {date} à {time}. Le tableau de bord fait foi. Ce document est un instantané et est remplacé par le tableau de bord en cas de divergence.",
+  "report.subtitle":
+    "Un instantané imprimable des objectifs, des key results, de la maturité de mesure et du portefeuille d'initiatives.",
+  "report.generated":
+    "Généré depuis le tableau de bord OKR ICFS le {date} à {time}. Le tableau de bord fait foi. Ce document est un instantané et est remplacé par le tableau de bord en cas de divergence.",
   "report.download": "Télécharger le PDF",
   "report.summary.objectives": "Objectifs",
   "report.summary.keyResults": "Key results",
@@ -1391,7 +1484,8 @@ const fr: Record<StringKey, string> = {
   "report.summary.milestone": "Key results jalons",
   "report.summary.initiatives": "Initiatives",
   "report.readiness.title": "Maturité de la mesure",
-  "report.readiness.context": "2026 est une année de référence. Ce rapport montre l'état du système de mesure, et non l'avancement de l'exécution — les taux d'avancement seraient nuls par construction. Les références sont dues au 30.11.2026.",
+  "report.readiness.context":
+    "2026 est une année de référence. Ce rapport montre l'état du système de mesure, et non l'avancement de l'exécution — les taux d'avancement seraient nuls par construction. Les références sont dues au 30.11.2026.",
   "report.readiness.axis": "nombre sur {total} key results métriques",
   "report.byObjective.title": "Maturité par objectif",
   "report.byObjective.total": "Key results métriques",
@@ -1401,7 +1495,8 @@ const fr: Record<StringKey, string> = {
   "report.portfolio.gap": "{count} key results sans initiative : {list}",
   "report.portfolio.noGap": "Chaque key result a au moins une initiative.",
   "report.sfa.title": "Contribution aux axes stratégiques",
-  "report.sfa.legend": "Plein = contribution principale · Contour = contribution secondaire · Tiret = aucune",
+  "report.sfa.legend":
+    "Plein = contribution principale · Contour = contribution secondaire · Tiret = aucune",
   "report.sfa.pillar": "Pilier ICFS",
   "report.sfa.how": "Comment il contribue",
   "report.table.kr": "KR",
@@ -1426,7 +1521,6 @@ const fr: Record<StringKey, string> = {
   "report.kr.milestone": "Jalon",
   "report.kr.due": "Échéance {date}",
 
-
   "playground.card.why": "Pourquoi cela fonctionne",
   "playground.card.watch": "À surveiller",
   "playground.card.tryAnother": "Essayer une autre version",
@@ -1441,52 +1535,80 @@ const fr: Record<StringKey, string> = {
   "playground.quality.usable": "Utilisable après retouches",
   "playground.quality.refine": "À affiner",
   "playground.edu.heading": "En quoi ces éléments diffèrent",
-  "playground.edu.objective": "Un Objectif décrit un changement significatif. Ce n'est pas une liste de tâches.",
-  "playground.edu.kr": "Un Résultat clé décrit une preuve mesurable de progrès ou de succès. Ce n'est pas une activité.",
-  "playground.edu.initiative": "Une Initiative est un travail susceptible de faire avancer un Résultat clé. Ce n'est pas le résultat lui-même.",
+  "playground.edu.objective":
+    "Un Objectif décrit un changement significatif. Ce n'est pas une liste de tâches.",
+  "playground.edu.kr":
+    "Un Résultat clé décrit une preuve mesurable de progrès ou de succès. Ce n'est pas une activité.",
+  "playground.edu.initiative":
+    "Une Initiative est un travail susceptible de faire avancer un Résultat clé. Ce n'est pas le résultat lui-même.",
   "playground.example.heading": "Faible et amélioré",
   "playground.example.weakLabel": "Faible",
   "playground.example.weak": "Lancer des événements communautaires",
   "playground.example.feedbackLabel": "Retour",
-  "playground.example.feedback": "Cela décrit un travail : il s'agit donc d'une Initiative et non d'un Résultat clé.",
+  "playground.example.feedback":
+    "Cela décrit un travail : il s'agit donc d'une Initiative et non d'un Résultat clé.",
   "playground.example.improvedLabel": "Amélioré",
-  "playground.example.improved": "Augmenter de 25 % la participation de membres uniques aux événements communautaires d'ici la fin de l'année.",
-  "playground.why.objective-a": "Il nomme le changement et les personnes concernées, le résultat reste donc clair.",
-  "playground.why.objective-b": "Il décrit un état final, ce qui rend le progrès plus facile à reconnaître.",
-  "playground.why.kr-metric": "Il désigne quelque chose d'observable, le progrès peut donc être vérifié.",
-  "playground.why.kr-milestone": "Il fixe une étape visible, utile lorsqu'aucun chiffre n'est encore disponible.",
-  "playground.why.initiative-a": "Il relie un travail concret au résultat qu'il doit faire avancer.",
-  "playground.why.initiative-b": "Il est assez petit pour démarrer, ce qui garde une dynamique réaliste.",
-  "playground.watch.objective-a": "Vérifiez qu'il s'agit d'un résultat et non d'une liste d'activités.",
-  "playground.watch.objective-b": "Assurez-vous que l'état final est visible d'ici la fin de la période.",
-  "playground.watch.kr-metric": "Ajoutez une valeur de départ et une cible, et convenez de qui lit le chiffre.",
-  "playground.watch.kr-milestone": "Un jalon doit aussi montrer une preuve, pas seulement qu'un travail a eu lieu.",
-  "playground.watch.initiative-a": "Une initiative n'est pas le résultat ; gardez le résultat clé distinct.",
+  "playground.example.improved":
+    "Augmenter de 25 % la participation de membres uniques aux événements communautaires d'ici la fin de l'année.",
+  "playground.why.objective-a":
+    "Il nomme le changement et les personnes concernées, le résultat reste donc clair.",
+  "playground.why.objective-b":
+    "Il décrit un état final, ce qui rend le progrès plus facile à reconnaître.",
+  "playground.why.kr-metric":
+    "Il désigne quelque chose d'observable, le progrès peut donc être vérifié.",
+  "playground.why.kr-milestone":
+    "Il fixe une étape visible, utile lorsqu'aucun chiffre n'est encore disponible.",
+  "playground.why.initiative-a":
+    "Il relie un travail concret au résultat qu'il doit faire avancer.",
+  "playground.why.initiative-b":
+    "Il est assez petit pour démarrer, ce qui garde une dynamique réaliste.",
+  "playground.watch.objective-a":
+    "Vérifiez qu'il s'agit d'un résultat et non d'une liste d'activités.",
+  "playground.watch.objective-b":
+    "Assurez-vous que l'état final est visible d'ici la fin de la période.",
+  "playground.watch.kr-metric":
+    "Ajoutez une valeur de départ et une cible, et convenez de qui lit le chiffre.",
+  "playground.watch.kr-milestone":
+    "Un jalon doit aussi montrer une preuve, pas seulement qu'un travail a eu lieu.",
+  "playground.watch.initiative-a":
+    "Une initiative n'est pas le résultat ; gardez le résultat clé distinct.",
   "playground.watch.initiative-b": "Précisez qui s'en charge, sinon l'étape reste une idée.",
   "playground.check.heading": "Contrôles de qualité",
-  "playground.check.disclaimer": "Ces contrôles sont de simples indices de formulation, pas un verdict. Gardez votre jugement.",
+  "playground.check.disclaimer":
+    "Ces contrôles sont de simples indices de formulation, pas un verdict. Gardez votre jugement.",
   "playground.check.obj.task.title": "Langage de tâche possible",
-  "playground.check.obj.task.body": "Des mots comme lancer, construire, créer, réaliser ou livrer décrivent souvent du travail. Un Objective décrit plutôt le changement visé.",
+  "playground.check.obj.task.body":
+    "Des mots comme lancer, construire, créer, réaliser ou livrer décrivent souvent du travail. Un Objective décrit plutôt le changement visé.",
   "playground.check.obj.multi.title": "Plusieurs changements à la fois",
-  "playground.check.obj.multi.body": "Ce brouillon semble réunir plusieurs changements. Envisagez de le scinder pour que chaque Objective porte une intention claire.",
+  "playground.check.obj.multi.body":
+    "Ce brouillon semble réunir plusieurs changements. Envisagez de le scinder pour que chaque Objective porte une intention claire.",
   "playground.check.obj.beneficiary.title": "Bénéficiaire non identifié",
-  "playground.check.obj.beneficiary.body": "Aucun public ou groupe d'intérêt n'apparaît. Nommer qui en bénéficie, comme Customer de cet Objective, clarifie l'intention.",
+  "playground.check.obj.beneficiary.body":
+    "Aucun public ou groupe d'intérêt n'apparaît. Nommer qui en bénéficie, comme Customer de cet Objective, clarifie l'intention.",
   "playground.check.kr.activity.title": "Langage d'activité possible",
-  "playground.check.kr.activity.body": "Des mots comme lancer, créer, tenir, réaliser, développer, publier ou organiser décrivent généralement une Initiative. Un Key Result décrit la preuve du progrès.",
+  "playground.check.kr.activity.body":
+    "Des mots comme lancer, créer, tenir, réaliser, développer, publier ou organiser décrivent généralement une Initiative. Un Key Result décrit la preuve du progrès.",
   "playground.check.kr.measure.title": "Logique de mesure peu claire",
-  "playground.check.kr.measure.body": "Aucun nombre, pourcentage, décompte, score, date, jalon ou preuve observable n'apparaît. Réfléchissez à la façon de reconnaître le progrès.",
+  "playground.check.kr.measure.body":
+    "Aucun nombre, pourcentage, décompte, score, date, jalon ou preuve observable n'apparaît. Réfléchissez à la façon de reconnaître le progrès.",
   "playground.check.kr.baseline.title": "Baseline manquante",
-  "playground.check.kr.baseline.body": "Aucun point de départ n'a été saisi. Une Baseline donne du sens au Target.",
+  "playground.check.kr.baseline.body":
+    "Aucun point de départ n'a été saisi. Une Baseline donne du sens au Target.",
   "playground.check.kr.instrument.title": "Instrument non défini",
-  "playground.check.kr.instrument.body": "Aucune source de preuve ni méthode d'observation n'a été saisie. Nommer l'Instrument indique d'où viendra la valeur.",
+  "playground.check.kr.instrument.body":
+    "Aucune source de preuve ni méthode d'observation n'a été saisie. Nommer l'Instrument indique d'où viendra la valeur.",
   "playground.check.init.target.title": "Ressemble à une cible mesurable",
-  "playground.check.init.target.body": "Cela se lit comme un Key Result plutôt que comme du travail. Une Initiative décrit ce qui sera fait pour faire avancer un Key Result.",
+  "playground.check.init.target.body":
+    "Cela se lit comme un Key Result plutôt que comme du travail. Une Initiative décrit ce qui sera fait pour faire avancer un Key Result.",
   "playground.check.init.parent.title": "Key Result parent manquant",
-  "playground.check.init.parent.body": "Aucun Key Result n'a été nommé. Relier l'Initiative à un Key Result rend sa contribution visible.",
+  "playground.check.init.parent.body":
+    "Aucun Key Result n'a été nommé. Relier l'Initiative à un Key Result rend sa contribution visible.",
   "playground.check.init.owner.title": "Responsable ou effort non indiqué",
-  "playground.check.init.owner.body": "Aucun Steward, rôle ou estimation d'effort n'apparaît. Une indication approximative facilite la planification.",
+  "playground.check.init.owner.body":
+    "Aucun Steward, rôle ou estimation d'effort n'apparaît. Une indication approximative facilite la planification.",
   "playground.check.ok.title": "Aucun point signalé",
-  "playground.check.ok.body": "Ces contrôles simples n'ont rien signalé. C'est bon signe, sans être une garantie de qualité.",
+  "playground.check.ok.body":
+    "Ces contrôles simples n'ont rien signalé. C'est bon signe, sans être une garantie de qualité.",
 };
 
 const it: Record<StringKey, string> = {
@@ -1529,12 +1651,14 @@ const it: Record<StringKey, string> = {
   "kr.number": "Numero KR",
   "kr.detailDescription": "Risultato di cui si è responsabili e i progetti che lo realizzano.",
   "kr.deleteConfirm": "Eliminare questo risultato chiave e le sue iniziative?",
-  "kr.deleteConfirmBody": "Il risultato chiave e le sue iniziative verranno eliminati definitivamente. Questa azione non può essere annullata.",
+  "kr.deleteConfirmBody":
+    "Il risultato chiave e le sue iniziative verranno eliminati definitivamente. Questa azione non può essere annullata.",
   "kr.delete": "Elimina risultato chiave",
   "okr.customer": "Cliente:",
   "okr.delete": "Elimina set OKR",
   "okr.deleteConfirm": "Elimina set OKR",
-  "okr.deleteConfirmBody": "Eliminando il set OKR vengono eliminati anche i suoi risultati chiave e le sue iniziative. Questa azione non può essere annullata.",
+  "okr.deleteConfirmBody":
+    "Eliminando il set OKR vengono eliminati anche i suoi risultati chiave e le sue iniziative. Questa azione non può essere annullata.",
   "okr.noKeyResults": "Nessun risultato chiave ancora.",
   "okr.addKeyResult": "+ Aggiungi risultato chiave",
   "okr.addOkrSet": "Aggiungi set OKR",
@@ -1599,14 +1723,17 @@ const it: Record<StringKey, string> = {
   "initiatives.form.searchKr": "Cerca risultati chiave…",
   "initiative.link": "Collega iniziative",
   "initiative.linkDialog.title": "Collega iniziative a questo KR",
-  "initiative.linkDialog.description": "Scegli quali iniziative del portfolio contribuiscono a questo risultato chiave. Le nuove iniziative si creano nel Portfolio.",
+  "initiative.linkDialog.description":
+    "Scegli quali iniziative del portfolio contribuiscono a questo risultato chiave. Le nuove iniziative si creano nel Portfolio.",
   "initiative.linkDialog.search": "Cerca iniziative…",
   "initiative.linkDialog.empty": "Nessuna iniziativa nel portfolio.",
   "initiative.linkDialog.role.none": "Nessuno",
   "initiative.linkDialog.role.secondary": "Secondaria",
   "initiative.linkDialog.role.primary": "Primaria",
-  "initiative.linkDialog.primaryHint": "Impostare un'iniziativa come Primaria la sposta qui dal suo KR attuale.",
-  "initiative.linkDialog.primaryLocked": "Modifica il collegamento primario nel dialogo del KR di destinazione.",
+  "initiative.linkDialog.primaryHint":
+    "Impostare un'iniziativa come Primaria la sposta qui dal suo KR attuale.",
+  "initiative.linkDialog.primaryLocked":
+    "Modifica il collegamento primario nel dialogo del KR di destinazione.",
   "initiative.unlinkSecondary": "Rimuovi collegamento secondario",
   "initiative.createInPortfolio": "Le nuove iniziative si creano nel Portfolio.",
   "initiative.linksUpdated": "Collegamenti aggiornati",
@@ -1644,9 +1771,10 @@ const it: Record<StringKey, string> = {
   "initiatives.form.skillNote": "Quale competenza?",
   "initiatives.form.skillNotePlaceholder": "p. es. grafica, revisione legale",
   "initiatives.form.unspecified": "Non specificato",
-  "initiatives.form.helpersOwnerHint": "I collaboratori affiancano una persona responsabile. Indicane una prima.",
-  "initiatives.form.availabilityHint": "La disponibilit\u00e0 vale finch\u00e9 l'iniziativa \u00e8 pianificata.",
-
+  "initiatives.form.helpersOwnerHint":
+    "I collaboratori affiancano una persona responsabile. Indicane una prima.",
+  "initiatives.form.availabilityHint":
+    "La disponibilit\u00e0 vale finch\u00e9 l'iniziativa \u00e8 pianificata.",
 
   "common.cancel": "Annulla",
   "common.create": "Crea",
@@ -1693,14 +1821,18 @@ const it: Record<StringKey, string> = {
   "report.nav": "Rapporto",
   "playground.nav": "Spazio di prova OKR",
   "playground.title": "Spazio di prova OKR",
-  "playground.intro": "Scopri come funzionano obiettivi, risultati chiave e iniziative. Le tue bozze di esercitazione non vengono salvate e non influiscono sulla dashboard OKR di ICFS.",
+  "playground.intro":
+    "Scopri come funzionano obiettivi, risultati chiave e iniziative. Le tue bozze di esercitazione non vengono salvate e non influiscono sulla dashboard OKR di ICFS.",
   "playground.badge": "Area di prova · Nulla qui modifica gli OKR reali",
   "playground.mode.objective.title": "Creare un obiettivo",
-  "playground.mode.objective.desc": "Un obiettivo descrive, come risultato, ciò che il chapter vuole ottenere per un pubblico specifico.",
+  "playground.mode.objective.desc":
+    "Un obiettivo descrive, come risultato, ciò che il chapter vuole ottenere per un pubblico specifico.",
   "playground.mode.kr.title": "Creare un risultato chiave",
-  "playground.mode.kr.desc": "Un risultato chiave rende misurabile il progresso di un obiettivo, da un valore iniziale a un valore obiettivo.",
+  "playground.mode.kr.desc":
+    "Un risultato chiave rende misurabile il progresso di un obiettivo, da un valore iniziale a un valore obiettivo.",
   "playground.mode.initiative.title": "Ideare iniziative",
-  "playground.mode.initiative.desc": "Un'iniziativa è il lavoro concreto che qualcuno assume per far avanzare un risultato chiave.",
+  "playground.mode.initiative.desc":
+    "Un'iniziativa è il lavoro concreto che qualcuno assume per far avanzare un risultato chiave.",
   "playground.start": "Inizia a esplorare",
   "playground.clear": "Azzera",
   "playground.notSaved": "Su questa pagina non viene salvato nulla.",
@@ -1724,20 +1856,24 @@ const it: Record<StringKey, string> = {
   "playground.q.initiative.2": "Che tipo di lavoro potrebbe contribuire?",
   "playground.q.initiative.3": "Quali vincoli, competenze o capacità contano?",
   "playground.result.heading": "Bozze di esercitazione",
-  "playground.result.note": "Questi esempi sono generati localmente dalle tue risposte. Nulla viene salvato e nessun OKR reale viene modificato.",
+  "playground.result.note":
+    "Questi esempi sono generati localmente dalle tue risposte. Nulla viene salvato e nessun OKR reale viene modificato.",
   "playground.result.tag": "Bozza di esercitazione",
   "playground.result.objective.a.title": "Obiettivo formulato come risultato",
   "playground.result.objective.b.title": "Formulazione come stato finale",
   "playground.result.objective.note.title": "Che cosa affinare",
-  "playground.result.objective.note.body": "Indica un pubblico, descrivi un risultato invece di un'attività e assicurati che il cambiamento sia visibile alla fine del periodo.",
+  "playground.result.objective.note.body":
+    "Indica un pubblico, descrivi un risultato invece di un'attività e assicurati che il cambiamento sia visibile alla fine del periodo.",
   "playground.result.kr.metric.title": "Risultato chiave con metrica",
   "playground.result.kr.milestone.title": "Risultato chiave come traguardo",
   "playground.result.kr.note.title": "Nota sulla misurazione",
-  "playground.result.kr.note.body": "Definisci prima un valore iniziale, chiarisci chi legge il dato e con quale frequenza viene aggiornato.",
+  "playground.result.kr.note.body":
+    "Definisci prima un valore iniziale, chiarisci chi legge il dato e con quale frequenza viene aggiornato.",
   "playground.result.initiative.a.title": "Idea di iniziativa",
   "playground.result.initiative.b.title": "Primo passo più piccolo",
   "playground.result.initiative.note.title": "Impegno e supporto",
-  "playground.result.initiative.note.body": "Stabilisci se si tratta di un'attività una tantum, ricorrente o di un filone di lavoro, e se servono una guida, aiutanti o una competenza specifica.",
+  "playground.result.initiative.note.body":
+    "Stabilisci se si tratta di un'attività una tantum, ricorrente o di un filone di lavoro, e se servono una guida, aiutanti o una competenza specifica.",
   "playground.tpl.for": "per",
   "playground.tpl.by": "Entro la fine del periodo",
   "playground.tpl.who": "Pubblico",
@@ -1750,11 +1886,14 @@ const it: Record<StringKey, string> = {
   "playground.tpl.constraints": "Vincoli",
   "playground.tpl.smallStep": "Primo passo",
   "playground.metaTitle": "Spazio di prova OKR — The Switzerland Chapter of ICF",
-  "playground.metaDescription": "Un'area pubblica per esercitarsi con obiettivi, risultati chiave e iniziative. Nulla viene salvato e nessun dato reale viene modificato.",
+  "playground.metaDescription":
+    "Un'area pubblica per esercitarsi con obiettivi, risultati chiave e iniziative. Nulla viene salvato e nessun dato reale viene modificato.",
   "report.eyebrow": "IL CHAPTER SVIZZERO DI ICF · RAPPORTO AL CONSIGLIO",
   "report.title": "Rapporto OKR al consiglio 2026–2027",
-  "report.subtitle": "Un'istantanea stampabile di obiettivi, key result, maturità della misurazione e portafoglio di iniziative.",
-  "report.generated": "Generato dalla dashboard OKR ICFS il {date} alle {time}. La dashboard è la fonte ufficiale. Questo documento è un'istantanea ed è superato dalla dashboard in caso di divergenza.",
+  "report.subtitle":
+    "Un'istantanea stampabile di obiettivi, key result, maturità della misurazione e portafoglio di iniziative.",
+  "report.generated":
+    "Generato dalla dashboard OKR ICFS il {date} alle {time}. La dashboard è la fonte ufficiale. Questo documento è un'istantanea ed è superato dalla dashboard in caso di divergenza.",
   "report.download": "Scarica PDF",
   "report.summary.objectives": "Obiettivi",
   "report.summary.keyResults": "Key result",
@@ -1762,7 +1901,8 @@ const it: Record<StringKey, string> = {
   "report.summary.milestone": "Key result milestone",
   "report.summary.initiatives": "Iniziative",
   "report.readiness.title": "Maturità della misurazione",
-  "report.readiness.context": "Il 2026 è un anno di baseline. Questo rapporto mostra quanto del sistema di misurazione esiste, non l'avanzamento dell'esecuzione — le percentuali sarebbero pari a zero per costruzione. Le baseline sono attese entro il 30.11.2026.",
+  "report.readiness.context":
+    "Il 2026 è un anno di baseline. Questo rapporto mostra quanto del sistema di misurazione esiste, non l'avanzamento dell'esecuzione — le percentuali sarebbero pari a zero per costruzione. Le baseline sono attese entro il 30.11.2026.",
   "report.readiness.axis": "conteggio su {total} key result metrici",
   "report.byObjective.title": "Maturità per obiettivo",
   "report.byObjective.total": "Key result metrici",
@@ -1772,7 +1912,8 @@ const it: Record<StringKey, string> = {
   "report.portfolio.gap": "{count} key result senza iniziativa: {list}",
   "report.portfolio.noGap": "Ogni key result ha almeno un'iniziativa.",
   "report.sfa.title": "Contributo alle aree strategiche",
-  "report.sfa.legend": "Pieno = contributo primario · Contorno = contributo secondario · Trattino = nessuno",
+  "report.sfa.legend":
+    "Pieno = contributo primario · Contorno = contributo secondario · Trattino = nessuno",
   "report.sfa.pillar": "Pilastro ICFS",
   "report.sfa.how": "Come contribuisce",
   "report.table.kr": "KR",
@@ -1797,7 +1938,6 @@ const it: Record<StringKey, string> = {
   "report.kr.milestone": "Milestone",
   "report.kr.due": "Scadenza {date}",
 
-
   "playground.card.why": "Perché funziona",
   "playground.card.watch": "A cosa fare attenzione",
   "playground.card.tryAnother": "Prova un'altra versione",
@@ -1812,52 +1952,78 @@ const it: Record<StringKey, string> = {
   "playground.quality.usable": "Utilizzabile con modifiche",
   "playground.quality.refine": "Da affinare",
   "playground.edu.heading": "In cosa differiscono questi elementi",
-  "playground.edu.objective": "Un Obiettivo descrive un cambiamento significativo. Non è un elenco di attività.",
-  "playground.edu.kr": "Un Risultato chiave descrive prove misurabili di progresso o successo. Non è un'attività.",
-  "playground.edu.initiative": "Un'Iniziativa è un lavoro che può contribuire a muovere un Risultato chiave. Non è il risultato stesso.",
+  "playground.edu.objective":
+    "Un Obiettivo descrive un cambiamento significativo. Non è un elenco di attività.",
+  "playground.edu.kr":
+    "Un Risultato chiave descrive prove misurabili di progresso o successo. Non è un'attività.",
+  "playground.edu.initiative":
+    "Un'Iniziativa è un lavoro che può contribuire a muovere un Risultato chiave. Non è il risultato stesso.",
   "playground.example.heading": "Debole e migliorato",
   "playground.example.weakLabel": "Debole",
   "playground.example.weak": "Lanciare eventi per la community",
   "playground.example.feedbackLabel": "Riscontro",
-  "playground.example.feedback": "Questo descrive un lavoro, quindi è un'Iniziativa e non un Risultato chiave.",
+  "playground.example.feedback":
+    "Questo descrive un lavoro, quindi è un'Iniziativa e non un Risultato chiave.",
   "playground.example.improvedLabel": "Migliorato",
-  "playground.example.improved": "Aumentare del 25% la partecipazione di membri unici agli eventi della community entro fine anno.",
-  "playground.why.objective-a": "Nomina il cambiamento e le persone coinvolte, così il risultato resta chiaro.",
-  "playground.why.objective-b": "Descrive uno stato finale, il che rende il progresso più facile da riconoscere.",
-  "playground.why.kr-metric": "Indica qualcosa di osservabile, quindi il progresso può essere verificato.",
-  "playground.why.kr-milestone": "Fissa un passo visibile, utile quando non è ancora disponibile un numero.",
+  "playground.example.improved":
+    "Aumentare del 25% la partecipazione di membri unici agli eventi della community entro fine anno.",
+  "playground.why.objective-a":
+    "Nomina il cambiamento e le persone coinvolte, così il risultato resta chiaro.",
+  "playground.why.objective-b":
+    "Descrive uno stato finale, il che rende il progresso più facile da riconoscere.",
+  "playground.why.kr-metric":
+    "Indica qualcosa di osservabile, quindi il progresso può essere verificato.",
+  "playground.why.kr-milestone":
+    "Fissa un passo visibile, utile quando non è ancora disponibile un numero.",
   "playground.why.initiative-a": "Collega un lavoro concreto al risultato che deve muovere.",
-  "playground.why.initiative-b": "È abbastanza piccolo da iniziare, mantenendo un ritmo realistico.",
+  "playground.why.initiative-b":
+    "È abbastanza piccolo da iniziare, mantenendo un ritmo realistico.",
   "playground.watch.objective-a": "Verifica che sia un risultato e non un elenco di attività.",
-  "playground.watch.objective-b": "Assicurati che lo stato finale sia visibile entro la fine del periodo.",
-  "playground.watch.kr-metric": "Aggiungi un valore di partenza e uno obiettivo, e stabilisci chi legge il numero.",
-  "playground.watch.kr-milestone": "Anche una milestone deve mostrare prove, non solo che il lavoro è avvenuto.",
-  "playground.watch.initiative-a": "Un'iniziativa non è il risultato; mantieni distinto il risultato chiave.",
+  "playground.watch.objective-b":
+    "Assicurati che lo stato finale sia visibile entro la fine del periodo.",
+  "playground.watch.kr-metric":
+    "Aggiungi un valore di partenza e uno obiettivo, e stabilisci chi legge il numero.",
+  "playground.watch.kr-milestone":
+    "Anche una milestone deve mostrare prove, non solo che il lavoro è avvenuto.",
+  "playground.watch.initiative-a":
+    "Un'iniziativa non è il risultato; mantieni distinto il risultato chiave.",
   "playground.watch.initiative-b": "Indica chi se ne occupa, altrimenti il passo resta un'idea.",
   "playground.check.heading": "Controlli di qualità",
-  "playground.check.disclaimer": "Questi controlli sono semplici indizi di formulazione, non un verdetto. Usa il tuo giudizio.",
+  "playground.check.disclaimer":
+    "Questi controlli sono semplici indizi di formulazione, non un verdetto. Usa il tuo giudizio.",
   "playground.check.obj.task.title": "Possibile linguaggio da attività",
-  "playground.check.obj.task.body": "Parole come lanciare, costruire, creare, svolgere o consegnare descrivono spesso lavoro. Un Objective descrive di norma il cambiamento desiderato.",
+  "playground.check.obj.task.body":
+    "Parole come lanciare, costruire, creare, svolgere o consegnare descrivono spesso lavoro. Un Objective descrive di norma il cambiamento desiderato.",
   "playground.check.obj.multi.title": "Forse più cambiamenti insieme",
-  "playground.check.obj.multi.body": "Questa bozza sembra unire più cambiamenti. Valuta di suddividerla, così ogni Objective porta un'intenzione chiara.",
+  "playground.check.obj.multi.body":
+    "Questa bozza sembra unire più cambiamenti. Valuta di suddividerla, così ogni Objective porta un'intenzione chiara.",
   "playground.check.obj.beneficiary.title": "Beneficiario non evidente",
-  "playground.check.obj.beneficiary.body": "Non è visibile un pubblico o un gruppo di riferimento. Indicare chi ne beneficia, come Customer di questo Objective, rende l'intento più chiaro.",
+  "playground.check.obj.beneficiary.body":
+    "Non è visibile un pubblico o un gruppo di riferimento. Indicare chi ne beneficia, come Customer di questo Objective, rende l'intento più chiaro.",
   "playground.check.kr.activity.title": "Possibile linguaggio da attività",
-  "playground.check.kr.activity.body": "Parole come lanciare, creare, svolgere, sviluppare, pubblicare o organizzare descrivono di solito un'Initiative. Un Key Result descrive la prova del progresso.",
+  "playground.check.kr.activity.body":
+    "Parole come lanciare, creare, svolgere, sviluppare, pubblicare o organizzare descrivono di solito un'Initiative. Un Key Result descrive la prova del progresso.",
   "playground.check.kr.measure.title": "Logica di misurazione poco chiara",
-  "playground.check.kr.measure.body": "Non si vede un numero, una percentuale, un conteggio, un punteggio, una data, una milestone o una prova osservabile. Considera come riconoscere il progresso.",
+  "playground.check.kr.measure.body":
+    "Non si vede un numero, una percentuale, un conteggio, un punteggio, una data, una milestone o una prova osservabile. Considera come riconoscere il progresso.",
   "playground.check.kr.baseline.title": "Baseline mancante",
-  "playground.check.kr.baseline.body": "Non è stato inserito un punto di partenza. Una Baseline rende significativo il Target.",
+  "playground.check.kr.baseline.body":
+    "Non è stato inserito un punto di partenza. Una Baseline rende significativo il Target.",
   "playground.check.kr.instrument.title": "Instrument non definito",
-  "playground.check.kr.instrument.body": "Non è stata indicata una fonte di prova o un metodo di osservazione. Indicare l'Instrument mostra da dove arriva il valore.",
+  "playground.check.kr.instrument.body":
+    "Non è stata indicata una fonte di prova o un metodo di osservazione. Indicare l'Instrument mostra da dove arriva il valore.",
   "playground.check.init.target.title": "Sembra un obiettivo misurabile",
-  "playground.check.init.target.body": "Si legge come un Key Result più che come lavoro. Un'Initiative descrive ciò che verrà fatto per muovere un Key Result.",
+  "playground.check.init.target.body":
+    "Si legge come un Key Result più che come lavoro. Un'Initiative descrive ciò che verrà fatto per muovere un Key Result.",
   "playground.check.init.parent.title": "Key Result di riferimento mancante",
-  "playground.check.init.parent.body": "Non è stato indicato un Key Result. Collegare l'Initiative a un Key Result rende visibile il contributo.",
+  "playground.check.init.parent.body":
+    "Non è stato indicato un Key Result. Collegare l'Initiative a un Key Result rende visibile il contributo.",
   "playground.check.init.owner.title": "Responsabile o impegno non indicati",
-  "playground.check.init.owner.body": "Non sono visibili uno Steward, un ruolo o una stima dell'impegno. Un'indicazione di massima facilita la pianificazione.",
+  "playground.check.init.owner.body":
+    "Non sono visibili uno Steward, un ruolo o una stima dell'impegno. Un'indicazione di massima facilita la pianificazione.",
   "playground.check.ok.title": "Nessun elemento segnalato",
-  "playground.check.ok.body": "Questi controlli semplici non hanno segnalato nulla. È un buon segno, ma non una garanzia di qualità.",
+  "playground.check.ok.body":
+    "Questi controlli semplici non hanno segnalato nulla. È un buon segno, ma non una garanzia di qualità.",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
