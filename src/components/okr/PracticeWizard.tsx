@@ -28,8 +28,9 @@ export type WizardSelection = {
 };
 
 /**
- * The three-question practice wizard. Everything is component state only:
- * no storage, no network, no writes.
+ * The three-question practice wizard. Answers live in component state only;
+ * generation goes through the server-side AI endpoint and nothing is stored
+ * or written to the database.
  *
  * When `lockedFirstAnswer` is provided the first question is supplied by the
  * caller (the connected chain) and only the remaining two are asked.
