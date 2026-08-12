@@ -3,7 +3,13 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { qualityForVariant, type DraftCard, type DraftQuality } from "@/lib/playground-drafts";
+import { QualityChecks } from "@/components/okr/QualityChecks";
+import {
+  qualityForVariant,
+  type DraftCard,
+  type DraftQuality,
+  type PlaygroundMode,
+} from "@/lib/playground-drafts";
 
 const QUALITY_STYLES: Record<DraftQuality, string> = {
   strong: "border-primary/40 bg-primary/10 text-primary",
@@ -21,7 +27,16 @@ const QUALITY_LABEL = {
  * One practice draft. All interaction (variant cycling, inline editing,
  * clipboard copy) is local to this component — nothing is persisted.
  */
-export function PracticeDraftCard({ card }: { card: DraftCard }) {
+export function PracticeDraftCard({
+  card,
+  mode,
+  answers,
+}: {
+  card: DraftCard;
+  mode: PlaygroundMode;
+  /** The three wizard answers, used by the baseline / instrument / owner checks. */
+  answers: string[];
+}) {
   const { t } = useLocale();
   const [variantIndex, setVariantIndex] = useState(0);
   const [edits, setEdits] = useState<Record<number, string>>({});
@@ -125,6 +140,9 @@ export function PracticeDraftCard({ card }: { card: DraftCard }) {
           </div>
         )}
       </dl>
+
+      <QualityChecks mode={mode} statement={statement} answers={answers} />
+
 
       <div className="mt-4 flex flex-wrap gap-2">
         <Button

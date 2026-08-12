@@ -303,7 +303,13 @@ function PlaygroundPage() {
                 <div className="mt-4 grid gap-4 lg:grid-cols-3">
                   <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
                     {results.map((card) => (
-                      <PracticeDraftCard key={`${resetKey}-${card.id}`} card={card} />
+                      <PracticeDraftCard
+                        key={`${resetKey}-${card.id}`}
+                        card={card}
+                        mode={mode}
+                        answers={answers}
+                      />
+
                     ))}
                   </div>
                   <PlaygroundGuidance />

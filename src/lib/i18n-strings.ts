@@ -304,6 +304,30 @@ export type StringKey =
   | "playground.watch.kr-milestone"
   | "playground.watch.initiative-a"
   | "playground.watch.initiative-b"
+  | "playground.check.heading"
+  | "playground.check.disclaimer"
+  | "playground.check.obj.task.title"
+  | "playground.check.obj.task.body"
+  | "playground.check.obj.multi.title"
+  | "playground.check.obj.multi.body"
+  | "playground.check.obj.beneficiary.title"
+  | "playground.check.obj.beneficiary.body"
+  | "playground.check.kr.activity.title"
+  | "playground.check.kr.activity.body"
+  | "playground.check.kr.measure.title"
+  | "playground.check.kr.measure.body"
+  | "playground.check.kr.baseline.title"
+  | "playground.check.kr.baseline.body"
+  | "playground.check.kr.instrument.title"
+  | "playground.check.kr.instrument.body"
+  | "playground.check.init.target.title"
+  | "playground.check.init.target.body"
+  | "playground.check.init.parent.title"
+  | "playground.check.init.parent.body"
+  | "playground.check.init.owner.title"
+  | "playground.check.init.owner.body"
+  | "playground.check.ok.title"
+  | "playground.check.ok.body"
   | "report.eyebrow"
   | "report.title"
   | "report.subtitle"
@@ -696,6 +720,30 @@ const en: Record<StringKey, string> = {
   "playground.watch.kr-milestone": "A milestone should still show evidence, not only that work happened.",
   "playground.watch.initiative-a": "An initiative is not the result itself; keep the key result separate.",
   "playground.watch.initiative-b": "Name who takes it on, otherwise the step stays an idea.",
+  "playground.check.heading": "Quality checks",
+  "playground.check.disclaimer": "These checks are simple pattern hints, not a verdict. Use your judgement.",
+  "playground.check.obj.task.title": "Possible task language",
+  "playground.check.obj.task.body": "Words such as launch, build, create, run or deliver often describe work. An Objective usually describes the change you want to see.",
+  "playground.check.obj.multi.title": "Possibly several changes at once",
+  "playground.check.obj.multi.body": "This draft seems to join several changes. Consider splitting it so each Objective carries one clear intent.",
+  "playground.check.obj.beneficiary.title": "Beneficiary not evident",
+  "playground.check.obj.beneficiary.body": "No audience or stakeholder is visible. Naming who benefits, as the Customer of this Objective, makes the intent easier to share.",
+  "playground.check.kr.activity.title": "Possible activity language",
+  "playground.check.kr.activity.body": "Words such as launch, create, hold, run, develop, publish or organise usually describe an Initiative. A Key Result describes the evidence of progress.",
+  "playground.check.kr.measure.title": "Measurement logic unclear",
+  "playground.check.kr.measure.body": "No number, percentage, count, score, date, milestone or observable evidence is visible. Consider how progress would be recognised.",
+  "playground.check.kr.baseline.title": "Baseline missing",
+  "playground.check.kr.baseline.body": "No starting point was entered. A Baseline makes the Target meaningful.",
+  "playground.check.kr.instrument.title": "Instrument not defined",
+  "playground.check.kr.instrument.body": "No evidence source or observation method was entered. Naming the Instrument shows where the value will come from.",
+  "playground.check.init.target.title": "Looks like a measurable target",
+  "playground.check.init.target.body": "This reads like a Key Result rather than work. An Initiative describes what will be done to move a Key Result.",
+  "playground.check.init.parent.title": "Parent Key Result missing",
+  "playground.check.init.parent.body": "No Key Result was named. Linking an Initiative to a Key Result keeps the contribution visible.",
+  "playground.check.init.owner.title": "Owner or effort not stated",
+  "playground.check.init.owner.body": "No Steward, role or effort estimate is visible. A rough owner and size make the work easier to plan.",
+  "playground.check.ok.title": "No issues detected",
+  "playground.check.ok.body": "These simple checks found nothing to flag. That is a good sign, not a guarantee of quality.",
 };
 
 const de: Record<StringKey, string> = {
@@ -1044,6 +1092,30 @@ const de: Record<StringKey, string> = {
   "playground.watch.kr-milestone": "Auch ein Meilenstein sollte Belege zeigen, nicht nur, dass gearbeitet wurde.",
   "playground.watch.initiative-a": "Eine Initiative ist nicht das Ergebnis selbst; halten Sie das Key Result getrennt.",
   "playground.watch.initiative-b": "Benennen Sie, wer das übernimmt, sonst bleibt der Schritt eine Idee.",
+  "playground.check.heading": "Qualitätsprüfungen",
+  "playground.check.disclaimer": "Diese Prüfungen sind einfache Muster-Hinweise, kein Urteil. Nutzen Sie Ihr eigenes Urteilsvermögen.",
+  "playground.check.obj.task.title": "Möglicherweise Aufgaben-Sprache",
+  "playground.check.obj.task.body": "Wörter wie lancieren, aufbauen, erstellen, durchführen oder liefern beschreiben oft Arbeit. Ein Objective beschreibt in der Regel die angestrebte Veränderung.",
+  "playground.check.obj.multi.title": "Möglicherweise mehrere Veränderungen zugleich",
+  "playground.check.obj.multi.body": "Dieser Entwurf verbindet offenbar mehrere Veränderungen. Erwägen Sie eine Aufteilung, damit jedes Objective eine klare Absicht trägt.",
+  "playground.check.obj.beneficiary.title": "Zielgruppe nicht erkennbar",
+  "playground.check.obj.beneficiary.body": "Es ist keine Zielgruppe oder Anspruchsgruppe sichtbar. Wer als Customer profitiert, macht die Absicht leichter vermittelbar.",
+  "playground.check.kr.activity.title": "Möglicherweise Aktivitäts-Sprache",
+  "playground.check.kr.activity.body": "Wörter wie lancieren, erstellen, durchführen, entwickeln, veröffentlichen oder organisieren beschreiben meist eine Initiative. Ein Key Result beschreibt den Beleg für Fortschritt.",
+  "playground.check.kr.measure.title": "Messlogik unklar",
+  "playground.check.kr.measure.body": "Es ist keine Zahl, kein Prozentwert, keine Anzahl, kein Score, kein Datum, kein Meilenstein und kein beobachtbarer Beleg sichtbar. Überlegen Sie, woran Fortschritt erkennbar wäre.",
+  "playground.check.kr.baseline.title": "Baseline fehlt",
+  "playground.check.kr.baseline.body": "Es wurde kein Ausgangspunkt erfasst. Eine Baseline macht das Target aussagekräftig.",
+  "playground.check.kr.instrument.title": "Instrument nicht definiert",
+  "playground.check.kr.instrument.body": "Es wurde keine Belegquelle oder Beobachtungsmethode erfasst. Ein benanntes Instrument zeigt, woher der Wert stammt.",
+  "playground.check.init.target.title": "Wirkt wie ein messbares Ziel",
+  "playground.check.init.target.body": "Das liest sich eher wie ein Key Result als wie Arbeit. Eine Initiative beschreibt, was getan wird, um ein Key Result zu bewegen.",
+  "playground.check.init.parent.title": "Übergeordnetes Key Result fehlt",
+  "playground.check.init.parent.body": "Es wurde kein Key Result genannt. Die Verknüpfung hält den Beitrag der Initiative sichtbar.",
+  "playground.check.init.owner.title": "Verantwortung oder Aufwand nicht genannt",
+  "playground.check.init.owner.body": "Es sind weder Steward oder Rolle noch eine Aufwandsschätzung sichtbar. Eine grobe Zuordnung erleichtert die Planung.",
+  "playground.check.ok.title": "Keine Auffälligkeiten gefunden",
+  "playground.check.ok.body": "Diese einfachen Prüfungen haben nichts markiert. Das ist ein gutes Zeichen, aber keine Qualitätsgarantie.",
 };
 
 const fr: Record<StringKey, string> = {
@@ -1391,6 +1463,30 @@ const fr: Record<StringKey, string> = {
   "playground.watch.kr-milestone": "Un jalon doit aussi montrer une preuve, pas seulement qu'un travail a eu lieu.",
   "playground.watch.initiative-a": "Une initiative n'est pas le résultat ; gardez le résultat clé distinct.",
   "playground.watch.initiative-b": "Précisez qui s'en charge, sinon l'étape reste une idée.",
+  "playground.check.heading": "Contrôles de qualité",
+  "playground.check.disclaimer": "Ces contrôles sont de simples indices de formulation, pas un verdict. Gardez votre jugement.",
+  "playground.check.obj.task.title": "Langage de tâche possible",
+  "playground.check.obj.task.body": "Des mots comme lancer, construire, créer, réaliser ou livrer décrivent souvent du travail. Un Objective décrit plutôt le changement visé.",
+  "playground.check.obj.multi.title": "Plusieurs changements à la fois",
+  "playground.check.obj.multi.body": "Ce brouillon semble réunir plusieurs changements. Envisagez de le scinder pour que chaque Objective porte une intention claire.",
+  "playground.check.obj.beneficiary.title": "Bénéficiaire non identifié",
+  "playground.check.obj.beneficiary.body": "Aucun public ou groupe d'intérêt n'apparaît. Nommer qui en bénéficie, comme Customer de cet Objective, clarifie l'intention.",
+  "playground.check.kr.activity.title": "Langage d'activité possible",
+  "playground.check.kr.activity.body": "Des mots comme lancer, créer, tenir, réaliser, développer, publier ou organiser décrivent généralement une Initiative. Un Key Result décrit la preuve du progrès.",
+  "playground.check.kr.measure.title": "Logique de mesure peu claire",
+  "playground.check.kr.measure.body": "Aucun nombre, pourcentage, décompte, score, date, jalon ou preuve observable n'apparaît. Réfléchissez à la façon de reconnaître le progrès.",
+  "playground.check.kr.baseline.title": "Baseline manquante",
+  "playground.check.kr.baseline.body": "Aucun point de départ n'a été saisi. Une Baseline donne du sens au Target.",
+  "playground.check.kr.instrument.title": "Instrument non défini",
+  "playground.check.kr.instrument.body": "Aucune source de preuve ni méthode d'observation n'a été saisie. Nommer l'Instrument indique d'où viendra la valeur.",
+  "playground.check.init.target.title": "Ressemble à une cible mesurable",
+  "playground.check.init.target.body": "Cela se lit comme un Key Result plutôt que comme du travail. Une Initiative décrit ce qui sera fait pour faire avancer un Key Result.",
+  "playground.check.init.parent.title": "Key Result parent manquant",
+  "playground.check.init.parent.body": "Aucun Key Result n'a été nommé. Relier l'Initiative à un Key Result rend sa contribution visible.",
+  "playground.check.init.owner.title": "Responsable ou effort non indiqué",
+  "playground.check.init.owner.body": "Aucun Steward, rôle ou estimation d'effort n'apparaît. Une indication approximative facilite la planification.",
+  "playground.check.ok.title": "Aucun point signalé",
+  "playground.check.ok.body": "Ces contrôles simples n'ont rien signalé. C'est bon signe, sans être une garantie de qualité.",
 };
 
 const it: Record<StringKey, string> = {
@@ -1738,6 +1834,30 @@ const it: Record<StringKey, string> = {
   "playground.watch.kr-milestone": "Anche una milestone deve mostrare prove, non solo che il lavoro è avvenuto.",
   "playground.watch.initiative-a": "Un'iniziativa non è il risultato; mantieni distinto il risultato chiave.",
   "playground.watch.initiative-b": "Indica chi se ne occupa, altrimenti il passo resta un'idea.",
+  "playground.check.heading": "Controlli di qualità",
+  "playground.check.disclaimer": "Questi controlli sono semplici indizi di formulazione, non un verdetto. Usa il tuo giudizio.",
+  "playground.check.obj.task.title": "Possibile linguaggio da attività",
+  "playground.check.obj.task.body": "Parole come lanciare, costruire, creare, svolgere o consegnare descrivono spesso lavoro. Un Objective descrive di norma il cambiamento desiderato.",
+  "playground.check.obj.multi.title": "Forse più cambiamenti insieme",
+  "playground.check.obj.multi.body": "Questa bozza sembra unire più cambiamenti. Valuta di suddividerla, così ogni Objective porta un'intenzione chiara.",
+  "playground.check.obj.beneficiary.title": "Beneficiario non evidente",
+  "playground.check.obj.beneficiary.body": "Non è visibile un pubblico o un gruppo di riferimento. Indicare chi ne beneficia, come Customer di questo Objective, rende l'intento più chiaro.",
+  "playground.check.kr.activity.title": "Possibile linguaggio da attività",
+  "playground.check.kr.activity.body": "Parole come lanciare, creare, svolgere, sviluppare, pubblicare o organizzare descrivono di solito un'Initiative. Un Key Result descrive la prova del progresso.",
+  "playground.check.kr.measure.title": "Logica di misurazione poco chiara",
+  "playground.check.kr.measure.body": "Non si vede un numero, una percentuale, un conteggio, un punteggio, una data, una milestone o una prova osservabile. Considera come riconoscere il progresso.",
+  "playground.check.kr.baseline.title": "Baseline mancante",
+  "playground.check.kr.baseline.body": "Non è stato inserito un punto di partenza. Una Baseline rende significativo il Target.",
+  "playground.check.kr.instrument.title": "Instrument non definito",
+  "playground.check.kr.instrument.body": "Non è stata indicata una fonte di prova o un metodo di osservazione. Indicare l'Instrument mostra da dove arriva il valore.",
+  "playground.check.init.target.title": "Sembra un obiettivo misurabile",
+  "playground.check.init.target.body": "Si legge come un Key Result più che come lavoro. Un'Initiative descrive ciò che verrà fatto per muovere un Key Result.",
+  "playground.check.init.parent.title": "Key Result di riferimento mancante",
+  "playground.check.init.parent.body": "Non è stato indicato un Key Result. Collegare l'Initiative a un Key Result rende visibile il contributo.",
+  "playground.check.init.owner.title": "Responsabile o impegno non indicati",
+  "playground.check.init.owner.body": "Non sono visibili uno Steward, un ruolo o una stima dell'impegno. Un'indicazione di massima facilita la pianificazione.",
+  "playground.check.ok.title": "Nessun elemento segnalato",
+  "playground.check.ok.body": "Questi controlli semplici non hanno segnalato nulla. È un buon segno, ma non una garanzia di qualità.",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
