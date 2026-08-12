@@ -43,6 +43,7 @@ export function OkrChain() {
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   // Bumped on "Start a new chain" so the wizards remount clean.
   const [chainKey, setChainKey] = useState(0);
+  const [resetOpen, setResetOpen] = useState(false);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   const available = [true, Boolean(objective), Boolean(kr), Boolean(kr) && initiatives.length > 0];
