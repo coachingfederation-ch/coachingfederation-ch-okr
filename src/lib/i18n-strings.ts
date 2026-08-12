@@ -395,6 +395,13 @@ export type StringKey =
   | "playground.chain.wizard.objective"
   | "playground.chain.wizard.kr"
   | "playground.chain.wizard.initiative"
+  | "playground.chain.limit.kr"
+  | "playground.chain.limit.krReached"
+  | "playground.chain.limit.init"
+  | "playground.chain.limit.initReached"
+  | "playground.chain.initFor"
+  | "playground.chain.handoff.title"
+  | "playground.chain.handoff.body"
   | "playground.handoff.signIn"
   | "playground.handoff.noRights"
   | "playground.handoff.use"
@@ -928,7 +935,7 @@ const en: Record<StringKey, string> = {
   "playground.chain.confirm.objective":
     "Changing the Objective will clear the Key Results and Initiatives in this practice chain. Continue?",
   "playground.chain.confirm.kr":
-    "Changing the Key Result will clear the Initiatives in this practice chain. Continue?",
+    "Removing this Key Result will also remove the Initiatives you selected for it. Continue?",
   "playground.chain.confirm.continue": "Continue",
   "playground.chain.confirm.cancel": "Keep current selection",
   "playground.chain.confirm.new.title": "Start a new chain?",
@@ -945,6 +952,14 @@ const en: Record<StringKey, string> = {
   "playground.chain.wizard.objective": "Objective step",
   "playground.chain.wizard.kr": "Key Result step",
   "playground.chain.wizard.initiative": "Initiative step",
+  "playground.chain.limit.kr": "Choose up to 3 Key Results for this Objective",
+  "playground.chain.limit.krReached": "You have reached 3 Key Results. Deselect one to choose another.",
+  "playground.chain.limit.init": "Choose up to 3 Initiatives for this Key Result",
+  "playground.chain.limit.initReached": "You have reached 3 Initiatives for this Key Result. Deselect one to choose another.",
+  "playground.chain.initFor": "Initiatives for",
+  "playground.chain.handoff.title": "Nothing here reaches the live dashboard",
+  "playground.chain.handoff.body":
+    "This practice chain — the Objective, its Key Results and their Initiatives — is never copied into live OKR data. Signing in only keeps the chain in your browser for this session so you can re-enter it by hand in the dashboard.",
   "playground.handoff.signIn": "Sign in to use this draft in an OKR set",
   "playground.handoff.noRights":
     "You can copy this draft; edit permission is required to use it in a live OKR set",
@@ -1465,6 +1480,14 @@ const de: Record<StringKey, string> = {
   "playground.chain.wizard.objective": "Objective-Schritt",
   "playground.chain.wizard.kr": "Key-Result-Schritt",
   "playground.chain.wizard.initiative": "Initiativen-Schritt",
+  "playground.chain.limit.kr": "Wähle bis zu 3 Key Results für dieses Objective",
+  "playground.chain.limit.krReached": "Du hast 3 Key Results erreicht. Hebe eine Auswahl auf, um eine andere zu wählen.",
+  "playground.chain.limit.init": "Wähle bis zu 3 Initiativen für dieses Key Result",
+  "playground.chain.limit.initReached": "Du hast 3 Initiativen für dieses Key Result erreicht. Hebe eine Auswahl auf, um eine andere zu wählen.",
+  "playground.chain.initFor": "Initiativen für",
+  "playground.chain.handoff.title": "Nichts davon gelangt ins Live-Dashboard",
+  "playground.chain.handoff.body":
+    "Diese Übungskette — das Objective, seine Key Results und deren Initiativen — wird nie in die Live-OKR-Daten übernommen. Die Anmeldung behält die Kette nur für diese Sitzung im Browser, damit du sie im Dashboard manuell erfassen kannst.",
   "playground.handoff.signIn": "Anmelden, um diesen Entwurf in einem OKR-Set zu verwenden",
   "playground.handoff.noRights":
     "Du kannst diesen Entwurf kopieren; für die Verwendung in einem Live-OKR-Set ist eine Bearbeitungsberechtigung nötig",
@@ -1987,6 +2010,14 @@ const fr: Record<StringKey, string> = {
   "playground.chain.wizard.objective": "Étape Objective",
   "playground.chain.wizard.kr": "Étape Key Result",
   "playground.chain.wizard.initiative": "Étape Initiative",
+  "playground.chain.limit.kr": "Choisissez jusqu’à 3 Key Results pour cet Objective",
+  "playground.chain.limit.krReached": "Vous avez atteint 3 Key Results. Désélectionnez-en un pour en choisir un autre.",
+  "playground.chain.limit.init": "Choisissez jusqu’à 3 initiatives pour ce Key Result",
+  "playground.chain.limit.initReached": "Vous avez atteint 3 initiatives pour ce Key Result. Désélectionnez-en une pour en choisir une autre.",
+  "playground.chain.initFor": "Initiatives pour",
+  "playground.chain.handoff.title": "Rien ici n’atteint le tableau de bord réel",
+  "playground.chain.handoff.body":
+    "Cette chaîne d’entraînement — l’Objective, ses Key Results et leurs initiatives — n’est jamais copiée dans les données OKR réelles. La connexion conserve uniquement la chaîne dans votre navigateur pour cette session, afin de la ressaisir manuellement dans le tableau de bord.",
   "playground.handoff.signIn": "Connectez-vous pour utiliser ce brouillon dans un OKR Set",
   "playground.handoff.noRights":
     "Vous pouvez copier ce brouillon ; une autorisation de modification est requise pour l’utiliser dans un OKR Set actif",
@@ -2506,6 +2537,14 @@ const it: Record<StringKey, string> = {
   "playground.chain.wizard.objective": "Passaggio Objective",
   "playground.chain.wizard.kr": "Passaggio Key Result",
   "playground.chain.wizard.initiative": "Passaggio Iniziativa",
+  "playground.chain.limit.kr": "Scegli fino a 3 Key Result per questo Objective",
+  "playground.chain.limit.krReached": "Hai raggiunto 3 Key Result. Deseleziona un elemento per sceglierne un altro.",
+  "playground.chain.limit.init": "Scegli fino a 3 iniziative per questo Key Result",
+  "playground.chain.limit.initReached": "Hai raggiunto 3 iniziative per questo Key Result. Deseleziona un elemento per sceglierne un altro.",
+  "playground.chain.initFor": "Iniziative per",
+  "playground.chain.handoff.title": "Nulla di questo raggiunge la dashboard reale",
+  "playground.chain.handoff.body":
+    "Questa catena di esercitazione — l’Objective, i suoi Key Result e le relative iniziative — non viene mai copiata nei dati OKR reali. L’accesso conserva la catena solo nel browser per questa sessione, così puoi reinserirla manualmente nella dashboard.",
   "playground.handoff.signIn": "Accedi per usare questa bozza in un OKR Set",
   "playground.handoff.noRights":
     "Puoi copiare questa bozza; per usarla in un OKR Set attivo serve l’autorizzazione di modifica",
