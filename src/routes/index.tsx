@@ -43,6 +43,7 @@ import {
 import { LOCALES, LOCALE_LABELS, type Locale } from "@/lib/i18n-shared";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { pillarName } from "@/lib/i18n-strings";
+import { AssistantDrawer, type AssistantContext } from "@/components/okr/AssistantDrawer";
 import { EditableText } from "@/components/okr/EditableText";
 import { KrMeasurement } from "@/components/okr/KrMeasurement";
 import { formatSwissDate } from "@/components/okr/kr-metrics";
@@ -50,8 +51,6 @@ import { formatSwissDate } from "@/components/okr/kr-metrics";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { LinkInitiativesDialog } from "@/components/okr/LinkInitiativesDialog";
-
-
 
 import {
   DropdownMenu,
@@ -97,8 +96,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "ICFS OKR Dashboard" },
       {
         property: "og:description",
-        content:
-          "ICF Switzerland 2026 OKRs aligned to the ICF Global Strategic Plan 2026–2029.",
+        content: "ICF Switzerland 2026 OKRs aligned to the ICF Global Strategic Plan 2026–2029.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -151,13 +149,7 @@ function useOkrMutations(sourceLang: Locale) {
   const updateAlignFn = useServerFn(updateAlignmentRow);
   const updatePillarFn = useServerFn(updatePillarSummary);
 
-
-  const updateSet = useMutation<
-    unknown,
-    Error,
-    { id: string; patch: Partial<OkrSetDTO> },
-    Ctx
-  >({
+  const updateSet = useMutation<unknown, Error, { id: string; patch: Partial<OkrSetDTO> }, Ctx>({
     mutationFn: (v) => updateOkrSetFn({ data: { id: v.id, patch: v.patch as never, sourceLang } }),
     onMutate: (v) =>
       optimistic((d) => {
@@ -187,12 +179,7 @@ function useOkrMutations(sourceLang: Locale) {
     onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
     onSuccess: invalidate,
   });
-  const updateKr = useMutation<
-    unknown,
-    Error,
-    { id: string; patch: Partial<KeyResultDTO> },
-    Ctx
-  >({
+  const updateKr = useMutation<unknown, Error, { id: string; patch: Partial<KeyResultDTO> }, Ctx>({
     mutationFn: (v) => updateKrFn({ data: { id: v.id, patch: v.patch as never, sourceLang } }),
     onMutate: (v) =>
       optimistic((d) => {
@@ -208,8 +195,7 @@ function useOkrMutations(sourceLang: Locale) {
     mutationFn: (v) => deleteKrFn({ data: { id: v.id } }),
     onMutate: (v) =>
       optimistic((d) => {
-        for (const s of d.okr_sets)
-          s.key_results = s.key_results.filter((k) => k.id !== v.id);
+        for (const s of d.okr_sets) s.key_results = s.key_results.filter((k) => k.id !== v.id);
       }),
     onError: onErr,
     onSettled: invalidate,
@@ -238,35 +224,27 @@ function useOkrMutations(sourceLang: Locale) {
     onMutate: (v) =>
       optimistic((d) => {
         for (const s of d.okr_sets)
-          for (const k of s.key_results)
-            k.initiatives = k.initiatives.filter((i) => i.id !== v.id);
+          for (const k of s.key_results) k.initiatives = k.initiatives.filter((i) => i.id !== v.id);
       }),
     onError: onErr,
     onSettled: invalidate,
   });
 
-  const setInitiativeSecondary = useMutation<
-    unknown,
-    Error,
-    { id: string; kr_ids: string[] },
-    Ctx
-  >({
-    mutationFn: (v) =>
-      setInitiativeSecondaryFn({ data: { id: v.id, kr_ids: v.kr_ids } }),
-    onMutate: (v) =>
-      optimistic((d) => {
-        for (const s of d.okr_sets)
-          for (const k of s.key_results) {
-            const it = k.initiatives.find((i) => i.id === v.id);
-            if (it) it.secondary_kr_ids = [...v.kr_ids];
-          }
-      }),
-    onError: onErr,
-    onSettled: invalidate,
-  });
-
-
-
+  const setInitiativeSecondary = useMutation<unknown, Error, { id: string; kr_ids: string[] }, Ctx>(
+    {
+      mutationFn: (v) => setInitiativeSecondaryFn({ data: { id: v.id, kr_ids: v.kr_ids } }),
+      onMutate: (v) =>
+        optimistic((d) => {
+          for (const s of d.okr_sets)
+            for (const k of s.key_results) {
+              const it = k.initiatives.find((i) => i.id === v.id);
+              if (it) it.secondary_kr_ids = [...v.kr_ids];
+            }
+        }),
+      onError: onErr,
+      onSettled: invalidate,
+    },
+  );
 
   const updateAlign = useMutation<
     unknown,
@@ -302,11 +280,18 @@ function useOkrMutations(sourceLang: Locale) {
   });
 
   return {
-    updateSet, addSet, deleteSet,
-    addKr, updateKr, deleteKr,
-    addInit, updateInit, deleteInit, setInitiativeSecondary,
-    updateAlign, updatePillar,
-
+    updateSet,
+    addSet,
+    deleteSet,
+    addKr,
+    updateKr,
+    deleteKr,
+    addInit,
+    updateInit,
+    deleteInit,
+    setInitiativeSecondary,
+    updateAlign,
+    updatePillar,
   };
 }
 type OkrMutations = ReturnType<typeof useOkrMutations>;
@@ -346,7 +331,9 @@ function LanguageSwitcher() {
 }
 
 function PillarChip({
-  code, canEdit, onRemove,
+  code,
+  canEdit,
+  onRemove,
 }: {
   code: Pillar;
   canEdit: boolean;
@@ -375,7 +362,9 @@ function PillarChip({
 }
 
 function PillarTagList({
-  pillars, canEdit, onChange,
+  pillars,
+  canEdit,
+  onChange,
 }: {
   pillars: Pillar[];
   canEdit: boolean;
@@ -406,10 +395,7 @@ function PillarTagList({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="min-w-[16rem]">
             {available.map((p) => (
-              <DropdownMenuItem
-                key={p}
-                onSelect={() => onChange([...pillars, p])}
-              >
+              <DropdownMenuItem key={p} onSelect={() => onChange([...pillars, p])}>
                 <span className="mr-2 font-semibold text-primary">{p}</span>
                 <span className="text-muted-foreground">{pillarName(locale, p)}</span>
               </DropdownMenuItem>
@@ -446,7 +432,9 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 function RoleLabelSelect({
-  value, canEdit, onChange,
+  value,
+  canEdit,
+  onChange,
 }: {
   value: RoleLabel;
   canEdit: boolean;
@@ -467,7 +455,9 @@ function RoleLabelSelect({
         className="appearance-none inline-flex items-center gap-1 rounded-md border border-primary/25 bg-card pl-2 pr-6 py-1 text-xs font-semibold text-primary cursor-pointer hover:bg-primary/5"
       >
         {ROLE_LABELS.map((r) => (
-          <option key={r} value={r}>{r}</option>
+          <option key={r} value={r}>
+            {r}
+          </option>
         ))}
       </select>
       <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
@@ -477,7 +467,10 @@ function RoleLabelSelect({
 
 /** Small enum picker matching the RoleLabelSelect affordance. */
 function PlainSelect({
-  value, canEdit, options, onChange,
+  value,
+  canEdit,
+  options,
+  onChange,
 }: {
   value: string;
   canEdit: boolean;
@@ -496,7 +489,9 @@ function PlainSelect({
         className="appearance-none inline-flex items-center rounded-md border border-primary/25 bg-card pl-2 pr-6 py-1 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5"
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
         ))}
       </select>
       <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
@@ -506,16 +501,16 @@ function PlainSelect({
 
 /** Date field; empty string is normalised to null so the column stays nullable. */
 function PlainDate({
-  value, canEdit, onChange,
+  value,
+  canEdit,
+  onChange,
 }: {
   value: string | null;
   canEdit: boolean;
   onChange: (v: string | null) => void;
 }) {
   if (!canEdit) {
-    return (
-      <span className="text-sm text-muted-foreground">{formatSwissDate(value) || "—"}</span>
-    );
+    return <span className="text-sm text-muted-foreground">{formatSwissDate(value) || "—"}</span>;
   }
   return (
     <input
@@ -527,11 +522,15 @@ function PlainDate({
   );
 }
 
-
 // ---------- OKR card ----------
 
 function OkrCard({
-  set, canEdit, m, dashboard, secondaryByKr, initiativeOrigin,
+  set,
+  canEdit,
+  m,
+  dashboard,
+  secondaryByKr,
+  initiativeOrigin,
 }: {
   set: OkrSetDTO;
   canEdit: boolean;
@@ -540,16 +539,14 @@ function OkrCard({
   secondaryByKr: Map<string, InitiativeDTO[]>;
   initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
 }) {
-
   const { locale, t } = useLocale();
   const [openKrId, setOpenKrId] = useState<string | null>(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const openKr = openKrId
-    ? set.key_results.find((k) => k.id === openKrId) ?? null
-    : null;
+  // Editor-only assistant drawer. Read-only visitors never see the entry points.
+  const [assistant, setAssistant] = useState<AssistantContext | null>(null);
+  const openKr = openKrId ? (set.key_results.find((k) => k.id === openKrId) ?? null) : null;
 
-  const updateSet = (patch: Partial<OkrSetDTO>) =>
-    m.updateSet.mutate({ id: set.id, patch });
+  const updateSet = (patch: Partial<OkrSetDTO>) => m.updateSet.mutate({ id: set.id, patch });
 
   const titleText = pickTranslation(set, "title", set.title, locale);
   const roleNameText = pickTranslation(set, "role_name", set.role_name, locale);
@@ -617,9 +614,7 @@ function OkrCard({
                   <AlertDialogTitle>
                     {`${t("okr.deleteConfirm")}: ${set.number}. ${titleText || "Untitled"}`}
                   </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t("okr.deleteConfirmBody")}
-                  </AlertDialogDescription>
+                  <AlertDialogDescription>{t("okr.deleteConfirmBody")}</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
@@ -643,7 +638,23 @@ function OkrCard({
       />
 
       <section className="mt-6 rounded-2xl border border-border/70 bg-muted/40 p-5">
-        <div className="eyebrow mb-2">{t("section.objective")}</div>
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <div className="eyebrow">{t("section.objective")}</div>
+          {canEdit && (
+            <button
+              type="button"
+              onClick={() =>
+                setAssistant({
+                  mode: "objective",
+                  contextLabel: `${t("assistant.ctx.set")} ${set.number}`,
+                })
+              }
+              className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+            >
+              {t("assistant.cta.create")}
+            </button>
+          )}
+        </div>
         <EditableText
           as="p"
           multiline
@@ -707,17 +718,25 @@ function OkrCard({
         canEdit={canEdit}
         m={m}
         dashboard={dashboard}
-        secondaryInitiatives={openKr ? secondaryByKr.get(openKr.id) ?? [] : []}
+        secondaryInitiatives={openKr ? (secondaryByKr.get(openKr.id) ?? []) : []}
         initiativeOrigin={initiativeOrigin}
+        objectiveText={objectiveText}
+        onAssist={(ctx) => {
+          setOpenKrId(null);
+          setAssistant(ctx);
+        }}
         onClose={() => setOpenKrId(null)}
       />
 
+      <AssistantDrawer context={assistant} onClose={() => setAssistant(null)} />
     </article>
   );
 }
 
 function KrCard({
-  kr, onOpen, secondaryCount,
+  kr,
+  onOpen,
+  secondaryCount,
 }: {
   kr: KeyResultDTO;
   onOpen: () => void;
@@ -748,7 +767,9 @@ function KrCard({
       </p>
       <KrMeasurement kr={kr} />
       <dl className="mt-3 flex gap-3 text-xs">
-        <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">{t("kr.lead")}</dt>
+        <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">
+          {t("kr.lead")}
+        </dt>
         <dd className="min-w-0 flex-1 truncate text-muted-foreground">
           {lead || <span className="italic">—</span>}
         </dd>
@@ -762,13 +783,24 @@ function KrCard({
 }
 
 function KrDetailSheet({
-  kr, canEdit, m, dashboard, onClose, secondaryInitiatives, initiativeOrigin,
+  kr,
+  canEdit,
+  m,
+  dashboard,
+  onClose,
+  secondaryInitiatives,
+  initiativeOrigin,
+  objectiveText,
+  onAssist,
 }: {
   kr: KeyResultDTO | null;
   canEdit: boolean;
   m: OkrMutations;
   dashboard: DashboardDTO;
   onClose: () => void;
+  /** Parent objective, pre-filled as context for the assistant. */
+  objectiveText: string;
+  onAssist: (context: AssistantContext) => void;
   secondaryInitiatives: InitiativeDTO[];
   initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
 }) {
@@ -792,7 +824,6 @@ function KrDetailSheet({
   const krLead = kr ? pickTranslation(kr, "lead", kr.lead, locale) : "";
   const krMeasure = kr ? pickTranslation(kr, "measure", kr.measure, locale) : "";
   const krInstrument = kr ? pickTranslation(kr, "instrument", kr.instrument, locale) : "";
-
 
   return (
     <Sheet
@@ -821,10 +852,39 @@ function KrDetailSheet({
                   className="text-lg font-semibold leading-snug text-foreground"
                 />
               </SheetTitle>
-              <SheetDescription className="text-left">
-                {t("kr.detailDescription")}
-              </SheetDescription>
+              <SheetDescription className="text-left">{t("kr.detailDescription")}</SheetDescription>
             </SheetHeader>
+
+            {canEdit && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    onAssist({
+                      mode: "kr",
+                      contextLabel: `${t("assistant.ctx.kr")} ${kr.kr || "—"}`,
+                      lockedFirstAnswer: objectiveText,
+                    })
+                  }
+                  className="btn-mono inline-flex h-8 items-center rounded-md border border-primary/25 bg-card px-3 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+                >
+                  {t("assistant.cta.measurable")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    onAssist({
+                      mode: "initiative",
+                      contextLabel: `${t("assistant.ctx.kr")} ${kr.kr || "—"}`,
+                      lockedFirstAnswer: krText,
+                    })
+                  }
+                  className="btn-mono inline-flex h-8 items-center rounded-md border border-primary/25 bg-card px-3 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+                >
+                  {t("assistant.cta.initiatives")}
+                </button>
+              </div>
+            )}
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div>
@@ -971,7 +1031,6 @@ function KrDetailSheet({
               />
             </div>
 
-
             <section className="mt-8">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <SectionLabel>{t("section.relatedInitiatives")}</SectionLabel>
@@ -1111,7 +1170,6 @@ function KrDetailSheet({
               dashboard={dashboard}
             />
 
-
             {canEdit && (
               <div className="mt-8 border-t border-border/60 pt-4">
                 <button
@@ -1125,9 +1183,7 @@ function KrDetailSheet({
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>{t("kr.deleteConfirm")}</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        {t("kr.deleteConfirmBody")}
-                      </AlertDialogDescription>
+                      <AlertDialogDescription>{t("kr.deleteConfirmBody")}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
@@ -1152,11 +1208,13 @@ function KrDetailSheet({
   );
 }
 
-
 // ---------- Alignment table ----------
 
 function ContribCell({
-  value, canEdit, onCycle, label,
+  value,
+  canEdit,
+  onCycle,
+  label,
 }: {
   value: Contribution;
   canEdit: boolean;
@@ -1165,7 +1223,9 @@ function ContribCell({
 }) {
   const dots =
     value === "none" ? (
-      <span className="text-muted-foreground/40" aria-hidden="true">—</span>
+      <span className="text-muted-foreground/40" aria-hidden="true">
+        —
+      </span>
     ) : (
       <span className="inline-flex items-center gap-1" aria-hidden="true">
         <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
@@ -1196,7 +1256,9 @@ function ContribCell({
 }
 
 function AlignmentTable({
-  rows, canEdit, m,
+  rows,
+  canEdit,
+  m,
 }: {
   rows: AlignmentRowDTO[];
   canEdit: boolean;
@@ -1221,9 +1283,7 @@ function AlignmentTable({
         </span>{" "}
         {t("section.alignmentSecondary")}
         {canEdit && (
-          <span className="ml-1 text-muted-foreground/70">
-            {t("section.alignmentCycleHint")}
-          </span>
+          <span className="ml-1 text-muted-foreground/70">{t("section.alignmentCycleHint")}</span>
         )}
       </p>
 
@@ -1292,15 +1352,15 @@ function AlignmentTable({
 // ---------- Page ----------
 
 function Index() {
-  return (
-    <IndexSuspense />
-  );
+  return <IndexSuspense />;
 }
 
 function IndexSuspense() {
   const { t } = useLocale();
   return (
-    <Suspense fallback={<div className="p-8 text-sm text-muted-foreground">{t("common.loading")}</div>}>
+    <Suspense
+      fallback={<div className="p-8 text-sm text-muted-foreground">{t("common.loading")}</div>}
+    >
       <IndexContent />
     </Suspense>
   );
@@ -1350,7 +1410,6 @@ function IndexContent() {
               <LanguageSwitcher />
               <AuthBadge />
             </div>
-
           </div>
 
           <div className="flex flex-wrap items-start justify-between gap-6">
@@ -1376,7 +1435,6 @@ function IndexContent() {
           <h2 className="display-lg mt-5 text-hero-foreground">{t("hero.pillarTitle")}</h2>
         </div>
       </header>
-
 
       <section className="mx-auto -mt-14 max-w-6xl px-8">
         <div className="grid gap-4 md:grid-cols-3">
@@ -1408,9 +1466,7 @@ function IndexContent() {
                   value={descText}
                   canEdit={canEdit}
                   maxLength={LIMITS.pillarDescription}
-                  onSave={(v) =>
-                    m.updatePillar.mutate({ code, patch: { description: v } })
-                  }
+                  onSave={(v) => m.updatePillar.mutate({ code, patch: { description: v } })}
                   className="mt-3 text-sm leading-relaxed text-muted-foreground"
                 />
               </div>
@@ -1425,9 +1481,7 @@ function IndexContent() {
 
         {/* 2026 scorecard: how much of the measurement system actually exists yet. */}
         <MeasurementScorecard data={data} />
-
       </section>
-
 
       <section className="mx-auto max-w-6xl space-y-10 px-8 py-12">
         <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
@@ -1443,7 +1497,6 @@ function IndexContent() {
             secondaryByKr={secondaryByKr}
             initiativeOrigin={initiativeOrigin}
           />
-
         ))}
         {canEdit && (
           <div className="flex justify-center">
@@ -1500,9 +1553,7 @@ function MeasurementScorecard({ data }: { data: DashboardDTO }) {
             <div
               key={key}
               className={`rounded-xl border px-4 py-3 ${
-                complete
-                  ? "border-border bg-card"
-                  : "border-warning-border bg-warning-surface"
+                complete ? "border-border bg-card" : "border-warning-border bg-warning-surface"
               }`}
             >
               <div
@@ -1511,9 +1562,7 @@ function MeasurementScorecard({ data }: { data: DashboardDTO }) {
                 }`}
               >
                 {count}
-                <span className="ml-1 text-base font-medium text-muted-foreground">
-                  / {total}
-                </span>
+                <span className="ml-1 text-base font-medium text-muted-foreground">/ {total}</span>
               </div>
               <div className="mt-1.5 text-sm font-medium text-foreground">{t(key)}</div>
               <div className="text-xs text-muted-foreground">

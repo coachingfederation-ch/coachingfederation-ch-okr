@@ -32,6 +32,7 @@ export function PracticeDraftCard({
   card,
   mode,
   answers,
+  showHandoff = true,
   selected,
   selectLabel,
   selectedLabel,
@@ -42,6 +43,8 @@ export function PracticeDraftCard({
   mode: PlaygroundMode;
   /** The three wizard answers, used by the baseline / instrument / owner checks. */
   answers: string[];
+  /** Hide the public sign-in handoff (authenticated assistant drawer). */
+  showHandoff?: boolean;
   /** Chain selection state; omitted for standalone practice. */
   selected?: boolean;
   selectLabel?: string;
@@ -165,7 +168,7 @@ export function PracticeDraftCard({
 
       <QualityChecks mode={mode} statement={statement} answers={answers} />
 
-      <DraftHandoff mode={mode} statement={statement} />
+      {showHandoff && <DraftHandoff mode={mode} statement={statement} />}
 
       <div className="mt-4 flex flex-wrap gap-2">
         {selectLabel && onSelect && (

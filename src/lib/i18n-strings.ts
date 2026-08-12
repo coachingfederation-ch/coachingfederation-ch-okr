@@ -378,6 +378,17 @@ export type StringKey =
   | "playground.handoff.restored.title"
   | "playground.handoff.restored.body"
   | "playground.handoff.restored.dismiss"
+  | "assistant.eyebrow"
+  | "assistant.description"
+  | "assistant.title.objective"
+  | "assistant.title.kr"
+  | "assistant.title.initiative"
+  | "assistant.footer"
+  | "assistant.cta.create"
+  | "assistant.cta.measurable"
+  | "assistant.cta.initiatives"
+  | "assistant.ctx.set"
+  | "assistant.ctx.kr"
   | "report.eyebrow"
   | "report.title"
   | "report.subtitle"
@@ -892,6 +903,17 @@ const en: Record<StringKey, string> = {
   "playground.handoff.restored.body":
     "This draft was kept in your browser only, so you could find it again after signing in. It is not saved to any OKR set.",
   "playground.handoff.restored.dismiss": "Dismiss",
+  "assistant.eyebrow": "OKR Assistant",
+  "assistant.description": "Guided drafting with quality checks. Nothing is saved to the dashboard in this stage.",
+  "assistant.title.objective": "Drafting an Objective",
+  "assistant.title.kr": "Making a Key Result measurable",
+  "assistant.title.initiative": "Ideating Initiatives",
+  "assistant.footer": "Draft insertion will be enabled in the next stage.",
+  "assistant.cta.create": "Create with Assistant",
+  "assistant.cta.measurable": "Make this measurable",
+  "assistant.cta.initiatives": "Ideate initiatives",
+  "assistant.ctx.set": "OKR Set",
+  "assistant.ctx.kr": "KR",
 };
 
 const de: Record<StringKey, string> = {
@@ -1372,6 +1394,17 @@ const de: Record<StringKey, string> = {
   "playground.handoff.restored.body":
     "Dieser Entwurf wurde nur in deinem Browser behalten, damit du ihn nach der Anmeldung wiederfindest. Er ist in keinem OKR-Set gespeichert.",
   "playground.handoff.restored.dismiss": "Ausblenden",
+  "assistant.eyebrow": "OKR-Assistent",
+  "assistant.description": "Geführtes Entwerfen mit Qualitätsprüfungen. In dieser Stufe wird nichts im Dashboard gespeichert.",
+  "assistant.title.objective": "Objective entwerfen",
+  "assistant.title.kr": "Key Result messbar machen",
+  "assistant.title.initiative": "Initiativen entwickeln",
+  "assistant.footer": "Das Einfügen von Entwürfen wird in der nächsten Stufe aktiviert.",
+  "assistant.cta.create": "Mit Assistent erstellen",
+  "assistant.cta.measurable": "Messbar machen",
+  "assistant.cta.initiatives": "Initiativen entwickeln",
+  "assistant.ctx.set": "OKR-Set",
+  "assistant.ctx.kr": "KR",
 };
 
 const fr: Record<StringKey, string> = {
@@ -1854,6 +1887,17 @@ const fr: Record<StringKey, string> = {
   "playground.handoff.restored.body":
     "Ce brouillon a été conservé uniquement dans votre navigateur, afin que vous puissiez le retrouver après la connexion. Il n’est enregistré dans aucun OKR Set.",
   "playground.handoff.restored.dismiss": "Masquer",
+  "assistant.eyebrow": "Assistant OKR",
+  "assistant.description": "Rédaction guidée avec contrôles de qualité. À ce stade, rien n’est enregistré dans le tableau de bord.",
+  "assistant.title.objective": "Rédiger un Objective",
+  "assistant.title.kr": "Rendre un Key Result mesurable",
+  "assistant.title.initiative": "Imaginer des Initiatives",
+  "assistant.footer": "L’insertion des brouillons sera activée à la prochaine étape.",
+  "assistant.cta.create": "Créer avec l’assistant",
+  "assistant.cta.measurable": "Rendre mesurable",
+  "assistant.cta.initiatives": "Imaginer des initiatives",
+  "assistant.ctx.set": "OKR Set",
+  "assistant.ctx.kr": "KR",
 };
 
 const it: Record<StringKey, string> = {
@@ -2333,6 +2377,17 @@ const it: Record<StringKey, string> = {
   "playground.handoff.restored.body":
     "Questa bozza è stata conservata solo nel tuo browser, così puoi ritrovarla dopo l’accesso. Non è salvata in alcun OKR Set.",
   "playground.handoff.restored.dismiss": "Nascondi",
+  "assistant.eyebrow": "Assistente OKR",
+  "assistant.description": "Stesura guidata con controlli di qualità. In questa fase nulla viene salvato nella dashboard.",
+  "assistant.title.objective": "Redigere un Objective",
+  "assistant.title.kr": "Rendere misurabile un Key Result",
+  "assistant.title.initiative": "Ideare Initiatives",
+  "assistant.footer": "L’inserimento delle bozze sarà attivato nella fase successiva.",
+  "assistant.cta.create": "Crea con l’assistente",
+  "assistant.cta.measurable": "Rendi misurabile",
+  "assistant.cta.initiatives": "Idea iniziative",
+  "assistant.ctx.set": "OKR Set",
+  "assistant.ctx.kr": "KR",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
