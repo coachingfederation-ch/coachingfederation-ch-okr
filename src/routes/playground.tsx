@@ -142,7 +142,7 @@ function PlaygroundPage() {
         </div>
       </header>
 
-      <section className="mx-auto -mt-8 max-w-7xl px-8 pb-16">
+      <section className="mx-auto max-w-7xl px-8 pt-8 pb-16">
         <div
           role="status"
           className="rounded-2xl border border-primary/25 bg-primary/5 px-4 py-3 text-sm font-medium text-primary shadow-soft"
