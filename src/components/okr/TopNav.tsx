@@ -43,6 +43,13 @@ export function TopNav() {
       >
         {t("report.nav")}
       </Link>
+      <Link
+        to="/playground"
+        className={cn(base, isPlaygroundActive ? active : inactive)}
+        aria-current={isPlaygroundActive ? "page" : undefined}
+      >
+        {t("playground.nav")}
+      </Link>
     </nav>
   );
 
