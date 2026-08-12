@@ -401,6 +401,23 @@ export function OkrChain() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("playground.chain.confirm.new.title")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("playground.chain.confirm.new.body")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("playground.chain.confirm.new.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={performReset}>
+              {t("playground.chain.confirm.new.continue")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 }
