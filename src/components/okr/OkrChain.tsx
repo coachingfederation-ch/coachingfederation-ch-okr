@@ -156,7 +156,7 @@ export function OkrChain() {
             {t("playground.chain.cta.title")}
           </h2>
         </div>
-        <Button type="button" variant="outline" className="h-11" onClick={startNewChain}>
+        <Button type="button" variant="outline" className="h-11" onClick={() => setResetOpen(true)}>
           {t("playground.chain.new")}
         </Button>
       </div>
@@ -368,7 +368,7 @@ export function OkrChain() {
             <Button type="button" className="h-11" onClick={copyChain}>
               {t("playground.chain.copy")}
             </Button>
-            <Button type="button" variant="outline" className="h-11" onClick={startNewChain}>
+            <Button type="button" variant="outline" className="h-11" onClick={() => setResetOpen(true)}>
               {t("playground.chain.new")}
             </Button>
           </div>
