@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { QualityChecks } from "@/components/okr/QualityChecks";
+import { DraftHandoff } from "@/components/okr/DraftHandoff";
 import {
   qualityForVariant,
   type DraftCard,
@@ -163,6 +164,8 @@ export function PracticeDraftCard({
       </dl>
 
       <QualityChecks mode={mode} statement={statement} answers={answers} />
+
+      <DraftHandoff mode={mode} statement={statement} />
 
       <div className="mt-4 flex flex-wrap gap-2">
         {selectLabel && onSelect && (

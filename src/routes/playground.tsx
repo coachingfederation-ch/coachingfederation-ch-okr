@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useLocale } from "@/lib/i18n";
 import { AuthBadge } from "@/components/okr/AuthBadge";
@@ -7,6 +7,11 @@ import { TopNav } from "@/components/okr/TopNav";
 import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { PracticeWizard } from "@/components/okr/PracticeWizard";
 import { OkrChain } from "@/components/okr/OkrChain";
+import {
+  clearHandoffDraft,
+  readHandoffDraft,
+  type HandoffDraft,
+} from "@/components/okr/DraftHandoff";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -65,6 +70,11 @@ function PlaygroundPage() {
   // Everything below is component state only: no storage, no network, no writes.
   const [mode, setMode] = useState<PlaygroundMode | null>(null);
   const [chainOpen, setChainOpen] = useState(false);
+  // Session-only handoff: a draft kept before a sign-in redirect, never saved.
+  const [handoff, setHandoff] = useState<HandoffDraft | null>(null);
+  useEffect(() => {
+    setHandoff(readHandoffDraft());
+  }, []);
   const chainRef = useRef<HTMLDivElement | null>(null);
 
   const activeMode = MODES.find((m) => m.id === mode);
@@ -113,6 +123,29 @@ function PlaygroundPage() {
         >
           {t("playground.badge")}
         </div>
+
+        {handoff && (
+          <div className="mt-4 rounded-2xl border border-accent/50 bg-accent/15 px-4 py-3 shadow-soft">
+            <p className="text-sm font-semibold text-foreground">
+              {t("playground.handoff.restored.title")}
+            </p>
+            <p className="mt-1 text-sm text-foreground/90">{handoff.statement}</p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {t("playground.handoff.restored.body")}
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-3 h-11"
+              onClick={() => {
+                clearHandoffDraft();
+                setHandoff(null);
+              }}
+            >
+              {t("playground.handoff.restored.dismiss")}
+            </Button>
+          </div>
+        )}
 
         {/* Primary path: the connected Objective -> Key Result -> Initiative journey. */}
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-primary/40 bg-card p-6 shadow-soft">
