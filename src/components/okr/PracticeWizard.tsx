@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/lib/i18n";
+import type { StringKey } from "@/lib/i18n-strings";
 import { cn } from "@/lib/utils";
 import { PracticeDraftCard } from "@/components/okr/PracticeDraftCard";
 import { PlaygroundGuidance } from "@/components/okr/PlaygroundGuidance";
@@ -37,6 +38,7 @@ export function PracticeWizard({
   mode,
   title,
   lockedFirstAnswer,
+  context,
   selection,
   showGuidance = true,
   showHandoff = true,
@@ -44,6 +46,8 @@ export function PracticeWizard({
   mode: PlaygroundMode;
   title: string;
   lockedFirstAnswer?: string;
+  /** Non-sensitive parent OKR text sent along for better drafting. */
+  context?: string;
   selection?: WizardSelection;
   showGuidance?: boolean;
   /** The sign-in / insert handoff is only meaningful on the public playground. */
