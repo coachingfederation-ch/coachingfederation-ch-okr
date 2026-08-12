@@ -35,12 +35,15 @@ export function PracticeWizard({
   lockedFirstAnswer,
   selection,
   showGuidance = true,
+  showHandoff = true,
 }: {
   mode: PlaygroundMode;
   title: string;
   lockedFirstAnswer?: string;
   selection?: WizardSelection;
   showGuidance?: boolean;
+  /** The sign-in / insert handoff is only meaningful on the public playground. */
+  showHandoff?: boolean;
 }) {
   const { t } = useLocale();
 
@@ -208,6 +211,7 @@ export function PracticeWizard({
                   card={card}
                   mode={mode}
                   answers={effective}
+                  showHandoff={showHandoff}
                   selected={selection?.isSelected(card.id)}
                   selectLabel={selection?.selectLabel}
                   selectedLabel={selection?.selectedLabel}
