@@ -228,6 +228,25 @@ export type StringKey =
   | "playground.wizard.restart"
   | "playground.wizard.generate"
   | "playground.wizard.generating"
+  | "playground.ai.option"
+  | "playground.ai.error.unavailable"
+  | "playground.ai.error.rateLimited"
+  | "playground.ai.error.invalid"
+  | "playground.ai.retry"
+  | "playground.ai.fallback"
+  | "playground.ai.fallbackNote"
+  | "playground.ai.nextQuestions"
+  | "playground.card.warnings"
+  | "playground.meta.measurement"
+  | "playground.meta.baseline"
+  | "playground.meta.target"
+  | "playground.meta.instrument"
+  | "playground.meta.owner"
+  | "playground.meta.effort"
+  | "playground.meta.timing"
+  | "playground.baseline.known"
+  | "playground.baseline.pending"
+  | "playground.baseline.exploratory"
   | "playground.q.objective.1"
   | "playground.q.objective.2"
   | "playground.q.objective.3"
@@ -666,6 +685,25 @@ const en: Record<StringKey, string> = {
   "playground.wizard.restart": "Start again",
   "playground.wizard.generate": "Generate practice drafts",
   "playground.wizard.generating": "Drafting suggestions…",
+  "playground.ai.option": "Option",
+  "playground.ai.error.unavailable": "Drafting is unavailable right now. You can keep writing your own draft below, or try again in a moment.",
+  "playground.ai.error.rateLimited": "Too many drafting requests from this device. Please wait a few minutes, or keep writing your own draft below.",
+  "playground.ai.error.invalid": "The suggestion came back unusable. Try again, or keep writing your own draft below.",
+  "playground.ai.retry": "Try again",
+  "playground.ai.fallback": "Continue with example drafts",
+  "playground.ai.fallbackNote": "Example drafts are illustrative patterns, not AI suggestions. Edit them freely.",
+  "playground.ai.nextQuestions": "Questions to ask next",
+  "playground.card.warnings": "Watch for",
+  "playground.meta.measurement": "Measurement",
+  "playground.meta.baseline": "Baseline",
+  "playground.meta.target": "Target suggestion",
+  "playground.meta.instrument": "Instrument suggestion",
+  "playground.meta.owner": "Suggested owner role",
+  "playground.meta.effort": "Effort",
+  "playground.meta.timing": "Timing / dependencies",
+  "playground.baseline.known": "Known \u2014 stated by you",
+  "playground.baseline.pending": "Pending \u2014 still to be established",
+  "playground.baseline.exploratory": "Exploratory \u2014 the right measure is unclear",
   "playground.q.objective.1": "What strategic change do you want to create?",
   "playground.q.objective.2": "Who should benefit from that change?",
   "playground.q.objective.3": "What should be different by the end of the period?",
@@ -1150,6 +1188,25 @@ const de: Record<StringKey, string> = {
   "playground.wizard.restart": "Neu beginnen",
   "playground.wizard.generate": "Übungsentwürfe erzeugen",
   "playground.wizard.generating": "Vorschläge werden entworfen…",
+  "playground.ai.option": "Option",
+  "playground.ai.error.unavailable": "Die Entwurfshilfe ist im Moment nicht verf\u00fcgbar. Sie k\u00f6nnen unten selbst weiterschreiben oder es gleich nochmals versuchen.",
+  "playground.ai.error.rateLimited": "Zu viele Anfragen von diesem Ger\u00e4t. Bitte warten Sie einige Minuten oder schreiben Sie unten selbst weiter.",
+  "playground.ai.error.invalid": "Der Vorschlag war unbrauchbar. Versuchen Sie es nochmals oder schreiben Sie unten selbst weiter.",
+  "playground.ai.retry": "Nochmals versuchen",
+  "playground.ai.fallback": "Mit Beispielentw\u00fcrfen weiterarbeiten",
+  "playground.ai.fallbackNote": "Beispielentw\u00fcrfe sind Musterformulierungen, keine KI-Vorschl\u00e4ge. Sie k\u00f6nnen sie frei bearbeiten.",
+  "playground.ai.nextQuestions": "N\u00e4chste Fragen",
+  "playground.card.warnings": "Achten Sie auf",
+  "playground.meta.measurement": "Messung",
+  "playground.meta.baseline": "Ausgangswert",
+  "playground.meta.target": "Zielvorschlag",
+  "playground.meta.instrument": "Vorschlag zur Erhebung",
+  "playground.meta.owner": "Vorgeschlagene Rolle",
+  "playground.meta.effort": "Aufwand",
+  "playground.meta.timing": "Zeitpunkt / Abh\u00e4ngigkeiten",
+  "playground.baseline.known": "Bekannt \u2014 von Ihnen genannt",
+  "playground.baseline.pending": "Offen \u2014 noch zu erheben",
+  "playground.baseline.exploratory": "Explorativ \u2014 die passende Messgr\u00f6sse ist unklar",
   "playground.q.objective.1": "Welche strategische Veränderung wollen Sie bewirken?",
   "playground.q.objective.2": "Wer soll von dieser Veränderung profitieren?",
   "playground.q.objective.3": "Was soll am Ende der Periode anders sein?",
@@ -1643,6 +1700,25 @@ const fr: Record<StringKey, string> = {
   "playground.wizard.restart": "Recommencer",
   "playground.wizard.generate": "Générer des brouillons d'exercice",
   "playground.wizard.generating": "Rédaction des suggestions…",
+  "playground.ai.option": "Option",
+  "playground.ai.error.unavailable": "L'aide \u00e0 la r\u00e9daction est indisponible pour le moment. Vous pouvez continuer \u00e0 \u00e9crire vous-m\u00eame ci-dessous ou r\u00e9essayer.",
+  "playground.ai.error.rateLimited": "Trop de demandes depuis cet appareil. Patientez quelques minutes ou continuez \u00e0 \u00e9crire vous-m\u00eame ci-dessous.",
+  "playground.ai.error.invalid": "La suggestion re\u00e7ue est inutilisable. R\u00e9essayez ou continuez \u00e0 \u00e9crire vous-m\u00eame ci-dessous.",
+  "playground.ai.retry": "R\u00e9essayer",
+  "playground.ai.fallback": "Continuer avec des exemples",
+  "playground.ai.fallbackNote": "Les exemples sont des mod\u00e8les de formulation, pas des suggestions IA. Modifiez-les librement.",
+  "playground.ai.nextQuestions": "Questions \u00e0 poser ensuite",
+  "playground.card.warnings": "\u00c0 surveiller",
+  "playground.meta.measurement": "Mesure",
+  "playground.meta.baseline": "Valeur de d\u00e9part",
+  "playground.meta.target": "Cible sugg\u00e9r\u00e9e",
+  "playground.meta.instrument": "Instrument sugg\u00e9r\u00e9",
+  "playground.meta.owner": "R\u00f4le responsable sugg\u00e9r\u00e9",
+  "playground.meta.effort": "Effort",
+  "playground.meta.timing": "Calendrier / d\u00e9pendances",
+  "playground.baseline.known": "Connue \u2014 indiqu\u00e9e par vous",
+  "playground.baseline.pending": "\u00c0 \u00e9tablir",
+  "playground.baseline.exploratory": "Exploratoire \u2014 la bonne mesure reste \u00e0 d\u00e9finir",
   "playground.q.objective.1": "Quel changement stratégique voulez-vous créer ?",
   "playground.q.objective.2": "Qui doit bénéficier de ce changement ?",
   "playground.q.objective.3": "Qu'est-ce qui devra être différent à la fin de la période ?",
@@ -2135,6 +2211,25 @@ const it: Record<StringKey, string> = {
   "playground.wizard.restart": "Ricomincia",
   "playground.wizard.generate": "Genera bozze di esercitazione",
   "playground.wizard.generating": "Sto preparando i suggerimenti…",
+  "playground.ai.option": "Opzione",
+  "playground.ai.error.unavailable": "La generazione di bozze non \u00e8 disponibile in questo momento. Pu\u00f2 continuare a scrivere qui sotto o riprovare fra poco.",
+  "playground.ai.error.rateLimited": "Troppe richieste da questo dispositivo. Attenda alcuni minuti oppure continui a scrivere qui sotto.",
+  "playground.ai.error.invalid": "Il suggerimento ricevuto non \u00e8 utilizzabile. Riprovi oppure continui a scrivere qui sotto.",
+  "playground.ai.retry": "Riprova",
+  "playground.ai.fallback": "Continua con bozze di esempio",
+  "playground.ai.fallbackNote": "Le bozze di esempio sono modelli illustrativi, non suggerimenti AI. Pu\u00f2 modificarle liberamente.",
+  "playground.ai.nextQuestions": "Domande successive",
+  "playground.card.warnings": "Da tenere d'occhio",
+  "playground.meta.measurement": "Misurazione",
+  "playground.meta.baseline": "Valore di partenza",
+  "playground.meta.target": "Target suggerito",
+  "playground.meta.instrument": "Strumento suggerito",
+  "playground.meta.owner": "Ruolo responsabile suggerito",
+  "playground.meta.effort": "Impegno",
+  "playground.meta.timing": "Tempistica / dipendenze",
+  "playground.baseline.known": "Noto \u2014 indicato da lei",
+  "playground.baseline.pending": "Da rilevare",
+  "playground.baseline.exploratory": "Esplorativo \u2014 la misura giusta non \u00e8 chiara",
   "playground.q.objective.1": "Quale cambiamento strategico vuoi creare?",
   "playground.q.objective.2": "Chi dovrebbe beneficiare di questo cambiamento?",
   "playground.q.objective.3": "Che cosa dovrà essere diverso alla fine del periodo?",
