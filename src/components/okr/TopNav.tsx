@@ -15,6 +15,7 @@ export function TopNav() {
   const isOkrsActive = path === "/";
   const isInitiativesActive = path.startsWith("/initiatives");
   const isReportActive = path.startsWith("/report");
+  const isPlaygroundActive = path.startsWith("/playground");
 
   return (
     <nav
