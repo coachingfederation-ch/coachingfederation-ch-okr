@@ -8,13 +8,20 @@ export type DraftQuality = "strong" | "usable" | "refine";
 export type DraftCard = {
   id: string;
   title: string;
-  /** Three deterministic phrasings of the same suggestion, in order. */
+  /** One or more phrasings of the same suggestion, in order. */
   variants: string[];
   /** Short rationale shown as "Why this works". */
   why: string;
   /** Short caution shown as "Watch for" on non-strong variants. */
   watchFor: string;
+  /** Quality assessed by the generator; overrides the variant-index rating. */
+  quality?: DraftQuality;
+  /** Labelled supporting fields (measurement, baseline, owner role, …). */
+  meta?: Array<{ label: string; value: string }>;
+  /** Cautions returned by the generator. */
+  warnings?: string[];
 };
+
 
 type T = (key: StringKey) => string;
 

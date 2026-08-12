@@ -1,10 +1,15 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+
+import { useServerFn } from "@tanstack/react-start";
 
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/lib/i18n";
+import type { StringKey } from "@/lib/i18n-strings";
 import { cn } from "@/lib/utils";
 import { PracticeDraftCard } from "@/components/okr/PracticeDraftCard";
 import { PlaygroundGuidance } from "@/components/okr/PlaygroundGuidance";
+import { generateOkrDrafts } from "@/lib/ai-drafts.functions";
+import { toDraftCards } from "@/lib/ai-draft-mapping";
 import {
   buildDrafts,
   QUESTION_KEYS,
@@ -23,8 +28,9 @@ export type WizardSelection = {
 };
 
 /**
- * The three-question practice wizard. Everything is component state only:
- * no storage, no network, no writes.
+ * The three-question practice wizard. Answers live in component state only;
+ * generation goes through the server-side AI endpoint and nothing is stored
+ * or written to the database.
  *
  * When `lockedFirstAnswer` is provided the first question is supplied by the
  * caller (the connected chain) and only the remaining two are asked.
@@ -33,6 +39,7 @@ export function PracticeWizard({
   mode,
   title,
   lockedFirstAnswer,
+  context,
   selection,
   showGuidance = true,
   showHandoff = true,
@@ -40,20 +47,26 @@ export function PracticeWizard({
   mode: PlaygroundMode;
   title: string;
   lockedFirstAnswer?: string;
+  /** Non-sensitive parent OKR text sent along for better drafting. */
+  context?: string;
   selection?: WizardSelection;
   showGuidance?: boolean;
   /** The sign-in / insert handoff is only meaningful on the public playground. */
   showHandoff?: boolean;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  const generate = useServerFn(generateOkrDrafts);
 
   const questionIndices = lockedFirstAnswer === undefined ? [0, 1, 2] : [1, 2];
   const totalSteps = questionIndices.length;
 
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<string[]>(["", "", ""]);
-  const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [results, setResults] = useState<DraftCard[]>([]);
+  const [errorKey, setErrorKey] = useState<StringKey>("playground.ai.error.unavailable");
+  const [usedFallback, setUsedFallback] = useState(false);
+  const [nextQuestions, setNextQuestions] = useState<string[]>([]);
   const [resetKey, setResetKey] = useState(0);
   const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
@@ -62,16 +75,50 @@ export function PracticeWizard({
       ? answers
       : [lockedFirstAnswer, answers[1] ?? "", answers[2] ?? ""];
 
-  // Believable latency for the mock generator; a real AI call replaces this later.
-  useEffect(() => {
-    if (status !== "loading") return;
-    const id = window.setTimeout(() => {
-      setResults(buildDrafts(mode, effective, t));
+  /**
+   * Real AI generation. Failures never block the user: we surface a plain
+   * error and offer both a retry and a manual/example path so drafting can
+   * continue by hand.
+   */
+  const run = useCallback(async () => {
+    setStatus("loading");
+    setUsedFallback(false);
+    try {
+      const response = await generate({
+        data: {
+          mode,
+          answers: effective,
+          locale,
+          ...(context ? { context } : {}),
+        },
+      });
+      if (!response.ok) {
+        setErrorKey(
+          response.code === "rate_limited"
+            ? "playground.ai.error.rateLimited"
+            : response.code === "invalid"
+              ? "playground.ai.error.invalid"
+              : "playground.ai.error.unavailable",
+        );
+        setStatus("error");
+        return;
+      }
+      setResults(toDraftCards(mode, response.result, t));
+      setNextQuestions(response.result.nextQuestions);
       setStatus("done");
-    }, 1200);
-    return () => window.clearTimeout(id);
+    } catch {
+      setErrorKey("playground.ai.error.unavailable");
+      setStatus("error");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, mode]);
+  }, [mode, locale, effective.join("\u0000"), context]);
+
+  const useExamples = () => {
+    setResults(buildDrafts(mode, effective, t));
+    setNextQuestions([]);
+    setUsedFallback(true);
+    setStatus("done");
+  };
 
   // Move focus to the new question so keyboard and screen-reader users follow along.
   useEffect(() => {
@@ -82,6 +129,8 @@ export function PracticeWizard({
     setStep(0);
     setAnswers(["", "", ""]);
     setResults([]);
+    setNextQuestions([]);
+    setUsedFallback(false);
     setStatus("idle");
     setResetKey((k) => k + 1);
   };
@@ -167,7 +216,7 @@ export function PracticeWizard({
                 type="button"
                 className="h-11"
                 disabled={!canAdvance}
-                onClick={() => setStatus("loading")}
+                onClick={() => void run()}
               >
                 {t("playground.wizard.generate")}
               </Button>
@@ -195,6 +244,31 @@ export function PracticeWizard({
             className="h-4 w-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary motion-reduce:animate-none"
           />
           {t("playground.wizard.generating")}
+        </div>
+      )}
+
+      {status === "error" && (
+        <div
+          role="alert"
+          className="mt-6 rounded-xl border border-destructive/40 bg-destructive/5 p-4"
+        >
+          <p className="text-sm text-foreground">{t(errorKey)}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button type="button" className="h-11" onClick={() => void run()}>
+              {t("playground.ai.retry")}
+            </Button>
+            <Button type="button" variant="outline" className="h-11" onClick={useExamples}>
+              {t("playground.ai.fallback")}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11"
+              onClick={() => setStatus("idle")}
+            >
+              {t("playground.wizard.back")}
+            </Button>
+          </div>
         </div>
       )}
 
@@ -227,6 +301,21 @@ export function PracticeWizard({
             </div>
             {showGuidance && <PlaygroundGuidance />}
           </div>
+          {nextQuestions.length > 0 && (
+            <div className="mt-4 rounded-xl border border-border/70 bg-muted/40 p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {t("playground.ai.nextQuestions")}
+              </p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-foreground/90">
+                {nextQuestions.map((q) => (
+                  <li key={q}>{q}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {usedFallback && (
+            <p className="mt-4 text-sm text-muted-foreground">{t("playground.ai.fallbackNote")}</p>
+          )}
           <p className="mt-4 text-sm text-muted-foreground">{t("playground.result.note")}</p>
           <Button type="button" variant="outline" className="mt-4 h-11" onClick={restart}>
             {t("playground.wizard.restart")}

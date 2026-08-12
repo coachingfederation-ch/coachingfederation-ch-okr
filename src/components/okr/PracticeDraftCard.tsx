@@ -63,7 +63,7 @@ export function PracticeDraftCard({
 
   const base = card.variants[variantIndex] ?? card.variants[0] ?? "";
   const statement = edits[variantIndex] ?? base;
-  const quality = qualityForVariant(variantIndex);
+  const quality = card.quality ?? qualityForVariant(variantIndex);
   const headingId = `${card.id}-title`;
 
   // Keep the chain context in sync with local edits / variant cycling.
@@ -156,13 +156,37 @@ export function PracticeDraftCard({
           </dt>
           <dd className="text-sm text-foreground/90">{card.why}</dd>
         </div>
-        {quality !== "strong" && card.watchFor && (
+        {card.meta?.map((m) => (
+          <div key={m.label}>
+            <dt className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              {m.label}
+            </dt>
+            <dd className="text-sm text-foreground/90">{m.value}</dd>
+          </div>
+        ))}
+        {card.warnings && card.warnings.length > 0 ? (
           <div>
             <dt className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-              {t("playground.card.watch")}
+              {t("playground.card.warnings")}
             </dt>
-            <dd className="text-sm text-foreground/90">{card.watchFor}</dd>
+            <dd className="text-sm text-foreground/90">
+              <ul className="list-disc space-y-1 pl-5">
+                {card.warnings.map((w) => (
+                  <li key={w}>{w}</li>
+                ))}
+              </ul>
+            </dd>
           </div>
+        ) : (
+          quality !== "strong" &&
+          card.watchFor && (
+            <div>
+              <dt className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                {t("playground.card.watch")}
+              </dt>
+              <dd className="text-sm text-foreground/90">{card.watchFor}</dd>
+            </div>
+          )
         )}
       </dl>
 
@@ -182,17 +206,19 @@ export function PracticeDraftCard({
             {selected ? (selectedLabel ?? selectLabel) : selectLabel}
           </Button>
         )}
-        <Button
-          type="button"
-          variant="outline"
-          className="h-11"
-          onClick={() => {
-            setVariantIndex((i) => (i + 1) % card.variants.length);
-            setIsEditing(false);
-          }}
-        >
-          {t("playground.card.tryAnother")}
-        </Button>
+        {card.variants.length > 1 && (
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11"
+            onClick={() => {
+              setVariantIndex((i) => (i + 1) % card.variants.length);
+              setIsEditing(false);
+            }}
+          >
+            {t("playground.card.tryAnother")}
+          </Button>
+        )}
         {!isEditing && (
           <Button
             type="button"
@@ -212,10 +238,12 @@ export function PracticeDraftCard({
       </div>
 
       <p className="mt-2 text-xs text-muted-foreground">
-        <span aria-hidden="true">
-          {t("playground.card.variant")} {variantIndex + 1} {t("playground.wizard.of")}{" "}
-          {card.variants.length}
-        </span>
+        {card.variants.length > 1 && (
+          <span aria-hidden="true">
+            {t("playground.card.variant")} {variantIndex + 1} {t("playground.wizard.of")}{" "}
+            {card.variants.length}
+          </span>
+        )}
         <span aria-live="polite" className="ml-2 font-medium text-primary">
           {copyState === "copied"
             ? t("playground.card.copied")
