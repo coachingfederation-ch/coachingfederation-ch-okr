@@ -65,6 +65,7 @@ export function AssistantDrawer({
                 mode={context.mode}
                 title={context.contextLabel}
                 lockedFirstAnswer={context.lockedFirstAnswer}
+                context={context.lockedFirstAnswer ?? ""}
                 showHandoff={false}
               />
             </div>
