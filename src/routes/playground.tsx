@@ -292,35 +292,13 @@ function PlaygroundPage() {
                 <h4 className="text-base font-semibold text-foreground">
                   {t("playground.result.heading")}
                 </h4>
-                <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  {results.map((card) => (
-                    <article
-                      key={card.id}
-                      className="rounded-xl border border-border/70 bg-background p-4"
-                    >
-                      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        {t("playground.result.tag")}
-                      </p>
-                      <h5 className="mt-1 text-sm font-semibold text-foreground">
-                        {card.title}
-                      </h5>
-                      <p className="mt-2 text-sm leading-relaxed text-foreground/90">
-                        {card.headline}
-                      </p>
-                      {card.lines.length > 0 && (
-                        <dl className="mt-3 space-y-1.5">
-                          {card.lines.map((line) => (
-                            <div key={line.label}>
-                              <dt className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                                {line.label}
-                              </dt>
-                              <dd className="text-sm text-foreground/90">{line.value}</dd>
-                            </div>
-                          ))}
-                        </dl>
-                      )}
-                    </article>
-                  ))}
+                <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                  <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
+                    {results.map((card) => (
+                      <PracticeDraftCard key={`${resetKey}-${card.id}`} card={card} />
+                    ))}
+                  </div>
+                  <PlaygroundGuidance />
                 </div>
                 <p className="mt-4 text-sm text-muted-foreground">
                   {t("playground.result.note")}
@@ -335,6 +313,7 @@ function PlaygroundPage() {
                 </Button>
               </div>
             )}
+
 
             <p className="mt-5 text-xs text-muted-foreground">{t("playground.notSaved")}</p>
           </div>
