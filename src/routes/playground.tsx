@@ -80,7 +80,6 @@ function PlaygroundPage() {
   // Bumped on reset so draft cards remount and drop their local edits.
   const [resetKey, setResetKey] = useState(0);
 
-
   // Believable latency for the mock generator; a real AI call replaces this later.
   useEffect(() => {
     if (status !== "loading" || !mode) return;
@@ -105,7 +104,6 @@ function PlaygroundPage() {
     setStatus("idle");
     setResetKey((k) => k + 1);
   };
-
 
   const answer = answers[step] ?? "";
   const canAdvance = answer.trim().length > 0;
@@ -197,18 +195,16 @@ function PlaygroundPage() {
                   {t(activeMode.titleKey)}
                 </h3>
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                className="h-11"
-                onClick={() => reset(mode)}
-              >
+              <Button type="button" variant="outline" className="h-11" onClick={() => reset(mode)}>
                 {t("playground.wizard.restart")}
               </Button>
             </div>
 
             {/* Progress */}
-            <p aria-live="polite" className="text-xs font-medium tracking-wide text-muted-foreground">
+            <p
+              aria-live="polite"
+              className="text-xs font-medium tracking-wide text-muted-foreground"
+            >
               {t("playground.wizard.step")} {Math.min(step + 1, TOTAL_STEPS)}{" "}
               {t("playground.wizard.of")} {TOTAL_STEPS}
             </p>
@@ -234,9 +230,7 @@ function PlaygroundPage() {
                 >
                   {t(QUESTION_KEYS[mode][step]!)}
                 </h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {t("playground.wizard.hint")}
-                </p>
+                <p className="mt-1 text-sm text-muted-foreground">{t("playground.wizard.hint")}</p>
                 <textarea
                   rows={4}
                   value={answer}
@@ -303,14 +297,17 @@ function PlaygroundPage() {
                 <div className="mt-4 grid gap-4 lg:grid-cols-3">
                   <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
                     {results.map((card) => (
-                      <PracticeDraftCard key={`${resetKey}-${card.id}`} card={card} />
+                      <PracticeDraftCard
+                        key={`${resetKey}-${card.id}`}
+                        card={card}
+                        mode={mode}
+                        answers={answers}
+                      />
                     ))}
                   </div>
                   <PlaygroundGuidance />
                 </div>
-                <p className="mt-4 text-sm text-muted-foreground">
-                  {t("playground.result.note")}
-                </p>
+                <p className="mt-4 text-sm text-muted-foreground">{t("playground.result.note")}</p>
                 <Button
                   type="button"
                   variant="outline"
@@ -321,7 +318,6 @@ function PlaygroundPage() {
                 </Button>
               </div>
             )}
-
 
             <p className="mt-5 text-xs text-muted-foreground">{t("playground.notSaved")}</p>
           </div>
