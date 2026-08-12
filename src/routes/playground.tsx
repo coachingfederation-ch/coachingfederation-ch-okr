@@ -5,6 +5,9 @@ import { useLocale } from "@/lib/i18n";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
+import { PracticeDraftCard } from "@/components/okr/PracticeDraftCard";
+import { PlaygroundGuidance } from "@/components/okr/PlaygroundGuidance";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
@@ -74,6 +77,9 @@ function PlaygroundPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
   const [results, setResults] = useState<DraftCard[]>([]);
   const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  // Bumped on reset so draft cards remount and drop their local edits.
+  const [resetKey, setResetKey] = useState(0);
+
 
   // Believable latency for the mock generator; a real AI call replaces this later.
   useEffect(() => {
@@ -97,7 +103,9 @@ function PlaygroundPage() {
     setAnswers(EMPTY_ANSWERS);
     setResults([]);
     setStatus("idle");
+    setResetKey((k) => k + 1);
   };
+
 
   const answer = answers[step] ?? "";
   const canAdvance = answer.trim().length > 0;
@@ -292,35 +300,13 @@ function PlaygroundPage() {
                 <h4 className="text-base font-semibold text-foreground">
                   {t("playground.result.heading")}
                 </h4>
-                <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  {results.map((card) => (
-                    <article
-                      key={card.id}
-                      className="rounded-xl border border-border/70 bg-background p-4"
-                    >
-                      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        {t("playground.result.tag")}
-                      </p>
-                      <h5 className="mt-1 text-sm font-semibold text-foreground">
-                        {card.title}
-                      </h5>
-                      <p className="mt-2 text-sm leading-relaxed text-foreground/90">
-                        {card.headline}
-                      </p>
-                      {card.lines.length > 0 && (
-                        <dl className="mt-3 space-y-1.5">
-                          {card.lines.map((line) => (
-                            <div key={line.label}>
-                              <dt className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                                {line.label}
-                              </dt>
-                              <dd className="text-sm text-foreground/90">{line.value}</dd>
-                            </div>
-                          ))}
-                        </dl>
-                      )}
-                    </article>
-                  ))}
+                <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                  <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
+                    {results.map((card) => (
+                      <PracticeDraftCard key={`${resetKey}-${card.id}`} card={card} />
+                    ))}
+                  </div>
+                  <PlaygroundGuidance />
                 </div>
                 <p className="mt-4 text-sm text-muted-foreground">
                   {t("playground.result.note")}
@@ -335,6 +321,7 @@ function PlaygroundPage() {
                 </Button>
               </div>
             )}
+
 
             <p className="mt-5 text-xs text-muted-foreground">{t("playground.notSaved")}</p>
           </div>

@@ -3,15 +3,27 @@ import type { StringKey } from "./i18n-strings";
 /** Practice modes offered on the public /playground route. */
 export type PlaygroundMode = "objective" | "kr" | "initiative";
 
+export type DraftQuality = "strong" | "usable" | "refine";
+
 export type DraftCard = {
   id: string;
   title: string;
-  /** Composed suggestion sentence built from the visitor's own answers. */
-  headline: string;
-  lines: { label: string; value: string }[];
+  /** Three deterministic phrasings of the same suggestion, in order. */
+  variants: string[];
+  /** Short rationale shown as "Why this works". */
+  why: string;
+  /** Short caution shown as "Watch for" on non-strong variants. */
+  watchFor: string;
 };
 
 type T = (key: StringKey) => string;
+
+/** Quality rating per variant index — variant 0 is the tightest phrasing. */
+export const VARIANT_QUALITY: DraftQuality[] = ["strong", "usable", "refine"];
+
+export function qualityForVariant(index: number): DraftQuality {
+  return VARIANT_QUALITY[index % VARIANT_QUALITY.length] ?? "usable";
+}
 
 /** The three questions asked per mode, in order. */
 export const QUESTION_KEYS: Record<PlaygroundMode, StringKey[]> = {
@@ -43,29 +55,33 @@ function dropTrailingPeriod(v: string): string {
  * contract the real generator will have to satisfy.
  */
 export function buildDrafts(mode: PlaygroundMode, answers: string[], t: T): DraftCard[] {
-  const a0 = clean(answers[0]);
-  const a1 = clean(answers[1]);
-  const a2 = clean(answers[2]);
+  const a0 = dropTrailingPeriod(clean(answers[0]));
+  const a1 = dropTrailingPeriod(clean(answers[1]));
+  const a2 = dropTrailingPeriod(clean(answers[2]));
 
   if (mode === "objective") {
     return [
       {
         id: "objective-a",
         title: t("playground.result.objective.a.title"),
-        headline: `${dropTrailingPeriod(a0)} ${t("playground.tpl.for")} ${dropTrailingPeriod(a1)}.`,
-        lines: [{ label: t("playground.tpl.byEnd"), value: a2 }],
+        variants: [
+          `${a0} ${t("playground.tpl.for")} ${a1}.`,
+          `${t("playground.tpl.for")} ${a1}: ${a0}.`,
+          `${t("playground.tpl.byEnd")}: ${a0} ${t("playground.tpl.for")} ${a1}.`,
+        ],
+        why: t("playground.why.objective-a"),
+        watchFor: t("playground.watch.objective-a"),
       },
       {
         id: "objective-b",
         title: t("playground.result.objective.b.title"),
-        headline: `${t("playground.tpl.by")}: ${dropTrailingPeriod(a2)}.`,
-        lines: [{ label: t("playground.tpl.who"), value: a1 }],
-      },
-      {
-        id: "objective-note",
-        title: t("playground.result.objective.note.title"),
-        headline: t("playground.result.objective.note.body"),
-        lines: [],
+        variants: [
+          `${t("playground.tpl.by")}: ${a2}.`,
+          `${a2} — ${t("playground.tpl.for")} ${a1}.`,
+          `${t("playground.tpl.byEnd")}: ${a2} (${a1}).`,
+        ],
+        why: t("playground.why.objective-b"),
+        watchFor: t("playground.watch.objective-b"),
       },
     ];
   }
@@ -75,23 +91,24 @@ export function buildDrafts(mode: PlaygroundMode, answers: string[], t: T): Draf
       {
         id: "kr-metric",
         title: t("playground.result.kr.metric.title"),
-        headline: `${t("playground.tpl.measure")}: ${dropTrailingPeriod(a2)}.`,
-        lines: [
-          { label: t("playground.tpl.evidence"), value: a1 },
-          { label: t("playground.tpl.supports"), value: a0 },
+        variants: [
+          `${t("playground.tpl.measure")}: ${a2}.`,
+          `${a1} — ${t("playground.tpl.measure")}: ${a2}.`,
+          `${t("playground.tpl.measure")}: ${a2}. ${t("playground.tpl.supports")}: ${a0}.`,
         ],
+        why: t("playground.why.kr-metric"),
+        watchFor: t("playground.watch.kr-metric"),
       },
       {
         id: "kr-milestone",
         title: t("playground.result.kr.milestone.title"),
-        headline: `${t("playground.tpl.milestone")}: ${dropTrailingPeriod(a1)}.`,
-        lines: [{ label: t("playground.tpl.supports"), value: a0 }],
-      },
-      {
-        id: "kr-note",
-        title: t("playground.result.kr.note.title"),
-        headline: t("playground.result.kr.note.body"),
-        lines: [],
+        variants: [
+          `${t("playground.tpl.milestone")}: ${a1}.`,
+          `${t("playground.tpl.milestone")}: ${a1} — ${t("playground.tpl.supports")}: ${a0}.`,
+          `${t("playground.tpl.byEnd")}: ${a1}.`,
+        ],
+        why: t("playground.why.kr-milestone"),
+        watchFor: t("playground.watch.kr-milestone"),
       },
     ];
   }
@@ -100,20 +117,24 @@ export function buildDrafts(mode: PlaygroundMode, answers: string[], t: T): Draf
     {
       id: "initiative-a",
       title: t("playground.result.initiative.a.title"),
-      headline: `${dropTrailingPeriod(a1)} — ${t("playground.tpl.moves")} ${dropTrailingPeriod(a0)}.`,
-      lines: [{ label: t("playground.tpl.constraints"), value: a2 }],
+      variants: [
+        `${a1} — ${t("playground.tpl.moves")} ${a0}.`,
+        `${a1}. ${t("playground.tpl.constraints")}: ${a2}.`,
+        `${t("playground.tpl.moves")} ${a0}: ${a1}.`,
+      ],
+      why: t("playground.why.initiative-a"),
+      watchFor: t("playground.watch.initiative-a"),
     },
     {
       id: "initiative-b",
       title: t("playground.result.initiative.b.title"),
-      headline: `${t("playground.tpl.smallStep")}: ${dropTrailingPeriod(a1)}.`,
-      lines: [{ label: t("playground.tpl.moves"), value: a0 }],
-    },
-    {
-      id: "initiative-note",
-      title: t("playground.result.initiative.note.title"),
-      headline: t("playground.result.initiative.note.body"),
-      lines: [],
+      variants: [
+        `${t("playground.tpl.smallStep")}: ${a1}.`,
+        `${t("playground.tpl.smallStep")}: ${a1} — ${t("playground.tpl.moves")} ${a0}.`,
+        `${t("playground.tpl.smallStep")}: ${a1} (${a2}).`,
+      ],
+      why: t("playground.why.initiative-b"),
+      watchFor: t("playground.watch.initiative-b"),
     },
   ];
 }
