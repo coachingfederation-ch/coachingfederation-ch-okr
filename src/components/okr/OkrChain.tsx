@@ -43,6 +43,7 @@ export function OkrChain() {
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   // Bumped on "Start a new chain" so the wizards remount clean.
   const [chainKey, setChainKey] = useState(0);
+  const [resetOpen, setResetOpen] = useState(false);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   const available = [true, Boolean(objective), Boolean(kr), Boolean(kr) && initiatives.length > 0];
@@ -98,13 +99,14 @@ export function OkrChain() {
     setPending(null);
   };
 
-  const startNewChain = () => {
+  const performReset = () => {
     setObjective(null);
     setKr(null);
     setInitiatives([]);
     setStep(0);
     setChainKey((k) => k + 1);
     setCopyState("idle");
+    setResetOpen(false);
   };
 
   const chainText = () =>
@@ -154,7 +156,7 @@ export function OkrChain() {
             {t("playground.chain.cta.title")}
           </h2>
         </div>
-        <Button type="button" variant="outline" className="h-11" onClick={startNewChain}>
+        <Button type="button" variant="outline" className="h-11" onClick={() => setResetOpen(true)}>
           {t("playground.chain.new")}
         </Button>
       </div>
@@ -366,7 +368,7 @@ export function OkrChain() {
             <Button type="button" className="h-11" onClick={copyChain}>
               {t("playground.chain.copy")}
             </Button>
-            <Button type="button" variant="outline" className="h-11" onClick={startNewChain}>
+            <Button type="button" variant="outline" className="h-11" onClick={() => setResetOpen(true)}>
               {t("playground.chain.new")}
             </Button>
           </div>
@@ -395,6 +397,23 @@ export function OkrChain() {
             <AlertDialogCancel>{t("playground.chain.confirm.cancel")}</AlertDialogCancel>
             <AlertDialogAction onClick={confirmPending}>
               {t("playground.chain.confirm.continue")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("playground.chain.confirm.new.title")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("playground.chain.confirm.new.body")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("playground.chain.confirm.new.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={performReset}>
+              {t("playground.chain.confirm.new.continue")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

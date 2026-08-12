@@ -381,6 +381,10 @@ export type StringKey =
   | "playground.chain.confirm.kr"
   | "playground.chain.confirm.continue"
   | "playground.chain.confirm.cancel"
+  | "playground.chain.confirm.new.title"
+  | "playground.chain.confirm.new.body"
+  | "playground.chain.confirm.new.continue"
+  | "playground.chain.confirm.new.cancel"
   | "playground.chain.note.objToKr"
   | "playground.chain.note.krToInit"
   | "playground.chain.note.review"
@@ -918,6 +922,11 @@ const en: Record<StringKey, string> = {
     "Changing the Key Result will clear the Initiatives in this practice chain. Continue?",
   "playground.chain.confirm.continue": "Continue",
   "playground.chain.confirm.cancel": "Keep current selection",
+  "playground.chain.confirm.new.title": "Start a new chain?",
+  "playground.chain.confirm.new.body":
+    "Starting a new chain will clear the Objective, Key Results and Initiatives you have built. This cannot be undone. Continue?",
+  "playground.chain.confirm.new.continue": "Start new chain",
+  "playground.chain.confirm.new.cancel": "Keep this chain",
   "playground.chain.note.objToKr":
     "Key Results make success on this Objective observable and measurable.",
   "playground.chain.note.krToInit":
@@ -1428,6 +1437,11 @@ const de: Record<StringKey, string> = {
     "Wenn du das Key Result änderst, werden die Initiativen dieser Übungskette gelöscht. Fortfahren?",
   "playground.chain.confirm.continue": "Fortfahren",
   "playground.chain.confirm.cancel": "Aktuelle Auswahl behalten",
+  "playground.chain.confirm.new.title": "Neue Kette starten?",
+  "playground.chain.confirm.new.body":
+    "Wenn du eine neue Kette startest, werden das Objective, die Key Results und Initiativen gelöscht, die du erstellt hast. Das kann nicht rückgängig gemacht werden. Fortfahren?",
+  "playground.chain.confirm.new.continue": "Neue Kette starten",
+  "playground.chain.confirm.new.cancel": "Diese Kette behalten",
   "playground.chain.note.objToKr":
     "Key Results machen den Erfolg dieses Objectives sichtbar und messbar.",
   "playground.chain.note.krToInit":
@@ -1940,6 +1954,11 @@ const fr: Record<StringKey, string> = {
     "Modifier le Key Result effacera les Initiatives de cette chaîne d’entraînement. Continuer ?",
   "playground.chain.confirm.continue": "Continuer",
   "playground.chain.confirm.cancel": "Conserver la sélection actuelle",
+  "playground.chain.confirm.new.title": "Démarrer une nouvelle chaîne ?",
+  "playground.chain.confirm.new.body":
+    "Démarrer une nouvelle chaîne effacera l’Objective, les Key Results et les Initiatives que vous avez construits. Cela ne peut pas être annulé. Continuer ?",
+  "playground.chain.confirm.new.continue": "Démarrer une nouvelle chaîne",
+  "playground.chain.confirm.new.cancel": "Conserver cette chaîne",
   "playground.chain.note.objToKr":
     "Les Key Results rendent le succès de cet Objective observable et mesurable.",
   "playground.chain.note.krToInit":
@@ -2449,6 +2468,11 @@ const it: Record<StringKey, string> = {
     "Modificando il Key Result verranno cancellate le Iniziative di questa catena di pratica. Continuare?",
   "playground.chain.confirm.continue": "Continua",
   "playground.chain.confirm.cancel": "Mantieni la selezione attuale",
+  "playground.chain.confirm.new.title": "Avviare una nuova catena?",
+  "playground.chain.confirm.new.body":
+    "Avviando una nuova catena verranno cancellati l’Objective, i Key Result e le Iniziative che hai costruito. Non può essere annullato. Continuare?",
+  "playground.chain.confirm.new.continue": "Avvia una nuova catena",
+  "playground.chain.confirm.new.cancel": "Mantieni questa catena",
   "playground.chain.note.objToKr":
     "I Key Result rendono osservabile e misurabile il successo di questo Objective.",
   "playground.chain.note.krToInit":
