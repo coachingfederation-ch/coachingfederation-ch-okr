@@ -645,7 +645,7 @@ export function EditInitiativeDialog({
             </div>
 
             <div className="grid gap-1.5 min-w-0">
-              <Label htmlFor="ei-kind">{t("work.kindLabel")}</Label>
+              <Label htmlFor="ei-kind">{t("work.kind")}</Label>
               <Select
                 value={kind}
                 onValueChange={(v) => setKind(v as InitiativeKind)}
@@ -821,7 +821,7 @@ export function EditInitiativeDialog({
                     id="ei-bet-action"
                     rows={2}
                     value={betAction}
-                    maxLength={LIMITS.betText}
+                    maxLength={LIMITS.betPart}
                     onChange={(e) => setBetAction(e.target.value)}
                     disabled={!canEdit}
                   />
@@ -832,7 +832,7 @@ export function EditInitiativeDialog({
                     id="ei-bet-change"
                     rows={2}
                     value={betChange}
-                    maxLength={LIMITS.betText}
+                    maxLength={LIMITS.betPart}
                     onChange={(e) => setBetChange(e.target.value)}
                     disabled={!canEdit}
                   />
@@ -843,7 +843,7 @@ export function EditInitiativeDialog({
                     id="ei-bet-question"
                     rows={2}
                     value={betQuestion}
-                    maxLength={LIMITS.betText}
+                    maxLength={LIMITS.betPart}
                     onChange={(e) => setBetQuestion(e.target.value)}
                     disabled={!canEdit}
                   />
