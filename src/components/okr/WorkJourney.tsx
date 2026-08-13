@@ -7,7 +7,6 @@ import { Check, Sparkles, Trash2 } from "lucide-react";
 
 import { addInitiative, addMilestone, addSignal } from "@/lib/okr.functions";
 import { generateOkrDrafts } from "@/lib/ai-drafts.functions";
-import type { InitiativeDraft } from "@/lib/ai-drafts.server";
 import {
   BET_CONFIDENCES,
   EVIDENCE_TYPES,
@@ -68,6 +67,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+
+/** Shape of one assistant initiative suggestion (mirrors the server draft). */
+type InitiativeDraft = {
+  title: string;
+  why: string;
+  owner_role: string;
+  effort: string;
+  timing: string;
+};
 
 const STATUS_KEY: Record<InitiativeStatus, StringKey> = {
   planned: "initiatives.status.planned",
