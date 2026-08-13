@@ -6,7 +6,6 @@ import { getDashboard } from "@/lib/okr.functions";
 import {
   INITIATIVE_KINDS,
   INITIATIVE_STATUSES,
-  type InitiativeKind,
   type InitiativeStatus,
   type OkrSetDTO,
 } from "@/lib/okr-schemas";
@@ -15,9 +14,9 @@ import { pickTranslation, useLocale } from "@/lib/i18n";
 import type { StringKey } from "@/lib/i18n-strings";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
-import { NewInitiativeDialog } from "@/components/okr/NewInitiativeDialog";
+import { WorkJourney } from "@/components/okr/WorkJourney";
 import { WorkCard } from "@/components/okr/WorkCard";
-import { KIND_KEY, KIND_PLURAL_KEY } from "@/components/okr/work-meta";
+import { KIND_PLURAL_KEY } from "@/components/okr/work-meta";
 import type { FlatInitiative } from "@/components/okr/initiative-meta";
 import { Button } from "@/components/ui/button";
 import {
@@ -85,7 +84,9 @@ function LanguageSwitcher() {
             aria-label={LOCALE_LABELS[l]}
             className={cn(
               "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider transition-colors",
-              active ? "bg-card text-primary shadow-sm" : "text-hero-foreground/80 hover:text-hero-foreground",
+              active
+                ? "bg-card text-primary shadow-sm"
+                : "text-hero-foreground/80 hover:text-hero-foreground",
             )}
           >
             {l}
@@ -132,7 +133,6 @@ function InitiativesContent() {
   const [kindFilter, setKindFilter] = useState<string>("all");
   const [teamFilter, setTeamFilter] = useState<string>("all");
   const [createOpen, setCreateOpen] = useState(false);
-  const [createKind, setCreateKind] = useState<InitiativeKind>("initiative");
 
   const teamNameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -221,11 +221,6 @@ function InitiativesContent() {
     }
     return ordered;
   }, [filtered, data.teams, teamNameById, t]);
-
-  const openCreate = (kind: InitiativeKind) => {
-    setCreateKind(kind);
-    setCreateOpen(true);
-  };
 
   return (
     <main className="min-h-dvh">
@@ -338,50 +333,42 @@ function InitiativesContent() {
                 {filtered.length} / {flat.length}
               </span>
               {canEdit && (
-                <div className="flex flex-wrap items-center gap-2">
-                  {INITIATIVE_KINDS.map((k) => (
-                    <Button
-                      key={k}
-                      size="sm"
-                      variant={k === "initiative" ? "default" : "outline"}
-                      onClick={() => openCreate(k)}
-                    >
-                      + {t(KIND_KEY[k])}
-                    </Button>
-                  ))}
-                </div>
+                <Button size="sm" onClick={() => setCreateOpen(true)}>
+                  + {t("journey.add")}
+                </Button>
               )}
             </div>
           </div>
         </div>
 
-        {krFilter !== "all" && (() => {
-          const set = data.okr_sets.find((s) => s.key_results.some((k) => k.id === krFilter));
-          const kr = set?.key_results.find((k) => k.id === krFilter);
-          if (!set || !kr) return null;
-          const okrTitle = pickTranslation(set, "title", set.title, locale) || "Untitled";
-          const krText = pickTranslation(kr, "text", kr.text, locale) || "Untitled KR";
-          return (
-            <div className="mt-3 flex items-start gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-soft">
-              <span className="mt-0.5 inline-flex h-6 shrink-0 items-center rounded bg-primary/10 px-2 text-[11px] font-bold text-primary">
-                {set.number}.{kr.kr?.includes(".") ? kr.kr.split(".")[1] : kr.kr || "—"}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                  {set.number}. {okrTitle}
-                </p>
-                <p className="text-sm font-semibold text-foreground">{krText}</p>
+        {krFilter !== "all" &&
+          (() => {
+            const set = data.okr_sets.find((s) => s.key_results.some((k) => k.id === krFilter));
+            const kr = set?.key_results.find((k) => k.id === krFilter);
+            if (!set || !kr) return null;
+            const okrTitle = pickTranslation(set, "title", set.title, locale) || "Untitled";
+            const krText = pickTranslation(kr, "text", kr.text, locale) || "Untitled KR";
+            return (
+              <div className="mt-3 flex items-start gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-soft">
+                <span className="mt-0.5 inline-flex h-6 shrink-0 items-center rounded bg-primary/10 px-2 text-[11px] font-bold text-primary">
+                  {set.number}.{kr.kr?.includes(".") ? kr.kr.split(".")[1] : kr.kr || "—"}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    {set.number}. {okrTitle}
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">{krText}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setKrFilter("all")}
+                  className="shrink-0 text-xs font-medium text-muted-foreground hover:text-foreground"
+                >
+                  {t("common.cancel")}
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setKrFilter("all")}
-                className="shrink-0 text-xs font-medium text-muted-foreground hover:text-foreground"
-              >
-                {t("common.cancel")}
-              </button>
-            </div>
-          );
-        })()}
+            );
+          })()}
       </section>
 
       <section className="mx-auto max-w-7xl px-8 py-8">
@@ -404,11 +391,10 @@ function InitiativesContent() {
         </p>
       </section>
 
-      <NewInitiativeDialog
+      <WorkJourney
         open={createOpen}
         onOpenChange={setCreateOpen}
         dashboard={data}
-        kind={createKind}
         defaultKrId={krFilter !== "all" ? krFilter : undefined}
       />
     </main>

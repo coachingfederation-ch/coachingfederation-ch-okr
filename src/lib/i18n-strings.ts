@@ -254,6 +254,51 @@ export type StringKey =
   | "work.form.team"
   | "work.form.unassigned"
   | "work.deleteEntry"
+  | "journey.add"
+  | "journey.title"
+  | "journey.subtitle"
+  | "journey.step"
+  | "journey.of"
+  | "journey.next"
+  | "journey.back"
+  | "journey.skip"
+  | "journey.finish"
+  | "journey.creating"
+  | "journey.step.kind"
+  | "journey.step.kindHelp"
+  | "journey.kindDesc.candidate"
+  | "journey.kindDesc.simple_task"
+  | "journey.kindDesc.initiative"
+  | "journey.step.context"
+  | "journey.step.contextHelp"
+  | "journey.secondaryKrs"
+  | "journey.secondaryKrsHelp"
+  | "journey.noSecondaryKrs"
+  | "journey.step.work"
+  | "journey.step.workHelp"
+  | "journey.step.aspiration"
+  | "journey.step.aspirationHelp"
+  | "journey.step.bet"
+  | "journey.step.betHelp"
+  | "journey.step.signals"
+  | "journey.step.signalsHelp"
+  | "journey.step.milestones"
+  | "journey.step.milestonesHelp"
+  | "journey.step.review"
+  | "journey.step.reviewHelp"
+  | "journey.needTitle"
+  | "journey.needKr"
+  | "journey.suggest"
+  | "journey.suggesting"
+  | "journey.suggestFailed"
+  | "journey.suggestions"
+  | "journey.useThis"
+  | "journey.dismiss"
+  | "journey.discardTitle"
+  | "journey.discardBody"
+  | "journey.discardConfirm"
+  | "journey.childFailed"
+  | "journey.reviewNothing"
   | "common.cancel"
   | "common.create"
   | "common.creating"
@@ -804,12 +849,16 @@ const en: Record<StringKey, string> = {
   "playground.wizard.generate": "Generate practice drafts",
   "playground.wizard.generating": "Drafting suggestions…",
   "playground.ai.option": "Option",
-  "playground.ai.error.unavailable": "Drafting is unavailable right now. You can keep writing your own draft below, or try again in a moment.",
-  "playground.ai.error.rateLimited": "Too many drafting requests from this device. Please wait a few minutes, or keep writing your own draft below.",
-  "playground.ai.error.invalid": "The suggestion came back unusable. Try again, or keep writing your own draft below.",
+  "playground.ai.error.unavailable":
+    "Drafting is unavailable right now. You can keep writing your own draft below, or try again in a moment.",
+  "playground.ai.error.rateLimited":
+    "Too many drafting requests from this device. Please wait a few minutes, or keep writing your own draft below.",
+  "playground.ai.error.invalid":
+    "The suggestion came back unusable. Try again, or keep writing your own draft below.",
   "playground.ai.retry": "Try again",
   "playground.ai.fallback": "Continue with example drafts",
-  "playground.ai.fallbackNote": "Example drafts are illustrative patterns, not AI suggestions. Edit them freely.",
+  "playground.ai.fallbackNote":
+    "Example drafts are illustrative patterns, not AI suggestions. Edit them freely.",
   "playground.ai.nextQuestions": "Questions to ask next",
   "playground.card.warnings": "Watch for",
   "playground.meta.measurement": "Measurement",
@@ -1052,9 +1101,11 @@ const en: Record<StringKey, string> = {
   "playground.chain.wizard.kr": "Key Result step",
   "playground.chain.wizard.initiative": "Initiative step",
   "playground.chain.limit.kr": "Choose up to 3 Key Results for this Objective",
-  "playground.chain.limit.krReached": "You have reached 3 Key Results. Deselect one to choose another.",
+  "playground.chain.limit.krReached":
+    "You have reached 3 Key Results. Deselect one to choose another.",
   "playground.chain.limit.init": "Choose up to 3 Initiatives for this Key Result",
-  "playground.chain.limit.initReached": "You have reached 3 Initiatives for this Key Result. Deselect one to choose another.",
+  "playground.chain.limit.initReached":
+    "You have reached 3 Initiatives for this Key Result. Deselect one to choose another.",
   "playground.chain.initFor": "Initiatives for",
   "playground.chain.handoff.title": "Nothing here reaches the live dashboard",
   "playground.chain.handoff.body":
@@ -1074,7 +1125,8 @@ const en: Record<StringKey, string> = {
     "This draft was kept in your browser only, so you could find it again after signing in. It is not saved to any OKR set.",
   "playground.handoff.restored.dismiss": "Dismiss",
   "assistant.eyebrow": "OKR Assistant",
-  "assistant.description": "Guided drafting with quality checks. Nothing is saved to the dashboard in this stage.",
+  "assistant.description":
+    "Guided drafting with quality checks. Nothing is saved to the dashboard in this stage.",
   "assistant.title.objective": "Drafting an Objective",
   "assistant.title.kr": "Making a Key Result measurable",
   "assistant.title.initiative": "Ideating Initiatives",
@@ -1181,6 +1233,54 @@ const en: Record<StringKey, string> = {
   "work.form.team": "Team",
   "work.form.unassigned": "Not assigned",
   "work.deleteEntry": "Remove",
+  "journey.add": "Add work",
+  "journey.title": "Create a piece of work",
+  "journey.subtitle":
+    "A short guided journey: pick the type of work, place it in the strategy, then frame it as far as you want to go today.",
+  "journey.step": "Step",
+  "journey.of": "of",
+  "journey.next": "Next",
+  "journey.back": "Back",
+  "journey.skip": "Skip this step",
+  "journey.finish": "Create",
+  "journey.creating": "Creating\u2026",
+  "journey.step.kind": "What kind of work is this?",
+  "journey.step.kindHelp": "Pick the lightest form that fits. You can change the type later.",
+  "journey.kindDesc.candidate": "A captured thought \u2014 no dates, no commitments.",
+  "journey.kindDesc.simple_task": "Committed work with an owner and dates.",
+  "journey.kindDesc.initiative": "A 90-day leg with signals, a bet and milestones.",
+  "journey.step.context": "Where does it belong?",
+  "journey.step.contextHelp": "Connect the work to the objective and key result it serves.",
+  "journey.secondaryKrs": "Also contributes to",
+  "journey.secondaryKrsHelp": "Optional \u2014 other key results this work supports.",
+  "journey.noSecondaryKrs": "No other key results selected.",
+  "journey.step.work": "The work itself",
+  "journey.step.workHelp": "Give it a clear title and say who carries it.",
+  "journey.step.aspiration": "Aspiration and the 90-day leg",
+  "journey.step.aspirationHelp": "What are we reaching for, and over which period?",
+  "journey.step.bet": "Our bet",
+  "journey.step.betHelp": "Say what you will try, what you expect, and what you will learn.",
+  "journey.step.signals": "Signals we watch",
+  "journey.step.signalsHelp":
+    "How will we notice that something is shifting? You can add these later.",
+  "journey.step.milestones": "Milestones",
+  "journey.step.milestonesHelp": "A few dated markers along the way. You can add these later.",
+  "journey.step.review": "Review and create",
+  "journey.step.reviewHelp": "Check the framing, then create the work.",
+  "journey.needTitle": "Add a title to continue.",
+  "journey.needKr": "Choose a key result to continue.",
+  "journey.suggest": "Suggest with the assistant",
+  "journey.suggesting": "Asking the assistant\u2026",
+  "journey.suggestFailed": "The assistant is unavailable right now.",
+  "journey.suggestions": "Assistant suggestions",
+  "journey.useThis": "Use this",
+  "journey.dismiss": "Dismiss",
+  "journey.discardTitle": "Discard this work?",
+  "journey.discardBody":
+    "You have not created it yet. Everything captured in this journey will be lost.",
+  "journey.discardConfirm": "Discard",
+  "journey.childFailed": "The work was created, but some signals or milestones could not be saved.",
+  "journey.reviewNothing": "Nothing captured yet.",
 };
 
 const de: Record<StringKey, string> = {
@@ -1423,12 +1523,16 @@ const de: Record<StringKey, string> = {
   "playground.wizard.generate": "Übungsentwürfe erzeugen",
   "playground.wizard.generating": "Vorschläge werden entworfen…",
   "playground.ai.option": "Option",
-  "playground.ai.error.unavailable": "Die Entwurfshilfe ist im Moment nicht verf\u00fcgbar. Sie k\u00f6nnen unten selbst weiterschreiben oder es gleich nochmals versuchen.",
-  "playground.ai.error.rateLimited": "Zu viele Anfragen von diesem Ger\u00e4t. Bitte warten Sie einige Minuten oder schreiben Sie unten selbst weiter.",
-  "playground.ai.error.invalid": "Der Vorschlag war unbrauchbar. Versuchen Sie es nochmals oder schreiben Sie unten selbst weiter.",
+  "playground.ai.error.unavailable":
+    "Die Entwurfshilfe ist im Moment nicht verf\u00fcgbar. Sie k\u00f6nnen unten selbst weiterschreiben oder es gleich nochmals versuchen.",
+  "playground.ai.error.rateLimited":
+    "Zu viele Anfragen von diesem Ger\u00e4t. Bitte warten Sie einige Minuten oder schreiben Sie unten selbst weiter.",
+  "playground.ai.error.invalid":
+    "Der Vorschlag war unbrauchbar. Versuchen Sie es nochmals oder schreiben Sie unten selbst weiter.",
   "playground.ai.retry": "Nochmals versuchen",
   "playground.ai.fallback": "Mit Beispielentw\u00fcrfen weiterarbeiten",
-  "playground.ai.fallbackNote": "Beispielentw\u00fcrfe sind Musterformulierungen, keine KI-Vorschl\u00e4ge. Sie k\u00f6nnen sie frei bearbeiten.",
+  "playground.ai.fallbackNote":
+    "Beispielentw\u00fcrfe sind Musterformulierungen, keine KI-Vorschl\u00e4ge. Sie k\u00f6nnen sie frei bearbeiten.",
   "playground.ai.nextQuestions": "N\u00e4chste Fragen",
   "playground.card.warnings": "Achten Sie auf",
   "playground.meta.measurement": "Messung",
@@ -1678,9 +1782,11 @@ const de: Record<StringKey, string> = {
   "playground.chain.wizard.kr": "Key-Result-Schritt",
   "playground.chain.wizard.initiative": "Initiativen-Schritt",
   "playground.chain.limit.kr": "Wähle bis zu 3 Key Results für dieses Objective",
-  "playground.chain.limit.krReached": "Du hast 3 Key Results erreicht. Hebe eine Auswahl auf, um eine andere zu wählen.",
+  "playground.chain.limit.krReached":
+    "Du hast 3 Key Results erreicht. Hebe eine Auswahl auf, um eine andere zu wählen.",
   "playground.chain.limit.init": "Wähle bis zu 3 Initiativen für dieses Key Result",
-  "playground.chain.limit.initReached": "Du hast 3 Initiativen für dieses Key Result erreicht. Hebe eine Auswahl auf, um eine andere zu wählen.",
+  "playground.chain.limit.initReached":
+    "Du hast 3 Initiativen für dieses Key Result erreicht. Hebe eine Auswahl auf, um eine andere zu wählen.",
   "playground.chain.initFor": "Initiativen für",
   "playground.chain.handoff.title": "Nichts davon gelangt ins Live-Dashboard",
   "playground.chain.handoff.body":
@@ -1700,7 +1806,8 @@ const de: Record<StringKey, string> = {
     "Dieser Entwurf wurde nur in deinem Browser behalten, damit du ihn nach der Anmeldung wiederfindest. Er ist in keinem OKR-Set gespeichert.",
   "playground.handoff.restored.dismiss": "Ausblenden",
   "assistant.eyebrow": "OKR-Assistent",
-  "assistant.description": "Geführtes Entwerfen mit Qualitätsprüfungen. In dieser Stufe wird nichts im Dashboard gespeichert.",
+  "assistant.description":
+    "Geführtes Entwerfen mit Qualitätsprüfungen. In dieser Stufe wird nichts im Dashboard gespeichert.",
   "assistant.title.objective": "Objective entwerfen",
   "assistant.title.kr": "Key Result messbar machen",
   "assistant.title.initiative": "Initiativen entwickeln",
@@ -1807,6 +1914,59 @@ const de: Record<StringKey, string> = {
   "work.form.team": "Team",
   "work.form.unassigned": "Nicht zugewiesen",
   "work.deleteEntry": "Entfernen",
+  "journey.add": "Arbeit hinzuf\u00fcgen",
+  "journey.title": "Eine Arbeit erstellen",
+  "journey.subtitle":
+    "Ein kurzer gef\u00fchrter Ablauf: Art der Arbeit w\u00e4hlen, in der Strategie verorten und so weit ausformulieren, wie du heute kommst.",
+  "journey.step": "Schritt",
+  "journey.of": "von",
+  "journey.next": "Weiter",
+  "journey.back": "Zur\u00fcck",
+  "journey.skip": "Schritt \u00fcberspringen",
+  "journey.finish": "Erstellen",
+  "journey.creating": "Wird erstellt\u2026",
+  "journey.step.kind": "Um welche Art von Arbeit geht es?",
+  "journey.step.kindHelp":
+    "W\u00e4hle die leichteste passende Form. Die Art l\u00e4sst sich sp\u00e4ter \u00e4ndern.",
+  "journey.kindDesc.candidate":
+    "Ein festgehaltener Gedanke \u2014 keine Termine, keine Verpflichtung.",
+  "journey.kindDesc.simple_task": "Verbindliche Arbeit mit Verantwortung und Terminen.",
+  "journey.kindDesc.initiative": "Eine 90-Tage-Etappe mit Signalen, einer Wette und Meilensteinen.",
+  "journey.step.context": "Wo geh\u00f6rt das hin?",
+  "journey.step.contextHelp": "Verbinde die Arbeit mit dem Ziel und dem Key Result, dem sie dient.",
+  "journey.secondaryKrs": "Zahlt zus\u00e4tzlich ein auf",
+  "journey.secondaryKrsHelp":
+    "Optional \u2014 weitere Key Results, die diese Arbeit unterst\u00fctzt.",
+  "journey.noSecondaryKrs": "Keine weiteren Key Results gew\u00e4hlt.",
+  "journey.step.work": "Die Arbeit selbst",
+  "journey.step.workHelp": "Gib ihr einen klaren Titel und benenne, wer sie tr\u00e4gt.",
+  "journey.step.aspiration": "Anspruch und 90-Tage-Etappe",
+  "journey.step.aspirationHelp": "Wonach streben wir, und in welchem Zeitraum?",
+  "journey.step.bet": "Unsere Wette",
+  "journey.step.betHelp":
+    "Beschreibe, was ihr versucht, was ihr erwartet und was ihr lernen wollt.",
+  "journey.step.signals": "Signale, die wir beobachten",
+  "journey.step.signalsHelp":
+    "Woran merken wir, dass sich etwas bewegt? Das l\u00e4sst sich auch sp\u00e4ter erg\u00e4nzen.",
+  "journey.step.milestones": "Meilensteine",
+  "journey.step.milestonesHelp":
+    "Ein paar datierte Marken unterwegs. Das l\u00e4sst sich auch sp\u00e4ter erg\u00e4nzen.",
+  "journey.step.review": "Pr\u00fcfen und erstellen",
+  "journey.step.reviewHelp": "Pr\u00fcfe die Rahmung und erstelle die Arbeit.",
+  "journey.needTitle": "Bitte einen Titel angeben.",
+  "journey.needKr": "Bitte ein Key Result w\u00e4hlen.",
+  "journey.suggest": "Mit dem Assistenten vorschlagen",
+  "journey.suggesting": "Assistent wird gefragt\u2026",
+  "journey.suggestFailed": "Der Assistent ist gerade nicht verf\u00fcgbar.",
+  "journey.suggestions": "Vorschl\u00e4ge des Assistenten",
+  "journey.useThis": "\u00dcbernehmen",
+  "journey.dismiss": "Verwerfen",
+  "journey.discardTitle": "Diese Arbeit verwerfen?",
+  "journey.discardBody": "Sie wurde noch nicht erstellt. Alles aus diesem Ablauf geht verloren.",
+  "journey.discardConfirm": "Verwerfen",
+  "journey.childFailed":
+    "Die Arbeit wurde erstellt, aber einzelne Signale oder Meilensteine konnten nicht gespeichert werden.",
+  "journey.reviewNothing": "Noch nichts erfasst.",
 };
 
 const fr: Record<StringKey, string> = {
@@ -2051,12 +2211,16 @@ const fr: Record<StringKey, string> = {
   "playground.wizard.generate": "Générer des brouillons d'exercice",
   "playground.wizard.generating": "Rédaction des suggestions…",
   "playground.ai.option": "Option",
-  "playground.ai.error.unavailable": "L'aide \u00e0 la r\u00e9daction est indisponible pour le moment. Vous pouvez continuer \u00e0 \u00e9crire vous-m\u00eame ci-dessous ou r\u00e9essayer.",
-  "playground.ai.error.rateLimited": "Trop de demandes depuis cet appareil. Patientez quelques minutes ou continuez \u00e0 \u00e9crire vous-m\u00eame ci-dessous.",
-  "playground.ai.error.invalid": "La suggestion re\u00e7ue est inutilisable. R\u00e9essayez ou continuez \u00e0 \u00e9crire vous-m\u00eame ci-dessous.",
+  "playground.ai.error.unavailable":
+    "L'aide \u00e0 la r\u00e9daction est indisponible pour le moment. Vous pouvez continuer \u00e0 \u00e9crire vous-m\u00eame ci-dessous ou r\u00e9essayer.",
+  "playground.ai.error.rateLimited":
+    "Trop de demandes depuis cet appareil. Patientez quelques minutes ou continuez \u00e0 \u00e9crire vous-m\u00eame ci-dessous.",
+  "playground.ai.error.invalid":
+    "La suggestion re\u00e7ue est inutilisable. R\u00e9essayez ou continuez \u00e0 \u00e9crire vous-m\u00eame ci-dessous.",
   "playground.ai.retry": "R\u00e9essayer",
   "playground.ai.fallback": "Continuer avec des exemples",
-  "playground.ai.fallbackNote": "Les exemples sont des mod\u00e8les de formulation, pas des suggestions IA. Modifiez-les librement.",
+  "playground.ai.fallbackNote":
+    "Les exemples sont des mod\u00e8les de formulation, pas des suggestions IA. Modifiez-les librement.",
   "playground.ai.nextQuestions": "Questions \u00e0 poser ensuite",
   "playground.card.warnings": "\u00c0 surveiller",
   "playground.meta.measurement": "Mesure",
@@ -2068,7 +2232,8 @@ const fr: Record<StringKey, string> = {
   "playground.meta.timing": "Calendrier / d\u00e9pendances",
   "playground.baseline.known": "Connue \u2014 indiqu\u00e9e par vous",
   "playground.baseline.pending": "\u00c0 \u00e9tablir",
-  "playground.baseline.exploratory": "Exploratoire \u2014 la bonne mesure reste \u00e0 d\u00e9finir",
+  "playground.baseline.exploratory":
+    "Exploratoire \u2014 la bonne mesure reste \u00e0 d\u00e9finir",
   "playground.q.objective.1": "Quel changement stratégique voulez-vous créer ?",
   "playground.q.objective.2": "Qui doit bénéficier de ce changement ?",
   "playground.q.objective.3": "Qu'est-ce qui devra être différent à la fin de la période ?",
@@ -2306,9 +2471,11 @@ const fr: Record<StringKey, string> = {
   "playground.chain.wizard.kr": "Étape Key Result",
   "playground.chain.wizard.initiative": "Étape Initiative",
   "playground.chain.limit.kr": "Choisissez jusqu’à 3 Key Results pour cet Objective",
-  "playground.chain.limit.krReached": "Vous avez atteint 3 Key Results. Désélectionnez-en un pour en choisir un autre.",
+  "playground.chain.limit.krReached":
+    "Vous avez atteint 3 Key Results. Désélectionnez-en un pour en choisir un autre.",
   "playground.chain.limit.init": "Choisissez jusqu’à 3 initiatives pour ce Key Result",
-  "playground.chain.limit.initReached": "Vous avez atteint 3 initiatives pour ce Key Result. Désélectionnez-en une pour en choisir une autre.",
+  "playground.chain.limit.initReached":
+    "Vous avez atteint 3 initiatives pour ce Key Result. Désélectionnez-en une pour en choisir une autre.",
   "playground.chain.initFor": "Initiatives pour",
   "playground.chain.handoff.title": "Rien ici n’atteint le tableau de bord réel",
   "playground.chain.handoff.body":
@@ -2328,7 +2495,8 @@ const fr: Record<StringKey, string> = {
     "Ce brouillon a été conservé uniquement dans votre navigateur, afin que vous puissiez le retrouver après la connexion. Il n’est enregistré dans aucun OKR Set.",
   "playground.handoff.restored.dismiss": "Masquer",
   "assistant.eyebrow": "Assistant OKR",
-  "assistant.description": "Rédaction guidée avec contrôles de qualité. À ce stade, rien n’est enregistré dans le tableau de bord.",
+  "assistant.description":
+    "Rédaction guidée avec contrôles de qualité. À ce stade, rien n’est enregistré dans le tableau de bord.",
   "assistant.title.objective": "Rédiger un Objective",
   "assistant.title.kr": "Rendre un Key Result mesurable",
   "assistant.title.initiative": "Imaginer des Initiatives",
@@ -2435,6 +2603,58 @@ const fr: Record<StringKey, string> = {
   "work.form.team": "Équipe",
   "work.form.unassigned": "Non attribué",
   "work.deleteEntry": "Supprimer",
+  "journey.add": "Ajouter un travail",
+  "journey.title": "Cr\u00e9er un travail",
+  "journey.subtitle":
+    "Un parcours guid\u00e9 court : choisir le type de travail, le rattacher \u00e0 la strat\u00e9gie, puis le cadrer aussi loin que possible aujourd'hui.",
+  "journey.step": "\u00c9tape",
+  "journey.of": "sur",
+  "journey.next": "Suivant",
+  "journey.back": "Retour",
+  "journey.skip": "Passer cette \u00e9tape",
+  "journey.finish": "Cr\u00e9er",
+  "journey.creating": "Cr\u00e9ation\u2026",
+  "journey.step.kind": "De quel type de travail s'agit-il ?",
+  "journey.step.kindHelp":
+    "Choisissez la forme la plus l\u00e9g\u00e8re qui convient. Le type peut \u00eatre modifi\u00e9 plus tard.",
+  "journey.kindDesc.candidate": "Une id\u00e9e not\u00e9e \u2014 sans dates ni engagement.",
+  "journey.kindDesc.simple_task":
+    "Un travail engag\u00e9, avec une personne responsable et des dates.",
+  "journey.kindDesc.initiative": "Une \u00e9tape de 90 jours avec signaux, pari et jalons.",
+  "journey.step.context": "O\u00f9 cela se rattache-t-il ?",
+  "journey.step.contextHelp": "Reliez le travail \u00e0 l'objectif et au key result qu'il sert.",
+  "journey.secondaryKrs": "Contribue aussi \u00e0",
+  "journey.secondaryKrsHelp": "Facultatif \u2014 autres key results soutenus par ce travail.",
+  "journey.noSecondaryKrs": "Aucun autre key result s\u00e9lectionn\u00e9.",
+  "journey.step.work": "Le travail lui-m\u00eame",
+  "journey.step.workHelp": "Donnez-lui un titre clair et indiquez qui le porte.",
+  "journey.step.aspiration": "Ambition et \u00e9tape de 90 jours",
+  "journey.step.aspirationHelp": "Vers quoi tendons-nous, et sur quelle p\u00e9riode ?",
+  "journey.step.bet": "Notre pari",
+  "journey.step.betHelp":
+    "Dites ce que vous allez essayer, ce que vous attendez et ce que vous allez apprendre.",
+  "journey.step.signals": "Signaux observ\u00e9s",
+  "journey.step.signalsHelp":
+    "Comment verrons-nous que quelque chose bouge ? Vous pouvez les ajouter plus tard.",
+  "journey.step.milestones": "Jalons",
+  "journey.step.milestonesHelp":
+    "Quelques rep\u00e8res dat\u00e9s en chemin. Vous pouvez les ajouter plus tard.",
+  "journey.step.review": "V\u00e9rifier et cr\u00e9er",
+  "journey.step.reviewHelp": "V\u00e9rifiez le cadrage, puis cr\u00e9ez le travail.",
+  "journey.needTitle": "Ajoutez un titre pour continuer.",
+  "journey.needKr": "Choisissez un key result pour continuer.",
+  "journey.suggest": "Proposer avec l'assistant",
+  "journey.suggesting": "Consultation de l'assistant\u2026",
+  "journey.suggestFailed": "L'assistant n'est pas disponible pour le moment.",
+  "journey.suggestions": "Suggestions de l'assistant",
+  "journey.useThis": "Utiliser",
+  "journey.dismiss": "Ignorer",
+  "journey.discardTitle": "Abandonner ce travail ?",
+  "journey.discardBody": "Il n'est pas encore cr\u00e9\u00e9. Tout ce parcours sera perdu.",
+  "journey.discardConfirm": "Abandonner",
+  "journey.childFailed":
+    "Le travail a \u00e9t\u00e9 cr\u00e9\u00e9, mais certains signaux ou jalons n'ont pas pu \u00eatre enregistr\u00e9s.",
+  "journey.reviewNothing": "Rien de saisi pour l'instant.",
 };
 
 const it: Record<StringKey, string> = {
@@ -2678,12 +2898,16 @@ const it: Record<StringKey, string> = {
   "playground.wizard.generate": "Genera bozze di esercitazione",
   "playground.wizard.generating": "Sto preparando i suggerimenti…",
   "playground.ai.option": "Opzione",
-  "playground.ai.error.unavailable": "La generazione di bozze non \u00e8 disponibile in questo momento. Pu\u00f2 continuare a scrivere qui sotto o riprovare fra poco.",
-  "playground.ai.error.rateLimited": "Troppe richieste da questo dispositivo. Attenda alcuni minuti oppure continui a scrivere qui sotto.",
-  "playground.ai.error.invalid": "Il suggerimento ricevuto non \u00e8 utilizzabile. Riprovi oppure continui a scrivere qui sotto.",
+  "playground.ai.error.unavailable":
+    "La generazione di bozze non \u00e8 disponibile in questo momento. Pu\u00f2 continuare a scrivere qui sotto o riprovare fra poco.",
+  "playground.ai.error.rateLimited":
+    "Troppe richieste da questo dispositivo. Attenda alcuni minuti oppure continui a scrivere qui sotto.",
+  "playground.ai.error.invalid":
+    "Il suggerimento ricevuto non \u00e8 utilizzabile. Riprovi oppure continui a scrivere qui sotto.",
   "playground.ai.retry": "Riprova",
   "playground.ai.fallback": "Continua con bozze di esempio",
-  "playground.ai.fallbackNote": "Le bozze di esempio sono modelli illustrativi, non suggerimenti AI. Pu\u00f2 modificarle liberamente.",
+  "playground.ai.fallbackNote":
+    "Le bozze di esempio sono modelli illustrativi, non suggerimenti AI. Pu\u00f2 modificarle liberamente.",
   "playground.ai.nextQuestions": "Domande successive",
   "playground.card.warnings": "Da tenere d'occhio",
   "playground.meta.measurement": "Misurazione",
@@ -2931,9 +3155,11 @@ const it: Record<StringKey, string> = {
   "playground.chain.wizard.kr": "Passaggio Key Result",
   "playground.chain.wizard.initiative": "Passaggio Iniziativa",
   "playground.chain.limit.kr": "Scegli fino a 3 Key Result per questo Objective",
-  "playground.chain.limit.krReached": "Hai raggiunto 3 Key Result. Deseleziona un elemento per sceglierne un altro.",
+  "playground.chain.limit.krReached":
+    "Hai raggiunto 3 Key Result. Deseleziona un elemento per sceglierne un altro.",
   "playground.chain.limit.init": "Scegli fino a 3 iniziative per questo Key Result",
-  "playground.chain.limit.initReached": "Hai raggiunto 3 iniziative per questo Key Result. Deseleziona un elemento per sceglierne un altro.",
+  "playground.chain.limit.initReached":
+    "Hai raggiunto 3 iniziative per questo Key Result. Deseleziona un elemento per sceglierne un altro.",
   "playground.chain.initFor": "Iniziative per",
   "playground.chain.handoff.title": "Nulla di questo raggiunge la dashboard reale",
   "playground.chain.handoff.body":
@@ -2953,7 +3179,8 @@ const it: Record<StringKey, string> = {
     "Questa bozza è stata conservata solo nel tuo browser, così puoi ritrovarla dopo l’accesso. Non è salvata in alcun OKR Set.",
   "playground.handoff.restored.dismiss": "Nascondi",
   "assistant.eyebrow": "Assistente OKR",
-  "assistant.description": "Stesura guidata con controlli di qualità. In questa fase nulla viene salvato nella dashboard.",
+  "assistant.description":
+    "Stesura guidata con controlli di qualità. In questa fase nulla viene salvato nella dashboard.",
   "assistant.title.objective": "Redigere un Objective",
   "assistant.title.kr": "Rendere misurabile un Key Result",
   "assistant.title.initiative": "Ideare Initiatives",
@@ -3060,6 +3287,57 @@ const it: Record<StringKey, string> = {
   "work.form.team": "Team",
   "work.form.unassigned": "Non assegnato",
   "work.deleteEntry": "Rimuovi",
+  "journey.add": "Aggiungi lavoro",
+  "journey.title": "Creare un lavoro",
+  "journey.subtitle":
+    "Un percorso guidato breve: scegliere il tipo di lavoro, collocarlo nella strategia e definirlo fin dove si riesce oggi.",
+  "journey.step": "Passo",
+  "journey.of": "di",
+  "journey.next": "Avanti",
+  "journey.back": "Indietro",
+  "journey.skip": "Salta questo passo",
+  "journey.finish": "Crea",
+  "journey.creating": "Creazione\u2026",
+  "journey.step.kind": "Di che tipo di lavoro si tratta?",
+  "journey.step.kindHelp":
+    "Scegli la forma pi\u00f9 leggera adatta. Il tipo si pu\u00f2 cambiare pi\u00f9 tardi.",
+  "journey.kindDesc.candidate": "Un pensiero annotato \u2014 senza date n\u00e9 impegni.",
+  "journey.kindDesc.simple_task": "Lavoro impegnato, con una persona responsabile e delle date.",
+  "journey.kindDesc.initiative": "Una tappa di 90 giorni con segnali, una scommessa e traguardi.",
+  "journey.step.context": "Dove si colloca?",
+  "journey.step.contextHelp": "Collega il lavoro all'obiettivo e al key result che serve.",
+  "journey.secondaryKrs": "Contribuisce anche a",
+  "journey.secondaryKrsHelp": "Facoltativo \u2014 altri key result sostenuti da questo lavoro.",
+  "journey.noSecondaryKrs": "Nessun altro key result selezionato.",
+  "journey.step.work": "Il lavoro in s\u00e9",
+  "journey.step.workHelp": "Dagli un titolo chiaro e indica chi lo porta avanti.",
+  "journey.step.aspiration": "Aspirazione e tappa di 90 giorni",
+  "journey.step.aspirationHelp": "A cosa puntiamo e in quale periodo?",
+  "journey.step.bet": "La nostra scommessa",
+  "journey.step.betHelp": "Indica cosa proverete, cosa vi aspettate e cosa imparerete.",
+  "journey.step.signals": "Segnali che osserviamo",
+  "journey.step.signalsHelp":
+    "Come noteremo che qualcosa si muove? Si possono aggiungere anche pi\u00f9 tardi.",
+  "journey.step.milestones": "Traguardi",
+  "journey.step.milestonesHelp":
+    "Alcuni riferimenti con data lungo il percorso. Si possono aggiungere anche pi\u00f9 tardi.",
+  "journey.step.review": "Verifica e crea",
+  "journey.step.reviewHelp": "Controlla l'impostazione e crea il lavoro.",
+  "journey.needTitle": "Aggiungi un titolo per continuare.",
+  "journey.needKr": "Scegli un key result per continuare.",
+  "journey.suggest": "Proponi con l'assistente",
+  "journey.suggesting": "Richiesta all'assistente\u2026",
+  "journey.suggestFailed": "L'assistente non \u00e8 disponibile al momento.",
+  "journey.suggestions": "Suggerimenti dell'assistente",
+  "journey.useThis": "Usa questo",
+  "journey.dismiss": "Ignora",
+  "journey.discardTitle": "Scartare questo lavoro?",
+  "journey.discardBody":
+    "Non \u00e8 ancora stato creato. Tutto quello inserito in questo percorso andr\u00e0 perso.",
+  "journey.discardConfirm": "Scarta",
+  "journey.childFailed":
+    "Il lavoro \u00e8 stato creato, ma alcuni segnali o traguardi non sono stati salvati.",
+  "journey.reviewNothing": "Ancora nulla inserito.",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
