@@ -15,9 +15,9 @@ import { pickTranslation, useLocale } from "@/lib/i18n";
 import type { StringKey } from "@/lib/i18n-strings";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
-import { NewInitiativeDialog } from "@/components/okr/NewInitiativeDialog";
+import { WorkJourney } from "@/components/okr/WorkJourney";
 import { WorkCard } from "@/components/okr/WorkCard";
-import { KIND_KEY, KIND_PLURAL_KEY } from "@/components/okr/work-meta";
+import { KIND_PLURAL_KEY } from "@/components/okr/work-meta";
 import type { FlatInitiative } from "@/components/okr/initiative-meta";
 import { Button } from "@/components/ui/button";
 import {
@@ -132,7 +132,6 @@ function InitiativesContent() {
   const [kindFilter, setKindFilter] = useState<string>("all");
   const [teamFilter, setTeamFilter] = useState<string>("all");
   const [createOpen, setCreateOpen] = useState(false);
-  const [createKind, setCreateKind] = useState<InitiativeKind>("initiative");
 
   const teamNameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -221,11 +220,6 @@ function InitiativesContent() {
     }
     return ordered;
   }, [filtered, data.teams, teamNameById, t]);
-
-  const openCreate = (kind: InitiativeKind) => {
-    setCreateKind(kind);
-    setCreateOpen(true);
-  };
 
   return (
     <main className="min-h-dvh">
@@ -338,18 +332,9 @@ function InitiativesContent() {
                 {filtered.length} / {flat.length}
               </span>
               {canEdit && (
-                <div className="flex flex-wrap items-center gap-2">
-                  {INITIATIVE_KINDS.map((k) => (
-                    <Button
-                      key={k}
-                      size="sm"
-                      variant={k === "initiative" ? "default" : "outline"}
-                      onClick={() => openCreate(k)}
-                    >
-                      + {t(KIND_KEY[k])}
-                    </Button>
-                  ))}
-                </div>
+                <Button size="sm" onClick={() => setCreateOpen(true)}>
+                  + {t("journey.add")}
+                </Button>
               )}
             </div>
           </div>
@@ -404,11 +389,10 @@ function InitiativesContent() {
         </p>
       </section>
 
-      <NewInitiativeDialog
+      <WorkJourney
         open={createOpen}
         onOpenChange={setCreateOpen}
         dashboard={data}
-        kind={createKind}
         defaultKrId={krFilter !== "all" ? krFilter : undefined}
       />
     </main>
