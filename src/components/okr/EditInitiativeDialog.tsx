@@ -10,18 +10,32 @@ import {
   setInitiativeSecondaryKrs,
 } from "@/lib/okr.functions";
 import {
+  BET_CONFIDENCES,
   INITIATIVE_AVAILABILITIES,
   INITIATIVE_COMMITMENTS,
   INITIATIVE_HELP_NEEDED,
+  INITIATIVE_KINDS,
   INITIATIVE_STATUSES,
   LIMITS,
+  PHASE_TYPES,
+  WORK_SIZES,
+  type BetConfidence,
   type DashboardDTO,
   type InitiativeAvailability,
   type InitiativeCommitment,
   type InitiativeDTO,
   type InitiativeHelpNeeded,
+  type InitiativeKind,
   type InitiativeStatus,
+  type PhaseType,
+  type WorkSize,
 } from "@/lib/okr-schemas";
+import {
+  CONFIDENCE_KEY,
+  KIND_KEY,
+  PHASE_TYPE_KEY,
+  SIZE_KEY,
+} from "./work-meta";
 import {
   AMBER_NOTE,
   AVAILABILITY_KEY,
@@ -162,6 +176,27 @@ export function EditInitiativeDialog({
   const [helpNeeded, setHelpNeeded] = useState<InitiativeHelpNeeded | null>(null);
   const [skillNote, setSkillNote] = useState("");
   const [secondaryIds, setSecondaryIds] = useState<string[]>([]);
+  // ASPIRE planning layer. Kept in the same sheet so an editor can move a card
+  // from "idea" to a planned initiative without leaving the portfolio.
+  const [kind, setKind] = useState<InitiativeKind>("initiative");
+  const [size, setSize] = useState<WorkSize | null>(null);
+  const [teamId, setTeamId] = useState<string | null>(null);
+  const [idea, setIdea] = useState("");
+  const [whyNow, setWhyNow] = useState("");
+  const [proposedOwner, setProposedOwner] = useState("");
+  const [phase, setPhase] = useState("1");
+  const [phaseType, setPhaseType] = useState<PhaseType | null>(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [aspiration, setAspiration] = useState("");
+  const [betAction, setBetAction] = useState("");
+  const [betChange, setBetChange] = useState("");
+  const [betQuestion, setBetQuestion] = useState("");
+  const [confidence, setConfidence] = useState<BetConfidence | null>(null);
+  const [learningCheckpoint, setLearningCheckpoint] = useState("");
+  const [supportNeeded, setSupportNeeded] = useState("");
+  const [outOfScope, setOutOfScope] = useState("");
+  const [leadName, setLeadName] = useState("");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -183,6 +218,27 @@ export function EditInitiativeDialog({
         pickTranslation(initiative, "skill_note", initiative.skill_note, locale) || "",
       );
       setSecondaryIds(initiative.secondary_kr_ids ?? []);
+      const tr = (field: string, value: string) =>
+        pickTranslation(initiative, field, value, locale) || "";
+      setKind(initiative.kind);
+      setSize(initiative.size ?? null);
+      setTeamId(initiative.team_id ?? null);
+      setIdea(tr("idea", initiative.idea));
+      setWhyNow(tr("why_now", initiative.why_now));
+      setProposedOwner(tr("proposed_owner", initiative.proposed_owner));
+      setPhase(String(initiative.phase ?? 1));
+      setPhaseType(initiative.phase_type ?? null);
+      setStartDate(initiative.start_date ?? "");
+      setEndDate(initiative.end_date ?? "");
+      setAspiration(tr("aspiration", initiative.aspiration));
+      setBetAction(tr("bet_action", initiative.bet_action));
+      setBetChange(tr("bet_change", initiative.bet_change));
+      setBetQuestion(tr("bet_question", initiative.bet_question));
+      setConfidence(initiative.confidence ?? null);
+      setLearningCheckpoint(tr("learning_checkpoint", initiative.learning_checkpoint ?? ""));
+      setSupportNeeded(tr("support_needed", initiative.support_needed));
+      setOutOfScope(tr("out_of_scope", initiative.out_of_scope));
+      setLeadName(tr("lead_name", initiative.lead_name));
     }
   }, [open, initiative, locale]);
 
@@ -205,6 +261,25 @@ export function EditInitiativeDialog({
             commitment,
             help_needed: helpNeeded,
             skill_note: skillNote.trim(),
+            kind,
+            size,
+            team_id: teamId,
+            idea: idea.trim(),
+            why_now: whyNow.trim(),
+            proposed_owner: proposedOwner.trim(),
+            phase: Number(phase) || 1,
+            phase_type: phaseType,
+            start_date: startDate || null,
+            end_date: endDate || null,
+            aspiration: aspiration.trim(),
+            bet_action: betAction.trim(),
+            bet_change: betChange.trim(),
+            bet_question: betQuestion.trim(),
+            confidence,
+            learning_checkpoint: learningCheckpoint.trim(),
+            support_needed: supportNeeded.trim(),
+            out_of_scope: outOfScope.trim(),
+            lead_name: leadName.trim(),
           },
           sourceLang: locale,
         },
@@ -560,6 +635,284 @@ export function EditInitiativeDialog({
                 {availability === "open" && (!commitment || !helpNeeded) && (
                   <span className={AMBER_NOTE}>{t("volunteer.scopeMissing")}</span>
                 )}
+              </>
+            )}
+
+            <div className="mt-2 border-t border-border/60 pt-4">
+              <h3 className="font-display text-sm font-bold text-foreground">
+                {t("work.section.plan")}
+              </h3>
+            </div>
+
+            <div className="grid gap-1.5 min-w-0">
+              <Label htmlFor="ei-kind">{t("work.filterKind")}</Label>
+              <Select
+                value={kind}
+                onValueChange={(v) => setKind(v as InitiativeKind)}
+                disabled={!canEdit}
+              >
+                <SelectTrigger id="ei-kind" className="w-full min-w-0">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {INITIATIVE_KINDS.map((k) => (
+                    <SelectItem key={k} value={k}>
+                      {t(KIND_KEY[k])}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-1.5 min-w-0">
+              <Label htmlFor="ei-size">{t("work.size")}</Label>
+              <Select
+                value={size ?? "__none__"}
+                onValueChange={(v) => setSize(v === "__none__" ? null : (v as WorkSize))}
+                disabled={!canEdit}
+              >
+                <SelectTrigger id="ei-size" className="w-full min-w-0">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{t("initiatives.form.unspecified")}</SelectItem>
+                  {WORK_SIZES.map((sz) => (
+                    <SelectItem key={sz} value={sz}>
+                      {t(SIZE_KEY[sz])}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-1.5 min-w-0">
+              <Label htmlFor="ei-team">{t("work.team")}</Label>
+              <Select
+                value={teamId ?? "__none__"}
+                onValueChange={(v) => setTeamId(v === "__none__" ? null : v)}
+                disabled={!canEdit}
+              >
+                <SelectTrigger id="ei-team" className="w-full min-w-0">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{t("initiatives.form.unspecified")}</SelectItem>
+                  {dashboard.teams.map((tm) => (
+                    <SelectItem key={tm.id} value={tm.id}>
+                      {pickTranslation(tm, "name", tm.name, locale) || tm.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {kind === "candidate" && (
+              <>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-idea">{t("work.idea")}</Label>
+                  <Textarea
+                    id="ei-idea"
+                    rows={3}
+                    value={idea}
+                    maxLength={LIMITS.idea}
+                    onChange={(e) => setIdea(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-whynow">{t("work.whyNow")}</Label>
+                  <Textarea
+                    id="ei-whynow"
+                    rows={2}
+                    value={whyNow}
+                    maxLength={LIMITS.whyNow}
+                    onChange={(e) => setWhyNow(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-proposed">{t("work.proposedOwner")}</Label>
+                  <Input
+                    id="ei-proposed"
+                    value={proposedOwner}
+                    maxLength={LIMITS.proposedOwner}
+                    onChange={(e) => setProposedOwner(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+              </>
+            )}
+
+            {kind === "initiative" && (
+              <>
+                <div className="grid gap-3 sm:grid-cols-2 min-w-0">
+                  <div className="grid gap-1.5 min-w-0">
+                    <Label htmlFor="ei-phase">{t("work.phaseNumber")}</Label>
+                    <Input
+                      id="ei-phase"
+                      type="number"
+                      min={1}
+                      value={phase}
+                      onChange={(e) => setPhase(e.target.value)}
+                      disabled={!canEdit}
+                    />
+                  </div>
+                  <div className="grid gap-1.5 min-w-0">
+                    <Label htmlFor="ei-phasetype">{t("work.phaseType")}</Label>
+                    <Select
+                      value={phaseType ?? "__none__"}
+                      onValueChange={(v) =>
+                        setPhaseType(v === "__none__" ? null : (v as PhaseType))
+                      }
+                      disabled={!canEdit}
+                    >
+                      <SelectTrigger id="ei-phasetype" className="w-full min-w-0">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">
+                          {t("initiatives.form.unspecified")}
+                        </SelectItem>
+                        {PHASE_TYPES.map((pt) => (
+                          <SelectItem key={pt} value={pt}>
+                            {t(PHASE_TYPE_KEY[pt])}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-1.5 min-w-0">
+                    <Label htmlFor="ei-start">{t("work.startDate")}</Label>
+                    <Input
+                      id="ei-start"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      disabled={!canEdit}
+                    />
+                  </div>
+                  <div className="grid gap-1.5 min-w-0">
+                    <Label htmlFor="ei-end">{t("work.endDate")}</Label>
+                    <Input
+                      id="ei-end"
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      disabled={!canEdit}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-aspiration">{t("work.aspiration")}</Label>
+                  <Textarea
+                    id="ei-aspiration"
+                    rows={2}
+                    value={aspiration}
+                    maxLength={LIMITS.aspiration}
+                    onChange={(e) => setAspiration(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-bet-action">{t("work.betAction")}</Label>
+                  <Textarea
+                    id="ei-bet-action"
+                    rows={2}
+                    value={betAction}
+                    maxLength={LIMITS.betPart}
+                    onChange={(e) => setBetAction(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-bet-change">{t("work.betChange")}</Label>
+                  <Textarea
+                    id="ei-bet-change"
+                    rows={2}
+                    value={betChange}
+                    maxLength={LIMITS.betPart}
+                    onChange={(e) => setBetChange(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-bet-question">{t("work.betQuestion")}</Label>
+                  <Textarea
+                    id="ei-bet-question"
+                    rows={2}
+                    value={betQuestion}
+                    maxLength={LIMITS.betPart}
+                    onChange={(e) => setBetQuestion(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-confidence">{t("work.confidence")}</Label>
+                  <Select
+                    value={confidence ?? "__none__"}
+                    onValueChange={(v) =>
+                      setConfidence(v === "__none__" ? null : (v as BetConfidence))
+                    }
+                    disabled={!canEdit}
+                  >
+                    <SelectTrigger id="ei-confidence" className="w-full min-w-0">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">{t("initiatives.form.unspecified")}</SelectItem>
+                      {BET_CONFIDENCES.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {t(CONFIDENCE_KEY[c])}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-checkpoint">{t("work.learningCheckpoint")}</Label>
+                  <Input
+                    id="ei-checkpoint"
+                    value={learningCheckpoint}
+                    maxLength={LIMITS.learningCheckpoint}
+                    onChange={(e) => setLearningCheckpoint(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-lead">{t("work.lead")}</Label>
+                  <Input
+                    id="ei-lead"
+                    value={leadName}
+                    maxLength={LIMITS.leadName}
+                    onChange={(e) => setLeadName(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-support">{t("work.supportNeeded")}</Label>
+                  <Textarea
+                    id="ei-support"
+                    rows={2}
+                    value={supportNeeded}
+                    maxLength={LIMITS.supportNeeded}
+                    onChange={(e) => setSupportNeeded(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="grid gap-1.5 min-w-0">
+                  <Label htmlFor="ei-scope">{t("work.outOfScope")}</Label>
+                  <Textarea
+                    id="ei-scope"
+                    rows={2}
+                    value={outOfScope}
+                    maxLength={LIMITS.outOfScope}
+                    onChange={(e) => setOutOfScope(e.target.value)}
+                    disabled={!canEdit}
+                  />
+                </div>
               </>
             )}
           </div>

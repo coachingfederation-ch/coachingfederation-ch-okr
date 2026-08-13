@@ -8,6 +8,7 @@ import {
   INITIATIVE_STATUSES,
   LIMITS,
   type DashboardDTO,
+  type InitiativeKind,
   type InitiativeStatus,
 } from "@/lib/okr-schemas";
 import { pickTranslation, useLocale } from "@/lib/i18n";
@@ -55,11 +56,15 @@ export function NewInitiativeDialog({
   onOpenChange,
   dashboard,
   defaultKrId,
+  // The portfolio creates candidates, simple tasks and full initiatives from
+  // the same sheet; the caller decides which kind the new row starts as.
+  kind = "initiative",
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   dashboard: DashboardDTO;
   defaultKrId?: string;
+  kind?: InitiativeKind;
 }) {
   const { t, locale } = useLocale();
   const qc = useQueryClient();
@@ -105,6 +110,7 @@ export function NewInitiativeDialog({
           owner: owner.trim() || undefined,
           description: description.trim() || undefined,
           status,
+          kind,
           sourceLang: locale,
         },
       }),

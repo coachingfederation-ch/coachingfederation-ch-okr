@@ -12,9 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StyleGuideRouteImport } from './routes/style-guide'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as PlaygroundRouteImport } from './routes/playground'
-import { Route as InitiativesRouteImport } from './routes/initiatives'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InitiativesIndexRouteImport } from './routes/initiatives.index'
+import { Route as InitiativesInitiativeIdRouteImport } from './routes/initiatives.$initiativeId'
 
 const StyleGuideRoute = StyleGuideRouteImport.update({
   id: '/style-guide',
@@ -31,11 +32,6 @@ const PlaygroundRoute = PlaygroundRouteImport.update({
   path: '/playground',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InitiativesRoute = InitiativesRouteImport.update({
-  id: '/initiatives',
-  path: '/initiatives',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -46,66 +42,83 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InitiativesIndexRoute = InitiativesIndexRouteImport.update({
+  id: '/initiatives/',
+  path: '/initiatives/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InitiativesInitiativeIdRoute = InitiativesInitiativeIdRouteImport.update({
+  id: '/initiatives/$initiativeId',
+  path: '/initiatives/$initiativeId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/initiatives': typeof InitiativesRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
+  '/initiatives/': typeof InitiativesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/initiatives': typeof InitiativesRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
+  '/initiatives': typeof InitiativesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/initiatives': typeof InitiativesRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
+  '/initiatives/': typeof InitiativesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
-    | '/initiatives'
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/initiatives/$initiativeId'
+    | '/initiatives/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/initiatives'
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/initiatives/$initiativeId'
+    | '/initiatives'
   id:
     | '__root__'
     | '/'
     | '/auth'
-    | '/initiatives'
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/initiatives/$initiativeId'
+    | '/initiatives/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
-  InitiativesRoute: typeof InitiativesRoute
   PlaygroundRoute: typeof PlaygroundRoute
   ReportRoute: typeof ReportRoute
   StyleGuideRoute: typeof StyleGuideRoute
+  InitiativesInitiativeIdRoute: typeof InitiativesInitiativeIdRoute
+  InitiativesIndexRoute: typeof InitiativesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -131,13 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlaygroundRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/initiatives': {
-      id: '/initiatives'
-      path: '/initiatives'
-      fullPath: '/initiatives'
-      preLoaderRoute: typeof InitiativesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -152,16 +158,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/initiatives/': {
+      id: '/initiatives/'
+      path: '/initiatives'
+      fullPath: '/initiatives/'
+      preLoaderRoute: typeof InitiativesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/initiatives/$initiativeId': {
+      id: '/initiatives/$initiativeId'
+      path: '/initiatives/$initiativeId'
+      fullPath: '/initiatives/$initiativeId'
+      preLoaderRoute: typeof InitiativesInitiativeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
-  InitiativesRoute: InitiativesRoute,
   PlaygroundRoute: PlaygroundRoute,
   ReportRoute: ReportRoute,
   StyleGuideRoute: StyleGuideRoute,
+  InitiativesInitiativeIdRoute: InitiativesInitiativeIdRoute,
+  InitiativesIndexRoute: InitiativesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

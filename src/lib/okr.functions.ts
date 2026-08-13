@@ -6,7 +6,9 @@ import {
   alignmentRowPatchSchema,
   initiativeCreateSchema,
   initiativePatchSchema,
-
+  learningEntryPatchSchema,
+  milestonePatchSchema,
+  signalPatchSchema,
   keyResultPatchSchema,
   localeSchema,
   okrSetPatchSchema,
@@ -18,10 +20,14 @@ import {
   type DashboardDTO,
   type InitiativeDTO,
   type KeyResultDTO,
+  type LearningEntryDTO,
+  type MilestoneDTO,
   type OkrSetDTO,
   type Pillar,
   type PillarSummaryDTO,
   type RoleLabel,
+  type SignalDTO,
+  type TeamDTO,
 } from "./okr-schemas";
 import type { Locale, TranslationsMap } from "./i18n-shared";
 import { z } from "zod";
@@ -125,7 +131,18 @@ async function translateRow(args: {
 export const getDashboard = createServerFn({ method: "GET" }).handler(
   async (): Promise<DashboardDTO> => {
     const supabase = serverPublicClient();
-    const [pillars, sets, krs, inits, aligns, secLinks] = await Promise.all([
+    const [
+      pillars,
+      sets,
+      krs,
+      inits,
+      aligns,
+      secLinks,
+      teams,
+      signals,
+      milestones,
+      learning,
+    ] = await Promise.all([
       supabase
         .from("pillar_summaries")
         .select("code,label,description,translations,source_lang"),
@@ -145,7 +162,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
       supabase
         .from("initiatives")
         .select(
-          "id,okr_set_id,kr_id,text,owner,description,status,availability,blocked_reason,commitment,help_needed,skill_note,updated_at,sort_order,translations,source_lang",
+          "id,okr_set_id,kr_id,text,owner,description,status,availability,blocked_reason,commitment,help_needed,skill_note,updated_at,sort_order,translations,source_lang,kind,size,team_id,idea,why_now,proposed_owner,start_date,end_date,phase,phase_type,aspiration,bet_action,bet_change,bet_question,confidence,learning_checkpoint,support_needed,out_of_scope,lead_name",
         )
         .order("sort_order", { ascending: true }),
       supabase
@@ -155,10 +172,41 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
       supabase
         .from("initiative_secondary_krs")
         .select("initiative_id,kr_id"),
+      supabase
+        .from("teams")
+        .select("id,name,position,translations,source_lang")
+        .order("position", { ascending: true }),
+      supabase
+        .from("initiative_signals")
+        .select(
+          "id,initiative_id,name,evidence,how_noticed,starting_point,direction,sort_order,translations,source_lang",
+        )
+        .order("sort_order", { ascending: true }),
+      supabase
+        .from("initiative_milestones")
+        .select(
+          "id,initiative_id,title,owner,due_date,sort_order,translations,source_lang",
+        )
+        .order("sort_order", { ascending: true }),
+      supabase
+        .from("initiative_learning_entries")
+        .select(
+          "id,initiative_id,entry_date,author_name,decision,what_happened,signals_telling,surprised_us,proud_of,do_next,next_move,translations,source_lang",
+        )
+        .order("entry_date", { ascending: false }),
     ]);
 
     const err =
-      pillars.error || sets.error || krs.error || inits.error || aligns.error || secLinks.error;
+      pillars.error ||
+      sets.error ||
+      krs.error ||
+      inits.error ||
+      aligns.error ||
+      secLinks.error ||
+      teams.error ||
+      signals.error ||
+      milestones.error ||
+      learning.error;
     if (err) throw new Error(err.message);
 
     const secByInit = new Map<string, string[]>();
@@ -166,6 +214,63 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
       const arr = secByInit.get(r.initiative_id) ?? [];
       arr.push(r.kr_id);
       secByInit.set(r.initiative_id, arr);
+    }
+
+    const withMeta = <T extends { translations?: unknown; source_lang?: string }>(r: T) => ({
+      translations: (r.translations as TranslationsMap) ?? {},
+      source_lang: ((r.source_lang ?? "en") as Locale),
+    });
+
+    const signalsByInit = new Map<string, SignalDTO[]>();
+    for (const r of signals.data ?? []) {
+      const arr = signalsByInit.get(r.initiative_id) ?? [];
+      arr.push({
+        id: r.id,
+        initiative_id: r.initiative_id,
+        name: r.name ?? "",
+        evidence: (r.evidence ?? "see") as SignalDTO["evidence"],
+        how_noticed: r.how_noticed ?? "",
+        starting_point: r.starting_point ?? "",
+        direction: (r.direction as SignalDTO["direction"]) ?? null,
+        sort_order: r.sort_order,
+        ...withMeta(r),
+      });
+      signalsByInit.set(r.initiative_id, arr);
+    }
+
+    const milestonesByInit = new Map<string, MilestoneDTO[]>();
+    for (const r of milestones.data ?? []) {
+      const arr = milestonesByInit.get(r.initiative_id) ?? [];
+      arr.push({
+        id: r.id,
+        initiative_id: r.initiative_id,
+        title: r.title ?? "",
+        owner: r.owner ?? "",
+        due_date: r.due_date ?? null,
+        sort_order: r.sort_order,
+        ...withMeta(r),
+      });
+      milestonesByInit.set(r.initiative_id, arr);
+    }
+
+    const learningByInit = new Map<string, LearningEntryDTO[]>();
+    for (const r of learning.data ?? []) {
+      const arr = learningByInit.get(r.initiative_id) ?? [];
+      arr.push({
+        id: r.id,
+        initiative_id: r.initiative_id,
+        entry_date: r.entry_date,
+        author_name: r.author_name ?? "",
+        decision: (r.decision ?? "growing") as LearningEntryDTO["decision"],
+        what_happened: r.what_happened ?? "",
+        signals_telling: r.signals_telling ?? "",
+        surprised_us: r.surprised_us ?? "",
+        proud_of: r.proud_of ?? "",
+        do_next: r.do_next ?? "",
+        next_move: r.next_move ?? "",
+        ...withMeta(r),
+      });
+      learningByInit.set(r.initiative_id, arr);
     }
 
     const initsByKr = new Map<string, InitiativeDTO[]>();
@@ -187,11 +292,34 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         updated_at: r.updated_at ?? null,
         sort_order: r.sort_order,
         secondary_kr_ids: secByInit.get(r.id) ?? [],
+        kind: (r.kind as InitiativeDTO["kind"]) ?? "initiative",
+        size: (r.size as InitiativeDTO["size"]) ?? null,
+        team_id: r.team_id ?? null,
+        idea: r.idea ?? "",
+        why_now: r.why_now ?? "",
+        proposed_owner: r.proposed_owner ?? "",
+        start_date: r.start_date ?? null,
+        end_date: r.end_date ?? null,
+        phase: r.phase ?? 1,
+        phase_type: (r.phase_type as InitiativeDTO["phase_type"]) ?? null,
+        aspiration: r.aspiration ?? "",
+        bet_action: r.bet_action ?? "",
+        bet_change: r.bet_change ?? "",
+        bet_question: r.bet_question ?? "",
+        confidence: (r.confidence as InitiativeDTO["confidence"]) ?? null,
+        learning_checkpoint: r.learning_checkpoint ?? null,
+        support_needed: r.support_needed ?? "",
+        out_of_scope: r.out_of_scope ?? "",
+        lead_name: r.lead_name ?? "",
+        signals: signalsByInit.get(r.id) ?? [],
+        milestones: milestonesByInit.get(r.id) ?? [],
+        learning_entries: learningByInit.get(r.id) ?? [],
         translations: (r as { translations?: TranslationsMap }).translations ?? {},
         source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
       });
       initsByKr.set(r.kr_id, arr);
     }
+
 
 
     const krsBySet = new Map<string, KeyResultDTO[]>();
@@ -256,6 +384,13 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         translations: (r as { translations?: TranslationsMap }).translations ?? {},
         source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
       })) as AlignmentRowDTO[],
+      teams: (teams.data ?? []).map((r) => ({
+        id: r.id,
+        name: r.name,
+        position: r.position,
+        translations: (r as { translations?: TranslationsMap }).translations ?? {},
+        source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
+      })) as TeamDTO[],
     };
   },
 );
@@ -420,6 +555,11 @@ export const addInitiative = createServerFn({ method: "POST" })
         owner: initiativeCreateSchema.shape.owner,
         description: initiativeCreateSchema.shape.description,
         status: initiativeCreateSchema.shape.status,
+        kind: initiativeCreateSchema.shape.kind,
+        team_id: initiativeCreateSchema.shape.team_id,
+        idea: initiativeCreateSchema.shape.idea,
+        why_now: initiativeCreateSchema.shape.why_now,
+        proposed_owner: initiativeCreateSchema.shape.proposed_owner,
         sourceLang: localeSchema.default("en"),
       })
       .parse(raw),
@@ -448,6 +588,11 @@ export const addInitiative = createServerFn({ method: "POST" })
         owner: data.owner ?? "",
         description: data.description ?? "",
         status: data.status ?? "planned",
+        kind: data.kind ?? "initiative",
+        team_id: data.team_id ?? null,
+        idea: data.idea ?? "",
+        why_now: data.why_now ?? "",
+        proposed_owner: data.proposed_owner ?? "",
         sort_order: nextSort,
         source_lang: data.sourceLang,
       })
@@ -457,6 +602,9 @@ export const addInitiative = createServerFn({ method: "POST" })
     const translatePatch: Record<string, string> = { text: data.text };
     if (data.owner) translatePatch.owner = data.owner;
     if (data.description) translatePatch.description = data.description;
+    if (data.idea) translatePatch.idea = data.idea;
+    if (data.why_now) translatePatch.why_now = data.why_now;
+    if (data.proposed_owner) translatePatch.proposed_owner = data.proposed_owner;
     await translateRow({
       ctx: context,
       table: "initiatives",
@@ -612,5 +760,209 @@ export const updatePillarSummary = createServerFn({ method: "POST" })
       sourceLang: data.sourceLang,
       patch: data.patch,
     });
+    return { ok: true };
+  });
+
+// -------- ASPIRE child records (signals / milestones / learning) --------
+// Each follows the same shape as the initiative writes: editor-only via RLS,
+// with translations refreshed from the editor's UI language.
+
+export const addSignal = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({
+        initiative_id: uuidSchema,
+        patch: signalPatchSchema,
+        sourceLang: localeSchema.default("en"),
+      })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: maxRow } = await context.supabase
+      .from("initiative_signals")
+      .select("sort_order")
+      .eq("initiative_id", data.initiative_id)
+      .order("sort_order", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const { data: row, error } = await context.supabase
+      .from("initiative_signals")
+      .insert({
+        initiative_id: data.initiative_id,
+        ...data.patch,
+        sort_order: (maxRow?.sort_order ?? 0) + 1,
+        source_lang: data.sourceLang,
+      })
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    await translateRow({
+      ctx: context,
+      table: "initiative_signals",
+      id: row.id,
+      sourceLang: data.sourceLang,
+      patch: data.patch,
+    });
+    return { id: row.id };
+  });
+
+export const updateSignal = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({ id: uuidSchema, patch: signalPatchSchema, sourceLang: localeSchema.default("en") })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("initiative_signals")
+      .update(data.patch)
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    await translateRow({
+      ctx: context,
+      table: "initiative_signals",
+      id: data.id,
+      sourceLang: data.sourceLang,
+      patch: data.patch,
+    });
+    return { ok: true };
+  });
+
+export const deleteSignal = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("initiative_signals")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const addMilestone = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({
+        initiative_id: uuidSchema,
+        patch: milestonePatchSchema,
+        sourceLang: localeSchema.default("en"),
+      })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: maxRow } = await context.supabase
+      .from("initiative_milestones")
+      .select("sort_order")
+      .eq("initiative_id", data.initiative_id)
+      .order("sort_order", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const { data: row, error } = await context.supabase
+      .from("initiative_milestones")
+      .insert({
+        initiative_id: data.initiative_id,
+        ...data.patch,
+        sort_order: (maxRow?.sort_order ?? 0) + 1,
+        source_lang: data.sourceLang,
+      })
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    await translateRow({
+      ctx: context,
+      table: "initiative_milestones",
+      id: row.id,
+      sourceLang: data.sourceLang,
+      patch: data.patch,
+    });
+    return { id: row.id };
+  });
+
+export const updateMilestone = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({
+        id: uuidSchema,
+        patch: milestonePatchSchema,
+        sourceLang: localeSchema.default("en"),
+      })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("initiative_milestones")
+      .update(data.patch)
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    await translateRow({
+      ctx: context,
+      table: "initiative_milestones",
+      id: data.id,
+      sourceLang: data.sourceLang,
+      patch: data.patch,
+    });
+    return { ok: true };
+  });
+
+export const deleteMilestone = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("initiative_milestones")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const addLearningEntry = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({
+        initiative_id: uuidSchema,
+        patch: learningEntryPatchSchema,
+        sourceLang: localeSchema.default("en"),
+      })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { entry_date, ...rest } = data.patch;
+    const { data: row, error } = await context.supabase
+      .from("initiative_learning_entries")
+      .insert({
+        initiative_id: data.initiative_id,
+        ...rest,
+        ...(entry_date ? { entry_date } : {}),
+        source_lang: data.sourceLang,
+      })
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    await translateRow({
+      ctx: context,
+      table: "initiative_learning_entries",
+      id: row.id,
+      sourceLang: data.sourceLang,
+      patch: rest,
+    });
+    return { id: row.id };
+  });
+
+export const deleteLearningEntry = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("initiative_learning_entries")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
     return { ok: true };
   });
