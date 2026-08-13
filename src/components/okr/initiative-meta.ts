@@ -66,4 +66,6 @@ export type FlatInitiative = import("@/lib/okr-schemas").InitiativeDTO & {
   krLabel: string;
   /** Labels of the key results this initiative also contributes to (secondary links). */
   secondaryLabels: string[];
+  /** Resolved team name, or null when the work has not been picked up by a team. */
+  teamName: string | null;
 };

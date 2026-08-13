@@ -157,6 +157,103 @@ export type StringKey =
   | "initiatives.form.unspecified"
   | "initiatives.form.helpersOwnerHint"
   | "initiatives.form.availabilityHint"
+  | "work.kind.candidate"
+  | "work.kind.simple_task"
+  | "work.kind.initiative"
+  | "work.kinds.candidate"
+  | "work.kinds.simple_task"
+  | "work.kinds.initiative"
+  | "work.filterKind"
+  | "work.filterAllKinds"
+  | "work.filterTeam"
+  | "work.filterAllTeams"
+  | "work.noTeam"
+  | "work.team"
+  | "work.size"
+  | "work.size.small"
+  | "work.size.medium"
+  | "work.new"
+  | "work.newIdea"
+  | "work.newTask"
+  | "work.newInitiative"
+  | "work.promote"
+  | "work.promoted"
+  | "work.open"
+  | "work.empty"
+  | "work.emptyStatus"
+  | "work.idea"
+  | "work.whyNow"
+  | "work.proposedOwner"
+  | "work.phase"
+  | "work.phaseNumber"
+  | "work.phaseType"
+  | "work.phaseType.delivery"
+  | "work.phaseType.discovery"
+  | "work.startDate"
+  | "work.endDate"
+  | "work.aspiration"
+  | "work.bet"
+  | "work.betAction"
+  | "work.betChange"
+  | "work.betQuestion"
+  | "work.confidence"
+  | "work.confidence.pretty_confident"
+  | "work.confidence.worth_testing"
+  | "work.confidence.wild_card"
+  | "work.signals"
+  | "work.signal.name"
+  | "work.signal.evidence"
+  | "work.evidence.see"
+  | "work.evidence.hear"
+  | "work.evidence.measure"
+  | "work.signal.howNoticed"
+  | "work.signal.startingPoint"
+  | "work.signal.direction"
+  | "work.direction.up"
+  | "work.direction.down"
+  | "work.addSignal"
+  | "work.noSignals"
+  | "work.milestones"
+  | "work.milestone.title"
+  | "work.milestone.owner"
+  | "work.milestone.due"
+  | "work.addMilestone"
+  | "work.noMilestones"
+  | "work.learning"
+  | "work.learning.date"
+  | "work.learning.author"
+  | "work.learning.decision"
+  | "work.decision.growing"
+  | "work.decision.tweak"
+  | "work.decision.surprise"
+  | "work.decision.let_go"
+  | "work.learning.whatHappened"
+  | "work.learning.signalsTelling"
+  | "work.learning.surprisedUs"
+  | "work.learning.proudOf"
+  | "work.learning.doNext"
+  | "work.learning.nextMove"
+  | "work.addLearning"
+  | "work.noLearning"
+  | "work.latestLearning"
+  | "work.lead"
+  | "work.supportNeeded"
+  | "work.outOfScope"
+  | "work.learningCheckpoint"
+  | "work.strategicContext"
+  | "work.back"
+  | "work.notFound"
+  | "work.section.plan"
+  | "work.section.people"
+  | "work.section.volunteering"
+  | "work.saved"
+  | "work.count"
+  | "work.lookingForPeople"
+  | "work.editPlan"
+  | "work.form.kind"
+  | "work.form.team"
+  | "work.form.unassigned"
+  | "work.deleteEntry"
   | "common.cancel"
   | "common.create"
   | "common.creating"
@@ -987,6 +1084,103 @@ const en: Record<StringKey, string> = {
   "assistant.cta.initiatives": "Ideate initiatives",
   "assistant.ctx.set": "OKR Set",
   "assistant.ctx.kr": "KR",
+  "work.kind.candidate": "Idea",
+  "work.kind.simple_task": "Simple task",
+  "work.kind.initiative": "Initiative",
+  "work.kinds.candidate": "Ideas",
+  "work.kinds.simple_task": "Simple tasks",
+  "work.kinds.initiative": "Initiatives",
+  "work.filterKind": "Type of work",
+  "work.filterAllKinds": "All types",
+  "work.filterTeam": "Team",
+  "work.filterAllTeams": "All teams",
+  "work.noTeam": "No team yet",
+  "work.team": "Team",
+  "work.size": "Size",
+  "work.size.small": "Small",
+  "work.size.medium": "Medium",
+  "work.new": "+ New work",
+  "work.newIdea": "Capture an idea",
+  "work.newTask": "Start a simple task",
+  "work.newInitiative": "Start an initiative",
+  "work.promote": "Change type",
+  "work.promoted": "Type updated",
+  "work.open": "Open the one-pager",
+  "work.empty": "No work matches these filters.",
+  "work.emptyStatus": "Nothing here yet",
+  "work.idea": "The idea",
+  "work.whyNow": "Why now",
+  "work.proposedOwner": "Proposed owner",
+  "work.phase": "90-day leg",
+  "work.phaseNumber": "Leg",
+  "work.phaseType": "Focus of this leg",
+  "work.phaseType.delivery": "Delivery",
+  "work.phaseType.discovery": "Discovery",
+  "work.startDate": "Start date",
+  "work.endDate": "End date",
+  "work.aspiration": "Our aspiration",
+  "work.bet": "Our bet",
+  "work.betAction": "If we…",
+  "work.betChange": "…then we expect…",
+  "work.betQuestion": "…and we will learn…",
+  "work.confidence": "Confidence",
+  "work.confidence.pretty_confident": "Pretty confident",
+  "work.confidence.worth_testing": "Worth testing",
+  "work.confidence.wild_card": "Wild card",
+  "work.signals": "Signals we watch",
+  "work.signal.name": "Signal",
+  "work.signal.evidence": "Evidence",
+  "work.evidence.see": "We would see",
+  "work.evidence.hear": "We would hear",
+  "work.evidence.measure": "We would measure",
+  "work.signal.howNoticed": "How we notice it",
+  "work.signal.startingPoint": "Starting point",
+  "work.signal.direction": "Direction",
+  "work.direction.up": "Going up",
+  "work.direction.down": "Going down",
+  "work.addSignal": "Add a signal",
+  "work.noSignals": "No signals yet.",
+  "work.milestones": "Milestones",
+  "work.milestone.title": "Milestone",
+  "work.milestone.owner": "Owner",
+  "work.milestone.due": "Due",
+  "work.addMilestone": "Add a milestone",
+  "work.noMilestones": "No milestones yet.",
+  "work.learning": "Learning check-ins",
+  "work.learning.date": "Date",
+  "work.learning.author": "Written by",
+  "work.learning.decision": "Where this stands",
+  "work.decision.growing": "This is growing",
+  "work.decision.tweak": "Worth a tweak",
+  "work.decision.surprise": "A surprise",
+  "work.decision.let_go": "Time to let go",
+  "work.learning.whatHappened": "What happened",
+  "work.learning.signalsTelling": "What the signals tell us",
+  "work.learning.surprisedUs": "What surprised us",
+  "work.learning.proudOf": "What we are proud of",
+  "work.learning.doNext": "What we do next",
+  "work.learning.nextMove": "Next move",
+  "work.addLearning": "Add a check-in",
+  "work.noLearning": "No check-ins yet.",
+  "work.latestLearning": "Latest check-in",
+  "work.lead": "Project lead",
+  "work.supportNeeded": "Support needed from the chapter",
+  "work.outOfScope": "Deliberately out of scope",
+  "work.learningCheckpoint": "Next learning checkpoint",
+  "work.strategicContext": "Strategic context",
+  "work.back": "Back to the portfolio",
+  "work.notFound": "This piece of work no longer exists.",
+  "work.section.plan": "Plan",
+  "work.section.people": "People",
+  "work.section.volunteering": "Volunteering",
+  "work.saved": "Saved",
+  "work.count": "Pieces of work",
+  "work.lookingForPeople": "Looking for people",
+  "work.editPlan": "Edit the plan",
+  "work.form.kind": "Type of work",
+  "work.form.team": "Team",
+  "work.form.unassigned": "Not assigned",
+  "work.deleteEntry": "Remove",
 };
 
 const de: Record<StringKey, string> = {
@@ -1516,6 +1710,103 @@ const de: Record<StringKey, string> = {
   "assistant.cta.initiatives": "Initiativen entwickeln",
   "assistant.ctx.set": "OKR-Set",
   "assistant.ctx.kr": "KR",
+  "work.kind.candidate": "Idee",
+  "work.kind.simple_task": "Einfache Aufgabe",
+  "work.kind.initiative": "Initiative",
+  "work.kinds.candidate": "Ideen",
+  "work.kinds.simple_task": "Einfache Aufgaben",
+  "work.kinds.initiative": "Initiativen",
+  "work.filterKind": "Art der Arbeit",
+  "work.filterAllKinds": "Alle Arten",
+  "work.filterTeam": "Team",
+  "work.filterAllTeams": "Alle Teams",
+  "work.noTeam": "Noch kein Team",
+  "work.team": "Team",
+  "work.size": "Umfang",
+  "work.size.small": "Klein",
+  "work.size.medium": "Mittel",
+  "work.new": "+ Neue Arbeit",
+  "work.newIdea": "Idee festhalten",
+  "work.newTask": "Einfache Aufgabe starten",
+  "work.newInitiative": "Initiative starten",
+  "work.promote": "Typ ändern",
+  "work.promoted": "Typ aktualisiert",
+  "work.open": "One-Pager öffnen",
+  "work.empty": "Keine Arbeit entspricht diesen Filtern.",
+  "work.emptyStatus": "Noch nichts hier",
+  "work.idea": "Die Idee",
+  "work.whyNow": "Warum jetzt",
+  "work.proposedOwner": "Vorgeschlagene Verantwortung",
+  "work.phase": "90-Tage-Etappe",
+  "work.phaseNumber": "Etappe",
+  "work.phaseType": "Fokus dieser Etappe",
+  "work.phaseType.delivery": "Umsetzung",
+  "work.phaseType.discovery": "Erkundung",
+  "work.startDate": "Startdatum",
+  "work.endDate": "Enddatum",
+  "work.aspiration": "Unser Anspruch",
+  "work.bet": "Unsere Wette",
+  "work.betAction": "Wenn wir…",
+  "work.betChange": "…dann erwarten wir…",
+  "work.betQuestion": "…und wir lernen…",
+  "work.confidence": "Zuversicht",
+  "work.confidence.pretty_confident": "Ziemlich zuversichtlich",
+  "work.confidence.worth_testing": "Einen Test wert",
+  "work.confidence.wild_card": "Wagnis",
+  "work.signals": "Signale, die wir beobachten",
+  "work.signal.name": "Signal",
+  "work.signal.evidence": "Evidenz",
+  "work.evidence.see": "Wir würden sehen",
+  "work.evidence.hear": "Wir würden hören",
+  "work.evidence.measure": "Wir würden messen",
+  "work.signal.howNoticed": "Wie wir es bemerken",
+  "work.signal.startingPoint": "Ausgangspunkt",
+  "work.signal.direction": "Richtung",
+  "work.direction.up": "Steigend",
+  "work.direction.down": "Sinkend",
+  "work.addSignal": "Signal hinzufügen",
+  "work.noSignals": "Noch keine Signale.",
+  "work.milestones": "Meilensteine",
+  "work.milestone.title": "Meilenstein",
+  "work.milestone.owner": "Verantwortung",
+  "work.milestone.due": "Fällig",
+  "work.addMilestone": "Meilenstein hinzufügen",
+  "work.noMilestones": "Noch keine Meilensteine.",
+  "work.learning": "Lern-Check-ins",
+  "work.learning.date": "Datum",
+  "work.learning.author": "Verfasst von",
+  "work.learning.decision": "Wo das steht",
+  "work.decision.growing": "Das wächst",
+  "work.decision.tweak": "Nachjustieren",
+  "work.decision.surprise": "Eine Überraschung",
+  "work.decision.let_go": "Zeit loszulassen",
+  "work.learning.whatHappened": "Was ist passiert",
+  "work.learning.signalsTelling": "Was die Signale sagen",
+  "work.learning.surprisedUs": "Was uns überrascht hat",
+  "work.learning.proudOf": "Worauf wir stolz sind",
+  "work.learning.doNext": "Was wir als Nächstes tun",
+  "work.learning.nextMove": "Nächster Schritt",
+  "work.addLearning": "Check-in hinzufügen",
+  "work.noLearning": "Noch keine Check-ins.",
+  "work.latestLearning": "Letztes Check-in",
+  "work.lead": "Projektleitung",
+  "work.supportNeeded": "Unterstützung durch das Chapter",
+  "work.outOfScope": "Bewusst nicht im Umfang",
+  "work.learningCheckpoint": "Nächster Lernpunkt",
+  "work.strategicContext": "Strategischer Kontext",
+  "work.back": "Zurück zum Portfolio",
+  "work.notFound": "Diese Arbeit existiert nicht mehr.",
+  "work.section.plan": "Plan",
+  "work.section.people": "Menschen",
+  "work.section.volunteering": "Freiwilligenarbeit",
+  "work.saved": "Gespeichert",
+  "work.count": "Arbeiten",
+  "work.lookingForPeople": "Sucht Menschen",
+  "work.editPlan": "Plan bearbeiten",
+  "work.form.kind": "Art der Arbeit",
+  "work.form.team": "Team",
+  "work.form.unassigned": "Nicht zugewiesen",
+  "work.deleteEntry": "Entfernen",
 };
 
 const fr: Record<StringKey, string> = {
@@ -2047,6 +2338,103 @@ const fr: Record<StringKey, string> = {
   "assistant.cta.initiatives": "Imaginer des initiatives",
   "assistant.ctx.set": "OKR Set",
   "assistant.ctx.kr": "KR",
+  "work.kind.candidate": "Idée",
+  "work.kind.simple_task": "Tâche simple",
+  "work.kind.initiative": "Initiative",
+  "work.kinds.candidate": "Idées",
+  "work.kinds.simple_task": "Tâches simples",
+  "work.kinds.initiative": "Initiatives",
+  "work.filterKind": "Type de travail",
+  "work.filterAllKinds": "Tous les types",
+  "work.filterTeam": "Équipe",
+  "work.filterAllTeams": "Toutes les équipes",
+  "work.noTeam": "Pas encore d'équipe",
+  "work.team": "Équipe",
+  "work.size": "Ampleur",
+  "work.size.small": "Petit",
+  "work.size.medium": "Moyen",
+  "work.new": "+ Nouveau travail",
+  "work.newIdea": "Noter une idée",
+  "work.newTask": "Lancer une tâche simple",
+  "work.newInitiative": "Lancer une initiative",
+  "work.promote": "Changer de type",
+  "work.promoted": "Type mis à jour",
+  "work.open": "Ouvrir le résumé",
+  "work.empty": "Aucun travail ne correspond à ces filtres.",
+  "work.emptyStatus": "Rien pour l'instant",
+  "work.idea": "L'idée",
+  "work.whyNow": "Pourquoi maintenant",
+  "work.proposedOwner": "Responsable proposé",
+  "work.phase": "Étape de 90 jours",
+  "work.phaseNumber": "Étape",
+  "work.phaseType": "Focus de cette étape",
+  "work.phaseType.delivery": "Réalisation",
+  "work.phaseType.discovery": "Exploration",
+  "work.startDate": "Date de début",
+  "work.endDate": "Date de fin",
+  "work.aspiration": "Notre ambition",
+  "work.bet": "Notre pari",
+  "work.betAction": "Si nous…",
+  "work.betChange": "…alors nous attendons…",
+  "work.betQuestion": "…et nous apprendrons…",
+  "work.confidence": "Confiance",
+  "work.confidence.pretty_confident": "Plutôt confiants",
+  "work.confidence.worth_testing": "Vaut un test",
+  "work.confidence.wild_card": "Pari risqué",
+  "work.signals": "Signaux observés",
+  "work.signal.name": "Signal",
+  "work.signal.evidence": "Indice",
+  "work.evidence.see": "Nous verrions",
+  "work.evidence.hear": "Nous entendrions",
+  "work.evidence.measure": "Nous mesurerions",
+  "work.signal.howNoticed": "Comment nous le remarquons",
+  "work.signal.startingPoint": "Point de départ",
+  "work.signal.direction": "Direction",
+  "work.direction.up": "En hausse",
+  "work.direction.down": "En baisse",
+  "work.addSignal": "Ajouter un signal",
+  "work.noSignals": "Aucun signal pour l'instant.",
+  "work.milestones": "Jalons",
+  "work.milestone.title": "Jalon",
+  "work.milestone.owner": "Responsable",
+  "work.milestone.due": "Échéance",
+  "work.addMilestone": "Ajouter un jalon",
+  "work.noMilestones": "Aucun jalon pour l'instant.",
+  "work.learning": "Points d'apprentissage",
+  "work.learning.date": "Date",
+  "work.learning.author": "Rédigé par",
+  "work.learning.decision": "Où cela en est",
+  "work.decision.growing": "Cela prend de l'ampleur",
+  "work.decision.tweak": "À ajuster",
+  "work.decision.surprise": "Une surprise",
+  "work.decision.let_go": "Il est temps d'arrêter",
+  "work.learning.whatHappened": "Ce qui s'est passé",
+  "work.learning.signalsTelling": "Ce que disent les signaux",
+  "work.learning.surprisedUs": "Ce qui nous a surpris",
+  "work.learning.proudOf": "Ce dont nous sommes fiers",
+  "work.learning.doNext": "Ce que nous faisons ensuite",
+  "work.learning.nextMove": "Prochaine étape",
+  "work.addLearning": "Ajouter un point",
+  "work.noLearning": "Aucun point pour l'instant.",
+  "work.latestLearning": "Dernier point",
+  "work.lead": "Responsable du projet",
+  "work.supportNeeded": "Soutien attendu du chapitre",
+  "work.outOfScope": "Volontairement hors périmètre",
+  "work.learningCheckpoint": "Prochain point d'apprentissage",
+  "work.strategicContext": "Contexte stratégique",
+  "work.back": "Retour au portefeuille",
+  "work.notFound": "Ce travail n'existe plus.",
+  "work.section.plan": "Plan",
+  "work.section.people": "Personnes",
+  "work.section.volunteering": "Bénévolat",
+  "work.saved": "Enregistré",
+  "work.count": "Travaux",
+  "work.lookingForPeople": "Cherche des personnes",
+  "work.editPlan": "Modifier le plan",
+  "work.form.kind": "Type de travail",
+  "work.form.team": "Équipe",
+  "work.form.unassigned": "Non attribué",
+  "work.deleteEntry": "Supprimer",
 };
 
 const it: Record<StringKey, string> = {
@@ -2575,6 +2963,103 @@ const it: Record<StringKey, string> = {
   "assistant.cta.initiatives": "Idea iniziative",
   "assistant.ctx.set": "OKR Set",
   "assistant.ctx.kr": "KR",
+  "work.kind.candidate": "Idea",
+  "work.kind.simple_task": "Compito semplice",
+  "work.kind.initiative": "Iniziativa",
+  "work.kinds.candidate": "Idee",
+  "work.kinds.simple_task": "Compiti semplici",
+  "work.kinds.initiative": "Iniziative",
+  "work.filterKind": "Tipo di lavoro",
+  "work.filterAllKinds": "Tutti i tipi",
+  "work.filterTeam": "Team",
+  "work.filterAllTeams": "Tutti i team",
+  "work.noTeam": "Nessun team",
+  "work.team": "Team",
+  "work.size": "Dimensione",
+  "work.size.small": "Piccolo",
+  "work.size.medium": "Medio",
+  "work.new": "+ Nuovo lavoro",
+  "work.newIdea": "Annota un'idea",
+  "work.newTask": "Avvia un compito semplice",
+  "work.newInitiative": "Avvia un'iniziativa",
+  "work.promote": "Cambia tipo",
+  "work.promoted": "Tipo aggiornato",
+  "work.open": "Apri la scheda",
+  "work.empty": "Nessun lavoro corrisponde a questi filtri.",
+  "work.emptyStatus": "Ancora nulla",
+  "work.idea": "L'idea",
+  "work.whyNow": "Perché ora",
+  "work.proposedOwner": "Responsabile proposto",
+  "work.phase": "Tappa di 90 giorni",
+  "work.phaseNumber": "Tappa",
+  "work.phaseType": "Focus di questa tappa",
+  "work.phaseType.delivery": "Realizzazione",
+  "work.phaseType.discovery": "Esplorazione",
+  "work.startDate": "Data d'inizio",
+  "work.endDate": "Data di fine",
+  "work.aspiration": "La nostra aspirazione",
+  "work.bet": "La nostra scommessa",
+  "work.betAction": "Se noi…",
+  "work.betChange": "…allora ci aspettiamo…",
+  "work.betQuestion": "…e impareremo…",
+  "work.confidence": "Fiducia",
+  "work.confidence.pretty_confident": "Abbastanza fiduciosi",
+  "work.confidence.worth_testing": "Vale la pena testare",
+  "work.confidence.wild_card": "Scommessa azzardata",
+  "work.signals": "Segnali che osserviamo",
+  "work.signal.name": "Segnale",
+  "work.signal.evidence": "Evidenza",
+  "work.evidence.see": "Vedremmo",
+  "work.evidence.hear": "Sentiremmo",
+  "work.evidence.measure": "Misureremmo",
+  "work.signal.howNoticed": "Come lo notiamo",
+  "work.signal.startingPoint": "Punto di partenza",
+  "work.signal.direction": "Direzione",
+  "work.direction.up": "In aumento",
+  "work.direction.down": "In calo",
+  "work.addSignal": "Aggiungi un segnale",
+  "work.noSignals": "Nessun segnale finora.",
+  "work.milestones": "Traguardi",
+  "work.milestone.title": "Traguardo",
+  "work.milestone.owner": "Responsabile",
+  "work.milestone.due": "Scadenza",
+  "work.addMilestone": "Aggiungi un traguardo",
+  "work.noMilestones": "Nessun traguardo finora.",
+  "work.learning": "Momenti di apprendimento",
+  "work.learning.date": "Data",
+  "work.learning.author": "Scritto da",
+  "work.learning.decision": "A che punto siamo",
+  "work.decision.growing": "Sta crescendo",
+  "work.decision.tweak": "Da correggere",
+  "work.decision.surprise": "Una sorpresa",
+  "work.decision.let_go": "È ora di lasciar andare",
+  "work.learning.whatHappened": "Cosa è successo",
+  "work.learning.signalsTelling": "Cosa dicono i segnali",
+  "work.learning.surprisedUs": "Cosa ci ha sorpreso",
+  "work.learning.proudOf": "Di cosa siamo fieri",
+  "work.learning.doNext": "Cosa faremo dopo",
+  "work.learning.nextMove": "Prossima mossa",
+  "work.addLearning": "Aggiungi un momento",
+  "work.noLearning": "Nessun momento finora.",
+  "work.latestLearning": "Ultimo momento",
+  "work.lead": "Responsabile del progetto",
+  "work.supportNeeded": "Supporto richiesto al chapter",
+  "work.outOfScope": "Volutamente fuori ambito",
+  "work.learningCheckpoint": "Prossimo punto di apprendimento",
+  "work.strategicContext": "Contesto strategico",
+  "work.back": "Torna al portfolio",
+  "work.notFound": "Questo lavoro non esiste più.",
+  "work.section.plan": "Piano",
+  "work.section.people": "Persone",
+  "work.section.volunteering": "Volontariato",
+  "work.saved": "Salvato",
+  "work.count": "Lavori",
+  "work.lookingForPeople": "Cerca persone",
+  "work.editPlan": "Modifica il piano",
+  "work.form.kind": "Tipo di lavoro",
+  "work.form.team": "Team",
+  "work.form.unassigned": "Non assegnato",
+  "work.deleteEntry": "Rimuovi",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {

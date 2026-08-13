@@ -53,6 +53,115 @@ export type Database = {
         }
         Relationships: []
       }
+      initiative_learning_entries: {
+        Row: {
+          author_name: string
+          created_at: string
+          decision: Database["public"]["Enums"]["learning_decision"]
+          do_next: string
+          entry_date: string
+          id: string
+          initiative_id: string
+          next_move: string
+          proud_of: string
+          signals_telling: string
+          source_lang: string
+          surprised_us: string
+          translations: Json
+          updated_at: string
+          what_happened: string
+        }
+        Insert: {
+          author_name?: string
+          created_at?: string
+          decision?: Database["public"]["Enums"]["learning_decision"]
+          do_next?: string
+          entry_date?: string
+          id?: string
+          initiative_id: string
+          next_move?: string
+          proud_of?: string
+          signals_telling?: string
+          source_lang?: string
+          surprised_us?: string
+          translations?: Json
+          updated_at?: string
+          what_happened?: string
+        }
+        Update: {
+          author_name?: string
+          created_at?: string
+          decision?: Database["public"]["Enums"]["learning_decision"]
+          do_next?: string
+          entry_date?: string
+          id?: string
+          initiative_id?: string
+          next_move?: string
+          proud_of?: string
+          signals_telling?: string
+          source_lang?: string
+          surprised_us?: string
+          translations?: Json
+          updated_at?: string
+          what_happened?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_learning_entries_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      initiative_milestones: {
+        Row: {
+          created_at: string
+          due_date: string | null
+          id: string
+          initiative_id: string
+          owner: string
+          sort_order: number
+          source_lang: string
+          title: string
+          translations: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          initiative_id: string
+          owner?: string
+          sort_order?: number
+          source_lang?: string
+          title?: string
+          translations?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          initiative_id?: string
+          owner?: string
+          sort_order?: number
+          source_lang?: string
+          title?: string
+          translations?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_milestones_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       initiative_secondary_krs: {
         Row: {
           created_at: string
@@ -86,75 +195,185 @@ export type Database = {
           },
         ]
       }
-      initiatives: {
+      initiative_signals: {
         Row: {
-          availability: Database["public"]["Enums"]["initiative_availability"]
-          blocked_reason: string
-          commitment:
-            | Database["public"]["Enums"]["initiative_commitment"]
-            | null
           created_at: string
-          description: string
-          help_needed:
-            | Database["public"]["Enums"]["initiative_help_needed"]
-            | null
+          direction: Database["public"]["Enums"]["signal_direction"] | null
+          evidence: Database["public"]["Enums"]["evidence_type"]
+          how_noticed: string
           id: string
-          kr_id: string
-          okr_set_id: string
-          owner: string
-          skill_note: string
+          initiative_id: string
+          name: string
           sort_order: number
           source_lang: string
-          status: string
-          text: string
+          starting_point: string
           translations: Json
           updated_at: string
         }
         Insert: {
-          availability?: Database["public"]["Enums"]["initiative_availability"]
-          blocked_reason?: string
-          commitment?:
-            | Database["public"]["Enums"]["initiative_commitment"]
-            | null
           created_at?: string
-          description?: string
-          help_needed?:
-            | Database["public"]["Enums"]["initiative_help_needed"]
-            | null
+          direction?: Database["public"]["Enums"]["signal_direction"] | null
+          evidence?: Database["public"]["Enums"]["evidence_type"]
+          how_noticed?: string
           id?: string
-          kr_id: string
-          okr_set_id: string
-          owner?: string
-          skill_note?: string
+          initiative_id: string
+          name?: string
           sort_order?: number
           source_lang?: string
-          status?: string
-          text?: string
+          starting_point?: string
           translations?: Json
           updated_at?: string
         }
         Update: {
+          created_at?: string
+          direction?: Database["public"]["Enums"]["signal_direction"] | null
+          evidence?: Database["public"]["Enums"]["evidence_type"]
+          how_noticed?: string
+          id?: string
+          initiative_id?: string
+          name?: string
+          sort_order?: number
+          source_lang?: string
+          starting_point?: string
+          translations?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_signals_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      initiatives: {
+        Row: {
+          aspiration: string
+          availability: Database["public"]["Enums"]["initiative_availability"]
+          bet_action: string
+          bet_change: string
+          bet_question: string
+          blocked_reason: string
+          commitment:
+            | Database["public"]["Enums"]["initiative_commitment"]
+            | null
+          confidence: Database["public"]["Enums"]["bet_confidence"] | null
+          created_at: string
+          description: string
+          end_date: string | null
+          help_needed:
+            | Database["public"]["Enums"]["initiative_help_needed"]
+            | null
+          id: string
+          idea: string
+          kind: Database["public"]["Enums"]["initiative_kind"]
+          kr_id: string
+          lead_name: string
+          learning_checkpoint: string | null
+          okr_set_id: string
+          out_of_scope: string
+          owner: string
+          phase: number
+          phase_type: Database["public"]["Enums"]["phase_type"] | null
+          proposed_owner: string
+          size: Database["public"]["Enums"]["work_size"] | null
+          skill_note: string
+          sort_order: number
+          source_lang: string
+          start_date: string | null
+          status: string
+          support_needed: string
+          team_id: string | null
+          text: string
+          translations: Json
+          updated_at: string
+          why_now: string
+        }
+        Insert: {
+          aspiration?: string
           availability?: Database["public"]["Enums"]["initiative_availability"]
+          bet_action?: string
+          bet_change?: string
+          bet_question?: string
           blocked_reason?: string
           commitment?:
             | Database["public"]["Enums"]["initiative_commitment"]
             | null
+          confidence?: Database["public"]["Enums"]["bet_confidence"] | null
           created_at?: string
           description?: string
+          end_date?: string | null
           help_needed?:
             | Database["public"]["Enums"]["initiative_help_needed"]
             | null
           id?: string
-          kr_id?: string
-          okr_set_id?: string
+          idea?: string
+          kind?: Database["public"]["Enums"]["initiative_kind"]
+          kr_id: string
+          lead_name?: string
+          learning_checkpoint?: string | null
+          okr_set_id: string
+          out_of_scope?: string
           owner?: string
+          phase?: number
+          phase_type?: Database["public"]["Enums"]["phase_type"] | null
+          proposed_owner?: string
+          size?: Database["public"]["Enums"]["work_size"] | null
           skill_note?: string
           sort_order?: number
           source_lang?: string
+          start_date?: string | null
           status?: string
+          support_needed?: string
+          team_id?: string | null
           text?: string
           translations?: Json
           updated_at?: string
+          why_now?: string
+        }
+        Update: {
+          aspiration?: string
+          availability?: Database["public"]["Enums"]["initiative_availability"]
+          bet_action?: string
+          bet_change?: string
+          bet_question?: string
+          blocked_reason?: string
+          commitment?:
+            | Database["public"]["Enums"]["initiative_commitment"]
+            | null
+          confidence?: Database["public"]["Enums"]["bet_confidence"] | null
+          created_at?: string
+          description?: string
+          end_date?: string | null
+          help_needed?:
+            | Database["public"]["Enums"]["initiative_help_needed"]
+            | null
+          id?: string
+          idea?: string
+          kind?: Database["public"]["Enums"]["initiative_kind"]
+          kr_id?: string
+          lead_name?: string
+          learning_checkpoint?: string | null
+          okr_set_id?: string
+          out_of_scope?: string
+          owner?: string
+          phase?: number
+          phase_type?: Database["public"]["Enums"]["phase_type"] | null
+          proposed_owner?: string
+          size?: Database["public"]["Enums"]["work_size"] | null
+          skill_note?: string
+          sort_order?: number
+          source_lang?: string
+          start_date?: string | null
+          status?: string
+          support_needed?: string
+          team_id?: string | null
+          text?: string
+          translations?: Json
+          updated_at?: string
+          why_now?: string
         }
         Relationships: [
           {
@@ -169,6 +388,13 @@ export type Database = {
             columns: ["okr_set_id"]
             isOneToOne: false
             referencedRelation: "okr_sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "initiatives_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
         ]
@@ -331,6 +557,36 @@ export type Database = {
         }
         Relationships: []
       }
+      teams: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          position: number
+          source_lang: string
+          translations: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          source_lang?: string
+          translations?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          source_lang?: string
+          translations?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -367,12 +623,19 @@ export type Database = {
     }
     Enums: {
       app_role: "editor" | "admin"
+      bet_confidence: "pretty_confident" | "worth_testing" | "wild_card"
       contribution: "none" | "secondary" | "primary"
+      evidence_type: "see" | "hear" | "measure"
       initiative_availability: "open" | "blocked" | "parked"
       initiative_commitment: "one_off" | "recurring" | "workstream"
       initiative_help_needed: "lead" | "helpers" | "skill"
+      initiative_kind: "candidate" | "simple_task" | "initiative"
       kr_type: "metric" | "milestone"
+      learning_decision: "growing" | "tweak" | "surprise" | "let_go"
       milestone_status: "not_started" | "in_progress" | "done"
+      phase_type: "delivery" | "discovery"
+      signal_direction: "up" | "down"
+      work_size: "small" | "medium"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -501,12 +764,19 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["editor", "admin"],
+      bet_confidence: ["pretty_confident", "worth_testing", "wild_card"],
       contribution: ["none", "secondary", "primary"],
+      evidence_type: ["see", "hear", "measure"],
       initiative_availability: ["open", "blocked", "parked"],
       initiative_commitment: ["one_off", "recurring", "workstream"],
       initiative_help_needed: ["lead", "helpers", "skill"],
+      initiative_kind: ["candidate", "simple_task", "initiative"],
       kr_type: ["metric", "milestone"],
+      learning_decision: ["growing", "tweak", "surprise", "let_go"],
       milestone_status: ["not_started", "in_progress", "done"],
+      phase_type: ["delivery", "discovery"],
+      signal_direction: ["up", "down"],
+      work_size: ["small", "medium"],
     },
   },
 } as const

@@ -85,7 +85,24 @@ export const LIMITS = {
   pillarDescription: 500,
   alignmentPillar: 120,
   alignmentHow: 800,
+
+  // ASPIRE-style planning fields
+  idea: 1000,
+  whyNow: 800,
+  proposedOwner: 100,
+  aspiration: 600,
+  betPart: 400,
+  learningCheckpoint: 200,
+  supportNeeded: 800,
+  outOfScope: 800,
+  leadName: 100,
+  signalName: 200,
+  signalNote: 300,
+  milestoneTitle: 200,
+  learningText: 1000,
+  authorName: 100,
 };
+
 
 
 const trimmedString = (max: number) =>
@@ -128,6 +145,69 @@ export const keyResultPatchSchema = z.object({
 });
 
 
+/**
+ * ASPIRE-style work kinds. All three live in the same `initiatives` table;
+ * `kind` decides how much planning structure a card carries.
+ */
+export type InitiativeKind = "candidate" | "simple_task" | "initiative";
+export const INITIATIVE_KINDS: InitiativeKind[] = [
+  "candidate",
+  "simple_task",
+  "initiative",
+];
+
+export type WorkSize = "small" | "medium";
+export const WORK_SIZES: WorkSize[] = ["small", "medium"];
+
+export type PhaseType = "delivery" | "discovery";
+export const PHASE_TYPES: PhaseType[] = ["delivery", "discovery"];
+
+export type BetConfidence = "pretty_confident" | "worth_testing" | "wild_card";
+export const BET_CONFIDENCES: BetConfidence[] = [
+  "pretty_confident",
+  "worth_testing",
+  "wild_card",
+];
+
+export type EvidenceType = "see" | "hear" | "measure";
+export const EVIDENCE_TYPES: EvidenceType[] = ["see", "hear", "measure"];
+
+export type SignalDirection = "up" | "down";
+export const SIGNAL_DIRECTIONS: SignalDirection[] = ["up", "down"];
+
+export type LearningDecision = "growing" | "tweak" | "surprise" | "let_go";
+export const LEARNING_DECISIONS: LearningDecision[] = [
+  "growing",
+  "tweak",
+  "surprise",
+  "let_go",
+];
+
+const planningFields = {
+  kind: z.enum(["candidate", "simple_task", "initiative"]).optional(),
+  size: z.enum(["small", "medium"]).nullable().optional(),
+  team_id: uuidSchema.nullable().optional(),
+  idea: trimmedString(LIMITS.idea).optional(),
+  why_now: trimmedString(LIMITS.whyNow).optional(),
+  proposed_owner: trimmedString(LIMITS.proposedOwner).optional(),
+  start_date: dateOrNull.optional(),
+  end_date: dateOrNull.optional(),
+  phase: z.number().int().min(1).max(20).optional(),
+  phase_type: z.enum(["delivery", "discovery"]).nullable().optional(),
+  aspiration: trimmedString(LIMITS.aspiration).optional(),
+  bet_action: trimmedString(LIMITS.betPart).optional(),
+  bet_change: trimmedString(LIMITS.betPart).optional(),
+  bet_question: trimmedString(LIMITS.betPart).optional(),
+  confidence: z
+    .enum(["pretty_confident", "worth_testing", "wild_card"])
+    .nullable()
+    .optional(),
+  learning_checkpoint: trimmedString(LIMITS.learningCheckpoint).optional(),
+  support_needed: trimmedString(LIMITS.supportNeeded).optional(),
+  out_of_scope: trimmedString(LIMITS.outOfScope).optional(),
+  lead_name: trimmedString(LIMITS.leadName).optional(),
+};
+
 export const initiativePatchSchema = z.object({
   text: trimmedString(LIMITS.initiative).min(1, { message: "Cannot be empty" }).optional(),
   owner: trimmedString(LIMITS.initiativeOwner).optional(),
@@ -138,6 +218,7 @@ export const initiativePatchSchema = z.object({
   commitment: z.enum(["one_off", "recurring", "workstream"]).nullable().optional(),
   help_needed: z.enum(["lead", "helpers", "skill"]).nullable().optional(),
   skill_note: trimmedString(LIMITS.initiativeSkillNote).optional(),
+  ...planningFields,
 });
 
 export const initiativeCreateSchema = z.object({
@@ -150,7 +231,39 @@ export const initiativeCreateSchema = z.object({
   commitment: z.enum(["one_off", "recurring", "workstream"]).nullable().optional(),
   help_needed: z.enum(["lead", "helpers", "skill"]).nullable().optional(),
   skill_note: trimmedString(LIMITS.initiativeSkillNote).optional(),
+  kind: z.enum(["candidate", "simple_task", "initiative"]).optional(),
+  team_id: uuidSchema.nullable().optional(),
+  idea: trimmedString(LIMITS.idea).optional(),
+  why_now: trimmedString(LIMITS.whyNow).optional(),
+  proposed_owner: trimmedString(LIMITS.proposedOwner).optional(),
 });
+
+export const signalPatchSchema = z.object({
+  name: trimmedString(LIMITS.signalName).optional(),
+  evidence: z.enum(["see", "hear", "measure"]).optional(),
+  how_noticed: trimmedString(LIMITS.signalNote).optional(),
+  starting_point: trimmedString(LIMITS.signalNote).optional(),
+  direction: z.enum(["up", "down"]).nullable().optional(),
+});
+
+export const milestonePatchSchema = z.object({
+  title: trimmedString(LIMITS.milestoneTitle).optional(),
+  owner: trimmedString(LIMITS.initiativeOwner).optional(),
+  due_date: dateOrNull.optional(),
+});
+
+export const learningEntryPatchSchema = z.object({
+  entry_date: dateOrNull.optional(),
+  author_name: trimmedString(LIMITS.authorName).optional(),
+  decision: z.enum(["growing", "tweak", "surprise", "let_go"]).optional(),
+  what_happened: trimmedString(LIMITS.learningText).optional(),
+  signals_telling: trimmedString(LIMITS.learningText).optional(),
+  surprised_us: trimmedString(LIMITS.learningText).optional(),
+  proud_of: trimmedString(LIMITS.learningText).optional(),
+  do_next: trimmedString(LIMITS.learningText).optional(),
+  next_move: trimmedString(LIMITS.learningText).optional(),
+});
+
 
 
 export const alignmentRowPatchSchema = z.object({
@@ -177,6 +290,46 @@ export type PillarSummaryDTO = WithTranslations & {
   label: string;
   description: string;
 };
+export type TeamDTO = WithTranslations & {
+  id: string;
+  name: string;
+  position: number;
+};
+
+export type SignalDTO = WithTranslations & {
+  id: string;
+  initiative_id: string;
+  name: string;
+  evidence: EvidenceType;
+  how_noticed: string;
+  starting_point: string;
+  direction: SignalDirection | null;
+  sort_order: number;
+};
+
+export type MilestoneDTO = WithTranslations & {
+  id: string;
+  initiative_id: string;
+  title: string;
+  owner: string;
+  due_date: string | null;
+  sort_order: number;
+};
+
+export type LearningEntryDTO = WithTranslations & {
+  id: string;
+  initiative_id: string;
+  entry_date: string;
+  author_name: string;
+  decision: LearningDecision;
+  what_happened: string;
+  signals_telling: string;
+  surprised_us: string;
+  proud_of: string;
+  do_next: string;
+  next_move: string;
+};
+
 export type InitiativeDTO = WithTranslations & {
   id: string;
   okr_set_id: string;
@@ -195,7 +348,32 @@ export type InitiativeDTO = WithTranslations & {
   updated_at: string | null;
   sort_order: number;
   secondary_kr_ids: string[];
+
+  // ASPIRE planning layer
+  kind: InitiativeKind;
+  size: WorkSize | null;
+  team_id: string | null;
+  idea: string;
+  why_now: string;
+  proposed_owner: string;
+  start_date: string | null;
+  end_date: string | null;
+  phase: number;
+  phase_type: PhaseType | null;
+  aspiration: string;
+  bet_action: string;
+  bet_change: string;
+  bet_question: string;
+  confidence: BetConfidence | null;
+  learning_checkpoint: string | null;
+  support_needed: string;
+  out_of_scope: string;
+  lead_name: string;
+  signals: SignalDTO[];
+  milestones: MilestoneDTO[];
+  learning_entries: LearningEntryDTO[];
 };
+
 
 
 export type KeyResultDTO = WithTranslations & {
@@ -247,6 +425,7 @@ export type DashboardDTO = {
   pillars: PillarSummaryDTO[];
   okr_sets: OkrSetDTO[];
   alignment_rows: AlignmentRowDTO[];
+  teams: TeamDTO[];
 };
 
 // Translatable fields per table — the single source of truth used server-side
@@ -259,8 +438,38 @@ export const TRANSLATABLE_FIELDS = {
 
     // Enum fields (availability, commitment, help_needed) are NOT translatable —
   // their labels come from the i18n strings.
-  initiatives: ["text", "owner", "description", "blocked_reason", "skill_note"] as const,
+  initiatives: [
+    "text",
+    "owner",
+    "description",
+    "blocked_reason",
+    "skill_note",
+    "idea",
+    "why_now",
+    "proposed_owner",
+    "aspiration",
+    "bet_action",
+    "bet_change",
+    "bet_question",
+    "learning_checkpoint",
+    "support_needed",
+    "out_of_scope",
+    "lead_name",
+  ] as const,
+  initiative_signals: ["name", "how_noticed", "starting_point"] as const,
+  initiative_milestones: ["title", "owner"] as const,
+  initiative_learning_entries: [
+    "author_name",
+    "what_happened",
+    "signals_telling",
+    "surprised_us",
+    "proud_of",
+    "do_next",
+    "next_move",
+  ] as const,
+  teams: ["name"] as const,
   alignment_rows: ["pillar", "how"] as const,
   pillar_summaries: ["label", "description"] as const,
 } as const;
+
 
