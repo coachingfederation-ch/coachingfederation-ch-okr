@@ -876,8 +876,8 @@ export function EditInitiativeDialog({
                   <Label htmlFor="ei-checkpoint">{t("work.learningCheckpoint")}</Label>
                   <Input
                     id="ei-checkpoint"
+                    type="date"
                     value={learningCheckpoint}
-                    maxLength={LIMITS.learningCheckpoint}
                     onChange={(e) => setLearningCheckpoint(e.target.value)}
                     disabled={!canEdit}
                   />
