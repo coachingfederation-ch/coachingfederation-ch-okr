@@ -6,7 +6,6 @@ import { getDashboard } from "@/lib/okr.functions";
 import {
   INITIATIVE_KINDS,
   INITIATIVE_STATUSES,
-  type InitiativeKind,
   type InitiativeStatus,
   type OkrSetDTO,
 } from "@/lib/okr-schemas";
