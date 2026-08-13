@@ -436,11 +436,7 @@ export function WorkJourney({
                     aria-current={i === index ? "step" : undefined}
                     className={cn(
                       "h-1.5 w-8 rounded-full transition-colors",
-                      i === index
-                        ? "bg-primary"
-                        : i < index
-                          ? "bg-highlight"
-                          : "bg-border",
+                      i === index ? "bg-primary" : i < index ? "bg-highlight" : "bg-border",
                     )}
                   >
                     <span className="sr-only">{t(STEP_TITLE[s])}</span>
@@ -603,7 +599,9 @@ export function WorkJourney({
                     <Field label={t("work.size")} htmlFor="wj-size">
                       <Select
                         value={state.size ?? "none"}
-                        onValueChange={(v) => patch({ size: v === "none" ? null : (v as WorkSize) })}
+                        onValueChange={(v) =>
+                          patch({ size: v === "none" ? null : (v as WorkSize) })
+                        }
                       >
                         <SelectTrigger id="wj-size" className="w-full">
                           <SelectValue />
@@ -671,9 +669,7 @@ export function WorkJourney({
                         </SelectContent>
                       </Select>
                     </Field>
-                    {state.kind === "simple_task" && (
-                      <DateRange state={state} patch={patch} />
-                    )}
+                    {state.kind === "simple_task" && <DateRange state={state} patch={patch} />}
                   </>
                 )}
               </div>
@@ -796,7 +792,10 @@ export function WorkJourney({
                   <p className="text-sm text-muted-foreground">{t("work.noSignals")}</p>
                 )}
                 {state.signals.map((sig, i) => (
-                  <div key={i} className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4">
+                  <div
+                    key={i}
+                    className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4"
+                  >
                     <div className="flex items-start gap-2">
                       <div className="min-w-0 flex-1">
                         <Field label={t("work.signal.name")} htmlFor={`wj-sig-${i}`}>
@@ -820,9 +819,7 @@ export function WorkJourney({
                         size="icon"
                         className="mt-6"
                         aria-label={t("work.deleteEntry")}
-                        onClick={() =>
-                          patch({ signals: state.signals.filter((_, j) => j !== i) })
-                        }
+                        onClick={() => patch({ signals: state.signals.filter((_, j) => j !== i) })}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -858,7 +855,10 @@ export function WorkJourney({
                             patch({
                               signals: state.signals.map((s, j) =>
                                 j === i
-                                  ? { ...s, direction: v === "none" ? null : (v as SignalDirection) }
+                                  ? {
+                                      ...s,
+                                      direction: v === "none" ? null : (v as SignalDirection),
+                                    }
                                   : s,
                               ),
                             })
@@ -937,7 +937,10 @@ export function WorkJourney({
                   <p className="text-sm text-muted-foreground">{t("work.noMilestones")}</p>
                 )}
                 {state.milestones.map((ms, i) => (
-                  <div key={i} className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4">
+                  <div
+                    key={i}
+                    className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4"
+                  >
                     <div className="flex items-start gap-2">
                       <div className="min-w-0 flex-1">
                         <Field label={t("work.milestone.title")} htmlFor={`wj-ms-${i}`}>

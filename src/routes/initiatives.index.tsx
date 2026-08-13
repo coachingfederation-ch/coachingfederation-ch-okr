@@ -84,7 +84,9 @@ function LanguageSwitcher() {
             aria-label={LOCALE_LABELS[l]}
             className={cn(
               "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider transition-colors",
-              active ? "bg-card text-primary shadow-sm" : "text-hero-foreground/80 hover:text-hero-foreground",
+              active
+                ? "bg-card text-primary shadow-sm"
+                : "text-hero-foreground/80 hover:text-hero-foreground",
             )}
           >
             {l}
@@ -339,33 +341,34 @@ function InitiativesContent() {
           </div>
         </div>
 
-        {krFilter !== "all" && (() => {
-          const set = data.okr_sets.find((s) => s.key_results.some((k) => k.id === krFilter));
-          const kr = set?.key_results.find((k) => k.id === krFilter);
-          if (!set || !kr) return null;
-          const okrTitle = pickTranslation(set, "title", set.title, locale) || "Untitled";
-          const krText = pickTranslation(kr, "text", kr.text, locale) || "Untitled KR";
-          return (
-            <div className="mt-3 flex items-start gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-soft">
-              <span className="mt-0.5 inline-flex h-6 shrink-0 items-center rounded bg-primary/10 px-2 text-[11px] font-bold text-primary">
-                {set.number}.{kr.kr?.includes(".") ? kr.kr.split(".")[1] : kr.kr || "—"}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                  {set.number}. {okrTitle}
-                </p>
-                <p className="text-sm font-semibold text-foreground">{krText}</p>
+        {krFilter !== "all" &&
+          (() => {
+            const set = data.okr_sets.find((s) => s.key_results.some((k) => k.id === krFilter));
+            const kr = set?.key_results.find((k) => k.id === krFilter);
+            if (!set || !kr) return null;
+            const okrTitle = pickTranslation(set, "title", set.title, locale) || "Untitled";
+            const krText = pickTranslation(kr, "text", kr.text, locale) || "Untitled KR";
+            return (
+              <div className="mt-3 flex items-start gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-soft">
+                <span className="mt-0.5 inline-flex h-6 shrink-0 items-center rounded bg-primary/10 px-2 text-[11px] font-bold text-primary">
+                  {set.number}.{kr.kr?.includes(".") ? kr.kr.split(".")[1] : kr.kr || "—"}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    {set.number}. {okrTitle}
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">{krText}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setKrFilter("all")}
+                  className="shrink-0 text-xs font-medium text-muted-foreground hover:text-foreground"
+                >
+                  {t("common.cancel")}
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setKrFilter("all")}
-                className="shrink-0 text-xs font-medium text-muted-foreground hover:text-foreground"
-              >
-                {t("common.cancel")}
-              </button>
-            </div>
-          );
-        })()}
+            );
+          })()}
       </section>
 
       <section className="mx-auto max-w-7xl px-8 py-8">

@@ -33,11 +33,9 @@ import type { Locale, TranslationsMap } from "./i18n-shared";
 import { z } from "zod";
 
 function serverPublicClient() {
-  return createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_PUBLISHABLE_KEY!,
-    { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
-  );
+  return createClient<Database>(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+  });
 }
 
 // -------- Translation helpers (server) --------
@@ -83,10 +81,8 @@ async function translateRow(args: {
     .eq(idColumn, id)
     .maybeSingle();
 
-  const existingRow = existing as
-    | { translations?: unknown; source_lang?: string | null }
-    | null;
-  const rowSource = ((existingRow?.source_lang ?? editorLang) as Locale);
+  const existingRow = existing as { translations?: unknown; source_lang?: string | null } | null;
+  const rowSource = (existingRow?.source_lang ?? editorLang) as Locale;
 
   const { translateFields, mergeTranslations } = await import("./translate.server");
   const fresh = await translateFields(editorLang, changed);
@@ -125,76 +121,59 @@ async function translateRow(args: {
     .eq(idColumn, id);
 }
 
-
 // -------- READ (public) --------
 
 export const getDashboard = createServerFn({ method: "GET" }).handler(
   async (): Promise<DashboardDTO> => {
     const supabase = serverPublicClient();
-    const [
-      pillars,
-      sets,
-      krs,
-      inits,
-      aligns,
-      secLinks,
-      teams,
-      signals,
-      milestones,
-      learning,
-    ] = await Promise.all([
-      supabase
-        .from("pillar_summaries")
-        .select("code,label,description,translations,source_lang"),
-      supabase
-        .from("okr_sets")
-        .select(
-          "id,number,title,role_label,role_name,customer,pillars,objective,alignment,sort_order,translations,source_lang",
-        )
-        .order("sort_order", { ascending: true }),
-      supabase
-        .from("key_results")
-        .select(
-          "id,okr_set_id,kr,text,target,lead,sort_order,translations,source_lang,kr_type,measure,instrument,baseline_2026,baseline_locked,current_value,current_as_of,target_2027,milestone_status,milestone_due",
-        )
-        .order("sort_order", { ascending: true }),
+    const [pillars, sets, krs, inits, aligns, secLinks, teams, signals, milestones, learning] =
+      await Promise.all([
+        supabase.from("pillar_summaries").select("code,label,description,translations,source_lang"),
+        supabase
+          .from("okr_sets")
+          .select(
+            "id,number,title,role_label,role_name,customer,pillars,objective,alignment,sort_order,translations,source_lang",
+          )
+          .order("sort_order", { ascending: true }),
+        supabase
+          .from("key_results")
+          .select(
+            "id,okr_set_id,kr,text,target,lead,sort_order,translations,source_lang,kr_type,measure,instrument,baseline_2026,baseline_locked,current_value,current_as_of,target_2027,milestone_status,milestone_due",
+          )
+          .order("sort_order", { ascending: true }),
 
-      supabase
-        .from("initiatives")
-        .select(
-          "id,okr_set_id,kr_id,text,owner,description,status,availability,blocked_reason,commitment,help_needed,skill_note,updated_at,sort_order,translations,source_lang,kind,size,team_id,idea,why_now,proposed_owner,start_date,end_date,phase,phase_type,aspiration,bet_action,bet_change,bet_question,confidence,learning_checkpoint,support_needed,out_of_scope,lead_name",
-        )
-        .order("sort_order", { ascending: true }),
-      supabase
-        .from("alignment_rows")
-        .select("id,pillar,sg,oe,ce,how,sort_order,translations,source_lang")
-        .order("sort_order", { ascending: true }),
-      supabase
-        .from("initiative_secondary_krs")
-        .select("initiative_id,kr_id"),
-      supabase
-        .from("teams")
-        .select("id,name,position,translations,source_lang")
-        .order("position", { ascending: true }),
-      supabase
-        .from("initiative_signals")
-        .select(
-          "id,initiative_id,name,evidence,how_noticed,starting_point,direction,sort_order,translations,source_lang",
-        )
-        .order("sort_order", { ascending: true }),
-      supabase
-        .from("initiative_milestones")
-        .select(
-          "id,initiative_id,title,owner,due_date,sort_order,translations,source_lang",
-        )
-        .order("sort_order", { ascending: true }),
-      supabase
-        .from("initiative_learning_entries")
-        .select(
-          "id,initiative_id,entry_date,author_name,decision,what_happened,signals_telling,surprised_us,proud_of,do_next,next_move,translations,source_lang",
-        )
-        .order("entry_date", { ascending: false }),
-    ]);
+        supabase
+          .from("initiatives")
+          .select(
+            "id,okr_set_id,kr_id,text,owner,description,status,availability,blocked_reason,commitment,help_needed,skill_note,updated_at,sort_order,translations,source_lang,kind,size,team_id,idea,why_now,proposed_owner,start_date,end_date,phase,phase_type,aspiration,bet_action,bet_change,bet_question,confidence,learning_checkpoint,support_needed,out_of_scope,lead_name",
+          )
+          .order("sort_order", { ascending: true }),
+        supabase
+          .from("alignment_rows")
+          .select("id,pillar,sg,oe,ce,how,sort_order,translations,source_lang")
+          .order("sort_order", { ascending: true }),
+        supabase.from("initiative_secondary_krs").select("initiative_id,kr_id"),
+        supabase
+          .from("teams")
+          .select("id,name,position,translations,source_lang")
+          .order("position", { ascending: true }),
+        supabase
+          .from("initiative_signals")
+          .select(
+            "id,initiative_id,name,evidence,how_noticed,starting_point,direction,sort_order,translations,source_lang",
+          )
+          .order("sort_order", { ascending: true }),
+        supabase
+          .from("initiative_milestones")
+          .select("id,initiative_id,title,owner,due_date,sort_order,translations,source_lang")
+          .order("sort_order", { ascending: true }),
+        supabase
+          .from("initiative_learning_entries")
+          .select(
+            "id,initiative_id,entry_date,author_name,decision,what_happened,signals_telling,surprised_us,proud_of,do_next,next_move,translations,source_lang",
+          )
+          .order("entry_date", { ascending: false }),
+      ]);
 
     const err =
       pillars.error ||
@@ -218,7 +197,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
 
     const withMeta = <T extends { translations?: unknown; source_lang?: string }>(r: T) => ({
       translations: (r.translations as TranslationsMap) ?? {},
-      source_lang: ((r.source_lang ?? "en") as Locale),
+      source_lang: (r.source_lang ?? "en") as Locale,
     });
 
     const signalsByInit = new Map<string, SignalDTO[]>();
@@ -283,8 +262,8 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         text: r.text,
         owner: r.owner ?? "",
         description: r.description ?? "",
-        status: ((r.status as InitiativeDTO["status"]) ?? "planned"),
-        availability: ((r.availability as InitiativeDTO["availability"]) ?? "open"),
+        status: (r.status as InitiativeDTO["status"]) ?? "planned",
+        availability: (r.availability as InitiativeDTO["availability"]) ?? "open",
         blocked_reason: r.blocked_reason ?? "",
         commitment: (r.commitment as InitiativeDTO["commitment"]) ?? null,
         help_needed: (r.help_needed as InitiativeDTO["help_needed"]) ?? null,
@@ -319,8 +298,6 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
       });
       initsByKr.set(r.kr_id, arr);
     }
-
-
 
     const krsBySet = new Map<string, KeyResultDTO[]>();
     for (const r of krs.data ?? []) {
@@ -395,7 +372,6 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
   },
 );
 
-
 // -------- WRITES (editor-only via RLS) --------
 
 // OKR sets
@@ -407,10 +383,7 @@ export const updateOkrSet = createServerFn({ method: "POST" })
       .parse(raw),
   )
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("okr_sets")
-      .update(data.patch)
-      .eq("id", data.id);
+    const { error } = await context.supabase.from("okr_sets").update(data.patch).eq("id", data.id);
     if (error) throw new Error(error.message);
     await translateRow({
       ctx: context,
@@ -425,7 +398,10 @@ export const updateOkrSet = createServerFn({ method: "POST" })
 export const addOkrSet = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) =>
-    z.object({ sourceLang: localeSchema.default("en") }).default({ sourceLang: "en" }).parse(raw ?? {}),
+    z
+      .object({ sourceLang: localeSchema.default("en") })
+      .default({ sourceLang: "en" })
+      .parse(raw ?? {}),
   )
   .handler(async ({ data, context }) => {
     const { data: maxRow } = await context.supabase
@@ -460,10 +436,7 @@ export const deleteOkrSet = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("okr_sets")
-      .delete()
-      .eq("id", data.id);
+    const { error } = await context.supabase.from("okr_sets").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -472,9 +445,7 @@ export const deleteOkrSet = createServerFn({ method: "POST" })
 export const addKeyResult = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) =>
-    z
-      .object({ okr_set_id: uuidSchema, sourceLang: localeSchema.default("en") })
-      .parse(raw),
+    z.object({ okr_set_id: uuidSchema, sourceLang: localeSchema.default("en") }).parse(raw),
   )
   .handler(async ({ data, context }) => {
     const { data: setRow, error: setErr } = await context.supabase
@@ -513,7 +484,11 @@ export const updateKeyResult = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) =>
     z
-      .object({ id: uuidSchema, patch: keyResultPatchSchema, sourceLang: localeSchema.default("en") })
+      .object({
+        id: uuidSchema,
+        patch: keyResultPatchSchema,
+        sourceLang: localeSchema.default("en"),
+      })
       .parse(raw),
   )
   .handler(async ({ data, context }) => {
@@ -536,10 +511,7 @@ export const deleteKeyResult = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("key_results")
-      .delete()
-      .eq("id", data.id);
+    const { error } = await context.supabase.from("key_results").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -628,14 +600,12 @@ export const addInitiative = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     const secondary = (data.secondary_kr_ids ?? []).filter((id) => id !== data.kr_id);
     if (secondary.length > 0) {
-      const { error: secErr } = await context.supabase
-        .from("initiative_secondary_krs")
-        .insert(
-          Array.from(new Set(secondary)).map((kr_id) => ({
-            initiative_id: row.id,
-            kr_id,
-          })),
-        );
+      const { error: secErr } = await context.supabase.from("initiative_secondary_krs").insert(
+        Array.from(new Set(secondary)).map((kr_id) => ({
+          initiative_id: row.id,
+          kr_id,
+        })),
+      );
       if (secErr) throw new Error(secErr.message);
     }
     const translatePatch: Record<string, string> = { text: data.text };
@@ -658,12 +628,15 @@ export const addInitiative = createServerFn({ method: "POST" })
     return { id: row.id };
   });
 
-
 export const updateInitiative = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) =>
     z
-      .object({ id: uuidSchema, patch: initiativePatchSchema, sourceLang: localeSchema.default("en") })
+      .object({
+        id: uuidSchema,
+        patch: initiativePatchSchema,
+        sourceLang: localeSchema.default("en"),
+      })
       .parse(raw),
   )
   .handler(async ({ data, context }) => {
@@ -686,10 +659,7 @@ export const deleteInitiative = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("initiatives")
-      .delete()
-      .eq("id", data.id);
+    const { error } = await context.supabase.from("initiatives").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -697,9 +667,7 @@ export const deleteInitiative = createServerFn({ method: "POST" })
 export const setInitiativeSecondaryKrs = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) =>
-    z
-      .object({ id: uuidSchema, kr_ids: z.array(uuidSchema).max(50) })
-      .parse(raw),
+    z.object({ id: uuidSchema, kr_ids: z.array(uuidSchema).max(50) }).parse(raw),
   )
   .handler(async ({ data, context }) => {
     const { data: initRow, error: initErr } = await context.supabase
@@ -733,9 +701,7 @@ export const setInitiativeSecondaryKrs = createServerFn({ method: "POST" })
 // "Link initiatives" dialog to move an initiative between KRs.
 export const setInitiativePrimaryKr = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((raw: unknown) =>
-    z.object({ id: uuidSchema, kr_id: uuidSchema }).parse(raw),
-  )
+  .inputValidator((raw: unknown) => z.object({ id: uuidSchema, kr_id: uuidSchema }).parse(raw))
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase
       .from("initiatives")
@@ -751,14 +717,16 @@ export const setInitiativePrimaryKr = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-
-
 // Alignment rows
 export const updateAlignmentRow = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) =>
     z
-      .object({ id: uuidSchema, patch: alignmentRowPatchSchema, sourceLang: localeSchema.default("en") })
+      .object({
+        id: uuidSchema,
+        patch: alignmentRowPatchSchema,
+        sourceLang: localeSchema.default("en"),
+      })
       .parse(raw),
   )
   .handler(async ({ data, context }) => {
@@ -877,10 +845,7 @@ export const deleteSignal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("initiative_signals")
-      .delete()
-      .eq("id", data.id);
+    const { error } = await context.supabase.from("initiative_signals").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
