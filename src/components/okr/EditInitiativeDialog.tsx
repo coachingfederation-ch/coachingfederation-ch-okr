@@ -645,7 +645,7 @@ export function EditInitiativeDialog({
             </div>
 
             <div className="grid gap-1.5 min-w-0">
-              <Label htmlFor="ei-kind">{t("work.kind")}</Label>
+              <Label htmlFor="ei-kind">{t("work.filterKind")}</Label>
               <Select
                 value={kind}
                 onValueChange={(v) => setKind(v as InitiativeKind)}
