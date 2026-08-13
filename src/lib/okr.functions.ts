@@ -560,6 +560,21 @@ export const addInitiative = createServerFn({ method: "POST" })
         idea: initiativeCreateSchema.shape.idea,
         why_now: initiativeCreateSchema.shape.why_now,
         proposed_owner: initiativeCreateSchema.shape.proposed_owner,
+        // The guided journey captures the whole framing in one pass, so the
+        // create call accepts the same planning layer as the edit patch.
+        size: initiativePatchSchema.shape.size,
+        start_date: initiativePatchSchema.shape.start_date,
+        end_date: initiativePatchSchema.shape.end_date,
+        phase: initiativePatchSchema.shape.phase,
+        phase_type: initiativePatchSchema.shape.phase_type,
+        aspiration: initiativePatchSchema.shape.aspiration,
+        bet_action: initiativePatchSchema.shape.bet_action,
+        bet_change: initiativePatchSchema.shape.bet_change,
+        bet_question: initiativePatchSchema.shape.bet_question,
+        confidence: initiativePatchSchema.shape.confidence,
+        learning_checkpoint: initiativePatchSchema.shape.learning_checkpoint,
+        lead_name: initiativePatchSchema.shape.lead_name,
+        secondary_kr_ids: z.array(uuidSchema).max(50).optional(),
         sourceLang: localeSchema.default("en"),
       })
       .parse(raw),
@@ -593,18 +608,46 @@ export const addInitiative = createServerFn({ method: "POST" })
         idea: data.idea ?? "",
         why_now: data.why_now ?? "",
         proposed_owner: data.proposed_owner ?? "",
+        size: data.size ?? null,
+        start_date: data.start_date ?? null,
+        end_date: data.end_date ?? null,
+        phase: data.phase ?? 1,
+        phase_type: data.phase_type ?? null,
+        aspiration: data.aspiration ?? "",
+        bet_action: data.bet_action ?? "",
+        bet_change: data.bet_change ?? "",
+        bet_question: data.bet_question ?? "",
+        confidence: data.confidence ?? null,
+        learning_checkpoint: data.learning_checkpoint || null,
+        lead_name: data.lead_name ?? "",
         sort_order: nextSort,
         source_lang: data.sourceLang,
       })
       .select("id")
       .single();
     if (error) throw new Error(error.message);
+    const secondary = (data.secondary_kr_ids ?? []).filter((id) => id !== data.kr_id);
+    if (secondary.length > 0) {
+      const { error: secErr } = await context.supabase
+        .from("initiative_secondary_krs")
+        .insert(
+          Array.from(new Set(secondary)).map((kr_id) => ({
+            initiative_id: row.id,
+            kr_id,
+          })),
+        );
+      if (secErr) throw new Error(secErr.message);
+    }
     const translatePatch: Record<string, string> = { text: data.text };
     if (data.owner) translatePatch.owner = data.owner;
     if (data.description) translatePatch.description = data.description;
     if (data.idea) translatePatch.idea = data.idea;
     if (data.why_now) translatePatch.why_now = data.why_now;
     if (data.proposed_owner) translatePatch.proposed_owner = data.proposed_owner;
+    if (data.aspiration) translatePatch.aspiration = data.aspiration;
+    if (data.bet_action) translatePatch.bet_action = data.bet_action;
+    if (data.bet_change) translatePatch.bet_change = data.bet_change;
+    if (data.bet_question) translatePatch.bet_question = data.bet_question;
     await translateRow({
       ctx: context,
       table: "initiatives",
