@@ -296,7 +296,7 @@ function DetailContent() {
           </div>
           {initiative.learning_checkpoint && (
             <Field label={t("work.learningCheckpoint")}>
-              {text("learning_checkpoint", initiative.learning_checkpoint)}
+              {formatDate(initiative.learning_checkpoint, locale)}
             </Field>
           )}
         </Panel>

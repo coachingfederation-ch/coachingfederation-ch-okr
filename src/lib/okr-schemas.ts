@@ -202,7 +202,9 @@ const planningFields = {
     .enum(["pretty_confident", "worth_testing", "wild_card"])
     .nullable()
     .optional(),
-  learning_checkpoint: trimmedString(LIMITS.learningCheckpoint).optional(),
+  // `learning_checkpoint` is a real date column: an empty string must become
+  // NULL, otherwise Postgres rejects the update with an invalid date syntax.
+  learning_checkpoint: dateOrNull.optional(),
   support_needed: trimmedString(LIMITS.supportNeeded).optional(),
   out_of_scope: trimmedString(LIMITS.outOfScope).optional(),
   lead_name: trimmedString(LIMITS.leadName).optional(),
@@ -451,7 +453,7 @@ export const TRANSLATABLE_FIELDS = {
     "bet_action",
     "bet_change",
     "bet_question",
-    "learning_checkpoint",
+    
     "support_needed",
     "out_of_scope",
     "lead_name",

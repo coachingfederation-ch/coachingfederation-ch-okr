@@ -235,7 +235,8 @@ export function EditInitiativeDialog({
       setBetChange(tr("bet_change", initiative.bet_change));
       setBetQuestion(tr("bet_question", initiative.bet_question));
       setConfidence(initiative.confidence ?? null);
-      setLearningCheckpoint(tr("learning_checkpoint", initiative.learning_checkpoint ?? ""));
+      // Date column, not translatable text — always use the raw ISO value.
+      setLearningCheckpoint(initiative.learning_checkpoint ?? "");
       setSupportNeeded(tr("support_needed", initiative.support_needed));
       setOutOfScope(tr("out_of_scope", initiative.out_of_scope));
       setLeadName(tr("lead_name", initiative.lead_name));
@@ -875,8 +876,8 @@ export function EditInitiativeDialog({
                   <Label htmlFor="ei-checkpoint">{t("work.learningCheckpoint")}</Label>
                   <Input
                     id="ei-checkpoint"
+                    type="date"
                     value={learningCheckpoint}
-                    maxLength={LIMITS.learningCheckpoint}
                     onChange={(e) => setLearningCheckpoint(e.target.value)}
                     disabled={!canEdit}
                   />
