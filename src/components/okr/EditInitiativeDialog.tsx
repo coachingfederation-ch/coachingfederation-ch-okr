@@ -235,7 +235,8 @@ export function EditInitiativeDialog({
       setBetChange(tr("bet_change", initiative.bet_change));
       setBetQuestion(tr("bet_question", initiative.bet_question));
       setConfidence(initiative.confidence ?? null);
-      setLearningCheckpoint(tr("learning_checkpoint", initiative.learning_checkpoint ?? ""));
+      // Date column, not translatable text — always use the raw ISO value.
+      setLearningCheckpoint(initiative.learning_checkpoint ?? "");
       setSupportNeeded(tr("support_needed", initiative.support_needed));
       setOutOfScope(tr("out_of_scope", initiative.out_of_scope));
       setLeadName(tr("lead_name", initiative.lead_name));
