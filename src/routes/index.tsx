@@ -807,7 +807,16 @@ function KrCard({
   );
 }
 
+/** Status dot palette, shared vocabulary with the initiative portfolio board. */
+const KR_INITIATIVE_DOT: Record<string, string> = {
+  planned: "bg-muted-foreground/40",
+  in_progress: "bg-highlight",
+  done: "bg-primary",
+  canceled: "bg-border",
+};
+
 function KrDetailSheet({
+
   kr,
   canEdit,
   m,
