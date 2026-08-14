@@ -75,8 +75,19 @@
   --color-chip-active-border: var(--chip-active-border);
 
   --color-surface: var(--surface);
+  /* Soft blue page wash used by the volunteer entry page. */
+  --color-wash: var(--wash);
 
   --shadow-soft: 0 1px 2px oklch(0.2802 0.084 278.57 / 5%), 0 6px 18px oklch(0.2802 0.084 278.57 / 5%);
+  /* Airy tile elevation for the lighter Get involved surfaces. */
+  --shadow-tile: 0 20px 50px oklch(0.2802 0.084 278.57 / 6%);
+  --shadow-lift: 0 14px 30px oklch(0.6177 0.1969 269.18 / 22%);
+  --shadow-spark: 0 14px 30px oklch(0.8488 0.1627 94.87 / 25%);
+
+  --radius-tile: 2rem;
+  --radius-tile-lg: 2.5rem;
+  --radius-tile-xl: 3rem;
+
 
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
@@ -105,6 +116,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2802 0.084 278.57);
   --surface: oklch(0.975 0.011 78.24);          /* soft bone panel */
+  --wash: oklch(0.9505 0.0208 274.5);           /* soft blue wash #EEF1FF */
+
   --secondary: oklch(0.94 0.016 78.24);
   --secondary-foreground: oklch(0.3949 0.1616 271.45);
   --muted: oklch(0.945 0.014 78.24);

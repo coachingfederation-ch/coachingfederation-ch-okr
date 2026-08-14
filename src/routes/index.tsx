@@ -136,232 +136,273 @@ function Content() {
   const visible = showAll ? matches : matches.slice(0, 6);
 
   return (
-    <main className="min-h-dvh">
-      <header className="bg-hero text-hero-foreground">
-        <div className="mx-auto max-w-6xl px-8 pb-24 pt-6">
-          <div className="mb-8 flex items-start justify-between gap-4">
+    <main className="min-h-dvh bg-wash">
+      <div className="mx-auto max-w-6xl px-5 py-6 md:px-8 md:py-10">
+        <div className="grid grid-cols-12 gap-5 md:gap-6">
+          {/* Chrome keeps the Deep Blue band, now as a compact tile on the wash. */}
+          <header className="col-span-12 flex flex-wrap items-center justify-between gap-4 rounded-tile bg-hero px-5 py-4 text-hero-foreground shadow-tile">
             <img
               src={icfLogo.url}
               alt="ICF Switzerland Charter Chapter"
-              className="-ml-3 -mt-2 h-20 w-auto"
-              width={88}
-              height={80}
+              className="h-14 w-auto"
+              width={62}
+              height={56}
               loading="eager"
               fetchPriority="high"
               decoding="async"
             />
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <TopNav />
               <LanguageSwitcher />
               <AuthBadge />
             </div>
-          </div>
+          </header>
 
-          <p className="eyebrow !text-accent">{t("involve.eyebrow")}</p>
-          <h1 className="display-xl mt-3 max-w-3xl">{t("involve.title")}</h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
-            {t("involve.subtitle")}
-          </p>
+          {/* Welcome tile */}
+          <section className="relative col-span-12 flex flex-col justify-center overflow-hidden rounded-tile-lg bg-card p-8 shadow-tile md:p-12 lg:col-span-8">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-accent/20"
+            />
+            <p className="eyebrow !text-highlight">{t("involve.eyebrow")}</p>
+            <h1 className="display-xl mt-4 max-w-2xl text-foreground">{t("involve.title")}</h1>
+            <p className="mt-5 max-w-lg text-lg leading-relaxed text-foreground/70">
+              {t("involve.subtitle")}
+            </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#journey"
-              className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-accent px-5 !text-hero shadow-sm transition-shadow hover:shadow"
-            >
-              <Sparkles className="h-4 w-4" /> {t("involve.cta.start")}
-            </a>
-            <Link
-              to="/initiatives"
-              className="btn-mono inline-flex h-11 items-center rounded-full border border-hero-foreground/30 px-5 text-hero-foreground transition-colors hover:bg-hero-foreground/10"
-            >
-              {t("involve.cta.browse")}
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Live pulse of the chapter, so the page opens with real facts. */}
-      <section className="mx-auto -mt-12 max-w-6xl px-8">
-        <dl className="grid gap-4 md:grid-cols-3">
-          {[
-            { value: stats.objectives, label: t("involve.stat.objectives") },
-            { value: stats.open, label: t("involve.stat.open") },
-            { value: stats.teams, label: t("involve.stat.teams") },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="rounded-2xl border border-border/70 bg-card px-5 py-4 shadow-soft"
-            >
-              <dt className="section-label text-muted-foreground">{s.label}</dt>
-              <dd className="font-display text-3xl font-bold text-primary">{s.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      {/* ---- The three questions ---- */}
-      <section id="journey" className="mx-auto mt-12 max-w-6xl px-8">
-        <div className="rounded-3xl border border-border/70 bg-card p-6 shadow-soft sm:p-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4">
-            <div>
-              <p className="section-label text-muted-foreground">
-                {t("involve.step")} {Math.min(step + 1, 3)} {t("involve.of")} 3
-              </p>
-              <h2 className="mt-1 font-display text-xl font-bold text-foreground">
-                {t("involve.journeyTitle")}
-              </h2>
-            </div>
-            {(step > 0 || complete) && (
-              <button
-                type="button"
-                onClick={() => {
-                  setAnswers(EMPTY);
-                  setStep(0);
-                  setShowAll(false);
-                }}
-                className="btn-mono text-xs text-muted-foreground hover:text-primary"
+            <div className="mt-8 flex flex-wrap gap-4">
+              <a
+                href="#journey"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-highlight px-7 text-sm font-bold text-highlight-foreground shadow-lift transition-transform hover:-translate-y-0.5"
               >
-                {t("involve.restart")}
-              </button>
-            )}
-          </div>
+                <Sparkles className="h-4 w-4" /> {t("involve.cta.start")}
+              </a>
+              <Link
+                to="/initiatives"
+                className="inline-flex min-h-11 items-center rounded-full border-2 border-foreground/10 px-7 text-sm font-bold text-foreground transition-colors hover:bg-foreground/5"
+              >
+                {t("involve.cta.browse")}
+              </Link>
+            </div>
+          </section>
 
-          <div className="mt-4 flex gap-1.5" aria-hidden>
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className={cn(
-                  "h-1.5 flex-1 rounded-full transition-colors",
-                  i <= step ? "bg-primary" : "bg-border",
+          {/* Live pulse of the chapter, so the page opens with real facts. */}
+          <section className="col-span-12 lg:col-span-4">
+            <dl className="grid h-full gap-5 sm:grid-cols-3 lg:grid-cols-1">
+              {[
+                {
+                  value: stats.objectives,
+                  label: t("involve.stat.objectives"),
+                  tone: "bg-highlight text-highlight-foreground shadow-lift",
+                  sub: "text-highlight-foreground/80",
+                },
+                {
+                  value: stats.open,
+                  label: t("involve.stat.open"),
+                  tone: "bg-card text-foreground shadow-tile",
+                  sub: "text-foreground/60",
+                },
+                {
+                  value: stats.teams,
+                  label: t("involve.stat.teams"),
+                  tone: "bg-accent text-accent-foreground shadow-spark",
+                  sub: "text-accent-foreground/70",
+                },
+              ].map((s) => (
+                <div
+                  key={s.label}
+                  className={cn(
+                    "flex flex-col justify-center rounded-tile px-6 py-6 lg:flex-1",
+                    s.tone,
+                  )}
+                >
+                  <dd className="font-display text-3xl font-bold">{s.value}</dd>
+                  <dt className={cn("mt-1 text-sm font-medium", s.sub)}>{s.label}</dt>
+                </div>
+              ))}
+            </dl>
+          </section>
+
+          {/* ---- The three questions ---- */}
+          <section
+            id="journey"
+            className="col-span-12 rounded-tile-xl bg-card p-6 shadow-tile sm:p-10 md:p-12"
+          >
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="mb-2 flex items-center gap-2">
+                  <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-foreground/40">
+                    {t("involve.step")} {Math.min(step + 1, 3)} {t("involve.of")} 3
+                  </span>
+                </div>
+                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl">
+                  {t("involve.journeyTitle")}
+                </h2>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div
+                  className="h-3 w-full overflow-hidden rounded-full bg-wash md:w-56"
+                  role="progressbar"
+                  aria-valuemin={1}
+                  aria-valuemax={3}
+                  aria-valuenow={Math.min(step + 1, 3)}
+                >
+                  <span
+                    className="block h-full rounded-full bg-highlight transition-[width] duration-300"
+                    style={{ width: `${((Math.min(step, 2) + 1) / 3) * 100}%` }}
+                  />
+                </div>
+                {(step > 0 || complete) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAnswers(EMPTY);
+                      setStep(0);
+                      setShowAll(false);
+                    }}
+                    className="whitespace-nowrap text-xs font-semibold text-foreground/50 transition-colors hover:text-highlight"
+                  >
+                    {t("involve.restart")}
+                  </button>
                 )}
-              />
-            ))}
-          </div>
+              </div>
+            </div>
 
-          {step === 0 && (
-            <Question title={t("involve.q1.title")} help={t("involve.q1.help")}>
-              {PILLARS.map((p) => {
-                const summary = data.pillars.find((x) => x.code === p);
-                return (
+            {step === 0 && (
+              <Question title={t("involve.q1.title")} help={t("involve.q1.help")}>
+                {PILLARS.map((p) => {
+                  const summary = data.pillars.find((x) => x.code === p);
+                  return (
+                    <ChoiceCard
+                      key={p}
+                      selected={answers.pillar === p}
+                      eyebrow={p}
+                      title={pillarName(locale, p)}
+                      body={
+                        summary
+                          ? pickTranslation(summary, "description", summary.description, locale)
+                          : ""
+                      }
+                      accent={`var(--color-pillar-${p.toLowerCase()})`}
+                      onSelect={() => {
+                        setAnswers((a) => ({ ...a, pillar: p }));
+                        setStep(1);
+                      }}
+                    />
+                  );
+                })}
+
+                <ChoiceCard
+                  selected={answers.pillar === "any"}
+                  title={t("involve.q1.any")}
+                  body={t("involve.q1.anyHelp")}
+                  onSelect={() => {
+                    setAnswers((a) => ({ ...a, pillar: "any" }));
+                    setStep(1);
+                  }}
+                />
+              </Question>
+            )}
+
+            {step === 1 && (
+              <Question title={t("involve.q2.title")} help={t("involve.q2.help")}>
+                {(["small", "medium", "any"] as TimeChoice[]).map((c) => (
                   <ChoiceCard
-                    key={p}
-                    selected={answers.pillar === p}
-                    eyebrow={p}
-                    title={pillarName(locale, p)}
-                    body={
-                      summary
-                        ? pickTranslation(summary, "description", summary.description, locale)
-                        : ""
-                    }
-                    accent={`var(--color-pillar-${p.toLowerCase()})`}
+                    key={c}
+                    selected={answers.time === c}
+                    title={t(`involve.time.${c}` as never)}
+                    body={t(`involve.time.${c}Help` as never)}
                     onSelect={() => {
-                      setAnswers((a) => ({ ...a, pillar: p }));
-                      setStep(1);
+                      setAnswers((a) => ({ ...a, time: c }));
+                      setStep(2);
                     }}
                   />
-                );
-              })}
+                ))}
+              </Question>
+            )}
 
-              <ChoiceCard
-                selected={answers.pillar === "any"}
-                title={t("involve.q1.any")}
-                body={t("involve.q1.anyHelp")}
-                onSelect={() => {
-                  setAnswers((a) => ({ ...a, pillar: "any" }));
-                  setStep(1);
-                }}
-              />
-            </Question>
-          )}
+            {step === 2 && (
+              <Question title={t("involve.q3.title")} help={t("involve.q3.help")}>
+                {(["lead", "helpers", "skill", "any"] as HelpChoice[]).map((c) => (
+                  <ChoiceCard
+                    key={c}
+                    selected={answers.help === c}
+                    title={t(`involve.help.${c}` as never)}
+                    body={t(`involve.help.${c}Help` as never)}
+                    onSelect={() => {
+                      setAnswers((a) => ({ ...a, help: c }));
+                      setStep(3);
+                    }}
+                  />
+                ))}
+              </Question>
+            )}
 
-          {step === 1 && (
-            <Question title={t("involve.q2.title")} help={t("involve.q2.help")}>
-              {(["small", "medium", "any"] as TimeChoice[]).map((c) => (
-                <ChoiceCard
-                  key={c}
-                  selected={answers.time === c}
-                  title={t(`involve.time.${c}` as never)}
-                  body={t(`involve.time.${c}Help` as never)}
-                  onSelect={() => {
-                    setAnswers((a) => ({ ...a, time: c }));
-                    setStep(2);
-                  }}
-                />
-              ))}
-            </Question>
-          )}
+            {step > 0 && (
+              <div className="mt-8 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setStep((s) => Math.max(0, s - 1))}
+                  className="inline-flex min-h-11 items-center rounded-full border-2 border-foreground/10 px-6 text-sm font-bold text-foreground transition-colors hover:bg-foreground/5"
+                >
+                  {t("involve.back")}
+                </button>
+              </div>
+            )}
+          </section>
 
-          {step === 2 && (
-            <Question title={t("involve.q3.title")} help={t("involve.q3.help")}>
-              {(["lead", "helpers", "skill", "any"] as HelpChoice[]).map((c) => (
-                <ChoiceCard
-                  key={c}
-                  selected={answers.help === c}
-                  title={t(`involve.help.${c}` as never)}
-                  body={t(`involve.help.${c}Help` as never)}
-                  onSelect={() => {
-                    setAnswers((a) => ({ ...a, help: c }));
-                    setStep(3);
-                  }}
-                />
-              ))}
-            </Question>
-          )}
+          {/* ---- Shortlist ---- */}
+          {complete && (
+            <section className="col-span-12" aria-live="polite">
+              <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3 px-2">
+                <h2 className="font-display text-2xl font-bold text-foreground">
+                  {t("involve.results.title")}
+                </h2>
+                <span className="text-xs font-semibold text-foreground/50">
+                  {matches.length} {t("involve.results.count")}
+                </span>
+              </div>
 
-          {step > 0 && (
-            <div className="mt-6 flex flex-wrap gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="h-11"
-                onClick={() => setStep((s) => Math.max(0, s - 1))}
-              >
-                {t("involve.back")}
-              </Button>
-            </div>
+              {matches.length === 0 ? (
+                <p className="rounded-tile border-2 border-dashed border-foreground/10 bg-card/60 px-6 py-12 text-center text-sm text-foreground/60">
+                  {t("involve.results.empty")}
+                </p>
+              ) : (
+                <>
+                  <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                    {visible.map((m) => (
+                      <MatchCard
+                        key={m.initiative.id}
+                        match={m}
+                        onInterest={() => setInterestFor(m)}
+                      />
+                    ))}
+                  </ul>
+                  {!showAll && matches.length > visible.length && (
+                    <div className="mt-8 text-center">
+                      <button
+                        type="button"
+                        onClick={() => setShowAll(true)}
+                        className="inline-flex min-h-11 items-center rounded-full border-2 border-foreground/10 bg-card px-7 text-sm font-bold text-foreground transition-colors hover:bg-foreground/5"
+                      >
+                        {t("involve.results.showAll")}
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </section>
           )}
         </div>
-      </section>
-
-      {/* ---- Shortlist ---- */}
-      {complete && (
-        <section className="mx-auto mt-10 max-w-6xl px-8 pb-16" aria-live="polite">
-          <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3 border-b border-border/60 pb-3">
-            <h2 className="font-display text-2xl font-bold text-foreground">
-              {t("involve.results.title")}
-            </h2>
-            <span className="text-xs font-medium text-muted-foreground">
-              {matches.length} {t("involve.results.count")}
-            </span>
-          </div>
-
-          {matches.length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-border/70 bg-card/50 px-6 py-12 text-center text-sm text-muted-foreground">
-              {t("involve.results.empty")}
-            </p>
-          ) : (
-            <>
-              <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {visible.map((m) => (
-                  <MatchCard key={m.initiative.id} match={m} onInterest={() => setInterestFor(m)} />
-                ))}
-              </ul>
-              {!showAll && matches.length > visible.length && (
-                <div className="mt-6 text-center">
-                  <Button type="button" variant="outline" onClick={() => setShowAll(true)}>
-                    {t("involve.results.showAll")}
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </section>
-      )}
+      </div>
 
       <InterestSheet match={interestFor} onClose={() => setInterestFor(null)} />
     </main>
   );
 }
+
 
 // ---------- Pieces ----------
 
@@ -375,10 +416,10 @@ function Question({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mt-6">
-      <h3 className="font-display text-lg font-semibold text-foreground">{title}</h3>
-      <p className="mt-1 text-sm text-muted-foreground">{help}</p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">{children}</div>
+    <div className="mt-10">
+      <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
+      <p className="mt-1 text-sm text-foreground/60">{help}</p>
+      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{children}</div>
     </div>
   );
 }
@@ -404,28 +445,57 @@ function ChoiceCard({
       aria-pressed={selected}
       onClick={onSelect}
       className={cn(
-        "group flex min-h-[6rem] flex-col rounded-2xl border p-4 text-left transition-colors",
+        "group flex min-h-[10rem] flex-col rounded-tile border-2 p-6 text-left transition-all duration-300",
         selected
-          ? "border-primary bg-primary/5"
-          : "border-border/70 bg-surface hover:border-primary/40 hover:bg-primary/5",
+          ? "border-highlight bg-highlight text-highlight-foreground shadow-lift"
+          : "border-transparent bg-wash text-foreground hover:-translate-y-0.5 hover:border-highlight hover:bg-highlight hover:text-highlight-foreground",
       )}
     >
-      <span className="flex items-center gap-2">
-        {accent && (
+      <span
+        className={cn(
+          "mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-card transition-transform group-hover:scale-110",
+        )}
+      >
+        {accent ? (
           <span
             aria-hidden
-            className="h-2.5 w-2.5 shrink-0 rounded-full"
+            className="h-5 w-5 rounded-full"
             style={{ backgroundColor: accent }}
           />
+        ) : selected ? (
+          <Check className="h-5 w-5 text-highlight" />
+        ) : (
+          <Sparkles className="h-5 w-5 text-highlight" />
         )}
-        {eyebrow && <span className="section-label text-muted-foreground">{eyebrow}</span>}
-        {selected && <Check className="ml-auto h-4 w-4 text-primary" />}
       </span>
-      <span className="mt-1 font-display text-base font-semibold text-foreground">{title}</span>
-      {body && <span className="mt-1 text-sm leading-relaxed text-muted-foreground">{body}</span>}
+
+      {eyebrow && (
+        <span
+          className={cn(
+            "text-[11px] font-bold uppercase tracking-widest",
+            selected ? "text-highlight-foreground/80" : "text-foreground/45 group-hover:text-highlight-foreground/80",
+          )}
+        >
+          {eyebrow}
+        </span>
+      )}
+      <span className="mt-1 font-display text-lg font-bold leading-snug">{title}</span>
+      {body && (
+        <span
+          className={cn(
+            "mt-2 text-sm leading-relaxed",
+            selected
+              ? "text-highlight-foreground/85"
+              : "text-foreground/60 group-hover:text-highlight-foreground/85",
+          )}
+        >
+          {body}
+        </span>
+      )}
     </button>
   );
 }
+
 
 function MatchCard({ match, onInterest }: { match: Match; onInterest: () => void }) {
   const { t, locale } = useLocale();
@@ -434,12 +504,12 @@ function MatchCard({ match, onInterest }: { match: Match; onInterest: () => void
   const description = pickTranslation(it, "description", it.description, locale);
 
   return (
-    <li className="flex flex-col rounded-2xl border border-border/70 bg-card p-5 shadow-soft">
+    <li className="flex flex-col rounded-tile bg-card p-6 shadow-tile transition-transform hover:-translate-y-0.5">
       <div className="flex flex-wrap items-center gap-2">
         {match.pillars.map((p) => (
           <span
             key={p}
-            className="inline-flex h-6 items-center gap-1.5 rounded-full bg-primary/10 px-2.5 text-[11px] font-semibold text-primary"
+            className="inline-flex h-7 items-center gap-1.5 rounded-full bg-wash px-3 text-[11px] font-bold text-highlight"
           >
             <span
               aria-hidden
@@ -449,40 +519,44 @@ function MatchCard({ match, onInterest }: { match: Match; onInterest: () => void
             {p}
           </span>
         ))}
-        <span className="inline-flex h-6 items-center rounded bg-accent/25 px-2 text-[11px] font-bold text-hero">
+        <span className="inline-flex h-7 items-center rounded-full bg-accent px-3 text-[11px] font-bold text-accent-foreground">
           {match.okrNumber}
         </span>
       </div>
 
-      <h3 className="mt-3 font-display text-base font-bold leading-snug text-foreground">{text}</h3>
-      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{match.krText}</p>
+      <h3 className="mt-4 font-display text-lg font-bold leading-snug text-foreground">{text}</h3>
+      <p className="mt-1 line-clamp-2 text-xs text-foreground/50">{match.krText}</p>
       {description && (
-        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-foreground/85">
+        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-foreground/70">
           {description}
         </p>
       )}
 
-      <ul className="mt-3 flex flex-wrap gap-1.5">
+      <ul className="mt-4 flex flex-wrap gap-1.5">
         <Meta>{t(AVAILABILITY_KEY[it.availability])}</Meta>
         {it.commitment && <Meta>{t(COMMITMENT_KEY[it.commitment])}</Meta>}
         {it.help_needed && <Meta>{t(HELP_NEEDED_KEY[it.help_needed])}</Meta>}
       </ul>
 
       {match.reasons.length > 0 && (
-        <p className="mt-3 rounded-xl border-l-4 border-l-accent bg-surface px-3 py-2 text-xs text-muted-foreground">
-          <span className="font-semibold text-foreground">{t("involve.match.why")}</span>{" "}
+        <p className="mt-4 rounded-2xl bg-wash px-4 py-3 text-xs leading-relaxed text-foreground/65">
+          <span className="font-bold text-foreground">{t("involve.match.why")}</span>{" "}
           {match.reasons.join(" · ")}
         </p>
       )}
 
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/60 pt-3">
-        <Button type="button" size="sm" onClick={onInterest}>
+      <div className="mt-auto flex flex-wrap items-center gap-3 pt-5">
+        <button
+          type="button"
+          onClick={onInterest}
+          className="inline-flex min-h-11 items-center rounded-full bg-highlight px-6 text-sm font-bold text-highlight-foreground shadow-lift transition-transform hover:-translate-y-0.5"
+        >
           {t("involve.interest.cta")}
-        </Button>
+        </button>
         <Link
           to="/initiatives/$initiativeId"
           params={{ initiativeId: it.id }}
-          className="btn-mono inline-flex items-center gap-1 text-xs text-primary hover:underline"
+          className="inline-flex min-h-11 items-center gap-1 text-xs font-bold text-highlight hover:underline"
         >
           {t("initiative.open")} <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
@@ -493,11 +567,12 @@ function MatchCard({ match, onInterest }: { match: Match; onInterest: () => void
 
 function Meta({ children }: { children: React.ReactNode }) {
   return (
-    <li className="inline-flex h-6 items-center rounded-full border border-border bg-surface px-2.5 text-[11px] font-medium text-muted-foreground">
+    <li className="inline-flex h-7 items-center rounded-full bg-wash px-3 text-[11px] font-semibold text-foreground/60">
       {children}
     </li>
   );
 }
+
 
 function InterestSheet({ match, onClose }: { match: Match | null; onClose: () => void }) {
   const { t, locale } = useLocale();
