@@ -151,7 +151,7 @@ function Content() {
               fetchPriority="high"
               decoding="async"
             />
-            <div className="-mx-1 flex w-full max-w-full items-center gap-3 overflow-x-auto px-1 md:w-auto">
+            <div className="flex w-full max-w-full flex-wrap items-center justify-end gap-3 md:w-auto">
               <TopNav />
               <LanguageSwitcher />
               <AuthBadge />
