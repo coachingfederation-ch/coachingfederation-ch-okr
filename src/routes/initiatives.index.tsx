@@ -9,7 +9,6 @@ import {
   type InitiativeStatus,
   type OkrSetDTO,
 } from "@/lib/okr-schemas";
-import { LOCALES, LOCALE_LABELS } from "@/lib/i18n-shared";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import type { StringKey } from "@/lib/i18n-strings";
 import { AuthBadge } from "@/components/okr/AuthBadge";
