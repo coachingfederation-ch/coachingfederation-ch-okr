@@ -340,19 +340,35 @@ function PillarChip({
   onRemove?: () => void;
 }) {
   const { locale, t } = useLocale();
+  // Subtle pillar-tinted identity: a small leading dot in the full pillar
+  // colour plus a low-opacity tint of that colour as the chip fill, so each
+  // SFA badge reads with its own hue on the Deep-Blue band while the code
+  // stays the non-colour indicator.
+  const pillarVar =
+    code === "SG"
+      ? "var(--color-pillar-sg)"
+      : code === "OE"
+        ? "var(--color-pillar-oe)"
+        : "var(--color-pillar-ce)";
   return (
     <span
       role="img"
       aria-label={`${code} — ${pillarName(locale, code)}`}
-      className="inline-flex h-7 items-center gap-1 rounded-full border border-[--color-chip-active-border] bg-card pl-3 pr-2 text-[11px] font-semibold tracking-wide text-primary"
+      className="inline-flex h-7 items-center gap-1.5 rounded-full border border-[var(--color-chip-active-border)] pl-2.5 pr-2 text-[11px] font-semibold tracking-wide text-hero-foreground"
+      style={{ backgroundColor: `color-mix(in oklab, ${pillarVar} 15%, transparent)` }}
     >
+      <span
+        aria-hidden
+        className="h-1.5 w-1.5 shrink-0 rounded-full"
+        style={{ backgroundColor: pillarVar }}
+      />
       {code}
       {canEdit && onRemove && (
         <button
           type="button"
           aria-label={`${t("tag.remove")} ${code}`}
           onClick={onRemove}
-          className="inline-flex h-4 w-4 items-center justify-center rounded-full text-primary/60 hover:bg-primary/10 hover:text-primary"
+          className="inline-flex h-4 w-4 items-center justify-center rounded-full text-hero-foreground/60 hover:bg-hero-foreground/10 hover:text-hero-foreground"
         >
           <X className="h-3 w-3" />
         </button>
@@ -561,7 +577,7 @@ function OkrCard({
       <header className="bg-hero px-8 py-6 text-hero-foreground">
         <div className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-start gap-4">
-            <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-hero-foreground/10 font-display text-xl font-bold text-hero-foreground">
+            <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent font-display text-xl font-bold text-hero ring-1 ring-hero/10">
               {set.number}
             </span>
             <div className="min-w-0">
