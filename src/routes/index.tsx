@@ -1034,10 +1034,11 @@ function KrDetailSheet({
                         )}
                       </div>
                       <div className="relative rounded-md border border-highlight/40 bg-card p-4 shadow-sm">
-                        <span className="absolute -top-2 right-3 inline-flex items-center rounded-full bg-highlight px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-highlight-foreground">
+                        <div className="section-label mb-1 flex items-center gap-1.5 text-highlight">
+                          <span className="h-1.5 w-1.5 rounded-full bg-highlight" aria-hidden="true" />
                           {t("kr.current")}
-                        </span>
-                        <div className="section-label mb-1">{t("kr.current")}</div>
+                        </div>
+
                         <EditableText
                           value={kr.current_value}
                           canEdit={canEdit}
