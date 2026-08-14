@@ -353,7 +353,7 @@ function InitiativesContent() {
         )}
 
         <p className="mt-10 text-center text-xs text-muted-foreground">
-          <Link to="/" className="hover:text-primary hover:underline">
+          <Link to="/okrs" className="hover:text-primary hover:underline">
             ← {t("nav.okrs")}
           </Link>
         </p>

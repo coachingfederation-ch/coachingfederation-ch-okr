@@ -528,7 +528,7 @@ function StyleGuideFooter({ preview = false }: { preview?: boolean }) {
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-8 py-6 text-xs sm:flex-row sm:items-center">
         <p className="text-hero-foreground/70">© {year} ICF Switzerland — Charter Chapter</p>
         <nav aria-label="Footer" className="flex items-center gap-4">
-          <Link to="/" className="text-hero-foreground/80 hover:text-hero-foreground">
+          <Link to="/okrs" className="text-hero-foreground/80 hover:text-hero-foreground">
             OKRs
           </Link>
           <Link to="/initiatives" className="text-hero-foreground/80 hover:text-hero-foreground">

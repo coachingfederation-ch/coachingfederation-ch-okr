@@ -1,0 +1,1635 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { Suspense, useMemo, useState } from "react";
+import { X, Plus, ChevronDown, ArrowUpRight } from "lucide-react";
+import { toast } from "sonner";
+
+import {
+  addInitiative,
+  addKeyResult,
+  addOkrSet,
+  deleteInitiative,
+  deleteKeyResult,
+  deleteOkrSet,
+  getDashboard,
+  setInitiativeSecondaryKrs,
+  updateAlignmentRow,
+  updateInitiative,
+  updateKeyResult,
+  updateOkrSet,
+  updatePillarSummary,
+} from "@/lib/okr.functions";
+
+import {
+  CONTRIBUTION_CYCLE,
+  KR_TYPES,
+  LIMITS,
+  MILESTONE_STATUSES,
+  PILLARS,
+  ROLE_LABELS,
+  type AlignmentRowDTO,
+  type Contribution,
+  type DashboardDTO,
+  type InitiativeDTO,
+  type KeyResultDTO,
+  type KrType,
+  type MilestoneStatus,
+  type OkrSetDTO,
+  type Pillar,
+  type PillarSummaryDTO,
+  type RoleLabel,
+} from "@/lib/okr-schemas";
+import { type Locale } from "@/lib/i18n-shared";
+import { pickTranslation, useLocale } from "@/lib/i18n";
+import { pillarName } from "@/lib/i18n-strings";
+import { AssistantDrawer, type AssistantContext } from "@/components/okr/AssistantDrawer";
+import { EditableText } from "@/components/okr/EditableText";
+import { KrMeasurement } from "@/components/okr/KrMeasurement";
+import { formatSwissDate } from "@/components/okr/kr-metrics";
+
+import { AuthBadge } from "@/components/okr/AuthBadge";
+import { TopNav } from "@/components/okr/TopNav";
+import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
+import { LinkInitiativesDialog } from "@/components/okr/LinkInitiativesDialog";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useAuth } from "@/lib/auth-context";
+import { cn } from "@/lib/utils";
+import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
+
+const dashboardQueryOptions = queryOptions({
+  queryKey: ["dashboard"] as const,
+  queryFn: () => getDashboard(),
+});
+
+export const Route = createFileRoute("/okrs")({
+  head: () => ({
+    meta: [
+      { title: "ICFS OKR Dashboard" },
+      {
+        name: "description",
+        content:
+          "ICF Switzerland 2026 OKRs with global alignment — one customer-centric objective per strategic pillar.",
+      },
+      { property: "og:title", content: "ICFS OKR Dashboard" },
+      {
+        property: "og:description",
+        content: "ICF Switzerland 2026 OKRs aligned to the ICF Global Strategic Plan 2026–2029.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(dashboardQueryOptions),
+  component: Index,
+  errorComponent: ({ error }) => (
+    <div className="p-8 text-sm text-destructive" role="alert">
+      {error.message}
+    </div>
+  ),
+});
+
+// ---------- Mutations ----------
+// One useMutation per action, called at the top of IndexContent (fixed hook count).
+// `mutate(variables)` handles the payload; optimistic updates use those variables.
+
+type Ctx = { prev: DashboardDTO | undefined };
+type Mutator = (draft: DashboardDTO) => void;
+
+function useOkrMutations(sourceLang: Locale) {
+  const qc = useQueryClient();
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["dashboard"] });
+  const onErr = (e: unknown, _v: unknown, ctx: Ctx | undefined) => {
+    if (ctx?.prev) qc.setQueryData(["dashboard"], ctx.prev);
+    toast.error(e instanceof Error ? e.message : "Save failed");
+  };
+  const optimistic = async (mutator: Mutator): Promise<Ctx> => {
+    await qc.cancelQueries({ queryKey: ["dashboard"] });
+    const prev = qc.getQueryData<DashboardDTO>(["dashboard"]);
+    if (prev) {
+      const next = structuredClone(prev);
+      mutator(next);
+      qc.setQueryData(["dashboard"], next);
+    }
+    return { prev };
+  };
+
+  const updateOkrSetFn = useServerFn(updateOkrSet);
+  const addOkrSetFn = useServerFn(addOkrSet);
+  const deleteOkrSetFn = useServerFn(deleteOkrSet);
+  const addKrFn = useServerFn(addKeyResult);
+  const updateKrFn = useServerFn(updateKeyResult);
+  const deleteKrFn = useServerFn(deleteKeyResult);
+  const addInitFn = useServerFn(addInitiative);
+  const updateInitFn = useServerFn(updateInitiative);
+  const deleteInitFn = useServerFn(deleteInitiative);
+  const setInitiativeSecondaryFn = useServerFn(setInitiativeSecondaryKrs);
+  const updateAlignFn = useServerFn(updateAlignmentRow);
+  const updatePillarFn = useServerFn(updatePillarSummary);
+
+  const updateSet = useMutation<unknown, Error, { id: string; patch: Partial<OkrSetDTO> }, Ctx>({
+    mutationFn: (v) => updateOkrSetFn({ data: { id: v.id, patch: v.patch as never, sourceLang } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        const s = d.okr_sets.find((x) => x.id === v.id);
+        if (s) Object.assign(s, v.patch);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+  const addSet = useMutation({
+    mutationFn: () => addOkrSetFn({ data: { sourceLang } }),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
+    onSuccess: invalidate,
+  });
+  const deleteSet = useMutation<unknown, Error, { id: string }, Ctx>({
+    mutationFn: (v) => deleteOkrSetFn({ data: { id: v.id } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        d.okr_sets = d.okr_sets.filter((x) => x.id !== v.id);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+  const addKr = useMutation({
+    mutationFn: (v: { okr_set_id: string }) => addKrFn({ data: { ...v, sourceLang } }),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
+    onSuccess: invalidate,
+  });
+  const updateKr = useMutation<unknown, Error, { id: string; patch: Partial<KeyResultDTO> }, Ctx>({
+    mutationFn: (v) => updateKrFn({ data: { id: v.id, patch: v.patch as never, sourceLang } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets) {
+          const kr = s.key_results.find((k) => k.id === v.id);
+          if (kr) Object.assign(kr, v.patch);
+        }
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+  const deleteKr = useMutation<unknown, Error, { id: string }, Ctx>({
+    mutationFn: (v) => deleteKrFn({ data: { id: v.id } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets) s.key_results = s.key_results.filter((k) => k.id !== v.id);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+  const addInit = useMutation({
+    mutationFn: (v: { kr_id: string; text: string }) => addInitFn({ data: { ...v, sourceLang } }),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Save failed"),
+    onSuccess: invalidate,
+  });
+  const updateInit = useMutation<unknown, Error, { id: string; text: string }, Ctx>({
+    mutationFn: (v) => updateInitFn({ data: { id: v.id, patch: { text: v.text }, sourceLang } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets)
+          for (const k of s.key_results) {
+            const it = k.initiatives.find((i) => i.id === v.id);
+            if (it) it.text = v.text;
+          }
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+  const deleteInit = useMutation<unknown, Error, { id: string }, Ctx>({
+    mutationFn: (v) => deleteInitFn({ data: { id: v.id } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        for (const s of d.okr_sets)
+          for (const k of s.key_results) k.initiatives = k.initiatives.filter((i) => i.id !== v.id);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+  const setInitiativeSecondary = useMutation<unknown, Error, { id: string; kr_ids: string[] }, Ctx>(
+    {
+      mutationFn: (v) => setInitiativeSecondaryFn({ data: { id: v.id, kr_ids: v.kr_ids } }),
+      onMutate: (v) =>
+        optimistic((d) => {
+          for (const s of d.okr_sets)
+            for (const k of s.key_results) {
+              const it = k.initiatives.find((i) => i.id === v.id);
+              if (it) it.secondary_kr_ids = [...v.kr_ids];
+            }
+        }),
+      onError: onErr,
+      onSettled: invalidate,
+    },
+  );
+
+  const updateAlign = useMutation<
+    unknown,
+    Error,
+    { id: string; patch: Partial<AlignmentRowDTO> },
+    Ctx
+  >({
+    mutationFn: (v) => updateAlignFn({ data: { id: v.id, patch: v.patch as never, sourceLang } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        const r = d.alignment_rows.find((x) => x.id === v.id);
+        if (r) Object.assign(r, v.patch);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+  const updatePillar = useMutation<
+    unknown,
+    Error,
+    { code: Pillar; patch: Partial<PillarSummaryDTO> },
+    Ctx
+  >({
+    mutationFn: (v) =>
+      updatePillarFn({ data: { code: v.code, patch: v.patch as never, sourceLang } }),
+    onMutate: (v) =>
+      optimistic((d) => {
+        const p = d.pillars.find((x) => x.code === v.code);
+        if (p) Object.assign(p, v.patch);
+      }),
+    onError: onErr,
+    onSettled: invalidate,
+  });
+
+  return {
+    updateSet,
+    addSet,
+    deleteSet,
+    addKr,
+    updateKr,
+    deleteKr,
+    addInit,
+    updateInit,
+    deleteInit,
+    setInitiativeSecondary,
+    updateAlign,
+    updatePillar,
+  };
+}
+type OkrMutations = ReturnType<typeof useOkrMutations>;
+
+// ---------- Atoms ----------
+
+
+
+
+function PillarChip({
+  code,
+  canEdit,
+  onRemove,
+}: {
+  code: Pillar;
+  canEdit: boolean;
+  onRemove?: () => void;
+}) {
+  const { locale, t } = useLocale();
+  // Subtle pillar-tinted identity: a small leading dot in the full pillar
+  // colour plus a low-opacity tint of that colour as the chip fill, so each
+  // SFA badge reads with its own hue on the Deep-Blue band while the code
+  // stays the non-colour indicator.
+  const pillarVar =
+    code === "SG"
+      ? "var(--color-pillar-sg)"
+      : code === "OE"
+        ? "var(--color-pillar-oe)"
+        : "var(--color-pillar-ce)";
+  return (
+    <span
+      role="img"
+      aria-label={`${code} — ${pillarName(locale, code)}`}
+      className="inline-flex h-7 items-center gap-1.5 rounded-full border border-[var(--color-chip-active-border)] pl-2.5 pr-2 text-[11px] font-semibold tracking-wide text-hero-foreground"
+      style={{ backgroundColor: `color-mix(in oklab, ${pillarVar} 15%, transparent)` }}
+    >
+      <span
+        aria-hidden
+        className="h-1.5 w-1.5 shrink-0 rounded-full"
+        style={{ backgroundColor: pillarVar }}
+      />
+      {code}
+      {canEdit && onRemove && (
+        <button
+          type="button"
+          aria-label={`${t("tag.remove")} ${code}`}
+          onClick={onRemove}
+          className="inline-flex h-4 w-4 items-center justify-center rounded-full text-hero-foreground/60 hover:bg-hero-foreground/10 hover:text-hero-foreground"
+        >
+          <X className="h-3 w-3" />
+        </button>
+      )}
+    </span>
+  );
+}
+
+function PillarTagList({
+  pillars,
+  canEdit,
+  onChange,
+}: {
+  pillars: Pillar[];
+  canEdit: boolean;
+  onChange: (next: Pillar[]) => void;
+}) {
+  const { locale, t } = useLocale();
+  const available = PILLARS.filter((p) => !pillars.includes(p));
+  return (
+    <div className="mt-4 flex flex-wrap items-center gap-2">
+      {pillars.map((p) => (
+        <PillarChip
+          key={p}
+          code={p}
+          canEdit={canEdit}
+          onRemove={() => onChange(pillars.filter((x) => x !== p))}
+        />
+      ))}
+      {canEdit && available.length > 0 && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="inline-flex h-7 items-center gap-1 rounded-full border border-dashed border-border bg-card px-2.5 text-[11px] font-medium text-muted-foreground hover:bg-muted/60 hover:text-primary transition-colors"
+            >
+              <Plus className="h-3 w-3" />
+              {t("tag.add")}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="min-w-[16rem]">
+            {available.map((p) => (
+              <DropdownMenuItem key={p} onSelect={() => onChange([...pillars, p])}>
+                <span className="mr-2 font-semibold text-primary">{p}</span>
+                <span className="text-muted-foreground">{pillarName(locale, p)}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+      {!canEdit && pillars.length === 0 && (
+        <span className="text-xs text-muted-foreground">{t("tag.none")}</span>
+      )}
+    </div>
+  );
+}
+
+function PillarDot({ code }: { code: Pillar }) {
+  const bg =
+    code === "SG"
+      ? "var(--color-pillar-sg)"
+      : code === "OE"
+        ? "var(--color-pillar-oe)"
+        : "var(--color-pillar-ce)";
+  return (
+    <span
+      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-primary-foreground"
+      style={{ backgroundColor: bg }}
+    >
+      {code}
+    </span>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return <div className="section-label mb-2">{children}</div>;
+}
+
+function RoleLabelSelect({
+  value,
+  canEdit,
+  onChange,
+}: {
+  value: RoleLabel;
+  canEdit: boolean;
+  onChange: (v: RoleLabel) => void;
+}) {
+  if (!canEdit) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-md border border-primary/25 bg-card px-2 py-1 text-xs font-semibold text-primary">
+        {value}
+      </span>
+    );
+  }
+  return (
+    <span className="relative inline-flex">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as RoleLabel)}
+        className="appearance-none inline-flex items-center gap-1 rounded-md border border-primary/25 bg-card pl-2 pr-6 py-1 text-xs font-semibold text-primary cursor-pointer hover:bg-primary/5"
+      >
+        {ROLE_LABELS.map((r) => (
+          <option key={r} value={r}>
+            {r}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
+    </span>
+  );
+}
+
+/** Small enum picker matching the RoleLabelSelect affordance. */
+function PlainSelect({
+  value,
+  canEdit,
+  options,
+  onChange,
+}: {
+  value: string;
+  canEdit: boolean;
+  options: { value: string; label: string }[];
+  onChange: (v: string) => void;
+}) {
+  const current = options.find((o) => o.value === value)?.label ?? value;
+  if (!canEdit) {
+    return <span className="text-sm text-foreground">{current}</span>;
+  }
+  return (
+    <span className="relative inline-flex">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="appearance-none inline-flex items-center rounded-md border border-primary/25 bg-card pl-2 pr-6 py-1 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5"
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-primary" />
+    </span>
+  );
+}
+
+/** Date field; empty string is normalised to null so the column stays nullable. */
+function PlainDate({
+  value,
+  canEdit,
+  onChange,
+}: {
+  value: string | null;
+  canEdit: boolean;
+  onChange: (v: string | null) => void;
+}) {
+  if (!canEdit) {
+    return <span className="text-sm text-muted-foreground">{formatSwissDate(value) || "—"}</span>;
+  }
+  return (
+    <input
+      type="date"
+      value={value ?? ""}
+      onChange={(e) => onChange(e.target.value || null)}
+      className="mt-1 w-full rounded-md border border-input bg-card px-2 py-1 text-xs text-foreground"
+    />
+  );
+}
+
+// ---------- OKR card ----------
+
+function OkrCard({
+  set,
+  canEdit,
+  m,
+  dashboard,
+  secondaryByKr,
+  initiativeOrigin,
+}: {
+  set: OkrSetDTO;
+  canEdit: boolean;
+  m: OkrMutations;
+  dashboard: DashboardDTO;
+  secondaryByKr: Map<string, InitiativeDTO[]>;
+  initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
+}) {
+  const { locale, t } = useLocale();
+  const [openKrId, setOpenKrId] = useState<string | null>(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  // Editor-only assistant drawer. Read-only visitors never see the entry points.
+  const [assistant, setAssistant] = useState<AssistantContext | null>(null);
+  const openKr = openKrId ? (set.key_results.find((k) => k.id === openKrId) ?? null) : null;
+
+  const updateSet = (patch: Partial<OkrSetDTO>) => m.updateSet.mutate({ id: set.id, patch });
+
+  const titleText = pickTranslation(set, "title", set.title, locale);
+  const roleNameText = pickTranslation(set, "role_name", set.role_name, locale);
+  const customerText = pickTranslation(set, "customer", set.customer, locale);
+  const objectiveText = pickTranslation(set, "objective", set.objective, locale);
+  const alignmentText = pickTranslation(set, "alignment", set.alignment, locale);
+
+  return (
+    <article className="overflow-hidden rounded-3xl border border-border/70 bg-card shadow-soft">
+      {/* Deep-blue identity band: the objective's number and title own the top
+          of the card so every key result below reads as a child of it. */}
+      <header className="bg-hero px-8 py-6 text-hero-foreground">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex min-w-0 items-start gap-4">
+            <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent font-display text-xl font-bold text-hero ring-1 ring-hero/10">
+              {set.number}
+            </span>
+            <div className="min-w-0">
+              <EditableText
+                as="h2"
+                value={titleText}
+                canEdit={canEdit}
+                maxLength={LIMITS.title}
+                onSave={(v) => updateSet({ title: v })}
+                className="font-display text-2xl font-bold leading-tight text-hero-foreground"
+                placeholder="Untitled OKR"
+              />
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-hero-foreground/75">
+                <RoleLabelSelect
+                  value={set.role_label}
+                  canEdit={canEdit}
+                  onChange={(v) => updateSet({ role_label: v })}
+                />
+                <EditableText
+                  value={roleNameText}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.roleName}
+                  onSave={(v) => updateSet({ role_name: v })}
+                  className="font-medium text-hero-foreground"
+                  placeholder="Name"
+                />
+                <span aria-hidden className="text-hero-foreground/40">
+                  ·
+                </span>
+                <span className="text-hero-foreground/70">{t("okr.customer")}</span>
+                <EditableText
+                  value={customerText}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.customer}
+                  onSave={(v) => updateSet({ customer: v })}
+                  className="font-medium text-hero-foreground"
+                  placeholder="Customer"
+                />
+              </div>
+            </div>
+          </div>
+          {canEdit && (
+            <>
+              <button
+                type="button"
+                aria-label={t("okr.delete")}
+                onClick={() => setConfirmDeleteOpen(true)}
+                className="rounded-md p-1 text-hero-foreground/60 transition-colors hover:bg-hero-foreground/10 hover:text-hero-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      {`${t("okr.deleteConfirm")}: ${set.number}. ${titleText || "Untitled"}`}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>{t("okr.deleteConfirmBody")}</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      onClick={() => m.deleteSet.mutate({ id: set.id })}
+                    >
+                      {t("okr.delete")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
+        </div>
+
+        <PillarTagList
+          pillars={set.pillars}
+          canEdit={canEdit}
+          onChange={(next) => updateSet({ pillars: next })}
+        />
+      </header>
+
+      <div className="px-8 pb-8 pt-6">
+        {/* The objective statement is the card's headline — no surrounding box
+            competes with it. */}
+        <section>
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <div className="eyebrow">{t("section.objective")}</div>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() =>
+                  setAssistant({
+                    mode: "objective",
+                    contextLabel: `${t("assistant.ctx.set")} ${set.number}`,
+                  })
+                }
+                className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+              >
+                {t("assistant.cta.create")}
+              </button>
+            )}
+          </div>
+          <EditableText
+            as="p"
+            multiline
+            value={objectiveText}
+            canEdit={canEdit}
+            maxLength={LIMITS.objective}
+            onSave={(v) => updateSet({ objective: v })}
+            className="font-display text-lg font-semibold leading-snug text-foreground"
+            placeholder="What outcome should this OKR create?"
+          />
+        </section>
+
+        {/* Supporting context, collapsed by default so it never competes with
+            the objective or the key results. */}
+        <details className="group mt-5 border-t border-border/60 pt-3">
+          <summary className="section-label flex cursor-pointer list-none items-center gap-1.5 text-muted-foreground hover:text-primary">
+            <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
+            {t("section.globalAlignment")}
+          </summary>
+          <EditableText
+            as="p"
+            multiline
+            value={alignmentText}
+            canEdit={canEdit}
+            maxLength={LIMITS.alignment}
+            onSave={(v) => updateSet({ alignment: v })}
+            className="mt-2 text-sm leading-relaxed text-muted-foreground"
+            placeholder="How does this connect to the ICF Global focus areas?"
+          />
+        </details>
+
+        {/* Key results are nested inside a warm inset with a blue rail so the
+            objective → key result hierarchy is visible at a glance. */}
+        <section className="mt-6 rounded-2xl border-l-4 border-l-primary bg-surface py-4 pl-5 pr-4">
+          <div className="mb-3 flex items-center justify-between">
+            <SectionLabel>{t("section.keyResults")}</SectionLabel>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() => m.addKr.mutate({ okr_set_id: set.id })}
+                disabled={m.addKr.isPending}
+                className="btn-mono inline-flex items-center gap-1 text-primary hover:underline disabled:opacity-50"
+              >
+                {t("okr.addKeyResult")}
+              </button>
+            )}
+          </div>
+          {set.key_results.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-border/70 bg-card/50 p-4 text-sm italic text-muted-foreground">
+              {t("okr.noKeyResults")}
+            </p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {set.key_results.map((r) => (
+                <KrCard
+                  key={r.id}
+                  kr={r}
+                  onOpen={() => setOpenKrId(r.id)}
+                  secondaryCount={(secondaryByKr.get(r.id) ?? []).length}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+
+      <KrDetailSheet
+        kr={openKr}
+        canEdit={canEdit}
+        m={m}
+        dashboard={dashboard}
+        secondaryInitiatives={openKr ? (secondaryByKr.get(openKr.id) ?? []) : []}
+        initiativeOrigin={initiativeOrigin}
+        objectiveText={objectiveText}
+        onAssist={(ctx) => {
+          setOpenKrId(null);
+          setAssistant(ctx);
+        }}
+        onClose={() => setOpenKrId(null)}
+      />
+
+      <AssistantDrawer context={assistant} onClose={() => setAssistant(null)} />
+    </article>
+
+  );
+}
+
+function KrCard({
+  kr,
+  onOpen,
+  secondaryCount,
+}: {
+  kr: KeyResultDTO;
+  onOpen: () => void;
+  secondaryCount: number;
+}) {
+  const { locale, t } = useLocale();
+  const count = kr.initiatives.length + secondaryCount;
+  const text = pickTranslation(kr, "text", kr.text, locale);
+  return (
+    <div className="group relative flex h-full flex-col rounded-xl border border-border/70 bg-card p-4 text-left shadow-soft transition-all hover:border-primary/40 hover:shadow-md has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`${t("kr.openDetails")} ${kr.kr || ""}: ${text || t("kr.noDescription")}`}
+        className="absolute inset-0 z-10 rounded-xl focus:outline-none"
+      />
+      <div className="flex items-center justify-between gap-2">
+        <span className="inline-flex h-6 items-center rounded-md bg-primary px-2 text-[11px] font-bold text-primary-foreground">
+          KR {kr.kr || "—"}
+        </span>
+        <span className="text-[11px] font-medium text-muted-foreground">
+          {count} {count === 1 ? t("kr.count.one") : t("kr.count.other")}
+        </span>
+      </div>
+      <p className="mt-3 line-clamp-2 text-sm font-medium leading-relaxed text-foreground">
+        {text || <span className="italic text-muted-foreground">{t("kr.noDescription")}</span>}
+      </p>
+      {/* One progress signal only — numbers, context and dates live in the sheet. */}
+      <div className="mt-auto pt-4">
+        <KrMeasurement kr={kr} variant="compact" />
+      </div>
+
+    </div>
+  );
+}
+
+/** Status dot palette, shared vocabulary with the initiative portfolio board. */
+const KR_INITIATIVE_DOT: Record<string, string> = {
+  planned: "bg-muted-foreground/40",
+  in_progress: "bg-highlight",
+  done: "bg-primary",
+  canceled: "bg-border",
+};
+
+function KrDetailSheet({
+
+  kr,
+  canEdit,
+  m,
+  dashboard,
+  onClose,
+  secondaryInitiatives,
+  initiativeOrigin,
+  objectiveText,
+  onAssist,
+}: {
+  kr: KeyResultDTO | null;
+  canEdit: boolean;
+  m: OkrMutations;
+  dashboard: DashboardDTO;
+  onClose: () => void;
+  /** Parent objective, pre-filled as context for the assistant. */
+  objectiveText: string;
+  onAssist: (context: AssistantContext) => void;
+  secondaryInitiatives: InitiativeDTO[];
+  initiativeOrigin: Map<string, { okrNumber: number; krLabel: string }>;
+}) {
+  const { locale, t } = useLocale();
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [confirmDeleteKrOpen, setConfirmDeleteKrOpen] = useState(false);
+
+  const update = (patch: Partial<KeyResultDTO>) => {
+    if (!kr) return;
+    m.updateKr.mutate({ id: kr.id, patch });
+  };
+
+  const unlinkSecondary = (initiative: InitiativeDTO) => {
+    if (!kr) return;
+    const next = (initiative.secondary_kr_ids ?? []).filter((id) => id !== kr.id);
+    m.setInitiativeSecondary.mutate({ id: initiative.id, kr_ids: next });
+  };
+
+  const krText = kr ? pickTranslation(kr, "text", kr.text, locale) : "";
+  const krTarget = kr ? pickTranslation(kr, "target", kr.target, locale) : "";
+  const krLead = kr ? pickTranslation(kr, "lead", kr.lead, locale) : "";
+  const krMeasure = kr ? pickTranslation(kr, "measure", kr.measure, locale) : "";
+  const krInstrument = kr ? pickTranslation(kr, "instrument", kr.instrument, locale) : "";
+
+  return (
+    <Sheet
+      open={!!kr}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      <SheetContent
+        side="right"
+        className="flex w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-xl"
+      >
+        {kr && (
+          <>
+            {/* ---- Deep Blue identity band, echoing the OKR set card header ---- */}
+            <SheetHeader className="relative shrink-0 space-y-0 overflow-hidden bg-hero px-6 py-6 text-hero-foreground">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-primary/25"
+              />
+              <div className="relative z-10">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="inline-flex h-7 items-center rounded-md bg-accent px-2.5 text-xs font-bold text-hero ring-1 ring-hero/10">
+                    KR {kr.kr || "—"}
+                  </span>
+                  <span className="section-label text-highlight">{t("kr.parentObjective")}</span>
+                </div>
+                {objectiveText && (
+                  <p className="mt-2 line-clamp-2 text-sm font-medium leading-snug text-hero-foreground/80">
+                    {objectiveText}
+                  </p>
+                )}
+                <SheetTitle className="mt-3 text-left">
+                  <EditableText
+                    multiline
+                    value={krText}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.krText}
+                    onSave={(v) => update({ text: v })}
+                    placeholder="Describe the key result…"
+                    className="text-xl font-bold leading-snug text-hero-foreground"
+                  />
+                </SheetTitle>
+
+                {canEdit && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onAssist({
+                          mode: "kr",
+                          contextLabel: `${t("assistant.ctx.kr")} ${kr.kr || "—"}`,
+                          lockedFirstAnswer: objectiveText,
+                        })
+                      }
+                      className="btn-mono inline-flex h-8 items-center rounded-md border border-hero-foreground/30 px-3 text-[11px] text-hero-foreground transition-colors hover:bg-hero-foreground/10"
+                    >
+                      {t("assistant.cta.measurable")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onAssist({
+                          mode: "initiative",
+                          contextLabel: `${t("assistant.ctx.kr")} ${kr.kr || "—"}`,
+                          lockedFirstAnswer: krText,
+                        })
+                      }
+                      className="btn-mono inline-flex h-8 items-center rounded-md border border-hero-foreground/30 px-3 text-[11px] text-hero-foreground transition-colors hover:bg-hero-foreground/10"
+                    >
+                      {t("assistant.cta.initiatives")}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </SheetHeader>
+
+            {/* ---- Scrolling body: bone segments with a blue rail ---- */}
+            <div className="flex-1 space-y-8 overflow-y-auto bg-background px-6 py-6">
+              {/* Definition */}
+              <section className="space-y-3">
+                <h3 className="text-base font-bold text-hero">{t("kr.section.definition")}</h3>
+                <div className="rounded-r-lg border-l-4 border-primary bg-surface p-5 shadow-sm">
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <div className="section-label mb-1">{t("kr.lead")}</div>
+                      <EditableText
+                        value={krLead}
+                        canEdit={canEdit}
+                        maxLength={LIMITS.lead}
+                        onSave={(v) => update({ lead: v })}
+                        placeholder={t("kr.lead")}
+                        className="text-sm font-semibold text-hero"
+                      />
+                    </div>
+                    <div>
+                      <div className="section-label mb-1">{t("kr.number")}</div>
+                      <EditableText
+                        value={kr.kr}
+                        canEdit={canEdit}
+                        maxLength={LIMITS.kr}
+                        onSave={(v) => update({ kr: v })}
+                        className="text-sm font-semibold text-primary"
+                      />
+                    </div>
+                    <div>
+                      <div className="section-label mb-1">{t("kr.type")}</div>
+                      <PlainSelect
+                        canEdit={canEdit}
+                        value={kr.kr_type}
+                        options={KR_TYPES.map((v) => ({
+                          value: v,
+                          label: t(`kr.type.${v}` as const),
+                        }))}
+                        onChange={(v) => update({ kr_type: v as KrType })}
+                      />
+                    </div>
+                    <div>
+                      <div className="section-label mb-1">{t("kr.instrument")}</div>
+                      <EditableText
+                        value={krInstrument}
+                        canEdit={canEdit}
+                        maxLength={LIMITS.instrument}
+                        onSave={(v) => update({ instrument: v })}
+                        placeholder={t("kr.instrumentPlaceholder")}
+                        className="text-sm font-semibold text-hero"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-5 border-t border-border/60 pt-4">
+                    <div className="section-label mb-1">{t("kr.measure")}</div>
+                    <EditableText
+                      multiline
+                      value={krMeasure}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.measure}
+                      onSave={(v) => update({ measure: v })}
+                      placeholder={t("kr.measurePlaceholder")}
+                      className="text-sm leading-relaxed text-hero"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              {/* Measurement */}
+              <section className="space-y-3">
+                <h3 className="text-base font-bold text-hero">{t("kr.section.measurement")}</h3>
+                <div className="rounded-r-lg border-l-4 border-primary bg-surface p-5 shadow-sm">
+                  {kr.kr_type === "metric" ? (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="rounded-md border border-border/50 bg-card/60 p-4">
+                        <div className="section-label mb-1">{t("kr.baseline2026")}</div>
+                        <EditableText
+                          value={kr.baseline_2026}
+                          canEdit={canEdit && !kr.baseline_locked}
+                          maxLength={LIMITS.value}
+                          onSave={(v) => update({ baseline_2026: v })}
+                          placeholder={t("kr.baselinePending")}
+                          className="text-xl font-bold text-hero"
+                        />
+                        {canEdit && (
+                          <label className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                            <input
+                              type="checkbox"
+                              checked={kr.baseline_locked}
+                              onChange={(e) => update({ baseline_locked: e.target.checked })}
+                              className="h-3.5 w-3.5 accent-[var(--color-primary)]"
+                            />
+                            <span title={t("kr.baselineLockedHint")}>{t("kr.baselineLocked")}</span>
+                          </label>
+                        )}
+                      </div>
+                      <div className="relative rounded-md border border-highlight/40 bg-card p-4 shadow-sm">
+                        <div className="section-label mb-1 flex items-center gap-1.5 text-highlight">
+                          <span className="h-1.5 w-1.5 rounded-full bg-highlight" aria-hidden="true" />
+                          {t("kr.current")}
+                        </div>
+
+                        <EditableText
+                          value={kr.current_value}
+                          canEdit={canEdit}
+                          maxLength={LIMITS.value}
+                          onSave={(v) => update({ current_value: v })}
+                          placeholder="—"
+                          className="text-xl font-bold text-primary"
+                        />
+                        <PlainDate
+                          canEdit={canEdit}
+                          value={kr.current_as_of}
+                          onChange={(v) => update({ current_as_of: v })}
+                        />
+                      </div>
+                      <div className="rounded-md border border-border/50 bg-card/60 p-4">
+                        <div className="section-label mb-1">{t("kr.target2027")}</div>
+                        <EditableText
+                          value={kr.target_2027}
+                          canEdit={canEdit}
+                          maxLength={LIMITS.value}
+                          onSave={(v) => update({ target_2027: v })}
+                          placeholder="—"
+                          className="text-xl font-bold text-hero"
+                        />
+                      </div>
+                      <div className="rounded-md border border-border/50 bg-card/60 p-4">
+                        <div className="section-label mb-1">{t("kr.originalTarget")}</div>
+                        <EditableText
+                          value={krTarget}
+                          canEdit={canEdit}
+                          maxLength={LIMITS.target}
+                          onSave={(v) => update({ target: v })}
+                          placeholder="—"
+                          className="text-sm font-semibold text-muted-foreground"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="rounded-md border border-border/50 bg-card/60 p-4">
+                        <div className="section-label mb-1">{t("kr.milestoneStatus")}</div>
+                        <PlainSelect
+                          canEdit={canEdit}
+                          value={kr.milestone_status}
+                          options={MILESTONE_STATUSES.map((v) => ({
+                            value: v,
+                            label: t(`kr.milestone.${v}` as const),
+                          }))}
+                          onChange={(v) => update({ milestone_status: v as MilestoneStatus })}
+                        />
+                      </div>
+                      <div className="rounded-md border border-border/50 bg-card/60 p-4">
+                        <div className="section-label mb-1">{t("kr.milestoneDue")}</div>
+                        <PlainDate
+                          canEdit={canEdit}
+                          value={kr.milestone_due}
+                          onChange={(v) => update({ milestone_due: v })}
+                        />
+                      </div>
+                      <div className="rounded-md border border-border/50 bg-card/60 p-4 sm:col-span-2">
+                        <div className="section-label mb-1">{t("kr.originalTarget")}</div>
+                        <EditableText
+                          value={krTarget}
+                          canEdit={canEdit}
+                          maxLength={LIMITS.target}
+                          onSave={(v) => update({ target: v })}
+                          placeholder="—"
+                          className="text-sm font-semibold text-muted-foreground"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              {/* Related initiatives */}
+              <section className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-base font-bold text-hero">
+                    {t("section.relatedInitiatives")}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-medium text-muted-foreground">
+                      {kr.initiatives.length + secondaryInitiatives.length}
+                    </span>
+                    {canEdit && (
+                      <button
+                        type="button"
+                        onClick={() => setLinkOpen(true)}
+                        className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary transition-colors hover:bg-primary/5"
+                      >
+                        <Plus className="h-3 w-3" />
+                        {t("initiative.link")}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {kr.initiatives.length > 0 ? (
+                  <ul className="space-y-2">
+                    {kr.initiatives.map((it) => (
+                      <li
+                        key={it.id}
+                        className="flex items-start gap-3 rounded-r-md border-l-4 border-primary bg-surface p-4 transition-colors hover:bg-surface/70"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            "mt-1.5 h-2 w-2 shrink-0 rounded-full",
+                            KR_INITIATIVE_DOT[it.status] ?? "bg-muted-foreground/40",
+                          )}
+                        />
+                        <div className="min-w-0 flex-1 text-sm font-semibold leading-relaxed text-hero">
+                          <EditableText
+                            multiline
+                            value={pickTranslation(it, "text", it.text, locale)}
+                            canEdit={canEdit}
+                            maxLength={LIMITS.initiative}
+                            onSave={(v) => m.updateInit.mutate({ id: it.id, text: v })}
+                          />
+                        </div>
+                        <Link
+                          to="/initiatives/$initiativeId"
+                          params={{ initiativeId: it.id }}
+                          aria-label={t("initiative.open")}
+                          title={t("initiative.open")}
+                          className="mt-0.5 shrink-0 rounded-sm p-1 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                        >
+                          <ArrowUpRight className="h-4 w-4" />
+                        </Link>
+                      </li>
+
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="rounded-lg border border-dashed border-border p-6 text-center text-xs font-medium text-muted-foreground">
+                    {t("initiative.none")}
+                  </div>
+                )}
+                {canEdit && (
+                  <p className="text-[11px] italic text-muted-foreground">
+                    {t("initiative.createInPortfolio")}
+                  </p>
+                )}
+              </section>
+
+              {/* Secondary initiatives */}
+              {secondaryInitiatives.length > 0 && (
+                <section className="space-y-3 pb-2">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-bold text-hero">
+                      {t("section.secondaryInitiatives")}
+                    </h3>
+                    <span className="text-[11px] font-medium text-muted-foreground">
+                      {secondaryInitiatives.length}
+                    </span>
+                  </div>
+                  <ul className="space-y-2">
+                    {secondaryInitiatives.map((it) => {
+                      const origin = initiativeOrigin.get(it.id);
+                      const chip = origin
+                        ? `${origin.okrNumber}.${
+                            origin.krLabel.includes(".")
+                              ? origin.krLabel.split(".")[1]
+                              : origin.krLabel
+                          }`
+                        : "—";
+                      return (
+                        <li
+                          key={`sec-${it.id}`}
+                          className="flex items-start gap-3 rounded-r-md border-l-4 border-border bg-surface/60 p-4 text-sm leading-relaxed text-hero"
+                        >
+                          <span
+                            title={`${t("initiative.secondary")} — OKR ${chip}`}
+                            className="mt-0.5 inline-flex h-5 shrink-0 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary"
+                          >
+                            {chip}
+                          </span>
+                          <span className="min-w-0 flex-1 font-medium">
+                            {pickTranslation(it, "text", it.text, locale)}
+                          </span>
+                          <Link
+                            to="/initiatives/$initiativeId"
+                            params={{ initiativeId: it.id }}
+                            aria-label={t("initiative.open")}
+                            title={t("initiative.open")}
+                            className="shrink-0 rounded-sm p-0.5 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                          >
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Link>
+
+                          {canEdit && (
+                            <button
+                              type="button"
+                              onClick={() => unlinkSecondary(it)}
+                              aria-label={t("initiative.unlinkSecondary")}
+                              title={t("initiative.unlinkSecondary")}
+                              className="shrink-0 rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              )}
+            </div>
+
+            <LinkInitiativesDialog
+              open={linkOpen}
+              onOpenChange={setLinkOpen}
+              kr={kr}
+              dashboard={dashboard}
+            />
+
+            {/* ---- Pinned footer ---- */}
+            {canEdit && (
+              <div className="shrink-0 border-t border-border/70 bg-card px-6 py-4">
+                <button
+                  type="button"
+                  onClick={() => setConfirmDeleteKrOpen(true)}
+                  className="text-xs font-bold uppercase tracking-widest text-destructive transition-colors hover:underline"
+                >
+                  {t("kr.delete")}
+                </button>
+                <AlertDialog open={confirmDeleteKrOpen} onOpenChange={setConfirmDeleteKrOpen}>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{t("kr.deleteConfirm")}</AlertDialogTitle>
+                      <AlertDialogDescription>{t("kr.deleteConfirmBody")}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        onClick={() => {
+                          m.deleteKr.mutate({ id: kr.id });
+                          onClose();
+                        }}
+                      >
+                        {t("kr.delete")}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            )}
+          </>
+        )}
+      </SheetContent>
+
+
+    </Sheet>
+  );
+}
+
+// ---------- Alignment table ----------
+
+function ContribCell({
+  value,
+  canEdit,
+  onCycle,
+  label,
+}: {
+  value: Contribution;
+  canEdit: boolean;
+  onCycle: () => void;
+  label: string;
+}) {
+  const dots =
+    value === "none" ? (
+      <span className="text-muted-foreground/40" aria-hidden="true">
+        —
+      </span>
+    ) : (
+      <span className="inline-flex items-center gap-1" aria-hidden="true">
+        <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+        {value === "primary" && (
+          <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+        )}
+      </span>
+    );
+  const a11yLabel = `${label}: ${value} contribution`;
+  if (!canEdit) {
+    return (
+      <span role="img" aria-label={a11yLabel}>
+        {dots}
+      </span>
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={onCycle}
+      aria-label={`${a11yLabel}. Click to cycle`}
+      title="Click to cycle: none → secondary → primary"
+      className="rounded-sm px-1 py-0.5 hover:bg-primary/5"
+    >
+      {dots}
+    </button>
+  );
+}
+
+function AlignmentTable({
+  rows,
+  canEdit,
+  m,
+}: {
+  rows: AlignmentRowDTO[];
+  canEdit: boolean;
+  m: OkrMutations;
+}) {
+  const { locale, t } = useLocale();
+  const cycle = (curr: Contribution): Contribution =>
+    CONTRIBUTION_CYCLE[(CONTRIBUTION_CYCLE.indexOf(curr) + 1) % 3];
+
+  return (
+    <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-soft">
+      <h2 className="text-2xl font-bold text-foreground">{t("section.alignmentTitle")}</h2>
+      <p className="mt-2 text-sm text-muted-foreground">
+        {t("section.alignmentIntro")}{" "}
+        <span className="inline-flex items-center gap-1 align-middle">
+          <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+          <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+        </span>{" "}
+        {t("section.alignmentPrimary")}{" "}
+        <span className="inline-flex items-center align-middle">
+          <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+        </span>{" "}
+        {t("section.alignmentSecondary")}
+        {canEdit && (
+          <span className="ml-1 text-muted-foreground/70">{t("section.alignmentCycleHint")}</span>
+        )}
+      </p>
+
+      <div className="mt-5 overflow-hidden rounded-xl border border-border/70">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/60">
+            <tr className="text-left text-[11px] uppercase tracking-widest text-muted-foreground">
+              <th className="py-3 pl-4 font-semibold">{t("section.alignmentPillar")}</th>
+              <th className="w-20 py-3 font-semibold">SG</th>
+              <th className="w-20 py-3 font-semibold">OE</th>
+              <th className="w-20 py-3 font-semibold">CE</th>
+              <th className="py-3 pr-4 font-semibold">{t("section.alignmentHow")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => {
+              const pillarText = pickTranslation(row, "pillar", row.pillar, locale);
+              const howText = pickTranslation(row, "how", row.how, locale);
+              return (
+                <tr
+                  key={row.id}
+                  className={cn(
+                    "border-t border-border/60 align-top",
+                    i % 2 === 1 ? "bg-muted/20" : "bg-card",
+                  )}
+                >
+                  <td className="py-4 pl-4 font-semibold text-foreground">
+                    <EditableText
+                      value={pillarText}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.alignmentPillar}
+                      onSave={(v) => m.updateAlign.mutate({ id: row.id, patch: { pillar: v } })}
+                    />
+                  </td>
+                  {(["sg", "oe", "ce"] as const).map((col) => (
+                    <td key={col} className="py-4">
+                      <ContribCell
+                        value={row[col]}
+                        canEdit={canEdit}
+                        label={`${pillarText} → ${col.toUpperCase()}`}
+                        onCycle={() =>
+                          m.updateAlign.mutate({ id: row.id, patch: { [col]: cycle(row[col]) } })
+                        }
+                      />
+                    </td>
+                  ))}
+                  <td className="py-4 pr-4 leading-relaxed text-muted-foreground">
+                    <EditableText
+                      multiline
+                      value={howText}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.alignmentHow}
+                      onSave={(v) => m.updateAlign.mutate({ id: row.id, patch: { how: v } })}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  );
+}
+
+// ---------- Page ----------
+
+function Index() {
+  return <IndexSuspense />;
+}
+
+function IndexSuspense() {
+  const { t } = useLocale();
+  return (
+    <Suspense
+      fallback={<div className="p-8 text-sm text-muted-foreground">{t("common.loading")}</div>}
+    >
+      <IndexContent />
+    </Suspense>
+  );
+}
+
+function IndexContent() {
+  const { data } = useSuspenseQuery(dashboardQueryOptions);
+  const { canEdit } = useAuth();
+  const { locale, t } = useLocale();
+  const m = useOkrMutations(locale);
+
+  const { secondaryByKr, initiativeOrigin } = useMemo(() => {
+    const secondaryByKr = new Map<string, InitiativeDTO[]>();
+    const initiativeOrigin = new Map<string, { okrNumber: number; krLabel: string }>();
+    for (const s of data.okr_sets) {
+      for (const k of s.key_results) {
+        for (const it of k.initiatives) {
+          initiativeOrigin.set(it.id, { okrNumber: s.number, krLabel: k.kr || "—" });
+          for (const sid of it.secondary_kr_ids ?? []) {
+            const arr = secondaryByKr.get(sid);
+            if (arr) arr.push(it);
+            else secondaryByKr.set(sid, [it]);
+          }
+        }
+      }
+    }
+    return { secondaryByKr, initiativeOrigin };
+  }, [data]);
+
+  return (
+    <main className="min-h-dvh">
+      <header className="bg-hero text-hero-foreground">
+        <div className="mx-auto max-w-6xl px-8 pt-6 pb-28">
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <img
+              src={icfLogo.url}
+              alt="ICF Switzerland Charter Chapter"
+              className="h-20 w-auto -ml-3 -mt-2"
+              width={88}
+              height={80}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+            <div className="flex items-center gap-3">
+              <TopNav />
+              <LanguageSwitcher />
+              <AuthBadge />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-start justify-between gap-6">
+            <div className="max-w-3xl">
+              <p className="eyebrow !text-accent">{t("hero.eyebrow")}</p>
+              <h1 className="display-xl mt-3">{t("hero.title")}</h1>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-foreground/75">
+                {t("hero.subtitle")}
+              </p>
+            </div>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() => m.addSet.mutate()}
+                disabled={m.addSet.isPending}
+                className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-card px-5 !text-primary shadow-sm hover:shadow transition-shadow disabled:opacity-50"
+              >
+                <Plus className="h-4 w-4" /> {t("hero.addOkrSet")}
+              </button>
+            )}
+          </div>
+
+          <h2 className="display-lg mt-5 text-hero-foreground">{t("hero.pillarTitle")}</h2>
+        </div>
+      </header>
+
+      <section className="mx-auto -mt-14 max-w-6xl px-8">
+        <div className="grid gap-4 md:grid-cols-3">
+          {PILLARS.map((code) => {
+            const p =
+              data.pillars.find((x) => x.code === code) ??
+              ({ code, label: code, description: "" } as PillarSummaryDTO);
+            const labelText = pickTranslation(p, "label", p.label, locale);
+            const descText = pickTranslation(p, "description", p.description, locale);
+            return (
+              <div
+                key={code}
+                className="rounded-2xl border border-border/70 bg-card p-5 shadow-soft"
+              >
+                <div className="flex items-center gap-3">
+                  <PillarDot code={code} />
+                  <EditableText
+                    as="h2"
+                    value={labelText}
+                    canEdit={canEdit}
+                    maxLength={LIMITS.pillarLabel}
+                    onSave={(v) => m.updatePillar.mutate({ code, patch: { label: v } })}
+                    className="text-[15px] font-semibold text-foreground"
+                  />
+                </div>
+                <EditableText
+                  as="p"
+                  multiline
+                  value={descText}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.pillarDescription}
+                  onSave={(v) => m.updatePillar.mutate({ code, patch: { description: v } })}
+                  className="mt-3 text-sm leading-relaxed text-muted-foreground"
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Baselining-year context for every measurement shown below. */}
+        <p className="mt-6 rounded-xl border border-warning-border bg-warning-surface px-4 py-3 text-sm leading-relaxed text-foreground">
+          {t("banner.baselining")}
+        </p>
+
+        {/* 2026 scorecard: how much of the measurement system actually exists yet. */}
+        <MeasurementScorecard data={data} />
+      </section>
+
+      <section className="mx-auto max-w-6xl space-y-10 px-8 py-12">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+          {t("section.okrSets")}
+        </h2>
+        {data.okr_sets.map((set) => (
+          <OkrCard
+            key={set.id}
+            set={set}
+            canEdit={canEdit}
+            m={m}
+            dashboard={data}
+            secondaryByKr={secondaryByKr}
+            initiativeOrigin={initiativeOrigin}
+          />
+        ))}
+        {canEdit && (
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => m.addSet.mutate()}
+              disabled={m.addSet.isPending}
+              className="btn-mono inline-flex items-center gap-2 rounded-full border border-primary/25 bg-card px-5 py-2.5 text-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
+            >
+              <Plus className="h-4 w-4" /> {t("okr.addOkrSet")}
+            </button>
+          </div>
+        )}
+        <AlignmentTable rows={data.alignment_rows} canEdit={canEdit} m={m} />
+      </section>
+    </main>
+  );
+}
+
+/**
+ * 2026 measurement scorecard.
+ *
+ * Counts how many key results actually have the three prerequisites of a
+ * measurable OKR: a named instrument, a recorded baseline, and a current
+ * value carrying a date. Deliberately shown as raw counts — a percentage
+ * would soften a gap that should stay visible during the baselining year.
+ */
+function MeasurementScorecard({ data }: { data: DashboardDTO }) {
+  const { t } = useLocale();
+  const krs = data.okr_sets.flatMap((s) => s.key_results);
+  const total = krs.length;
+  const stats = [
+    {
+      key: "scorecard.instrument" as const,
+      count: krs.filter((k) => k.instrument.trim() !== "").length,
+    },
+    {
+      key: "scorecard.baseline" as const,
+      count: krs.filter((k) => k.baseline_2026.trim() !== "").length,
+    },
+    {
+      key: "scorecard.current" as const,
+      count: krs.filter((k) => k.current_value.trim() !== "" && !!k.current_as_of).length,
+    },
+  ];
+
+  return (
+    <section aria-label={t("scorecard.title")} className="mt-4">
+      <div className="section-label mb-2">{t("scorecard.title")}</div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        {stats.map(({ key, count }) => {
+          const complete = total > 0 && count === total;
+          return (
+            <div
+              key={key}
+              className={`rounded-xl border px-4 py-3 ${
+                complete ? "border-border bg-card" : "border-warning-border bg-warning-surface"
+              }`}
+            >
+              <div
+                className={`text-3xl font-bold leading-none ${
+                  complete ? "text-foreground" : "text-warning"
+                }`}
+              >
+                {count}
+                <span className="ml-1 text-base font-medium text-muted-foreground">/ {total}</span>
+              </div>
+              <div className="mt-1.5 text-sm font-medium text-foreground">{t(key)}</div>
+              <div className="text-xs text-muted-foreground">
+                {t("scorecard.of").replace("{total}", String(total))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}

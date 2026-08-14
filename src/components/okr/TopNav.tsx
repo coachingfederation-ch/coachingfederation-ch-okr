@@ -12,7 +12,8 @@ export function TopNav() {
   const inactive = "text-hero-foreground/80 hover:text-hero-foreground";
   const active = "bg-card text-primary shadow-sm";
 
-  const isOkrsActive = path === "/";
+  const isInvolveActive = path === "/";
+  const isOkrsActive = path.startsWith("/okrs");
   const isInitiativesActive = path.startsWith("/initiatives");
   const isReportActive = path.startsWith("/report");
   const isPlaygroundActive = path.startsWith("/playground");
@@ -24,6 +25,13 @@ export function TopNav() {
     >
       <Link
         to="/"
+        className={cn(base, isInvolveActive ? active : inactive)}
+        aria-current={isInvolveActive ? "page" : undefined}
+      >
+        {t("involve.nav")}
+      </Link>
+      <Link
+        to="/okrs"
         className={cn(base, isOkrsActive ? active : inactive)}
         aria-current={isOkrsActive ? "page" : undefined}
       >
@@ -36,6 +44,7 @@ export function TopNav() {
       >
         {t("nav.initiatives")}
       </Link>
+
       <Link
         to="/report"
         className={cn(base, isReportActive ? active : inactive)}
@@ -52,6 +61,4 @@ export function TopNav() {
       </Link>
     </nav>
   );
-
 }
-

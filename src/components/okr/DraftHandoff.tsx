@@ -92,7 +92,7 @@ export function DraftHandoff({ mode, statement }: { mode: PlaygroundMode; statem
           <p className="text-sm text-foreground/90">{t("playground.handoff.editorHint")}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Button asChild className="h-11">
-              <Link to="/">{t("playground.handoff.openDashboard")}</Link>
+              <Link to="/okrs">{t("playground.handoff.openDashboard")}</Link>
             </Button>
             <Button
               type="button"

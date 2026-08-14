@@ -53,6 +53,44 @@ export type Database = {
         }
         Relationships: []
       }
+      initiative_interests: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          initiative_id: string
+          message: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          initiative_id: string
+          message?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          initiative_id?: string
+          message?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_interests_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       initiative_learning_entries: {
         Row: {
           author_name: string

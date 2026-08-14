@@ -2,6 +2,60 @@ import type { Locale } from "./i18n-shared";
 import type { Pillar } from "./okr-schemas";
 
 export type StringKey =
+  // get involved (volunteer entry page)
+  | "involve.panel.title"
+  | "involve.panel.empty"
+  | "involve.nav"
+  | "involve.eyebrow"
+  | "involve.title"
+  | "involve.subtitle"
+  | "involve.cta.start"
+  | "involve.cta.browse"
+  | "involve.stat.objectives"
+  | "involve.stat.open"
+  | "involve.stat.teams"
+  | "involve.step"
+  | "involve.of"
+  | "involve.journeyTitle"
+  | "involve.restart"
+  | "involve.back"
+  | "involve.q1.title"
+  | "involve.q1.help"
+  | "involve.q1.any"
+  | "involve.q1.anyHelp"
+  | "involve.q2.title"
+  | "involve.q2.help"
+  | "involve.time.small"
+  | "involve.time.smallHelp"
+  | "involve.time.medium"
+  | "involve.time.mediumHelp"
+  | "involve.time.any"
+  | "involve.time.anyHelp"
+  | "involve.q3.title"
+  | "involve.q3.help"
+  | "involve.help.lead"
+  | "involve.help.leadHelp"
+  | "involve.help.helpers"
+  | "involve.help.helpersHelp"
+  | "involve.help.skill"
+  | "involve.help.skillHelp"
+  | "involve.help.any"
+  | "involve.help.anyHelp"
+  | "involve.results.title"
+  | "involve.results.count"
+  | "involve.results.empty"
+  | "involve.results.showAll"
+  | "involve.match.why"
+  | "involve.interest.cta"
+  | "involve.interest.intro"
+  | "involve.interest.name"
+  | "involve.interest.email"
+  | "involve.interest.message"
+  | "involve.interest.submit"
+  | "involve.interest.sending"
+  | "involve.interest.success"
+  | "involve.interest.error"
+  | "involve.interest.privacy"
   // header / hero
   | "hero.eyebrow"
   | "hero.title"
@@ -39,7 +93,6 @@ export type StringKey =
   | "kr.lead"
   | "kr.openDetails"
   | "kr.number"
-  
   | "kr.section.definition"
   | "kr.parentObjective"
   | "kr.section.measurement"
@@ -617,6 +670,60 @@ export type StringKey =
   | "report.kr.due";
 
 const en: Record<StringKey, string> = {
+  "involve.panel.title": "Volunteer interest",
+  "involve.panel.empty": "No one has expressed interest in this work yet.",
+  "involve.nav": "Get involved",
+  "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · GET INVOLVED",
+  "involve.title": "Find where you fit in the chapter",
+  "involve.subtitle":
+    "Three short questions, and we will show you the open work that matches your interests, your time and your skills.",
+  "involve.cta.start": "Start the three questions",
+  "involve.cta.browse": "Browse all work",
+  "involve.stat.objectives": "Objectives",
+  "involve.stat.open": "Open for volunteers",
+  "involve.stat.teams": "Teams",
+  "involve.step": "Question",
+  "involve.of": "of",
+  "involve.journeyTitle": "Where would you see yourself?",
+  "involve.restart": "Start again",
+  "involve.back": "Back",
+  "involve.q1.title": "Which strategic focus area speaks to you?",
+  "involve.q1.help": "Pick the area you would most like to move forward.",
+  "involve.q1.any": "I am open",
+  "involve.q1.anyHelp": "Show me work across all focus areas.",
+  "involve.q2.title": "How much time can you give?",
+  "involve.q2.help": "Be honest — small contributions matter.",
+  "involve.time.small": "A one-off contribution",
+  "involve.time.smallHelp": "A single task with a clear end.",
+  "involve.time.medium": "A regular commitment",
+  "involve.time.mediumHelp": "Recurring work or a longer workstream.",
+  "involve.time.any": "Either works",
+  "involve.time.anyHelp": "Show me both.",
+  "involve.q3.title": "How would you like to help?",
+  "involve.q3.help": "There is room for leading, supporting and specialist input.",
+  "involve.help.lead": "Lead something",
+  "involve.help.leadHelp": "Take ownership of a piece of work.",
+  "involve.help.helpers": "Help a team",
+  "involve.help.helpersHelp": "Join others who are already moving.",
+  "involve.help.skill": "Bring a specific skill",
+  "involve.help.skillHelp": "Contribute expertise where it is missing.",
+  "involve.help.any": "Show me everything",
+  "involve.help.anyHelp": "I will decide once I see the work.",
+  "involve.results.title": "Work that fits you",
+  "involve.results.count": "matches",
+  "involve.results.empty": "Nothing is open for volunteers right now. Please check back soon.",
+  "involve.results.showAll": "Show all matches",
+  "involve.match.why": "Why this fits:",
+  "involve.interest.cta": "Express interest",
+  "involve.interest.intro": "Leave your details and the steward of this work will get back to you.",
+  "involve.interest.name": "Your name",
+  "involve.interest.email": "Email",
+  "involve.interest.message": "Anything you would like to add (optional)",
+  "involve.interest.submit": "Send my interest",
+  "involve.interest.sending": "Sending…",
+  "involve.interest.success": "Thank you. Your interest has been passed on to the chapter.",
+  "involve.interest.error": "Your interest could not be sent. Please try again.",
+  "involve.interest.privacy": "We only use your details to contact you about this work.",
   "hero.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · OKR DASHBOARD",
   "hero.title": "2026-2027 Objectives and Keyresults with Global Alignment",
   "hero.subtitle":
@@ -653,7 +760,7 @@ const en: Record<StringKey, string> = {
   "kr.lead": "Lead",
   "kr.openDetails": "Open details →",
   "kr.number": "KR number",
-  
+
   "kr.section.definition": "Definition",
   "kr.parentObjective": "Parent objective",
   "kr.section.measurement": "Measurement",
@@ -1292,6 +1399,63 @@ const en: Record<StringKey, string> = {
 };
 
 const de: Record<StringKey, string> = {
+  "involve.panel.title": "Interesse von Freiwilligen",
+  "involve.panel.empty": "Bisher hat niemand Interesse an dieser Arbeit gemeldet.",
+  "involve.nav": "Mitmachen",
+  "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · MITMACHEN",
+  "involve.title": "Finde deinen Platz im Chapter",
+  "involve.subtitle":
+    "Drei kurze Fragen, und wir zeigen dir die offene Arbeit, die zu deinen Interessen, deiner Zeit und deinen Fähigkeiten passt.",
+  "involve.cta.start": "Die drei Fragen starten",
+  "involve.cta.browse": "Alle Arbeiten ansehen",
+  "involve.stat.objectives": "Objectives",
+  "involve.stat.open": "Offen für Freiwillige",
+  "involve.stat.teams": "Teams",
+  "involve.step": "Frage",
+  "involve.of": "von",
+  "involve.journeyTitle": "Wo würdest du dich sehen?",
+  "involve.restart": "Neu starten",
+  "involve.back": "Zurück",
+  "involve.q1.title": "Welcher strategische Fokusbereich spricht dich an?",
+  "involve.q1.help": "Wähle den Bereich, den du am liebsten voranbringen möchtest.",
+  "involve.q1.any": "Ich bin offen",
+  "involve.q1.anyHelp": "Zeig mir Arbeit aus allen Fokusbereichen.",
+  "involve.q2.title": "Wie viel Zeit kannst du einbringen?",
+  "involve.q2.help": "Sei ehrlich — auch kleine Beiträge zählen.",
+  "involve.time.small": "Ein einmaliger Beitrag",
+  "involve.time.smallHelp": "Eine einzelne Aufgabe mit klarem Ende.",
+  "involve.time.medium": "Ein regelmässiges Engagement",
+  "involve.time.mediumHelp": "Wiederkehrende Arbeit oder ein längerer Workstream.",
+  "involve.time.any": "Beides möglich",
+  "involve.time.anyHelp": "Zeig mir beides.",
+  "involve.q3.title": "Wie möchtest du helfen?",
+  "involve.q3.help": "Es gibt Platz zum Führen, Unterstützen und für Fachwissen.",
+  "involve.help.lead": "Etwas leiten",
+  "involve.help.leadHelp": "Verantwortung für ein Arbeitspaket übernehmen.",
+  "involve.help.helpers": "Ein Team unterstützen",
+  "involve.help.helpersHelp": "Dich anderen anschliessen, die schon dran sind.",
+  "involve.help.skill": "Eine bestimmte Fähigkeit einbringen",
+  "involve.help.skillHelp": "Fachwissen dort einbringen, wo es fehlt.",
+  "involve.help.any": "Zeig mir alles",
+  "involve.help.anyHelp": "Ich entscheide, wenn ich die Arbeit sehe.",
+  "involve.results.title": "Arbeit, die zu dir passt",
+  "involve.results.count": "Treffer",
+  "involve.results.empty": "Zurzeit ist nichts für Freiwillige offen. Schau bald wieder vorbei.",
+  "involve.results.showAll": "Alle Treffer anzeigen",
+  "involve.match.why": "Warum das passt:",
+  "involve.interest.cta": "Interesse melden",
+  "involve.interest.intro":
+    "Hinterlasse deine Angaben, und der Steward dieser Arbeit meldet sich bei dir.",
+  "involve.interest.name": "Dein Name",
+  "involve.interest.email": "E-Mail",
+  "involve.interest.message": "Was du noch ergänzen möchtest (optional)",
+  "involve.interest.submit": "Interesse senden",
+  "involve.interest.sending": "Wird gesendet…",
+  "involve.interest.success": "Danke. Dein Interesse wurde ans Chapter weitergeleitet.",
+  "involve.interest.error":
+    "Dein Interesse konnte nicht gesendet werden. Bitte versuche es erneut.",
+  "involve.interest.privacy":
+    "Wir nutzen deine Angaben nur, um dich zu dieser Arbeit zu kontaktieren.",
   "hero.eyebrow": "DAS SCHWEIZER CHAPTER DER ICF · OKR-DASHBOARD",
   "hero.title": "Objectives und Key Results 2026-2027 mit globaler Ausrichtung",
   "hero.subtitle":
@@ -1329,7 +1493,7 @@ const de: Record<StringKey, string> = {
   "kr.lead": "Verantwortlich",
   "kr.openDetails": "Details öffnen →",
   "kr.number": "KR-Nummer",
-  
+
   "kr.section.definition": "Definition",
   "kr.parentObjective": "Übergeordnetes Objective",
   "kr.section.measurement": "Messung",
@@ -1982,6 +2146,62 @@ const de: Record<StringKey, string> = {
 };
 
 const fr: Record<StringKey, string> = {
+  "involve.panel.title": "Intérêt des bénévoles",
+  "involve.panel.empty": "Personne n\u2019a encore manifesté d\u2019intérêt pour ce travail.",
+  "involve.nav": "Participer",
+  "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · PARTICIPER",
+  "involve.title": "Trouvez votre place dans le chapitre",
+  "involve.subtitle":
+    "Trois questions courtes, et nous vous montrons les travaux ouverts qui correspondent à vos intérêts, votre temps et vos compétences.",
+  "involve.cta.start": "Commencer les trois questions",
+  "involve.cta.browse": "Voir tous les travaux",
+  "involve.stat.objectives": "Objectifs",
+  "involve.stat.open": "Ouverts aux bénévoles",
+  "involve.stat.teams": "Équipes",
+  "involve.step": "Question",
+  "involve.of": "sur",
+  "involve.journeyTitle": "Où vous verriez-vous ?",
+  "involve.restart": "Recommencer",
+  "involve.back": "Retour",
+  "involve.q1.title": "Quel domaine stratégique vous parle ?",
+  "involve.q1.help": "Choisissez le domaine que vous aimeriez le plus faire avancer.",
+  "involve.q1.any": "Je suis ouvert·e",
+  "involve.q1.anyHelp": "Montrez-moi les travaux de tous les domaines.",
+  "involve.q2.title": "Combien de temps pouvez-vous donner ?",
+  "involve.q2.help": "Soyez honnête — les petites contributions comptent.",
+  "involve.time.small": "Une contribution ponctuelle",
+  "involve.time.smallHelp": "Une tâche unique avec une fin claire.",
+  "involve.time.medium": "Un engagement régulier",
+  "involve.time.mediumHelp": "Un travail récurrent ou un chantier plus long.",
+  "involve.time.any": "Les deux conviennent",
+  "involve.time.anyHelp": "Montrez-moi les deux.",
+  "involve.q3.title": "Comment souhaitez-vous aider ?",
+  "involve.q3.help": "Il y a de la place pour diriger, soutenir et apporter une expertise.",
+  "involve.help.lead": "Diriger quelque chose",
+  "involve.help.leadHelp": "Prendre la responsabilité d'un travail.",
+  "involve.help.helpers": "Aider une équipe",
+  "involve.help.helpersHelp": "Rejoindre celles et ceux qui avancent déjà.",
+  "involve.help.skill": "Apporter une compétence précise",
+  "involve.help.skillHelp": "Contribuer là où l'expertise manque.",
+  "involve.help.any": "Montrez-moi tout",
+  "involve.help.anyHelp": "Je déciderai en voyant les travaux.",
+  "involve.results.title": "Des travaux qui vous correspondent",
+  "involve.results.count": "correspondances",
+  "involve.results.empty": "Rien n'est ouvert aux bénévoles pour l'instant. Revenez bientôt.",
+  "involve.results.showAll": "Afficher toutes les correspondances",
+  "involve.match.why": "Pourquoi cela correspond :",
+  "involve.interest.cta": "Manifester son intérêt",
+  "involve.interest.intro":
+    "Laissez vos coordonnées et le steward de ce travail vous recontactera.",
+  "involve.interest.name": "Votre nom",
+  "involve.interest.email": "E-mail",
+  "involve.interest.message": "Ce que vous souhaitez ajouter (facultatif)",
+  "involve.interest.submit": "Envoyer mon intérêt",
+  "involve.interest.sending": "Envoi…",
+  "involve.interest.success": "Merci. Votre intérêt a été transmis au chapitre.",
+  "involve.interest.error": "Votre intérêt n'a pas pu être envoyé. Veuillez réessayer.",
+  "involve.interest.privacy":
+    "Nous utilisons vos coordonnées uniquement pour vous contacter au sujet de ce travail.",
   "hero.eyebrow": "LE CHAPITRE SUISSE DE L'ICF · TABLEAU DE BORD OKR",
   "hero.title": "Objectifs et key results 2026-2027 avec alignement global",
   "hero.subtitle":
@@ -2019,7 +2239,7 @@ const fr: Record<StringKey, string> = {
   "kr.lead": "Responsable",
   "kr.openDetails": "Voir les détails →",
   "kr.number": "Numéro KR",
-  
+
   "kr.section.definition": "Définition",
   "kr.parentObjective": "Objectif parent",
   "kr.section.measurement": "Mesure",
@@ -2674,6 +2894,60 @@ const fr: Record<StringKey, string> = {
 };
 
 const it: Record<StringKey, string> = {
+  "involve.panel.title": "Interesse dei volontari",
+  "involve.panel.empty": "Nessuno ha ancora manifestato interesse per questo lavoro.",
+  "involve.nav": "Partecipa",
+  "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · PARTECIPA",
+  "involve.title": "Trova il tuo posto nel chapter",
+  "involve.subtitle":
+    "Tre brevi domande e ti mostriamo il lavoro aperto che corrisponde ai tuoi interessi, al tuo tempo e alle tue competenze.",
+  "involve.cta.start": "Inizia le tre domande",
+  "involve.cta.browse": "Vedi tutti i lavori",
+  "involve.stat.objectives": "Obiettivi",
+  "involve.stat.open": "Aperti ai volontari",
+  "involve.stat.teams": "Team",
+  "involve.step": "Domanda",
+  "involve.of": "di",
+  "involve.journeyTitle": "Dove ti vedresti?",
+  "involve.restart": "Ricomincia",
+  "involve.back": "Indietro",
+  "involve.q1.title": "Quale area strategica ti ispira?",
+  "involve.q1.help": "Scegli l'area che vorresti far avanzare di più.",
+  "involve.q1.any": "Sono aperto/a",
+  "involve.q1.anyHelp": "Mostrami lavori di tutte le aree.",
+  "involve.q2.title": "Quanto tempo puoi dedicare?",
+  "involve.q2.help": "Sii sincero/a: anche i piccoli contributi contano.",
+  "involve.time.small": "Un contributo una tantum",
+  "involve.time.smallHelp": "Un singolo compito con una fine chiara.",
+  "involve.time.medium": "Un impegno regolare",
+  "involve.time.mediumHelp": "Lavoro ricorrente o un percorso più lungo.",
+  "involve.time.any": "Vanno bene entrambi",
+  "involve.time.anyHelp": "Mostrami entrambi.",
+  "involve.q3.title": "Come vorresti contribuire?",
+  "involve.q3.help": "C'è spazio per guidare, sostenere e portare competenze.",
+  "involve.help.lead": "Guidare qualcosa",
+  "involve.help.leadHelp": "Assumere la responsabilità di un lavoro.",
+  "involve.help.helpers": "Aiutare un team",
+  "involve.help.helpersHelp": "Unirti a chi è già in movimento.",
+  "involve.help.skill": "Portare una competenza specifica",
+  "involve.help.skillHelp": "Contribuire dove manca l'esperienza.",
+  "involve.help.any": "Mostrami tutto",
+  "involve.help.anyHelp": "Deciderò quando vedrò i lavori.",
+  "involve.results.title": "Lavori adatti a te",
+  "involve.results.count": "corrispondenze",
+  "involve.results.empty": "Al momento non c'è nulla di aperto ai volontari. Torna presto.",
+  "involve.results.showAll": "Mostra tutte le corrispondenze",
+  "involve.match.why": "Perché è adatto:",
+  "involve.interest.cta": "Manifesta interesse",
+  "involve.interest.intro": "Lascia i tuoi dati e lo steward di questo lavoro ti ricontatterà.",
+  "involve.interest.name": "Il tuo nome",
+  "involve.interest.email": "E-mail",
+  "involve.interest.message": "Qualcosa da aggiungere (facoltativo)",
+  "involve.interest.submit": "Invia il mio interesse",
+  "involve.interest.sending": "Invio…",
+  "involve.interest.success": "Grazie. Il tuo interesse è stato trasmesso al chapter.",
+  "involve.interest.error": "Non è stato possibile inviare il tuo interesse. Riprova.",
+  "involve.interest.privacy": "Usiamo i tuoi dati solo per contattarti riguardo a questo lavoro.",
   "hero.eyebrow": "IL CHAPTER SVIZZERO DI ICF · DASHBOARD OKR",
   "hero.title": "Obiettivi e key result 2026-2027 con allineamento globale",
   "hero.subtitle":
@@ -2711,7 +2985,7 @@ const it: Record<StringKey, string> = {
   "kr.lead": "Responsabile",
   "kr.openDetails": "Apri dettagli →",
   "kr.number": "Numero KR",
-  
+
   "kr.section.definition": "Definizione",
   "kr.parentObjective": "Obiettivo di riferimento",
   "kr.section.measurement": "Misurazione",

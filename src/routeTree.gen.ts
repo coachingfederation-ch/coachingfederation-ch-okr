@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StyleGuideRouteImport } from './routes/style-guide'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as PlaygroundRouteImport } from './routes/playground'
+import { Route as OkrsRouteImport } from './routes/okrs'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InitiativesIndexRouteImport } from './routes/initiatives.index'
@@ -30,6 +31,11 @@ const ReportRoute = ReportRouteImport.update({
 const PlaygroundRoute = PlaygroundRouteImport.update({
   id: '/playground',
   path: '/playground',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OkrsRoute = OkrsRouteImport.update({
+  id: '/okrs',
+  path: '/okrs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -56,6 +62,7 @@ const InitiativesInitiativeIdRoute = InitiativesInitiativeIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/okrs'
     | '/playground'
     | '/report'
     | '/style-guide'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/okrs'
     | '/playground'
     | '/report'
     | '/style-guide'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/okrs'
     | '/playground'
     | '/report'
     | '/style-guide'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  OkrsRoute: typeof OkrsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   ReportRoute: typeof ReportRoute
   StyleGuideRoute: typeof StyleGuideRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/playground'
       fullPath: '/playground'
       preLoaderRoute: typeof PlaygroundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/okrs': {
+      id: '/okrs'
+      path: '/okrs'
+      fullPath: '/okrs'
+      preLoaderRoute: typeof OkrsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  OkrsRoute: OkrsRoute,
   PlaygroundRoute: PlaygroundRoute,
   ReportRoute: ReportRoute,
   StyleGuideRoute: StyleGuideRoute,
