@@ -1,33 +1,41 @@
-import { useState } from "react";
+import * as React from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, UserRound } from "lucide-react";
+import { ChevronDown, LogOut, UserRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
+import { HEADER_MENU, HEADER_MENU_ITEM, HEADER_PILL, useDismissable } from "./use-dismissable";
 
+/**
+ * Header account control. Signed out it is an outlined "Sign in" pill; signed
+ * in it opens an account menu, matching the public ICF Switzerland header.
+ */
 export function AuthBadge() {
   const { user, isLoading } = useAuth();
-  const [signingOut, setSigningOut] = useState(false);
+  const [signingOut, setSigningOut] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const close = React.useCallback(() => setOpen(false), []);
+  const ref = useDismissable(open, close);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   if (isLoading) {
-    return <div className="h-8 w-24 rounded-md bg-white/10 animate-pulse" />;
+    return <div className="h-10 w-28 animate-pulse rounded-full bg-hero-foreground/10" />;
   }
 
   if (!user) {
     return (
-      <Link
-        to="/auth"
-        className="btn-mono inline-flex h-8 items-center gap-1.5 rounded-full bg-white/10 px-4 text-white hover:bg-white/20 transition-colors"
-      >
-        Sign in to edit
+      <Link to="/auth" className={HEADER_PILL}>
+        <UserRound className="h-3.5 w-3.5" aria-hidden="true" />
+        Sign in
       </Link>
     );
   }
 
   const onSignOut = async () => {
     setSigningOut(true);
+    close();
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
@@ -36,21 +44,36 @@ export function AuthBadge() {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs text-white/85">
-        <UserRound className="h-3.5 w-3.5" />
-        {user.email}
-      </span>
+    <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={onSignOut}
-        disabled={signingOut}
-        className="btn-mono inline-flex h-8 items-center gap-1.5 rounded-full bg-white/10 px-3 text-white hover:bg-white/20 transition-colors disabled:opacity-50"
-        title="Sign out"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="Account menu"
+        onClick={() => setOpen((v) => !v)}
+        className={HEADER_PILL}
       >
-        <LogOut className="h-3.5 w-3.5" />
-        Sign out
+        <UserRound className="h-3.5 w-3.5" aria-hidden="true" />
+        My account
+        <ChevronDown className="h-3 w-3" aria-hidden="true" />
       </button>
+      {open && (
+        <div role="menu" className={cn(HEADER_MENU, "min-w-[14rem]")}>
+          <p className="border-b border-border/70 px-4 py-3 text-xs leading-5 text-muted-foreground break-all">
+            {user.email}
+          </p>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => void onSignOut()}
+            disabled={signingOut}
+            className={cn(HEADER_MENU_ITEM, "disabled:opacity-50")}
+          >
+            <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
+            Sign out
+          </button>
+        </div>
+      )}
     </div>
   );
 }

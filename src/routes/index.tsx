@@ -40,7 +40,7 @@ import {
   type PillarSummaryDTO,
   type RoleLabel,
 } from "@/lib/okr-schemas";
-import { LOCALES, LOCALE_LABELS, type Locale } from "@/lib/i18n-shared";
+import { type Locale } from "@/lib/i18n-shared";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { pillarName } from "@/lib/i18n-strings";
 import { AssistantDrawer, type AssistantContext } from "@/components/okr/AssistantDrawer";
@@ -50,6 +50,7 @@ import { formatSwissDate } from "@/components/okr/kr-metrics";
 
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
+import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { LinkInitiativesDialog } from "@/components/okr/LinkInitiativesDialog";
 
 import {
@@ -298,37 +299,8 @@ type OkrMutations = ReturnType<typeof useOkrMutations>;
 
 // ---------- Atoms ----------
 
-function LanguageSwitcher() {
-  const { locale, setLocale } = useLocale();
-  return (
-    <div
-      role="group"
-      aria-label="Language"
-      className="inline-flex items-center rounded-full bg-hero-foreground/10 p-0.5 text-[11px] font-semibold"
-    >
-      {LOCALES.map((l) => {
-        const active = l === locale;
-        return (
-          <button
-            key={l}
-            type="button"
-            onClick={() => setLocale(l)}
-            aria-pressed={active}
-            aria-label={LOCALE_LABELS[l]}
-            className={cn(
-              "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider transition-colors",
-              active
-                ? "bg-card text-primary shadow-sm"
-                : "text-hero-foreground/80 hover:text-hero-foreground",
-            )}
-          >
-            {l}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
+
+
 
 function PillarChip({
   code,
