@@ -763,39 +763,30 @@ function KrCard({
   const { locale, t } = useLocale();
   const count = kr.initiatives.length + secondaryCount;
   const text = pickTranslation(kr, "text", kr.text, locale);
-  const lead = pickTranslation(kr, "lead", kr.lead, locale);
   return (
-    <div className="group relative flex h-full flex-col rounded-2xl border border-border/70 bg-card p-4 text-left shadow-soft transition-all hover:border-primary/40 hover:shadow-md has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
+    <div className="group relative flex h-full flex-col rounded-xl border border-border/70 bg-card p-4 text-left shadow-soft transition-all hover:border-primary/40 hover:shadow-md has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
       <button
         type="button"
         onClick={onOpen}
         aria-label={`${t("kr.openDetails")} ${kr.kr || ""}: ${text || t("kr.noDescription")}`}
-        className="absolute inset-0 z-10 rounded-2xl focus:outline-none"
+        className="absolute inset-0 z-10 rounded-xl focus:outline-none"
       />
       <div className="flex items-center justify-between gap-2">
-        <span className="inline-flex h-6 items-center rounded-md bg-primary/10 px-2 text-[11px] font-bold text-primary">
+        <span className="inline-flex h-6 items-center rounded-md bg-primary px-2 text-[11px] font-bold text-primary-foreground">
           KR {kr.kr || "—"}
         </span>
         <span className="text-[11px] font-medium text-muted-foreground">
           {count} {count === 1 ? t("kr.count.one") : t("kr.count.other")}
         </span>
       </div>
-      <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-foreground">
+      <p className="mt-3 line-clamp-2 text-sm font-medium leading-relaxed text-foreground">
         {text || <span className="italic text-muted-foreground">{t("kr.noDescription")}</span>}
       </p>
-      <KrMeasurement kr={kr} />
-      <dl className="mt-3 flex gap-3 text-xs">
-        <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">
-          {t("kr.lead")}
-        </dt>
-        <dd className="min-w-0 flex-1 truncate text-muted-foreground">
-          {lead || <span className="italic">—</span>}
-        </dd>
-      </dl>
+      {/* One progress signal only — numbers, context and dates live in the sheet. */}
+      <div className="mt-auto pt-4">
+        <KrMeasurement kr={kr} variant="compact" />
+      </div>
 
-      <span className="mt-3 inline-flex text-[11px] font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-        {t("kr.openDetails")}
-      </span>
     </div>
   );
 }
