@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Suspense, useMemo, useState } from "react";
-import { X, Plus, ChevronDown } from "lucide-react";
+import { X, Plus, ChevronDown, ArrowUpRight } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -1129,7 +1129,17 @@ function KrDetailSheet({
                             onSave={(v) => m.updateInit.mutate({ id: it.id, text: v })}
                           />
                         </div>
+                        <Link
+                          to="/initiatives/$initiativeId"
+                          params={{ initiativeId: it.id }}
+                          aria-label={t("initiative.open")}
+                          title={t("initiative.open")}
+                          className="mt-0.5 shrink-0 rounded-sm p-1 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                        >
+                          <ArrowUpRight className="h-4 w-4" />
+                        </Link>
                       </li>
+
                     ))}
                   </ul>
                 ) : (
@@ -1179,6 +1189,16 @@ function KrDetailSheet({
                           <span className="min-w-0 flex-1 font-medium">
                             {pickTranslation(it, "text", it.text, locale)}
                           </span>
+                          <Link
+                            to="/initiatives/$initiativeId"
+                            params={{ initiativeId: it.id }}
+                            aria-label={t("initiative.open")}
+                            title={t("initiative.open")}
+                            className="shrink-0 rounded-sm p-0.5 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                          >
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Link>
+
                           {canEdit && (
                             <button
                               type="button"
