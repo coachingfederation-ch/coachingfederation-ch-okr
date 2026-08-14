@@ -13,6 +13,7 @@ import { LOCALES, LOCALE_LABELS } from "@/lib/i18n-shared";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import type { StringKey } from "@/lib/i18n-strings";
 import { AuthBadge } from "@/components/okr/AuthBadge";
+import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { TopNav } from "@/components/okr/TopNav";
 import { WorkJourney } from "@/components/okr/WorkJourney";
 import { WorkCard } from "@/components/okr/WorkCard";
@@ -64,38 +65,6 @@ export const Route = createFileRoute("/initiatives/")({
     </div>
   ),
 });
-
-function LanguageSwitcher() {
-  const { locale, setLocale } = useLocale();
-  return (
-    <div
-      role="group"
-      aria-label="Language"
-      className="inline-flex items-center rounded-full bg-hero-foreground/10 p-0.5 text-[11px] font-semibold"
-    >
-      {LOCALES.map((l) => {
-        const active = l === locale;
-        return (
-          <button
-            key={l}
-            type="button"
-            onClick={() => setLocale(l)}
-            aria-pressed={active}
-            aria-label={LOCALE_LABELS[l]}
-            className={cn(
-              "inline-flex h-6 items-center rounded-full px-2.5 uppercase tracking-wider transition-colors",
-              active
-                ? "bg-card text-primary shadow-sm"
-                : "text-hero-foreground/80 hover:text-hero-foreground",
-            )}
-          >
-            {l}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
 const STATUS_DOT: Record<InitiativeStatus, string> = {
   planned: "bg-muted-foreground/40",
