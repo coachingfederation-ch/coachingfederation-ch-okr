@@ -2,7 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
+
+export type InterestDTO = {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  created_at: string;
+};
 
 /**
  * Volunteer interest capture for the public "Get involved" entry page.
@@ -36,4 +45,19 @@ export const submitInitiativeInterest = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
     return { ok: true as const };
+  });
+
+/** Editor-only read of who put their hand up for a piece of work. */
+export const listInitiativeInterests = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => z.object({ initiative_id: z.string().uuid() }).parse(data))
+  .handler(async ({ context, data }) => {
+    const { data: rows, error } = await context.supabase
+      .from("initiative_interests")
+      .select("id, name, email, message, created_at")
+      .eq("initiative_id", data.initiative_id)
+      .order("created_at", { ascending: false });
+
+    if (error) throw new Error(error.message);
+    return (rows ?? []) as InterestDTO[];
   });
