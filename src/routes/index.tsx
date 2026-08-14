@@ -2,7 +2,16 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { ArrowUpRight, Check, Sparkles } from "lucide-react";
+import {
+  ArrowUpRight,
+  Check,
+  Handshake,
+  Megaphone,
+  Sparkles,
+  TrendingUp,
+  Users,
+  ShieldCheck,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { dashboardQueryOptions } from "@/lib/dashboard-query";
@@ -73,6 +82,16 @@ type Answers = { objective: string | "any" | null; time: TimeChoice | null; help
 
 const EMPTY: Answers = { objective: null, time: null, help: null };
 const STORAGE_KEY = "icfs.getInvolved.answers.v2";
+
+/** Speaking icons for each objective, keyed by objective number. */
+const OBJECTIVE_ICONS: Record<number, React.ReactNode> = {
+  1: <ShieldCheck className="h-5 w-5" />,
+  2: <Users className="h-5 w-5" />,
+  3: <TrendingUp className="h-5 w-5" />,
+  4: <Handshake className="h-5 w-5" />,
+  5: <Megaphone className="h-5 w-5" />,
+};
+
 
 /** Smallest commitments read as the lightest time ask. */
 const TIME_FIT: Record<TimeChoice, InitiativeCommitment[]> = {
@@ -273,7 +292,11 @@ function Content() {
             </div>
 
             {step === 0 && (
-              <Question title={t("involve.q1.title")} help={t("involve.q1.help")}>
+              <Question
+                title={t("involve.q1.title")}
+                help={t("involve.q1.help")}
+                columns="lg:grid-cols-5"
+              >
                 {data.okr_sets.map((set) => (
                   <ChoiceCard
                     key={set.id}
@@ -286,6 +309,7 @@ function Content() {
                         ? `var(--color-pillar-${set.pillars[0].toLowerCase()})`
                         : undefined
                     }
+                    icon={OBJECTIVE_ICONS[set.number] ?? <Sparkles className="h-5 w-5" />}
                     onSelect={() => {
                       setAnswers((a) => ({ ...a, objective: set.id }));
                       setStep(1);
@@ -297,6 +321,8 @@ function Content() {
                   selected={answers.objective === "any"}
                   title={t("involve.q1.any")}
                   body={t("involve.q1.anyHelp")}
+                  className="lg:col-span-5"
+                  icon={<Sparkles className="h-5 w-5" />}
                   onSelect={() => {
                     setAnswers((a) => ({ ...a, objective: "any" }));
                     setStep(1);
@@ -436,17 +462,21 @@ function Content() {
 function Question({
   title,
   help,
+  columns = "lg:grid-cols-4",
   children,
 }: {
   title: string;
   help: string;
+  columns?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="mt-10">
       <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
       <p className="mt-1 text-sm text-foreground/60">{help}</p>
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{children}</div>
+      <div className={cn("mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3", columns)}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -457,6 +487,8 @@ function ChoiceCard({
   title,
   body,
   accent,
+  icon,
+  className,
   onSelect,
 }: {
   selected?: boolean;
@@ -464,6 +496,8 @@ function ChoiceCard({
   title: string;
   body?: string;
   accent?: string;
+  icon?: React.ReactNode;
+  className?: string;
   onSelect: () => void;
 }) {
   return (
@@ -472,23 +506,22 @@ function ChoiceCard({
       aria-pressed={selected}
       onClick={onSelect}
       className={cn(
-        "group flex min-h-[10rem] flex-col rounded-tile border-2 p-6 text-left transition-all duration-300",
+        "group flex min-h-[9rem] flex-col rounded-tile border-2 p-4 text-left transition-all duration-300 sm:p-5",
         selected
           ? "border-highlight bg-highlight text-highlight-foreground shadow-lift"
           : "border-transparent bg-wash text-foreground hover:-translate-y-0.5 hover:border-highlight hover:bg-highlight hover:text-highlight-foreground",
+        className,
       )}
     >
-      <span
-        className={cn(
-          "mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-card transition-transform group-hover:scale-110",
-        )}
-      >
-        {accent ? (
+      <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-card transition-transform group-hover:scale-110">
+        {icon ? (
           <span
             aria-hidden
-            className="h-5 w-5 rounded-full"
-            style={{ backgroundColor: accent }}
-          />
+            style={accent ? { color: accent } : undefined}
+            className={cn(selected && "!text-highlight-foreground")}
+          >
+            {icon}
+          </span>
         ) : selected ? (
           <Check className="h-5 w-5 text-highlight" />
         ) : (
@@ -506,11 +539,13 @@ function ChoiceCard({
           {eyebrow}
         </span>
       )}
-      <span className="mt-1 font-display text-lg font-bold leading-snug">{title}</span>
+      <span className="mt-1 font-display text-base font-bold leading-snug sm:text-lg">
+        {title}
+      </span>
       {body && (
         <span
           className={cn(
-            "mt-2 text-sm leading-relaxed",
+            "mt-2 line-clamp-3 text-sm leading-relaxed",
             selected
               ? "text-highlight-foreground/85"
               : "text-foreground/60 group-hover:text-highlight-foreground/85",
