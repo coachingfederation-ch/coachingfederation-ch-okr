@@ -341,6 +341,31 @@ function Content() {
               </Question>
             )}
 
+            {complete && (
+              <ul className="mt-8 flex flex-wrap gap-2">
+                {[
+                  answers.pillar === "any"
+                    ? t("involve.q1.any")
+                    : answers.pillar
+                      ? pillarName(locale, answers.pillar)
+                      : null,
+                  answers.time ? t(`involve.time.${answers.time}` as never) : null,
+                  answers.help ? t(`involve.help.${answers.help}` as never) : null,
+                ]
+                  .filter(Boolean)
+                  .map((label) => (
+                    <li
+                      key={label as string}
+                      className="inline-flex min-h-11 items-center gap-2 rounded-full bg-wash px-5 text-sm font-bold text-foreground"
+                    >
+                      <Check className="h-4 w-4 text-highlight" />
+                      {label}
+                    </li>
+                  ))}
+              </ul>
+            )}
+
+
             {step > 0 && (
               <div className="mt-8 flex flex-wrap gap-2">
                 <button
