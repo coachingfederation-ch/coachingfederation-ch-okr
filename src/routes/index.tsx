@@ -857,16 +857,25 @@ function KrDetailSheet({
         if (!open) onClose();
       }}
     >
-      <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
+      <SheetContent
+        side="right"
+        className="flex w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-xl"
+      >
         {kr && (
           <>
-            <SheetHeader>
+            {/* ---- Fixed identity header ---- */}
+            <SheetHeader className="shrink-0 space-y-0 border-b border-border/70 bg-card px-6 py-5">
               <div className="flex items-center gap-2">
-                <span className="inline-flex h-7 items-center rounded-md bg-primary/10 px-2.5 text-xs font-bold text-primary">
+                <span className="inline-flex h-7 items-center rounded-md bg-accent px-2.5 text-xs font-bold text-hero ring-1 ring-hero/10">
                   KR {kr.kr || "—"}
                 </span>
+                {objectiveText && (
+                  <span className="min-w-0 truncate text-[11px] font-medium text-muted-foreground">
+                    {objectiveText}
+                  </span>
+                )}
               </div>
-              <SheetTitle className="text-left">
+              <SheetTitle className="mt-3 text-left">
                 <EditableText
                   multiline
                   value={krText}
@@ -877,266 +886,262 @@ function KrDetailSheet({
                   className="text-lg font-semibold leading-snug text-foreground"
                 />
               </SheetTitle>
-              <SheetDescription className="text-left">{t("kr.detailDescription")}</SheetDescription>
+              <SheetDescription className="mt-1 text-left text-xs">
+                {t("kr.detailDescription")}
+              </SheetDescription>
+
+              {canEdit && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onAssist({
+                        mode: "kr",
+                        contextLabel: `${t("assistant.ctx.kr")} ${kr.kr || "—"}`,
+                        lockedFirstAnswer: objectiveText,
+                      })
+                    }
+                    className="btn-mono inline-flex h-8 items-center rounded-md border border-primary/25 bg-card px-3 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+                  >
+                    {t("assistant.cta.measurable")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onAssist({
+                        mode: "initiative",
+                        contextLabel: `${t("assistant.ctx.kr")} ${kr.kr || "—"}`,
+                        lockedFirstAnswer: krText,
+                      })
+                    }
+                    className="btn-mono inline-flex h-8 items-center rounded-md border border-primary/25 bg-card px-3 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+                  >
+                    {t("assistant.cta.initiatives")}
+                  </button>
+                </div>
+              )}
             </SheetHeader>
 
-            {canEdit && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() =>
-                    onAssist({
-                      mode: "kr",
-                      contextLabel: `${t("assistant.ctx.kr")} ${kr.kr || "—"}`,
-                      lockedFirstAnswer: objectiveText,
-                    })
-                  }
-                  className="btn-mono inline-flex h-8 items-center rounded-md border border-primary/25 bg-card px-3 text-[11px] text-primary hover:bg-primary/5 transition-colors"
-                >
-                  {t("assistant.cta.measurable")}
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    onAssist({
-                      mode: "initiative",
-                      contextLabel: `${t("assistant.ctx.kr")} ${kr.kr || "—"}`,
-                      lockedFirstAnswer: krText,
-                    })
-                  }
-                  className="btn-mono inline-flex h-8 items-center rounded-md border border-primary/25 bg-card px-3 text-[11px] text-primary hover:bg-primary/5 transition-colors"
-                >
-                  {t("assistant.cta.initiatives")}
-                </button>
-              </div>
-            )}
+            {/* ---- Scrolling body: named sections, quiet rhythm ---- */}
+            <div className="flex-1 space-y-8 overflow-y-auto bg-background px-6 py-6">
+              {/* Definition */}
+              <section>
+                <SectionLabel>{t("kr.section.definition")}</SectionLabel>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-lg bg-surface/70 p-3">
+                    <div className="section-label mb-1">{t("kr.lead")}</div>
+                    <EditableText
+                      value={krLead}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.lead}
+                      onSave={(v) => update({ lead: v })}
+                      placeholder={t("kr.lead")}
+                      className="text-sm text-foreground"
+                    />
+                  </div>
+                  <div className="rounded-lg bg-surface/70 p-3">
+                    <div className="section-label mb-1">{t("kr.number")}</div>
+                    <EditableText
+                      value={kr.kr}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.kr}
+                      onSave={(v) => update({ kr: v })}
+                      className="text-sm font-medium text-primary"
+                    />
+                  </div>
+                  <div className="rounded-lg bg-surface/70 p-3">
+                    <div className="section-label mb-1">{t("kr.type")}</div>
+                    <PlainSelect
+                      canEdit={canEdit}
+                      value={kr.kr_type}
+                      options={KR_TYPES.map((v) => ({
+                        value: v,
+                        label: t(`kr.type.${v}` as const),
+                      }))}
+                      onChange={(v) => update({ kr_type: v as KrType })}
+                    />
+                  </div>
+                  <div className="rounded-lg bg-surface/70 p-3">
+                    <div className="section-label mb-1">{t("kr.instrument")}</div>
+                    <EditableText
+                      value={krInstrument}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.instrument}
+                      onSave={(v) => update({ instrument: v })}
+                      placeholder={t("kr.instrumentPlaceholder")}
+                      className="text-sm text-foreground"
+                    />
+                  </div>
+                  <div className="rounded-lg bg-surface/70 p-3 sm:col-span-2">
+                    <div className="section-label mb-1">{t("kr.measure")}</div>
+                    <EditableText
+                      multiline
+                      value={krMeasure}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.measure}
+                      onSave={(v) => update({ measure: v })}
+                      placeholder={t("kr.measurePlaceholder")}
+                      className="text-sm text-foreground"
+                    />
+                  </div>
+                </div>
+              </section>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div>
-                <div className="section-label mb-1">{t("kr.lead")}</div>
-                <EditableText
-                  value={krLead}
-                  canEdit={canEdit}
-                  maxLength={LIMITS.lead}
-                  onSave={(v) => update({ lead: v })}
-                  placeholder={t("kr.lead")}
-                  className="text-sm text-muted-foreground"
-                />
-              </div>
-              <div>
-                <div className="section-label mb-1">{t("kr.number")}</div>
-                <EditableText
-                  value={kr.kr}
-                  canEdit={canEdit}
-                  maxLength={LIMITS.kr}
-                  onSave={(v) => update({ kr: v })}
-                  className="text-sm font-medium text-primary"
-                />
-              </div>
-              <div>
-                <div className="section-label mb-1">{t("kr.type")}</div>
-                <PlainSelect
-                  canEdit={canEdit}
-                  value={kr.kr_type}
-                  options={KR_TYPES.map((v) => ({ value: v, label: t(`kr.type.${v}` as const) }))}
-                  onChange={(v) => update({ kr_type: v as KrType })}
-                />
-              </div>
-              <div>
-                <div className="section-label mb-1">{t("kr.measure")}</div>
-                <EditableText
-                  multiline
-                  value={krMeasure}
-                  canEdit={canEdit}
-                  maxLength={LIMITS.measure}
-                  onSave={(v) => update({ measure: v })}
-                  placeholder={t("kr.measurePlaceholder")}
-                  className="text-sm text-foreground"
-                />
-              </div>
-              <div>
-                <div className="section-label mb-1">{t("kr.instrument")}</div>
-                <EditableText
-                  value={krInstrument}
-                  canEdit={canEdit}
-                  maxLength={LIMITS.instrument}
-                  onSave={(v) => update({ instrument: v })}
-                  placeholder={t("kr.instrumentPlaceholder")}
-                  className="text-sm text-foreground"
-                />
-              </div>
-            </div>
-
-            {kr.kr_type === "metric" ? (
-              <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                <div>
-                  <div className="section-label mb-1">{t("kr.baseline2026")}</div>
-                  <EditableText
-                    value={kr.baseline_2026}
-                    canEdit={canEdit && !kr.baseline_locked}
-                    maxLength={LIMITS.value}
-                    onSave={(v) => update({ baseline_2026: v })}
-                    placeholder={t("kr.baselinePending")}
-                    className="text-sm font-semibold text-foreground"
-                  />
-                  {canEdit && (
-                    <label className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-                      <input
-                        type="checkbox"
-                        checked={kr.baseline_locked}
-                        onChange={(e) => update({ baseline_locked: e.target.checked })}
-                        className="h-3.5 w-3.5 accent-[var(--color-primary)]"
-                      />
-                      <span title={t("kr.baselineLockedHint")}>{t("kr.baselineLocked")}</span>
-                    </label>
-                  )}
-                </div>
-                <div>
-                  <div className="section-label mb-1">{t("kr.current")}</div>
-                  <EditableText
-                    value={kr.current_value}
-                    canEdit={canEdit}
-                    maxLength={LIMITS.value}
-                    onSave={(v) => update({ current_value: v })}
-                    placeholder="—"
-                    className="text-sm font-semibold text-foreground"
-                  />
-                  <PlainDate
-                    canEdit={canEdit}
-                    value={kr.current_as_of}
-                    onChange={(v) => update({ current_as_of: v })}
-                  />
-                </div>
-                <div>
-                  <div className="section-label mb-1">{t("kr.target2027")}</div>
-                  <EditableText
-                    value={kr.target_2027}
-                    canEdit={canEdit}
-                    maxLength={LIMITS.value}
-                    onSave={(v) => update({ target_2027: v })}
-                    placeholder="—"
-                    className="text-sm font-semibold text-foreground"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                <div>
-                  <div className="section-label mb-1">{t("kr.milestoneStatus")}</div>
-                  <PlainSelect
-                    canEdit={canEdit}
-                    value={kr.milestone_status}
-                    options={MILESTONE_STATUSES.map((v) => ({
-                      value: v,
-                      label: t(`kr.milestone.${v}` as const),
-                    }))}
-                    onChange={(v) => update({ milestone_status: v as MilestoneStatus })}
-                  />
-                </div>
-                <div>
-                  <div className="section-label mb-1">{t("kr.milestoneDue")}</div>
-                  <PlainDate
-                    canEdit={canEdit}
-                    value={kr.milestone_due}
-                    onChange={(v) => update({ milestone_due: v })}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="mt-6 rounded-xl border border-border/70 bg-surface p-3">
-              <div className="section-label mb-1">{t("kr.originalTarget")}</div>
-              <EditableText
-                value={krTarget}
-                canEdit={canEdit}
-                maxLength={LIMITS.target}
-                onSave={(v) => update({ target: v })}
-                placeholder="—"
-                className="text-sm text-muted-foreground"
-              />
-            </div>
-
-            <section className="mt-8">
-              <div className="mb-2 flex items-center justify-between gap-2">
-                <SectionLabel>{t("section.relatedInitiatives")}</SectionLabel>
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-medium text-muted-foreground">
-                    {kr.initiatives.length + secondaryInitiatives.length}
-                  </span>
-                  {canEdit && (
-                    <button
-                      type="button"
-                      onClick={() => setLinkOpen(true)}
-                      className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
-                    >
-                      <Plus className="h-3 w-3" />
-                      {t("initiative.link")}
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div className="overflow-hidden rounded-xl border border-border/70">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted/60 text-left">
-                    <tr className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                      <th className="py-2 pl-4 font-semibold">{t("initiative.header")}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {kr.initiatives.map((it, i) => (
-                      <tr
-                        key={it.id}
-                        className={cn(
-                          "border-t border-border/60 align-top",
-                          i % 2 === 1 ? "bg-muted/20" : "bg-card",
+              {/* Measurement */}
+              <section>
+                <SectionLabel>{t("kr.section.measurement")}</SectionLabel>
+                <div className="mt-3 rounded-xl border border-border/70 bg-card p-4">
+                  {kr.kr_type === "metric" ? (
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <div>
+                        <div className="section-label mb-1">{t("kr.baseline2026")}</div>
+                        <EditableText
+                          value={kr.baseline_2026}
+                          canEdit={canEdit && !kr.baseline_locked}
+                          maxLength={LIMITS.value}
+                          onSave={(v) => update({ baseline_2026: v })}
+                          placeholder={t("kr.baselinePending")}
+                          className="text-base font-semibold text-foreground"
+                        />
+                        {canEdit && (
+                          <label className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                            <input
+                              type="checkbox"
+                              checked={kr.baseline_locked}
+                              onChange={(e) => update({ baseline_locked: e.target.checked })}
+                              className="h-3.5 w-3.5 accent-[var(--color-primary)]"
+                            />
+                            <span title={t("kr.baselineLockedHint")}>{t("kr.baselineLocked")}</span>
+                          </label>
                         )}
-                      >
-                        <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
-                          <EditableText
-                            multiline
-                            value={pickTranslation(it, "text", it.text, locale)}
-                            canEdit={canEdit}
-                            maxLength={LIMITS.initiative}
-                            onSave={(v) => m.updateInit.mutate({ id: it.id, text: v })}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                    {kr.initiatives.length === 0 && (
-                      <tr>
-                        <td className="py-3 pl-4 text-sm italic text-muted-foreground bg-card">
-                          {t("initiative.none")}
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-              {canEdit && (
-                <p className="mt-2 text-[11px] italic text-muted-foreground">
-                  {t("initiative.createInPortfolio")}
-                </p>
-              )}
-            </section>
-
-            {secondaryInitiatives.length > 0 && (
-              <section className="mt-8">
-                <div className="mb-2 flex items-center justify-between">
-                  <SectionLabel>{t("section.secondaryInitiatives")}</SectionLabel>
-                  <span className="text-[11px] font-medium text-muted-foreground">
-                    {secondaryInitiatives.length}
-                  </span>
+                      </div>
+                      <div className="sm:border-l sm:border-border/60 sm:pl-4">
+                        <div className="section-label mb-1">{t("kr.current")}</div>
+                        <EditableText
+                          value={kr.current_value}
+                          canEdit={canEdit}
+                          maxLength={LIMITS.value}
+                          onSave={(v) => update({ current_value: v })}
+                          placeholder="—"
+                          className="text-base font-semibold text-primary"
+                        />
+                        <PlainDate
+                          canEdit={canEdit}
+                          value={kr.current_as_of}
+                          onChange={(v) => update({ current_as_of: v })}
+                        />
+                      </div>
+                      <div className="sm:border-l sm:border-border/60 sm:pl-4">
+                        <div className="section-label mb-1">{t("kr.target2027")}</div>
+                        <EditableText
+                          value={kr.target_2027}
+                          canEdit={canEdit}
+                          maxLength={LIMITS.value}
+                          onSave={(v) => update({ target_2027: v })}
+                          placeholder="—"
+                          className="text-base font-semibold text-foreground"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <div className="section-label mb-1">{t("kr.milestoneStatus")}</div>
+                        <PlainSelect
+                          canEdit={canEdit}
+                          value={kr.milestone_status}
+                          options={MILESTONE_STATUSES.map((v) => ({
+                            value: v,
+                            label: t(`kr.milestone.${v}` as const),
+                          }))}
+                          onChange={(v) => update({ milestone_status: v as MilestoneStatus })}
+                        />
+                      </div>
+                      <div className="sm:border-l sm:border-border/60 sm:pl-4">
+                        <div className="section-label mb-1">{t("kr.milestoneDue")}</div>
+                        <PlainDate
+                          canEdit={canEdit}
+                          value={kr.milestone_due}
+                          onChange={(v) => update({ milestone_due: v })}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <div className="mt-4 border-t border-border/60 pt-3">
+                    <div className="section-label mb-1">{t("kr.originalTarget")}</div>
+                    <EditableText
+                      value={krTarget}
+                      canEdit={canEdit}
+                      maxLength={LIMITS.target}
+                      onSave={(v) => update({ target: v })}
+                      placeholder="—"
+                      className="text-sm text-muted-foreground"
+                    />
+                  </div>
                 </div>
-                <div className="overflow-hidden rounded-xl border border-border/70">
-                  <table className="w-full text-sm">
-                    <thead className="bg-muted/60 text-left">
-                      <tr className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                        <th className="py-2 pl-4 font-semibold">{t("initiative.header")}</th>
-                        {canEdit && <th className="w-10" />}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {secondaryInitiatives.map((it, i) => {
+              </section>
+
+              {/* Related initiatives */}
+              <section>
+                <div className="flex items-center justify-between gap-2">
+                  <SectionLabel>{t("section.relatedInitiatives")}</SectionLabel>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-medium text-muted-foreground">
+                      {kr.initiatives.length + secondaryInitiatives.length}
+                    </span>
+                    {canEdit && (
+                      <button
+                        type="button"
+                        onClick={() => setLinkOpen(true)}
+                        className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+                      >
+                        <Plus className="h-3 w-3" />
+                        {t("initiative.link")}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <ul className="mt-3 divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-card">
+                  {kr.initiatives.map((it) => (
+                    <li key={it.id} className="flex items-start gap-2.5 px-4 py-3">
+                      <span
+                        aria-hidden="true"
+                        className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary"
+                      />
+                      <div className="min-w-0 flex-1 text-sm leading-relaxed text-foreground">
+                        <EditableText
+                          multiline
+                          value={pickTranslation(it, "text", it.text, locale)}
+                          canEdit={canEdit}
+                          maxLength={LIMITS.initiative}
+                          onSave={(v) => m.updateInit.mutate({ id: it.id, text: v })}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                  {kr.initiatives.length === 0 && (
+                    <li className="px-4 py-3 text-sm italic text-muted-foreground">
+                      {t("initiative.none")}
+                    </li>
+                  )}
+                </ul>
+                {canEdit && (
+                  <p className="mt-2 text-[11px] italic text-muted-foreground">
+                    {t("initiative.createInPortfolio")}
+                  </p>
+                )}
+
+                {secondaryInitiatives.length > 0 && (
+                  <div className="mt-5">
+                    <div className="flex items-center justify-between">
+                      <SectionLabel>{t("section.secondaryInitiatives")}</SectionLabel>
+                      <span className="text-[11px] font-medium text-muted-foreground">
+                        {secondaryInitiatives.length}
+                      </span>
+                    </div>
+                    <ul className="mt-3 divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-surface/60">
+                      {secondaryInitiatives.map((it) => {
                         const origin = initiativeOrigin.get(it.id);
                         const chip = origin
                           ? `${origin.okrNumber}.${
@@ -1146,47 +1151,38 @@ function KrDetailSheet({
                             }`
                           : "—";
                         return (
-                          <tr
+                          <li
                             key={`sec-${it.id}`}
-                            className={cn(
-                              "border-t border-border/60 align-top",
-                              i % 2 === 1 ? "bg-muted/20" : "bg-card",
-                            )}
+                            className="flex items-start gap-2.5 px-4 py-3 text-sm leading-relaxed text-foreground"
                           >
-                            <td className="py-2.5 pl-4 pr-3 leading-relaxed text-foreground">
-                              <div className="flex items-start gap-2">
-                                <span
-                                  title={`${t("initiative.secondary")} — OKR ${chip}`}
-                                  className="mt-0.5 inline-flex h-5 shrink-0 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary"
-                                >
-                                  {chip}
-                                </span>
-                                <span className="min-w-0 flex-1">
-                                  {pickTranslation(it, "text", it.text, locale)}
-                                </span>
-                              </div>
-                            </td>
+                            <span
+                              title={`${t("initiative.secondary")} — OKR ${chip}`}
+                              className="mt-0.5 inline-flex h-5 shrink-0 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary"
+                            >
+                              {chip}
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              {pickTranslation(it, "text", it.text, locale)}
+                            </span>
                             {canEdit && (
-                              <td className="py-2.5 pr-3">
-                                <button
-                                  type="button"
-                                  onClick={() => unlinkSecondary(it)}
-                                  aria-label={t("initiative.unlinkSecondary")}
-                                  title={t("initiative.unlinkSecondary")}
-                                  className="rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
-                                >
-                                  <X className="h-3.5 w-3.5" />
-                                </button>
-                              </td>
+                              <button
+                                type="button"
+                                onClick={() => unlinkSecondary(it)}
+                                aria-label={t("initiative.unlinkSecondary")}
+                                title={t("initiative.unlinkSecondary")}
+                                className="shrink-0 rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive"
+                              >
+                                <X className="h-3.5 w-3.5" />
+                              </button>
                             )}
-                          </tr>
+                          </li>
                         );
                       })}
-                    </tbody>
-                  </table>
-                </div>
+                    </ul>
+                  </div>
+                )}
               </section>
-            )}
+            </div>
 
             <LinkInitiativesDialog
               open={linkOpen}
@@ -1195,8 +1191,9 @@ function KrDetailSheet({
               dashboard={dashboard}
             />
 
+            {/* ---- Pinned footer ---- */}
             {canEdit && (
-              <div className="mt-8 border-t border-border/60 pt-4">
+              <div className="shrink-0 border-t border-border/70 bg-surface px-6 py-3">
                 <button
                   type="button"
                   onClick={() => setConfirmDeleteKrOpen(true)}
@@ -1229,6 +1226,7 @@ function KrDetailSheet({
           </>
         )}
       </SheetContent>
+
     </Sheet>
   );
 }
