@@ -1113,31 +1113,34 @@ export function WorkJourney({
             )}
 
             {blocker && <p className="mt-4 text-xs text-destructive">{t(blocker)}</p>}
-          </div>
+              </div>
 
-          <SheetFooter className="flex-row items-center justify-between gap-2 border-t px-6 py-4">
-            <Button
-              variant="ghost"
-              onClick={() => (index === 0 ? requestClose(false) : setIndex(index - 1))}
-              disabled={create.isPending}
-            >
-              {index === 0 ? t("common.cancel") : t("journey.back")}
-            </Button>
-            {isLast ? (
-              <Button
-                onClick={() => create.mutate()}
-                disabled={create.isPending || !state.kr_id || !state.text.trim()}
-              >
-                {create.isPending ? t("journey.creating") : t("journey.finish")}
-              </Button>
-            ) : (
-              <Button onClick={() => setIndex(index + 1)} disabled={!!blocker}>
-                {t("journey.next")}
-              </Button>
-            )}
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+              <DialogFooter className="flex-row items-center justify-between gap-2 border-t px-6 py-4 sm:justify-between">
+                <Button
+                  variant="ghost"
+                  onClick={() => (index === 0 ? requestClose(false) : setIndex(index - 1))}
+                  disabled={create.isPending}
+                >
+                  {index === 0 ? t("common.cancel") : t("journey.back")}
+                </Button>
+                {isLast ? (
+                  <Button
+                    onClick={() => create.mutate()}
+                    disabled={create.isPending || !state.kr_id || !state.text.trim()}
+                  >
+                    {create.isPending ? t("journey.creating") : t("journey.finish")}
+                  </Button>
+                ) : (
+                  <Button onClick={() => setIndex(index + 1)} disabled={!!blocker}>
+                    {t("journey.next")}
+                  </Button>
+                )}
+              </DialogFooter>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
 
       <AlertDialog open={confirmClose} onOpenChange={setConfirmClose}>
         <AlertDialogContent>
