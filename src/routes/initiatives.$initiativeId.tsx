@@ -1,5 +1,11 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
@@ -32,6 +38,7 @@ import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { EditInitiativeDialog } from "@/components/okr/EditInitiativeDialog";
+import { listInitiativeInterests } from "@/lib/interests.functions";
 import {
   AVAILABILITY_CHIP,
   AVAILABILITY_KEY,
@@ -342,6 +349,8 @@ function DetailContent() {
         )}
 
         <LearningPanel initiative={initiative} canEdit={canEdit} />
+
+        {canEdit && <InterestPanel initiativeId={initiative.id} />}
       </div>
 
       <EditInitiativeDialog
@@ -352,6 +361,58 @@ function DetailContent() {
         canEdit={canEdit}
       />
     </main>
+  );
+}
+
+// ---------- Volunteer interest (editors only) ----------
+
+/**
+ * Read-only list of volunteers who expressed interest from the public
+ * "Get involved" page. RLS keeps this invisible to everyone but editors.
+ */
+function InterestPanel({ initiativeId }: { initiativeId: string }) {
+  const { t, locale } = useLocale();
+  const listFn = useServerFn(listInitiativeInterests);
+  const { data, isLoading } = useQuery({
+    queryKey: ["initiative-interests", initiativeId] as const,
+    queryFn: () => listFn({ data: { initiative_id: initiativeId } }),
+  });
+
+  return (
+    <Panel title={t("involve.panel.title")}>
+      {isLoading ? (
+        <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
+      ) : !data || data.length === 0 ? (
+        <p className="text-sm text-muted-foreground">{t("involve.panel.empty")}</p>
+      ) : (
+        <ul className="grid gap-3">
+          {data.map((row) => (
+            <li
+              key={row.id}
+              className="rounded-r-md border-l-4 border-l-primary bg-surface px-4 py-3"
+            >
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="text-sm font-semibold text-foreground">{row.name}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {new Date(row.created_at).toLocaleDateString(locale)}
+                </p>
+              </div>
+              <a
+                href={`mailto:${row.email}`}
+                className="text-xs font-medium text-primary hover:underline"
+              >
+                {row.email}
+              </a>
+              {row.message && (
+                <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-foreground/85">
+                  {row.message}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </Panel>
   );
 }
 
