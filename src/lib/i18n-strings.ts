@@ -39,7 +39,7 @@ export type StringKey =
   | "kr.lead"
   | "kr.openDetails"
   | "kr.number"
-  | "kr.detailDescription"
+  
   | "kr.section.definition"
   | "kr.parentObjective"
   | "kr.section.measurement"
@@ -652,7 +652,7 @@ const en: Record<StringKey, string> = {
   "kr.lead": "Lead",
   "kr.openDetails": "Open details →",
   "kr.number": "KR number",
-  "kr.detailDescription": "Owned outcome and the projects that deliver it.",
+  
   "kr.section.definition": "Definition",
   "kr.parentObjective": "Parent objective",
   "kr.section.measurement": "Measurement",
@@ -1327,7 +1327,7 @@ const de: Record<StringKey, string> = {
   "kr.lead": "Verantwortlich",
   "kr.openDetails": "Details öffnen →",
   "kr.number": "KR-Nummer",
-  "kr.detailDescription": "Verantwortetes Ergebnis und die Projekte, die es liefern.",
+  
   "kr.section.definition": "Definition",
   "kr.parentObjective": "Übergeordnetes Objective",
   "kr.section.measurement": "Messung",
@@ -2016,7 +2016,7 @@ const fr: Record<StringKey, string> = {
   "kr.lead": "Responsable",
   "kr.openDetails": "Voir les détails →",
   "kr.number": "Numéro KR",
-  "kr.detailDescription": "Résultat piloté et projets qui le livrent.",
+  
   "kr.section.definition": "Définition",
   "kr.parentObjective": "Objectif parent",
   "kr.section.measurement": "Mesure",
@@ -2707,7 +2707,7 @@ const it: Record<StringKey, string> = {
   "kr.lead": "Responsabile",
   "kr.openDetails": "Apri dettagli →",
   "kr.number": "Numero KR",
-  "kr.detailDescription": "Risultato di cui si è responsabili e i progetti che lo realizzano.",
+  
   "kr.section.definition": "Definizione",
   "kr.parentObjective": "Obiettivo di riferimento",
   "kr.section.measurement": "Misurazione",

@@ -873,9 +873,6 @@ function KrDetailSheet({
                     className="text-xl font-bold leading-snug text-hero-foreground"
                   />
                 </SheetTitle>
-                <SheetDescription className="mt-1 text-left text-xs text-hero-foreground/70">
-                  {t("kr.detailDescription")}
-                </SheetDescription>
 
                 {canEdit && (
                   <div className="mt-4 flex flex-wrap gap-2">
