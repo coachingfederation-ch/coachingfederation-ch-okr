@@ -555,87 +555,96 @@ function OkrCard({
   const alignmentText = pickTranslation(set, "alignment", set.alignment, locale);
 
   return (
-    <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-soft">
-      <header className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4">
-          <span className="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
-            {set.number}
-          </span>
-          <div>
-            <EditableText
-              as="h2"
-              value={titleText}
-              canEdit={canEdit}
-              maxLength={LIMITS.title}
-              onSave={(v) => updateSet({ title: v })}
-              className="text-2xl font-bold text-foreground"
-              placeholder="Untitled OKR"
-            />
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-              <RoleLabelSelect
-                value={set.role_label}
-                canEdit={canEdit}
-                onChange={(v) => updateSet({ role_label: v })}
-              />
-              <span className="text-muted-foreground/60">:</span>
+    <article className="overflow-hidden rounded-3xl border border-border/70 bg-card shadow-soft">
+      {/* Deep-blue identity band: the objective's number and title own the top
+          of the card so every key result below reads as a child of it. */}
+      <header className="bg-hero px-8 py-6 text-hero-foreground">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex min-w-0 items-start gap-4">
+            <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-hero-foreground/10 font-display text-xl font-bold text-hero-foreground">
+              {set.number}
+            </span>
+            <div className="min-w-0">
               <EditableText
-                value={roleNameText}
+                as="h2"
+                value={titleText}
                 canEdit={canEdit}
-                maxLength={LIMITS.roleName}
-                onSave={(v) => updateSet({ role_name: v })}
-                className="font-medium text-foreground"
-                placeholder="Name"
+                maxLength={LIMITS.title}
+                onSave={(v) => updateSet({ title: v })}
+                className="font-display text-2xl font-bold leading-tight text-hero-foreground"
+                placeholder="Untitled OKR"
               />
-              <span className="ml-1 text-muted-foreground">{t("okr.customer")}</span>
-              <EditableText
-                value={customerText}
-                canEdit={canEdit}
-                maxLength={LIMITS.customer}
-                onSave={(v) => updateSet({ customer: v })}
-                className="font-medium text-foreground"
-                placeholder="Customer"
-              />
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-hero-foreground/75">
+                <RoleLabelSelect
+                  value={set.role_label}
+                  canEdit={canEdit}
+                  onChange={(v) => updateSet({ role_label: v })}
+                />
+                <EditableText
+                  value={roleNameText}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.roleName}
+                  onSave={(v) => updateSet({ role_name: v })}
+                  className="font-medium text-hero-foreground"
+                  placeholder="Name"
+                />
+                <span aria-hidden className="text-hero-foreground/40">
+                  ·
+                </span>
+                <span className="text-hero-foreground/70">{t("okr.customer")}</span>
+                <EditableText
+                  value={customerText}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.customer}
+                  onSave={(v) => updateSet({ customer: v })}
+                  className="font-medium text-hero-foreground"
+                  placeholder="Customer"
+                />
+              </div>
             </div>
           </div>
+          {canEdit && (
+            <>
+              <button
+                type="button"
+                aria-label={t("okr.delete")}
+                onClick={() => setConfirmDeleteOpen(true)}
+                className="rounded-md p-1 text-hero-foreground/60 transition-colors hover:bg-hero-foreground/10 hover:text-hero-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      {`${t("okr.deleteConfirm")}: ${set.number}. ${titleText || "Untitled"}`}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>{t("okr.deleteConfirmBody")}</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      onClick={() => m.deleteSet.mutate({ id: set.id })}
+                    >
+                      {t("okr.delete")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
         </div>
-        {canEdit && (
-          <>
-            <button
-              type="button"
-              aria-label={t("okr.delete")}
-              onClick={() => setConfirmDeleteOpen(true)}
-              className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    {`${t("okr.deleteConfirm")}: ${set.number}. ${titleText || "Untitled"}`}
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>{t("okr.deleteConfirmBody")}</AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    onClick={() => m.deleteSet.mutate({ id: set.id })}
-                  >
-                    {t("okr.delete")}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </>
-        )}
+
+        <PillarTagList
+          pillars={set.pillars}
+          canEdit={canEdit}
+          onChange={(next) => updateSet({ pillars: next })}
+        />
       </header>
 
-      <PillarTagList
-        pillars={set.pillars}
-        canEdit={canEdit}
-        onChange={(next) => updateSet({ pillars: next })}
-      />
+      <div className="px-8 pb-8 pt-6">
+
 
       <section className="mt-6 rounded-2xl border border-border/70 bg-muted/40 p-5">
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
