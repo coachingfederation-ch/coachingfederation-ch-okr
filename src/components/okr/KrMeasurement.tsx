@@ -17,10 +17,16 @@ import {
 export function KrMeasurement({
   kr,
   showContext = true,
+  variant = "full",
 }: {
   kr: KeyResultDTO;
   /** Render the measure / instrument context lines above the values. */
   showContext?: boolean;
+  /**
+   * "compact" is the card view: a single progress signal only. All numbers,
+   * context lines and dates live in the key result detail sheet.
+   */
+  variant?: "full" | "compact";
 }) {
   const { locale, t } = useLocale();
   const measure = pickTranslation(kr, "measure", kr.measure, locale);
@@ -28,7 +34,7 @@ export function KrMeasurement({
   const stale = isValueStale(kr.current_as_of);
   const progress = computeKrProgress(kr.baseline_2026, kr.current_value, kr.target_2027);
 
-  const context = showContext && (measure || instrument) ? (
+  const context = showContext && variant === "full" && (measure || instrument) ? (
     <div className="mt-2 space-y-0.5 text-[11px] leading-relaxed text-muted-foreground">
       {measure && <p className="line-clamp-2">{measure}</p>}
       {instrument && (
@@ -38,6 +44,52 @@ export function KrMeasurement({
       )}
     </div>
   ) : null;
+
+  if (variant === "compact") {
+    const needsAttention = kr.kr_type === "metric" && (stale || !kr.baseline_2026.trim());
+    return (
+      <div className="flex items-center gap-2">
+        {kr.kr_type === "milestone" ? (
+          <span className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-[11px] font-semibold text-secondary-foreground">
+            {t(`kr.milestone.${kr.milestone_status}` as const)}
+          </span>
+        ) : progress !== null ? (
+          <>
+            <div
+              className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-secondary"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(progress * 100)}
+              aria-label={t("kr.progress")}
+            >
+              <div
+                className="h-full rounded-full bg-primary"
+                style={{ width: `${progress * 100}%` }}
+              />
+            </div>
+            <span className="shrink-0 text-[11px] font-semibold tabular-nums text-foreground">
+              {Math.round(progress * 100)}%
+            </span>
+          </>
+        ) : (
+          <span className="text-[11px] italic text-muted-foreground">{t("kr.notMeasurable")}</span>
+        )}
+        {kr.kr_type === "milestone" && kr.milestone_due && (
+          <span className="text-[11px] text-muted-foreground">
+            {formatSwissDate(kr.milestone_due)}
+          </span>
+        )}
+        {needsAttention && (
+          <span
+            aria-label={stale ? t("kr.stale") : t("kr.baselinePending")}
+            title={stale ? t("kr.stale") : t("kr.baselinePending")}
+            className="ml-auto h-2 w-2 shrink-0 rounded-full bg-warning"
+          />
+        )}
+      </div>
+    );
+  }
 
   if (kr.kr_type === "milestone") {
     return (
@@ -56,6 +108,7 @@ export function KrMeasurement({
       </div>
     );
   }
+
 
   return (
     <div>

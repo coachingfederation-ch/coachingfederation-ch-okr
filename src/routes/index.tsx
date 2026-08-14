@@ -555,163 +555,180 @@ function OkrCard({
   const alignmentText = pickTranslation(set, "alignment", set.alignment, locale);
 
   return (
-    <article className="rounded-3xl border border-border/70 bg-card p-8 shadow-soft">
-      <header className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4">
-          <span className="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
-            {set.number}
-          </span>
-          <div>
-            <EditableText
-              as="h2"
-              value={titleText}
-              canEdit={canEdit}
-              maxLength={LIMITS.title}
-              onSave={(v) => updateSet({ title: v })}
-              className="text-2xl font-bold text-foreground"
-              placeholder="Untitled OKR"
-            />
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-              <RoleLabelSelect
-                value={set.role_label}
-                canEdit={canEdit}
-                onChange={(v) => updateSet({ role_label: v })}
-              />
-              <span className="text-muted-foreground/60">:</span>
+    <article className="overflow-hidden rounded-3xl border border-border/70 bg-card shadow-soft">
+      {/* Deep-blue identity band: the objective's number and title own the top
+          of the card so every key result below reads as a child of it. */}
+      <header className="bg-hero px-8 py-6 text-hero-foreground">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex min-w-0 items-start gap-4">
+            <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-hero-foreground/10 font-display text-xl font-bold text-hero-foreground">
+              {set.number}
+            </span>
+            <div className="min-w-0">
               <EditableText
-                value={roleNameText}
+                as="h2"
+                value={titleText}
                 canEdit={canEdit}
-                maxLength={LIMITS.roleName}
-                onSave={(v) => updateSet({ role_name: v })}
-                className="font-medium text-foreground"
-                placeholder="Name"
+                maxLength={LIMITS.title}
+                onSave={(v) => updateSet({ title: v })}
+                className="font-display text-2xl font-bold leading-tight text-hero-foreground"
+                placeholder="Untitled OKR"
               />
-              <span className="ml-1 text-muted-foreground">{t("okr.customer")}</span>
-              <EditableText
-                value={customerText}
-                canEdit={canEdit}
-                maxLength={LIMITS.customer}
-                onSave={(v) => updateSet({ customer: v })}
-                className="font-medium text-foreground"
-                placeholder="Customer"
-              />
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-hero-foreground/75">
+                <RoleLabelSelect
+                  value={set.role_label}
+                  canEdit={canEdit}
+                  onChange={(v) => updateSet({ role_label: v })}
+                />
+                <EditableText
+                  value={roleNameText}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.roleName}
+                  onSave={(v) => updateSet({ role_name: v })}
+                  className="font-medium text-hero-foreground"
+                  placeholder="Name"
+                />
+                <span aria-hidden className="text-hero-foreground/40">
+                  ·
+                </span>
+                <span className="text-hero-foreground/70">{t("okr.customer")}</span>
+                <EditableText
+                  value={customerText}
+                  canEdit={canEdit}
+                  maxLength={LIMITS.customer}
+                  onSave={(v) => updateSet({ customer: v })}
+                  className="font-medium text-hero-foreground"
+                  placeholder="Customer"
+                />
+              </div>
             </div>
           </div>
+          {canEdit && (
+            <>
+              <button
+                type="button"
+                aria-label={t("okr.delete")}
+                onClick={() => setConfirmDeleteOpen(true)}
+                className="rounded-md p-1 text-hero-foreground/60 transition-colors hover:bg-hero-foreground/10 hover:text-hero-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      {`${t("okr.deleteConfirm")}: ${set.number}. ${titleText || "Untitled"}`}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>{t("okr.deleteConfirmBody")}</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      onClick={() => m.deleteSet.mutate({ id: set.id })}
+                    >
+                      {t("okr.delete")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
         </div>
-        {canEdit && (
-          <>
-            <button
-              type="button"
-              aria-label={t("okr.delete")}
-              onClick={() => setConfirmDeleteOpen(true)}
-              className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    {`${t("okr.deleteConfirm")}: ${set.number}. ${titleText || "Untitled"}`}
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>{t("okr.deleteConfirmBody")}</AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    onClick={() => m.deleteSet.mutate({ id: set.id })}
-                  >
-                    {t("okr.delete")}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </>
-        )}
+
+        <PillarTagList
+          pillars={set.pillars}
+          canEdit={canEdit}
+          onChange={(next) => updateSet({ pillars: next })}
+        />
       </header>
 
-      <PillarTagList
-        pillars={set.pillars}
-        canEdit={canEdit}
-        onChange={(next) => updateSet({ pillars: next })}
-      />
-
-      <section className="mt-6 rounded-2xl border border-border/70 bg-muted/40 p-5">
-        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <div className="eyebrow">{t("section.objective")}</div>
-          {canEdit && (
-            <button
-              type="button"
-              onClick={() =>
-                setAssistant({
-                  mode: "objective",
-                  contextLabel: `${t("assistant.ctx.set")} ${set.number}`,
-                })
-              }
-              className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
-            >
-              {t("assistant.cta.create")}
-            </button>
-          )}
-        </div>
-        <EditableText
-          as="p"
-          multiline
-          value={objectiveText}
-          canEdit={canEdit}
-          maxLength={LIMITS.objective}
-          onSave={(v) => updateSet({ objective: v })}
-          className="text-[15px] font-semibold leading-relaxed text-foreground"
-          placeholder="What outcome should this OKR create?"
-        />
-      </section>
-
-      <section className="mt-6">
-        <SectionLabel>{t("section.globalAlignment")}</SectionLabel>
-        <EditableText
-          as="p"
-          multiline
-          value={alignmentText}
-          canEdit={canEdit}
-          maxLength={LIMITS.alignment}
-          onSave={(v) => updateSet({ alignment: v })}
-          className="text-sm leading-relaxed text-muted-foreground"
-          placeholder="How does this connect to the ICF Global focus areas?"
-        />
-      </section>
-
-      <section className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
-          <SectionLabel>{t("section.keyResults")}</SectionLabel>
-          {canEdit && (
-            <button
-              type="button"
-              onClick={() => m.addKr.mutate({ okr_set_id: set.id })}
-              disabled={m.addKr.isPending}
-              className="btn-mono inline-flex items-center gap-1 text-primary hover:underline disabled:opacity-50"
-            >
-              {t("okr.addKeyResult")}
-            </button>
-          )}
-        </div>
-        {set.key_results.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-border/70 bg-muted/30 p-4 text-sm italic text-muted-foreground">
-            {t("okr.noKeyResults")}
-          </p>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {set.key_results.map((r) => (
-              <KrCard
-                key={r.id}
-                kr={r}
-                onOpen={() => setOpenKrId(r.id)}
-                secondaryCount={(secondaryByKr.get(r.id) ?? []).length}
-              />
-            ))}
+      <div className="px-8 pb-8 pt-6">
+        {/* The objective statement is the card's headline — no surrounding box
+            competes with it. */}
+        <section>
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <div className="eyebrow">{t("section.objective")}</div>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() =>
+                  setAssistant({
+                    mode: "objective",
+                    contextLabel: `${t("assistant.ctx.set")} ${set.number}`,
+                  })
+                }
+                className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+              >
+                {t("assistant.cta.create")}
+              </button>
+            )}
           </div>
-        )}
-      </section>
+          <EditableText
+            as="p"
+            multiline
+            value={objectiveText}
+            canEdit={canEdit}
+            maxLength={LIMITS.objective}
+            onSave={(v) => updateSet({ objective: v })}
+            className="font-display text-lg font-semibold leading-snug text-foreground"
+            placeholder="What outcome should this OKR create?"
+          />
+        </section>
+
+        {/* Supporting context, collapsed by default so it never competes with
+            the objective or the key results. */}
+        <details className="group mt-5 border-t border-border/60 pt-3">
+          <summary className="section-label flex cursor-pointer list-none items-center gap-1.5 text-muted-foreground hover:text-primary">
+            <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
+            {t("section.globalAlignment")}
+          </summary>
+          <EditableText
+            as="p"
+            multiline
+            value={alignmentText}
+            canEdit={canEdit}
+            maxLength={LIMITS.alignment}
+            onSave={(v) => updateSet({ alignment: v })}
+            className="mt-2 text-sm leading-relaxed text-muted-foreground"
+            placeholder="How does this connect to the ICF Global focus areas?"
+          />
+        </details>
+
+        {/* Key results are nested inside a warm inset with a blue rail so the
+            objective → key result hierarchy is visible at a glance. */}
+        <section className="mt-6 rounded-2xl border-l-4 border-l-primary bg-surface py-4 pl-5 pr-4">
+          <div className="mb-3 flex items-center justify-between">
+            <SectionLabel>{t("section.keyResults")}</SectionLabel>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() => m.addKr.mutate({ okr_set_id: set.id })}
+                disabled={m.addKr.isPending}
+                className="btn-mono inline-flex items-center gap-1 text-primary hover:underline disabled:opacity-50"
+              >
+                {t("okr.addKeyResult")}
+              </button>
+            )}
+          </div>
+          {set.key_results.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-border/70 bg-card/50 p-4 text-sm italic text-muted-foreground">
+              {t("okr.noKeyResults")}
+            </p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {set.key_results.map((r) => (
+                <KrCard
+                  key={r.id}
+                  kr={r}
+                  onOpen={() => setOpenKrId(r.id)}
+                  secondaryCount={(secondaryByKr.get(r.id) ?? []).length}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
 
       <KrDetailSheet
         kr={openKr}
@@ -730,6 +747,7 @@ function OkrCard({
 
       <AssistantDrawer context={assistant} onClose={() => setAssistant(null)} />
     </article>
+
   );
 }
 
@@ -745,39 +763,30 @@ function KrCard({
   const { locale, t } = useLocale();
   const count = kr.initiatives.length + secondaryCount;
   const text = pickTranslation(kr, "text", kr.text, locale);
-  const lead = pickTranslation(kr, "lead", kr.lead, locale);
   return (
-    <div className="group relative flex h-full flex-col rounded-2xl border border-border/70 bg-card p-4 text-left shadow-soft transition-all hover:border-primary/40 hover:shadow-md has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
+    <div className="group relative flex h-full flex-col rounded-xl border border-border/70 bg-card p-4 text-left shadow-soft transition-all hover:border-primary/40 hover:shadow-md has-[:focus-visible]:border-primary/40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
       <button
         type="button"
         onClick={onOpen}
         aria-label={`${t("kr.openDetails")} ${kr.kr || ""}: ${text || t("kr.noDescription")}`}
-        className="absolute inset-0 z-10 rounded-2xl focus:outline-none"
+        className="absolute inset-0 z-10 rounded-xl focus:outline-none"
       />
       <div className="flex items-center justify-between gap-2">
-        <span className="inline-flex h-6 items-center rounded-md bg-primary/10 px-2 text-[11px] font-bold text-primary">
+        <span className="inline-flex h-6 items-center rounded-md bg-primary px-2 text-[11px] font-bold text-primary-foreground">
           KR {kr.kr || "—"}
         </span>
         <span className="text-[11px] font-medium text-muted-foreground">
           {count} {count === 1 ? t("kr.count.one") : t("kr.count.other")}
         </span>
       </div>
-      <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-foreground">
+      <p className="mt-3 line-clamp-2 text-sm font-medium leading-relaxed text-foreground">
         {text || <span className="italic text-muted-foreground">{t("kr.noDescription")}</span>}
       </p>
-      <KrMeasurement kr={kr} />
-      <dl className="mt-3 flex gap-3 text-xs">
-        <dt className="w-28 shrink-0 uppercase tracking-wider text-muted-foreground/80">
-          {t("kr.lead")}
-        </dt>
-        <dd className="min-w-0 flex-1 truncate text-muted-foreground">
-          {lead || <span className="italic">—</span>}
-        </dd>
-      </dl>
+      {/* One progress signal only — numbers, context and dates live in the sheet. */}
+      <div className="mt-auto pt-4">
+        <KrMeasurement kr={kr} variant="compact" />
+      </div>
 
-      <span className="mt-3 inline-flex text-[11px] font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-        {t("kr.openDetails")}
-      </span>
     </div>
   );
 }
