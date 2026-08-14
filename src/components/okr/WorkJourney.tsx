@@ -36,13 +36,14 @@ import {
   SIZE_KEY,
 } from "@/components/okr/work-meta";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -418,678 +419,743 @@ export function WorkJourney({
 
   return (
     <>
-      <Sheet open={open} onOpenChange={requestClose}>
-        <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-xl">
-          <SheetHeader className="border-b px-6 pt-6 pb-4">
-            <p className="eyebrow text-primary">
-              {t("journey.step")} {index + 1} {t("journey.of")} {steps.length}
-            </p>
-            <SheetTitle>{t(STEP_TITLE[step])}</SheetTitle>
-            <SheetDescription>{t(STEP_HELP[step])}</SheetDescription>
-            <ol className="mt-3 flex flex-wrap gap-1.5" aria-label={t("journey.title")}>
-              {steps.map((s, i) => (
-                <li key={s}>
-                  <button
-                    type="button"
-                    onClick={() => i <= index && setIndex(i)}
-                    disabled={i > index}
-                    aria-current={i === index ? "step" : undefined}
-                    className={cn(
-                      "h-1.5 w-8 rounded-full transition-colors",
-                      i === index ? "bg-primary" : i < index ? "bg-highlight" : "bg-border",
-                    )}
-                  >
-                    <span className="sr-only">{t(STEP_TITLE[s])}</span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </SheetHeader>
-
-          <div className="min-w-0 flex-1 overflow-y-auto px-6 py-5">
-            {step === "kind" && (
-              <div className="grid gap-3">
-                {INITIATIVE_KINDS.map((k) => {
-                  const active = state.kind === k;
+      <Dialog open={open} onOpenChange={requestClose}>
+        <DialogContent className="flex max-h-[85vh] w-[min(100vw-2rem,64rem)] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none">
+          <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+            {/* Named step rail on desktop; the compact dot row stays for narrow screens. */}
+            <aside className="hidden shrink-0 border-r border-border/70 bg-muted/30 px-3 py-6 md:block md:w-60">
+              <p className="eyebrow px-2 text-primary">{t("journey.title")}</p>
+              <ol className="mt-3 flex flex-col gap-1" aria-label={t("journey.title")}>
+                {steps.map((s, i) => {
+                  const done = i < index;
+                  const current = i === index;
                   return (
-                    <button
-                      key={k}
-                      type="button"
-                      onClick={() => patch({ kind: k })}
-                      className={cn(
-                        "rounded-2xl border p-4 text-left transition-colors",
-                        active
-                          ? "border-primary bg-primary/5 shadow-soft"
-                          : "border-border/70 bg-card hover:border-primary/40",
-                      )}
-                    >
-                      <span className="flex items-center gap-2 font-display text-base font-bold text-foreground">
-                        {t(KIND_KEY[k])}
-                        {active && <Check className="h-4 w-4 text-primary" aria-hidden />}
-                      </span>
-                      <span className="mt-1 block text-sm text-muted-foreground">
-                        {t(KIND_DESC_KEY[k])}
-                      </span>
-                    </button>
+                    <li key={s}>
+                      <button
+                        type="button"
+                        onClick={() => i <= index && setIndex(i)}
+                        disabled={i > index}
+                        aria-current={current ? "step" : undefined}
+                        className={cn(
+                          "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-sm transition-colors",
+                          current
+                            ? "bg-card font-semibold text-primary shadow-soft"
+                            : done
+                              ? "text-foreground hover:bg-card/70"
+                              : "text-muted-foreground",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold",
+                            current
+                              ? "bg-primary text-primary-foreground"
+                              : done
+                                ? "bg-highlight text-foreground"
+                                : "bg-border text-muted-foreground",
+                          )}
+                          aria-hidden
+                        >
+                          {done ? <Check className="h-3 w-3" /> : i + 1}
+                        </span>
+                        <span className="min-w-0 flex-1 leading-snug">{t(STEP_TITLE[s])}</span>
+                      </button>
+                    </li>
                   );
                 })}
-              </div>
-            )}
+              </ol>
+            </aside>
 
-            {step === "context" && (
-              <div className="grid gap-4">
-                <Field label={t("initiatives.form.kr")} htmlFor="wj-kr">
-                  <Select value={state.kr_id} onValueChange={(v) => patch({ kr_id: v })}>
-                    <SelectTrigger id="wj-kr" className="w-full min-w-0">
-                      <SelectValue
-                        placeholder={t("initiatives.form.selectKr")}
-                        className="truncate"
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {grouped.map((g) => (
-                        <SelectGroup key={g.groupLabel}>
-                          <SelectLabel>{g.groupLabel}</SelectLabel>
-                          {g.items.map((opt) => (
-                            <SelectItem key={opt.id} value={opt.id}>
-                              KR {opt.label}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+              <DialogHeader className="border-b px-6 pt-6 pb-4 text-left">
+                <p className="eyebrow text-primary">
+                  {t("journey.step")} {index + 1} {t("journey.of")} {steps.length}
+                </p>
+                <DialogTitle>{t(STEP_TITLE[step])}</DialogTitle>
+                <DialogDescription>{t(STEP_HELP[step])}</DialogDescription>
+                <ol
+                  className="mt-3 flex flex-wrap gap-1.5 md:hidden"
+                  aria-label={t("journey.title")}
+                >
+                  {steps.map((s, i) => (
+                    <li key={s}>
+                      <button
+                        type="button"
+                        onClick={() => i <= index && setIndex(i)}
+                        disabled={i > index}
+                        aria-current={i === index ? "step" : undefined}
+                        className={cn(
+                          "h-1.5 w-8 rounded-full transition-colors",
+                          i === index ? "bg-primary" : i < index ? "bg-highlight" : "bg-border",
+                        )}
+                      >
+                        <span className="sr-only">{t(STEP_TITLE[s])}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </DialogHeader>
 
-                <div className="grid gap-1.5">
-                  <Label>{t("journey.secondaryKrs")}</Label>
-                  <p className="text-xs text-muted-foreground">{t("journey.secondaryKrsHelp")}</p>
-                  <div className="max-h-52 overflow-y-auto rounded-xl border border-border/70 bg-card p-2">
-                    {krOptions
-                      .filter((k) => k.id !== state.kr_id)
-                      .map((k) => {
-                        const checked = state.secondary_kr_ids.includes(k.id);
-                        return (
-                          <label
-                            key={k.id}
-                            className="flex cursor-pointer items-start gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-muted/60"
-                          >
-                            <input
-                              type="checkbox"
-                              className="mt-1 accent-[var(--color-primary)]"
-                              checked={checked}
-                              onChange={(e) =>
-                                patch({
-                                  secondary_kr_ids: e.target.checked
-                                    ? [...state.secondary_kr_ids, k.id]
-                                    : state.secondary_kr_ids.filter((id) => id !== k.id),
-                                })
-                              }
-                            />
-                            <span className="min-w-0">KR {k.label}</span>
-                          </label>
-                        );
-                      })}
+              <div className="min-w-0 flex-1 overflow-y-auto px-6 py-5">
+                {step === "kind" && (
+                  <div className="grid gap-3">
+                    {INITIATIVE_KINDS.map((k) => {
+                      const active = state.kind === k;
+                      return (
+                        <button
+                          key={k}
+                          type="button"
+                          onClick={() => patch({ kind: k })}
+                          className={cn(
+                            "rounded-2xl border p-4 text-left transition-colors",
+                            active
+                              ? "border-primary bg-primary/5 shadow-soft"
+                              : "border-border/70 bg-card hover:border-primary/40",
+                          )}
+                        >
+                          <span className="flex items-center gap-2 font-display text-base font-bold text-foreground">
+                            {t(KIND_KEY[k])}
+                            {active && <Check className="h-4 w-4 text-primary" aria-hidden />}
+                          </span>
+                          <span className="mt-1 block text-sm text-muted-foreground">
+                            {t(KIND_DESC_KEY[k])}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
-                </div>
+                )}
 
-                <Field label={t("work.form.team")} htmlFor="wj-team">
-                  <Select
-                    value={state.team_id || "none"}
-                    onValueChange={(v) => patch({ team_id: v === "none" ? "" : v })}
-                  >
-                    <SelectTrigger id="wj-team" className="w-full min-w-0">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">{t("work.form.unassigned")}</SelectItem>
-                      {dashboard.teams.map((team) => (
-                        <SelectItem key={team.id} value={team.id}>
-                          {pickTranslation(team, "name", team.name, locale) || team.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
-              </div>
-            )}
+                {step === "context" && (
+                  <div className="grid gap-4">
+                    <Field label={t("initiatives.form.kr")} htmlFor="wj-kr">
+                      <Select value={state.kr_id} onValueChange={(v) => patch({ kr_id: v })}>
+                        <SelectTrigger id="wj-kr" className="w-full min-w-0">
+                          <SelectValue
+                            placeholder={t("initiatives.form.selectKr")}
+                            className="truncate"
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {grouped.map((g) => (
+                            <SelectGroup key={g.groupLabel}>
+                              <SelectLabel>{g.groupLabel}</SelectLabel>
+                              {g.items.map((opt) => (
+                                <SelectItem key={opt.id} value={opt.id}>
+                                  KR {opt.label}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </Field>
 
-            {step === "work" && (
-              <div className="grid gap-4">
-                <Field label={t("initiatives.form.title")} htmlFor="wj-title">
-                  <Textarea
-                    id="wj-title"
-                    rows={2}
-                    value={state.text}
-                    maxLength={LIMITS.initiative}
-                    onChange={(e) => patch({ text: e.target.value.slice(0, LIMITS.initiative) })}
-                    placeholder={t("initiatives.form.titlePlaceholder")}
-                    autoFocus
-                  />
-                </Field>
+                    <div className="grid gap-1.5">
+                      <Label>{t("journey.secondaryKrs")}</Label>
+                      <p className="text-xs text-muted-foreground">
+                        {t("journey.secondaryKrsHelp")}
+                      </p>
+                      <div className="max-h-52 overflow-y-auto rounded-xl border border-border/70 bg-card p-2">
+                        {krOptions
+                          .filter((k) => k.id !== state.kr_id)
+                          .map((k) => {
+                            const checked = state.secondary_kr_ids.includes(k.id);
+                            return (
+                              <label
+                                key={k.id}
+                                className="flex cursor-pointer items-start gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-muted/60"
+                              >
+                                <input
+                                  type="checkbox"
+                                  className="mt-1 accent-[var(--color-primary)]"
+                                  checked={checked}
+                                  onChange={(e) =>
+                                    patch({
+                                      secondary_kr_ids: e.target.checked
+                                        ? [...state.secondary_kr_ids, k.id]
+                                        : state.secondary_kr_ids.filter((id) => id !== k.id),
+                                    })
+                                  }
+                                />
+                                <span className="min-w-0">KR {k.label}</span>
+                              </label>
+                            );
+                          })}
+                      </div>
+                    </div>
 
-                {state.kind === "candidate" ? (
-                  <>
-                    <Field label={t("work.idea")} htmlFor="wj-idea">
-                      <Textarea
-                        id="wj-idea"
-                        rows={4}
-                        value={state.idea}
-                        maxLength={LIMITS.idea}
-                        onChange={(e) => patch({ idea: e.target.value.slice(0, LIMITS.idea) })}
-                      />
-                    </Field>
-                    <Field label={t("work.whyNow")} htmlFor="wj-why">
-                      <Textarea
-                        id="wj-why"
-                        rows={3}
-                        value={state.why_now}
-                        maxLength={LIMITS.whyNow}
-                        onChange={(e) => patch({ why_now: e.target.value.slice(0, LIMITS.whyNow) })}
-                      />
-                    </Field>
-                    <Field label={t("work.proposedOwner")} htmlFor="wj-proposed">
-                      <Input
-                        id="wj-proposed"
-                        value={state.proposed_owner}
-                        maxLength={LIMITS.proposedOwner}
-                        onChange={(e) => patch({ proposed_owner: e.target.value })}
-                      />
-                    </Field>
-                    <Field label={t("work.size")} htmlFor="wj-size">
+                    <Field label={t("work.form.team")} htmlFor="wj-team">
                       <Select
-                        value={state.size ?? "none"}
-                        onValueChange={(v) =>
-                          patch({ size: v === "none" ? null : (v as WorkSize) })
-                        }
+                        value={state.team_id || "none"}
+                        onValueChange={(v) => patch({ team_id: v === "none" ? "" : v })}
                       >
-                        <SelectTrigger id="wj-size" className="w-full">
+                        <SelectTrigger id="wj-team" className="w-full min-w-0">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="none">{t("tag.none")}</SelectItem>
-                          {WORK_SIZES.map((s) => (
-                            <SelectItem key={s} value={s}>
-                              {t(SIZE_KEY[s])}
+                          <SelectItem value="none">{t("work.form.unassigned")}</SelectItem>
+                          {dashboard.teams.map((team) => (
+                            <SelectItem key={team.id} value={team.id}>
+                              {pickTranslation(team, "name", team.name, locale) || team.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </Field>
-                  </>
-                ) : (
-                  <>
-                    <Field label={t("initiatives.form.description")} htmlFor="wj-desc">
+                  </div>
+                )}
+
+                {step === "work" && (
+                  <div className="grid gap-4">
+                    <Field label={t("initiatives.form.title")} htmlFor="wj-title">
                       <Textarea
-                        id="wj-desc"
-                        rows={4}
-                        value={state.description}
-                        maxLength={LIMITS.initiativeDescription}
+                        id="wj-title"
+                        rows={2}
+                        value={state.text}
+                        maxLength={LIMITS.initiative}
                         onChange={(e) =>
-                          patch({
-                            description: e.target.value.slice(0, LIMITS.initiativeDescription),
-                          })
+                          patch({ text: e.target.value.slice(0, LIMITS.initiative) })
                         }
-                        placeholder={t("initiatives.form.descriptionPlaceholder")}
+                        placeholder={t("initiatives.form.titlePlaceholder")}
+                        autoFocus
                       />
                     </Field>
-                    <Field label={t("initiatives.form.owner")} htmlFor="wj-owner">
-                      <Input
-                        id="wj-owner"
-                        value={state.owner}
-                        maxLength={LIMITS.initiativeOwner}
-                        onChange={(e) => patch({ owner: e.target.value })}
-                        placeholder={t("initiatives.form.ownerPlaceholder")}
-                      />
-                    </Field>
-                    {state.kind === "initiative" && (
-                      <Field label={t("work.lead")} htmlFor="wj-lead">
-                        <Input
-                          id="wj-lead"
-                          value={state.lead_name}
-                          maxLength={LIMITS.leadName}
-                          onChange={(e) => patch({ lead_name: e.target.value })}
-                        />
-                      </Field>
-                    )}
-                    <Field label={t("initiatives.form.status")} htmlFor="wj-status">
-                      <Select
-                        value={state.status}
-                        onValueChange={(v) => patch({ status: v as InitiativeStatus })}
-                      >
-                        <SelectTrigger id="wj-status" className="w-full">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {INITIATIVE_STATUSES.map((s) => (
-                            <SelectItem key={s} value={s}>
-                              {t(STATUS_KEY[s])}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                    {state.kind === "simple_task" && <DateRange state={state} patch={patch} />}
-                  </>
-                )}
-              </div>
-            )}
 
-            {step === "aspiration" && (
-              <div className="grid gap-4">
-                <Field label={t("work.aspiration")} htmlFor="wj-aspiration">
-                  <Textarea
-                    id="wj-aspiration"
-                    rows={4}
-                    value={state.aspiration}
-                    maxLength={LIMITS.aspiration}
-                    onChange={(e) =>
-                      patch({ aspiration: e.target.value.slice(0, LIMITS.aspiration) })
-                    }
-                  />
-                </Field>
-                <DateRange state={state} patch={patch} />
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <Field label={t("work.phaseNumber")} htmlFor="wj-phase">
-                    <Input
-                      id="wj-phase"
-                      type="number"
-                      min={1}
-                      max={20}
-                      value={state.phase}
-                      onChange={(e) => patch({ phase: Number(e.target.value) || 1 })}
-                    />
-                  </Field>
-                  <Field label={t("work.phaseType")} htmlFor="wj-phase-type">
-                    <Select
-                      value={state.phase_type ?? "none"}
-                      onValueChange={(v) =>
-                        patch({ phase_type: v === "none" ? null : (v as PhaseType) })
-                      }
-                    >
-                      <SelectTrigger id="wj-phase-type" className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">{t("tag.none")}</SelectItem>
-                        {PHASE_TYPES.map((p) => (
-                          <SelectItem key={p} value={p}>
-                            {t(PHASE_TYPE_KEY[p])}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </Field>
-                </div>
-                <Field label={t("work.learningCheckpoint")} htmlFor="wj-checkpoint">
-                  <Input
-                    id="wj-checkpoint"
-                    type="date"
-                    value={state.learning_checkpoint}
-                    onChange={(e) => patch({ learning_checkpoint: e.target.value })}
-                  />
-                </Field>
-              </div>
-            )}
-
-            {step === "bet" && (
-              <div className="grid gap-4">
-                <Field label={t("work.betAction")} htmlFor="wj-bet-action">
-                  <Textarea
-                    id="wj-bet-action"
-                    rows={2}
-                    value={state.bet_action}
-                    maxLength={LIMITS.betPart}
-                    onChange={(e) => patch({ bet_action: e.target.value.slice(0, LIMITS.betPart) })}
-                  />
-                </Field>
-                <Field label={t("work.betChange")} htmlFor="wj-bet-change">
-                  <Textarea
-                    id="wj-bet-change"
-                    rows={2}
-                    value={state.bet_change}
-                    maxLength={LIMITS.betPart}
-                    onChange={(e) => patch({ bet_change: e.target.value.slice(0, LIMITS.betPart) })}
-                  />
-                </Field>
-                <Field label={t("work.betQuestion")} htmlFor="wj-bet-question">
-                  <Textarea
-                    id="wj-bet-question"
-                    rows={2}
-                    value={state.bet_question}
-                    maxLength={LIMITS.betPart}
-                    onChange={(e) =>
-                      patch({ bet_question: e.target.value.slice(0, LIMITS.betPart) })
-                    }
-                  />
-                </Field>
-                <Field label={t("work.confidence")} htmlFor="wj-confidence">
-                  <Select
-                    value={state.confidence ?? "none"}
-                    onValueChange={(v) =>
-                      patch({ confidence: v === "none" ? null : (v as BetConfidence) })
-                    }
-                  >
-                    <SelectTrigger id="wj-confidence" className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">{t("tag.none")}</SelectItem>
-                      {BET_CONFIDENCES.map((c) => (
-                        <SelectItem key={c} value={c}>
-                          {t(CONFIDENCE_KEY[c])}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
-              </div>
-            )}
-
-            {step === "signals" && (
-              <div className="grid gap-4">
-                {state.signals.length === 0 && (
-                  <p className="text-sm text-muted-foreground">{t("work.noSignals")}</p>
-                )}
-                {state.signals.map((sig, i) => (
-                  <div
-                    key={i}
-                    className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4"
-                  >
-                    <div className="flex items-start gap-2">
-                      <div className="min-w-0 flex-1">
-                        <Field label={t("work.signal.name")} htmlFor={`wj-sig-${i}`}>
-                          <Input
-                            id={`wj-sig-${i}`}
-                            value={sig.name}
-                            maxLength={LIMITS.signalName}
+                    {state.kind === "candidate" ? (
+                      <>
+                        <Field label={t("work.idea")} htmlFor="wj-idea">
+                          <Textarea
+                            id="wj-idea"
+                            rows={4}
+                            value={state.idea}
+                            maxLength={LIMITS.idea}
+                            onChange={(e) => patch({ idea: e.target.value.slice(0, LIMITS.idea) })}
+                          />
+                        </Field>
+                        <Field label={t("work.whyNow")} htmlFor="wj-why">
+                          <Textarea
+                            id="wj-why"
+                            rows={3}
+                            value={state.why_now}
+                            maxLength={LIMITS.whyNow}
                             onChange={(e) =>
-                              patch({
-                                signals: state.signals.map((s, j) =>
-                                  j === i ? { ...s, name: e.target.value } : s,
-                                ),
-                              })
+                              patch({ why_now: e.target.value.slice(0, LIMITS.whyNow) })
                             }
                           />
                         </Field>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="mt-6"
-                        aria-label={t("work.deleteEntry")}
-                        onClick={() => patch({ signals: state.signals.filter((_, j) => j !== i) })}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <Field label={t("work.signal.evidence")} htmlFor={`wj-sig-ev-${i}`}>
-                        <Select
-                          value={sig.evidence}
-                          onValueChange={(v) =>
-                            patch({
-                              signals: state.signals.map((s, j) =>
-                                j === i ? { ...s, evidence: v as EvidenceType } : s,
-                              ),
-                            })
-                          }
-                        >
-                          <SelectTrigger id={`wj-sig-ev-${i}`} className="w-full">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {EVIDENCE_TYPES.map((e) => (
-                              <SelectItem key={e} value={e}>
-                                {t(EVIDENCE_KEY[e])}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <Field label={t("work.proposedOwner")} htmlFor="wj-proposed">
+                          <Input
+                            id="wj-proposed"
+                            value={state.proposed_owner}
+                            maxLength={LIMITS.proposedOwner}
+                            onChange={(e) => patch({ proposed_owner: e.target.value })}
+                          />
+                        </Field>
+                        <Field label={t("work.size")} htmlFor="wj-size">
+                          <Select
+                            value={state.size ?? "none"}
+                            onValueChange={(v) =>
+                              patch({ size: v === "none" ? null : (v as WorkSize) })
+                            }
+                          >
+                            <SelectTrigger id="wj-size" className="w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">{t("tag.none")}</SelectItem>
+                              {WORK_SIZES.map((s) => (
+                                <SelectItem key={s} value={s}>
+                                  {t(SIZE_KEY[s])}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </Field>
+                      </>
+                    ) : (
+                      <>
+                        <Field label={t("initiatives.form.description")} htmlFor="wj-desc">
+                          <Textarea
+                            id="wj-desc"
+                            rows={4}
+                            value={state.description}
+                            maxLength={LIMITS.initiativeDescription}
+                            onChange={(e) =>
+                              patch({
+                                description: e.target.value.slice(0, LIMITS.initiativeDescription),
+                              })
+                            }
+                            placeholder={t("initiatives.form.descriptionPlaceholder")}
+                          />
+                        </Field>
+                        <Field label={t("initiatives.form.owner")} htmlFor="wj-owner">
+                          <Input
+                            id="wj-owner"
+                            value={state.owner}
+                            maxLength={LIMITS.initiativeOwner}
+                            onChange={(e) => patch({ owner: e.target.value })}
+                            placeholder={t("initiatives.form.ownerPlaceholder")}
+                          />
+                        </Field>
+                        {state.kind === "initiative" && (
+                          <Field label={t("work.lead")} htmlFor="wj-lead">
+                            <Input
+                              id="wj-lead"
+                              value={state.lead_name}
+                              maxLength={LIMITS.leadName}
+                              onChange={(e) => patch({ lead_name: e.target.value })}
+                            />
+                          </Field>
+                        )}
+                        <Field label={t("initiatives.form.status")} htmlFor="wj-status">
+                          <Select
+                            value={state.status}
+                            onValueChange={(v) => patch({ status: v as InitiativeStatus })}
+                          >
+                            <SelectTrigger id="wj-status" className="w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {INITIATIVE_STATUSES.map((s) => (
+                                <SelectItem key={s} value={s}>
+                                  {t(STATUS_KEY[s])}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </Field>
+                        {state.kind === "simple_task" && <DateRange state={state} patch={patch} />}
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {step === "aspiration" && (
+                  <div className="grid gap-4">
+                    <Field label={t("work.aspiration")} htmlFor="wj-aspiration">
+                      <Textarea
+                        id="wj-aspiration"
+                        rows={4}
+                        value={state.aspiration}
+                        maxLength={LIMITS.aspiration}
+                        onChange={(e) =>
+                          patch({ aspiration: e.target.value.slice(0, LIMITS.aspiration) })
+                        }
+                      />
+                    </Field>
+                    <DateRange state={state} patch={patch} />
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <Field label={t("work.phaseNumber")} htmlFor="wj-phase">
+                        <Input
+                          id="wj-phase"
+                          type="number"
+                          min={1}
+                          max={20}
+                          value={state.phase}
+                          onChange={(e) => patch({ phase: Number(e.target.value) || 1 })}
+                        />
                       </Field>
-                      <Field label={t("work.signal.direction")} htmlFor={`wj-sig-dir-${i}`}>
+                      <Field label={t("work.phaseType")} htmlFor="wj-phase-type">
                         <Select
-                          value={sig.direction ?? "none"}
+                          value={state.phase_type ?? "none"}
                           onValueChange={(v) =>
-                            patch({
-                              signals: state.signals.map((s, j) =>
-                                j === i
-                                  ? {
-                                      ...s,
-                                      direction: v === "none" ? null : (v as SignalDirection),
-                                    }
-                                  : s,
-                              ),
-                            })
+                            patch({ phase_type: v === "none" ? null : (v as PhaseType) })
                           }
                         >
-                          <SelectTrigger id={`wj-sig-dir-${i}`} className="w-full">
+                          <SelectTrigger id="wj-phase-type" className="w-full">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="none">{t("tag.none")}</SelectItem>
-                            {SIGNAL_DIRECTIONS.map((d) => (
-                              <SelectItem key={d} value={d}>
-                                {t(DIRECTION_KEY[d])}
+                            {PHASE_TYPES.map((p) => (
+                              <SelectItem key={p} value={p}>
+                                {t(PHASE_TYPE_KEY[p])}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </Field>
                     </div>
-                    <Field label={t("work.signal.howNoticed")} htmlFor={`wj-sig-how-${i}`}>
+                    <Field label={t("work.learningCheckpoint")} htmlFor="wj-checkpoint">
                       <Input
-                        id={`wj-sig-how-${i}`}
-                        value={sig.how_noticed}
-                        maxLength={LIMITS.signalNote}
-                        onChange={(e) =>
-                          patch({
-                            signals: state.signals.map((s, j) =>
-                              j === i ? { ...s, how_noticed: e.target.value } : s,
-                            ),
-                          })
-                        }
-                      />
-                    </Field>
-                    <Field label={t("work.signal.startingPoint")} htmlFor={`wj-sig-start-${i}`}>
-                      <Input
-                        id={`wj-sig-start-${i}`}
-                        value={sig.starting_point}
-                        maxLength={LIMITS.signalNote}
-                        onChange={(e) =>
-                          patch({
-                            signals: state.signals.map((s, j) =>
-                              j === i ? { ...s, starting_point: e.target.value } : s,
-                            ),
-                          })
-                        }
+                        id="wj-checkpoint"
+                        type="date"
+                        value={state.learning_checkpoint}
+                        onChange={(e) => patch({ learning_checkpoint: e.target.value })}
                       />
                     </Field>
                   </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() =>
-                    patch({
-                      signals: [
-                        ...state.signals,
-                        {
-                          name: "",
-                          evidence: "see",
-                          how_noticed: "",
-                          starting_point: "",
-                          direction: null,
-                        },
-                      ],
-                    })
-                  }
-                >
-                  + {t("work.addSignal")}
-                </Button>
-              </div>
-            )}
-
-            {step === "milestones" && (
-              <div className="grid gap-4">
-                {state.milestones.length === 0 && (
-                  <p className="text-sm text-muted-foreground">{t("work.noMilestones")}</p>
                 )}
-                {state.milestones.map((ms, i) => (
-                  <div
-                    key={i}
-                    className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4"
-                  >
-                    <div className="flex items-start gap-2">
-                      <div className="min-w-0 flex-1">
-                        <Field label={t("work.milestone.title")} htmlFor={`wj-ms-${i}`}>
+
+                {step === "bet" && (
+                  <div className="grid gap-4">
+                    <Field label={t("work.betAction")} htmlFor="wj-bet-action">
+                      <Textarea
+                        id="wj-bet-action"
+                        rows={2}
+                        value={state.bet_action}
+                        maxLength={LIMITS.betPart}
+                        onChange={(e) =>
+                          patch({ bet_action: e.target.value.slice(0, LIMITS.betPart) })
+                        }
+                      />
+                    </Field>
+                    <Field label={t("work.betChange")} htmlFor="wj-bet-change">
+                      <Textarea
+                        id="wj-bet-change"
+                        rows={2}
+                        value={state.bet_change}
+                        maxLength={LIMITS.betPart}
+                        onChange={(e) =>
+                          patch({ bet_change: e.target.value.slice(0, LIMITS.betPart) })
+                        }
+                      />
+                    </Field>
+                    <Field label={t("work.betQuestion")} htmlFor="wj-bet-question">
+                      <Textarea
+                        id="wj-bet-question"
+                        rows={2}
+                        value={state.bet_question}
+                        maxLength={LIMITS.betPart}
+                        onChange={(e) =>
+                          patch({ bet_question: e.target.value.slice(0, LIMITS.betPart) })
+                        }
+                      />
+                    </Field>
+                    <Field label={t("work.confidence")} htmlFor="wj-confidence">
+                      <Select
+                        value={state.confidence ?? "none"}
+                        onValueChange={(v) =>
+                          patch({ confidence: v === "none" ? null : (v as BetConfidence) })
+                        }
+                      >
+                        <SelectTrigger id="wj-confidence" className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">{t("tag.none")}</SelectItem>
+                          {BET_CONFIDENCES.map((c) => (
+                            <SelectItem key={c} value={c}>
+                              {t(CONFIDENCE_KEY[c])}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                  </div>
+                )}
+
+                {step === "signals" && (
+                  <div className="grid gap-4">
+                    {state.signals.length === 0 && (
+                      <p className="text-sm text-muted-foreground">{t("work.noSignals")}</p>
+                    )}
+                    {state.signals.map((sig, i) => (
+                      <div
+                        key={i}
+                        className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4"
+                      >
+                        <div className="flex items-start gap-2">
+                          <div className="min-w-0 flex-1">
+                            <Field label={t("work.signal.name")} htmlFor={`wj-sig-${i}`}>
+                              <Input
+                                id={`wj-sig-${i}`}
+                                value={sig.name}
+                                maxLength={LIMITS.signalName}
+                                onChange={(e) =>
+                                  patch({
+                                    signals: state.signals.map((s, j) =>
+                                      j === i ? { ...s, name: e.target.value } : s,
+                                    ),
+                                  })
+                                }
+                              />
+                            </Field>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="mt-6"
+                            aria-label={t("work.deleteEntry")}
+                            onClick={() =>
+                              patch({ signals: state.signals.filter((_, j) => j !== i) })
+                            }
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          <Field label={t("work.signal.evidence")} htmlFor={`wj-sig-ev-${i}`}>
+                            <Select
+                              value={sig.evidence}
+                              onValueChange={(v) =>
+                                patch({
+                                  signals: state.signals.map((s, j) =>
+                                    j === i ? { ...s, evidence: v as EvidenceType } : s,
+                                  ),
+                                })
+                              }
+                            >
+                              <SelectTrigger id={`wj-sig-ev-${i}`} className="w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {EVIDENCE_TYPES.map((e) => (
+                                  <SelectItem key={e} value={e}>
+                                    {t(EVIDENCE_KEY[e])}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </Field>
+                          <Field label={t("work.signal.direction")} htmlFor={`wj-sig-dir-${i}`}>
+                            <Select
+                              value={sig.direction ?? "none"}
+                              onValueChange={(v) =>
+                                patch({
+                                  signals: state.signals.map((s, j) =>
+                                    j === i
+                                      ? {
+                                          ...s,
+                                          direction: v === "none" ? null : (v as SignalDirection),
+                                        }
+                                      : s,
+                                  ),
+                                })
+                              }
+                            >
+                              <SelectTrigger id={`wj-sig-dir-${i}`} className="w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">{t("tag.none")}</SelectItem>
+                                {SIGNAL_DIRECTIONS.map((d) => (
+                                  <SelectItem key={d} value={d}>
+                                    {t(DIRECTION_KEY[d])}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </Field>
+                        </div>
+                        <Field label={t("work.signal.howNoticed")} htmlFor={`wj-sig-how-${i}`}>
                           <Input
-                            id={`wj-ms-${i}`}
-                            value={ms.title}
-                            maxLength={LIMITS.milestoneTitle}
+                            id={`wj-sig-how-${i}`}
+                            value={sig.how_noticed}
+                            maxLength={LIMITS.signalNote}
                             onChange={(e) =>
                               patch({
-                                milestones: state.milestones.map((m, j) =>
-                                  j === i ? { ...m, title: e.target.value } : m,
+                                signals: state.signals.map((s, j) =>
+                                  j === i ? { ...s, how_noticed: e.target.value } : s,
+                                ),
+                              })
+                            }
+                          />
+                        </Field>
+                        <Field label={t("work.signal.startingPoint")} htmlFor={`wj-sig-start-${i}`}>
+                          <Input
+                            id={`wj-sig-start-${i}`}
+                            value={sig.starting_point}
+                            maxLength={LIMITS.signalNote}
+                            onChange={(e) =>
+                              patch({
+                                signals: state.signals.map((s, j) =>
+                                  j === i ? { ...s, starting_point: e.target.value } : s,
                                 ),
                               })
                             }
                           />
                         </Field>
                       </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="mt-6"
-                        aria-label={t("work.deleteEntry")}
-                        onClick={() =>
-                          patch({ milestones: state.milestones.filter((_, j) => j !== i) })
-                        }
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <Field label={t("work.milestone.owner")} htmlFor={`wj-ms-owner-${i}`}>
-                        <Input
-                          id={`wj-ms-owner-${i}`}
-                          value={ms.owner}
-                          maxLength={LIMITS.initiativeOwner}
-                          onChange={(e) =>
-                            patch({
-                              milestones: state.milestones.map((m, j) =>
-                                j === i ? { ...m, owner: e.target.value } : m,
-                              ),
-                            })
-                          }
-                        />
-                      </Field>
-                      <Field label={t("work.milestone.due")} htmlFor={`wj-ms-due-${i}`}>
-                        <Input
-                          id={`wj-ms-due-${i}`}
-                          type="date"
-                          value={ms.due_date}
-                          onChange={(e) =>
-                            patch({
-                              milestones: state.milestones.map((m, j) =>
-                                j === i ? { ...m, due_date: e.target.value } : m,
-                              ),
-                            })
-                          }
-                        />
-                      </Field>
-                    </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        patch({
+                          signals: [
+                            ...state.signals,
+                            {
+                              name: "",
+                              evidence: "see",
+                              how_noticed: "",
+                              starting_point: "",
+                              direction: null,
+                            },
+                          ],
+                        })
+                      }
+                    >
+                      + {t("work.addSignal")}
+                    </Button>
                   </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() =>
-                    patch({
-                      milestones: [...state.milestones, { title: "", owner: "", due_date: "" }],
-                    })
-                  }
-                >
-                  + {t("work.addMilestone")}
-                </Button>
-              </div>
-            )}
+                )}
 
-            {step === "review" && (
-              <Review state={state} krLabel={selectedKr ? `KR ${selectedKr.label}` : "—"} />
-            )}
-
-            {canAssist && (
-              <div className="mt-6 rounded-2xl border border-highlight/40 bg-highlight/5 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm font-semibold text-primary">{t("journey.suggestions")}</p>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    onClick={askAssistant}
-                    disabled={suggesting || state.text.trim().length === 0}
-                  >
-                    <Sparkles className="mr-1.5 h-3.5 w-3.5" aria-hidden />
-                    {suggesting ? t("journey.suggesting") : t("journey.suggest")}
-                  </Button>
-                </div>
-                {suggestions.length > 0 && (
-                  <ul className="mt-3 grid gap-2">
-                    {suggestions.map((d, i) => (
-                      <li key={i} className="rounded-xl border border-border/70 bg-card p-3">
-                        <p className="text-sm font-semibold text-foreground">{d.title}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">{d.why}</p>
-                        <div className="mt-2 flex gap-2">
-                          <Button type="button" size="sm" onClick={() => applySuggestion(d)}>
-                            {t("journey.useThis")}
+                {step === "milestones" && (
+                  <div className="grid gap-4">
+                    {state.milestones.length === 0 && (
+                      <p className="text-sm text-muted-foreground">{t("work.noMilestones")}</p>
+                    )}
+                    {state.milestones.map((ms, i) => (
+                      <div
+                        key={i}
+                        className="grid gap-3 rounded-2xl border border-border/70 bg-card p-4"
+                      >
+                        <div className="flex items-start gap-2">
+                          <div className="min-w-0 flex-1">
+                            <Field label={t("work.milestone.title")} htmlFor={`wj-ms-${i}`}>
+                              <Input
+                                id={`wj-ms-${i}`}
+                                value={ms.title}
+                                maxLength={LIMITS.milestoneTitle}
+                                onChange={(e) =>
+                                  patch({
+                                    milestones: state.milestones.map((m, j) =>
+                                      j === i ? { ...m, title: e.target.value } : m,
+                                    ),
+                                  })
+                                }
+                              />
+                            </Field>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="mt-6"
+                            aria-label={t("work.deleteEntry")}
+                            onClick={() =>
+                              patch({ milestones: state.milestones.filter((_, j) => j !== i) })
+                            }
+                          >
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
-                      </li>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          <Field label={t("work.milestone.owner")} htmlFor={`wj-ms-owner-${i}`}>
+                            <Input
+                              id={`wj-ms-owner-${i}`}
+                              value={ms.owner}
+                              maxLength={LIMITS.initiativeOwner}
+                              onChange={(e) =>
+                                patch({
+                                  milestones: state.milestones.map((m, j) =>
+                                    j === i ? { ...m, owner: e.target.value } : m,
+                                  ),
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label={t("work.milestone.due")} htmlFor={`wj-ms-due-${i}`}>
+                            <Input
+                              id={`wj-ms-due-${i}`}
+                              type="date"
+                              value={ms.due_date}
+                              onChange={(e) =>
+                                patch({
+                                  milestones: state.milestones.map((m, j) =>
+                                    j === i ? { ...m, due_date: e.target.value } : m,
+                                  ),
+                                })
+                              }
+                            />
+                          </Field>
+                        </div>
+                      </div>
                     ))}
-                    <li>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        patch({
+                          milestones: [...state.milestones, { title: "", owner: "", due_date: "" }],
+                        })
+                      }
+                    >
+                      + {t("work.addMilestone")}
+                    </Button>
+                  </div>
+                )}
+
+                {step === "review" && (
+                  <Review state={state} krLabel={selectedKr ? `KR ${selectedKr.label}` : "—"} />
+                )}
+
+                {canAssist && (
+                  <div className="mt-6 rounded-2xl border border-highlight/40 bg-highlight/5 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-semibold text-primary">
+                        {t("journey.suggestions")}
+                      </p>
                       <Button
                         type="button"
                         size="sm"
-                        variant="ghost"
-                        onClick={() => setSuggestions([])}
+                        variant="outline"
+                        onClick={askAssistant}
+                        disabled={suggesting || state.text.trim().length === 0}
                       >
-                        {t("journey.dismiss")}
+                        <Sparkles className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+                        {suggesting ? t("journey.suggesting") : t("journey.suggest")}
                       </Button>
-                    </li>
-                  </ul>
+                    </div>
+                    {suggestions.length > 0 && (
+                      <ul className="mt-3 grid gap-2">
+                        {suggestions.map((d, i) => (
+                          <li key={i} className="rounded-xl border border-border/70 bg-card p-3">
+                            <p className="text-sm font-semibold text-foreground">{d.title}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">{d.why}</p>
+                            <div className="mt-2 flex gap-2">
+                              <Button type="button" size="sm" onClick={() => applySuggestion(d)}>
+                                {t("journey.useThis")}
+                              </Button>
+                            </div>
+                          </li>
+                        ))}
+                        <li>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setSuggestions([])}
+                          >
+                            {t("journey.dismiss")}
+                          </Button>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
                 )}
+
+                {blocker && <p className="mt-4 text-xs text-destructive">{t(blocker)}</p>}
               </div>
-            )}
 
-            {blocker && <p className="mt-4 text-xs text-destructive">{t(blocker)}</p>}
+              <DialogFooter className="flex-row items-center justify-between gap-2 border-t px-6 py-4 sm:justify-between">
+                <Button
+                  variant="ghost"
+                  onClick={() => (index === 0 ? requestClose(false) : setIndex(index - 1))}
+                  disabled={create.isPending}
+                >
+                  {index === 0 ? t("common.cancel") : t("journey.back")}
+                </Button>
+                {isLast ? (
+                  <Button
+                    onClick={() => create.mutate()}
+                    disabled={create.isPending || !state.kr_id || !state.text.trim()}
+                  >
+                    {create.isPending ? t("journey.creating") : t("journey.finish")}
+                  </Button>
+                ) : (
+                  <Button onClick={() => setIndex(index + 1)} disabled={!!blocker}>
+                    {t("journey.next")}
+                  </Button>
+                )}
+              </DialogFooter>
+            </div>
           </div>
-
-          <SheetFooter className="flex-row items-center justify-between gap-2 border-t px-6 py-4">
-            <Button
-              variant="ghost"
-              onClick={() => (index === 0 ? requestClose(false) : setIndex(index - 1))}
-              disabled={create.isPending}
-            >
-              {index === 0 ? t("common.cancel") : t("journey.back")}
-            </Button>
-            {isLast ? (
-              <Button
-                onClick={() => create.mutate()}
-                disabled={create.isPending || !state.kr_id || !state.text.trim()}
-              >
-                {create.isPending ? t("journey.creating") : t("journey.finish")}
-              </Button>
-            ) : (
-              <Button onClick={() => setIndex(index + 1)} disabled={!!blocker}>
-                {t("journey.next")}
-              </Button>
-            )}
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={confirmClose} onOpenChange={setConfirmClose}>
         <AlertDialogContent>
