@@ -1129,7 +1129,17 @@ function KrDetailSheet({
                             onSave={(v) => m.updateInit.mutate({ id: it.id, text: v })}
                           />
                         </div>
+                        <Link
+                          to="/initiatives/$initiativeId"
+                          params={{ initiativeId: it.id }}
+                          aria-label={t("initiative.open")}
+                          title={t("initiative.open")}
+                          className="mt-0.5 shrink-0 rounded-sm p-1 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                        >
+                          <ArrowUpRight className="h-4 w-4" />
+                        </Link>
                       </li>
+
                     ))}
                   </ul>
                 ) : (
