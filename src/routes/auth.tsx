@@ -23,7 +23,7 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && user) navigate({ to: "/", replace: true });
+    if (!isLoading && user) navigate({ to: "/okrs", replace: true });
   }, [user, isLoading, navigate]);
 
   const onGoogle = async () => {
@@ -44,7 +44,7 @@ function AuthPage() {
         return;
       }
       if (result.redirected) return;
-      navigate({ to: "/", replace: true });
+      navigate({ to: "/okrs", replace: true });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Google sign-in failed");
       setBusy(false);
