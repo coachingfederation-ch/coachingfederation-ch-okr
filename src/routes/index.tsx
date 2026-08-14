@@ -697,7 +697,7 @@ function OkrCard({
 
         {/* Key results are nested inside a warm inset with a blue rail so the
             objective → key result hierarchy is visible at a glance. */}
-        <section className="mt-6 rounded-2xl border-l-4 border-l-primary bg-bone/60 py-4 pl-5 pr-4">
+        <section className="mt-6 rounded-2xl border-l-4 border-l-primary bg-surface py-4 pl-5 pr-4">
           <div className="mb-3 flex items-center justify-between">
             <SectionLabel>{t("section.keyResults")}</SectionLabel>
             {canEdit && (
