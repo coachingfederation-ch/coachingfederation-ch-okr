@@ -3,6 +3,8 @@ import type { Pillar } from "./okr-schemas";
 
 export type StringKey =
   // get involved (volunteer entry page)
+  | "involve.panel.title"
+  | "involve.panel.empty"
   | "involve.nav"
   | "involve.eyebrow"
   | "involve.title"
@@ -669,6 +671,8 @@ export type StringKey =
   | "report.kr.due";
 
 const en: Record<StringKey, string> = {
+  "involve.panel.title": "Volunteer interest",
+  "involve.panel.empty": "No one has expressed interest in this work yet.",
   "involve.nav": "Get involved",
   "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · GET INVOLVED",
   "involve.title": "Find where you fit in the chapter",
@@ -1395,6 +1399,8 @@ const en: Record<StringKey, string> = {
 };
 
 const de: Record<StringKey, string> = {
+  "involve.panel.title": "Interesse von Freiwilligen",
+  "involve.panel.empty": "Bisher hat niemand Interesse an dieser Arbeit gemeldet.",
   "involve.nav": "Mitmachen",
   "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · MITMACHEN",
   "involve.title": "Finde deinen Platz im Chapter",
@@ -2136,6 +2142,8 @@ const de: Record<StringKey, string> = {
 };
 
 const fr: Record<StringKey, string> = {
+  "involve.panel.title": "Intérêt des bénévoles",
+  "involve.panel.empty": "Personne n\u2019a encore manifesté d\u2019intérêt pour ce travail.",
   "involve.nav": "Participer",
   "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · PARTICIPER",
   "involve.title": "Trouvez votre place dans le chapitre",
@@ -2879,6 +2887,8 @@ const fr: Record<StringKey, string> = {
 };
 
 const it: Record<StringKey, string> = {
+  "involve.panel.title": "Interesse dei volontari",
+  "involve.panel.empty": "Nessuno ha ancora manifestato interesse per questo lavoro.",
   "involve.nav": "Partecipa",
   "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · PARTECIPA",
   "involve.title": "Trova il tuo posto nel chapter",
