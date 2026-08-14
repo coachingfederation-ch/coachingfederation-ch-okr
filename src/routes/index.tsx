@@ -50,6 +50,7 @@ import { formatSwissDate } from "@/components/okr/kr-metrics";
 
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
+import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { LinkInitiativesDialog } from "@/components/okr/LinkInitiativesDialog";
 
 import {
