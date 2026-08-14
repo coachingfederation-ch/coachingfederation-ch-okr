@@ -398,7 +398,6 @@ export type StringKey =
   | "kr.milestone.in_progress"
   | "kr.milestone.done"
   | "kr.milestoneDue"
-  | "kr.originalTarget"
   | "kr.baselineLocked"
   | "kr.baselineLockedHint"
   | "kr.measurePlaceholder"
@@ -925,7 +924,6 @@ const en: Record<StringKey, string> = {
   "kr.milestone.in_progress": "In progress",
   "kr.milestone.done": "Done",
   "kr.milestoneDue": "Due",
-  "kr.originalTarget": "Original 2026 target (from source document)",
   "kr.baselineLocked": "Baseline locked",
   "kr.baselineLockedHint": "Freeze the 2026 baseline once it is agreed.",
   "kr.measurePlaceholder": "What exactly is counted?",
@@ -1661,7 +1659,6 @@ const de: Record<StringKey, string> = {
   "kr.milestone.in_progress": "In Arbeit",
   "kr.milestone.done": "Erledigt",
   "kr.milestoneDue": "Fällig",
-  "kr.originalTarget": "Ursprüngliches Ziel 2026 (aus dem Quelldokument)",
   "kr.baselineLocked": "Baseline gesperrt",
   "kr.baselineLockedHint": "Die Baseline 2026 fixieren, sobald sie abgestimmt ist.",
   "kr.measurePlaceholder": "Was genau wird gezählt?",
@@ -2410,7 +2407,6 @@ const fr: Record<StringKey, string> = {
   "kr.milestone.in_progress": "En cours",
   "kr.milestone.done": "Terminé",
   "kr.milestoneDue": "Échéance",
-  "kr.originalTarget": "Cible 2026 d'origine (du document source)",
   "kr.baselineLocked": "Référence verrouillée",
   "kr.baselineLockedHint": "Figer la référence 2026 une fois qu'elle est validée.",
   "kr.measurePlaceholder": "Que compte-t-on exactement ?",
@@ -3156,7 +3152,6 @@ const it: Record<StringKey, string> = {
   "kr.milestone.in_progress": "In corso",
   "kr.milestone.done": "Completata",
   "kr.milestoneDue": "Scadenza",
-  "kr.originalTarget": "Obiettivo originale 2026 (dal documento di origine)",
   "kr.baselineLocked": "Baseline bloccata",
   "kr.baselineLockedHint": "Blocca la baseline 2026 una volta concordata.",
   "kr.measurePlaceholder": "Che cosa viene esattamente conteggiato?",
