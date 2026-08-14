@@ -455,17 +455,21 @@ function Content() {
 function Question({
   title,
   help,
+  columns = "lg:grid-cols-4",
   children,
 }: {
   title: string;
   help: string;
+  columns?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="mt-10">
       <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
       <p className="mt-1 text-sm text-foreground/60">{help}</p>
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{children}</div>
+      <div className={cn("mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3", columns)}>
+        {children}
+      </div>
     </div>
   );
 }
