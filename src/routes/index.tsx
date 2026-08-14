@@ -292,7 +292,11 @@ function Content() {
             </div>
 
             {step === 0 && (
-              <Question title={t("involve.q1.title")} help={t("involve.q1.help")}>
+              <Question
+                title={t("involve.q1.title")}
+                help={t("involve.q1.help")}
+                columns="lg:grid-cols-5"
+              >
                 {data.okr_sets.map((set) => (
                   <ChoiceCard
                     key={set.id}
@@ -305,6 +309,7 @@ function Content() {
                         ? `var(--color-pillar-${set.pillars[0].toLowerCase()})`
                         : undefined
                     }
+                    icon={OBJECTIVE_ICONS[set.number] ?? <Sparkles className="h-5 w-5" />}
                     onSelect={() => {
                       setAnswers((a) => ({ ...a, objective: set.id }));
                       setStep(1);
@@ -316,6 +321,8 @@ function Content() {
                   selected={answers.objective === "any"}
                   title={t("involve.q1.any")}
                   body={t("involve.q1.anyHelp")}
+                  className="lg:col-span-5"
+                  icon={<Sparkles className="h-5 w-5" />}
                   onSelect={() => {
                     setAnswers((a) => ({ ...a, objective: "any" }));
                     setStep(1);
