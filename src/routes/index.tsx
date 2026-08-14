@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { dashboardQueryOptions } from "@/lib/dashboard-query";
 import { submitInitiativeInterest } from "@/lib/interests.functions";
 import {
-  PILLARS,
   type DashboardDTO,
   type InitiativeCommitment,
   type InitiativeDTO,
@@ -16,7 +15,7 @@ import {
   type Pillar,
 } from "@/lib/okr-schemas";
 import { pickTranslation, useLocale } from "@/lib/i18n";
-import { pillarName, type StringKey } from "@/lib/i18n-strings";
+import { type StringKey } from "@/lib/i18n-strings";
 import type { Locale } from "@/lib/i18n-shared";
 import {
   AVAILABILITY_KEY,
