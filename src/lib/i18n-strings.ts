@@ -123,6 +123,7 @@ export type StringKey =
   // nav
   | "nav.okrs"
   | "nav.initiatives"
+  | "nav.more"
   // initiative portfolio (kanban)
   | "initiatives.title"
   | "initiatives.subtitle"
@@ -795,6 +796,7 @@ const en: Record<StringKey, string> = {
   "common.saveFailed": "Save failed",
   "nav.okrs": "OKRs",
   "nav.initiatives": "Initiative Portfolio",
+  "nav.more": "More",
   "initiatives.title": "Initiative Portfolio",
   "initiatives.subtitle": "All initiatives across every OKR, grouped by status.",
   "initiatives.filterAllOkrs": "All OKRs",
@@ -1528,6 +1530,7 @@ const de: Record<StringKey, string> = {
   "common.saveFailed": "Speichern fehlgeschlagen",
   "nav.okrs": "OKRs",
   "nav.initiatives": "Initiativen-Portfolio",
+  "nav.more": "Mehr",
   "initiatives.title": "Initiativen-Portfolio",
   "initiatives.subtitle": "Alle Initiativen über alle OKRs hinweg, nach Status gruppiert.",
   "initiatives.filterAllOkrs": "Alle OKRs",
@@ -2274,6 +2277,7 @@ const fr: Record<StringKey, string> = {
   "common.saveFailed": "Échec de l'enregistrement",
   "nav.okrs": "OKR",
   "nav.initiatives": "Portefeuille d'initiatives",
+  "nav.more": "Plus",
   "initiatives.title": "Portefeuille d'initiatives",
   "initiatives.subtitle": "Toutes les initiatives, tous OKR confondus, regroupées par statut.",
   "initiatives.filterAllOkrs": "Tous les OKR",
@@ -3020,6 +3024,7 @@ const it: Record<StringKey, string> = {
   "common.saveFailed": "Salvataggio non riuscito",
   "nav.okrs": "OKR",
   "nav.initiatives": "Portfolio iniziative",
+  "nav.more": "Altro",
   "initiatives.title": "Portfolio iniziative",
   "initiatives.subtitle": "Tutte le iniziative di tutti gli OKR, raggruppate per stato.",
   "initiatives.filterAllOkrs": "Tutti gli OKR",
