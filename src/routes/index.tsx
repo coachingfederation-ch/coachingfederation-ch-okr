@@ -644,83 +644,91 @@ function OkrCard({
       </header>
 
       <div className="px-8 pb-8 pt-6">
-
-
-      <section className="mt-6 rounded-2xl border border-border/70 bg-muted/40 p-5">
-        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <div className="eyebrow">{t("section.objective")}</div>
-          {canEdit && (
-            <button
-              type="button"
-              onClick={() =>
-                setAssistant({
-                  mode: "objective",
-                  contextLabel: `${t("assistant.ctx.set")} ${set.number}`,
-                })
-              }
-              className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
-            >
-              {t("assistant.cta.create")}
-            </button>
-          )}
-        </div>
-        <EditableText
-          as="p"
-          multiline
-          value={objectiveText}
-          canEdit={canEdit}
-          maxLength={LIMITS.objective}
-          onSave={(v) => updateSet({ objective: v })}
-          className="text-[15px] font-semibold leading-relaxed text-foreground"
-          placeholder="What outcome should this OKR create?"
-        />
-      </section>
-
-      <section className="mt-6">
-        <SectionLabel>{t("section.globalAlignment")}</SectionLabel>
-        <EditableText
-          as="p"
-          multiline
-          value={alignmentText}
-          canEdit={canEdit}
-          maxLength={LIMITS.alignment}
-          onSave={(v) => updateSet({ alignment: v })}
-          className="text-sm leading-relaxed text-muted-foreground"
-          placeholder="How does this connect to the ICF Global focus areas?"
-        />
-      </section>
-
-      <section className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
-          <SectionLabel>{t("section.keyResults")}</SectionLabel>
-          {canEdit && (
-            <button
-              type="button"
-              onClick={() => m.addKr.mutate({ okr_set_id: set.id })}
-              disabled={m.addKr.isPending}
-              className="btn-mono inline-flex items-center gap-1 text-primary hover:underline disabled:opacity-50"
-            >
-              {t("okr.addKeyResult")}
-            </button>
-          )}
-        </div>
-        {set.key_results.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-border/70 bg-muted/30 p-4 text-sm italic text-muted-foreground">
-            {t("okr.noKeyResults")}
-          </p>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {set.key_results.map((r) => (
-              <KrCard
-                key={r.id}
-                kr={r}
-                onOpen={() => setOpenKrId(r.id)}
-                secondaryCount={(secondaryByKr.get(r.id) ?? []).length}
-              />
-            ))}
+        {/* The objective statement is the card's headline — no surrounding box
+            competes with it. */}
+        <section>
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <div className="eyebrow">{t("section.objective")}</div>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() =>
+                  setAssistant({
+                    mode: "objective",
+                    contextLabel: `${t("assistant.ctx.set")} ${set.number}`,
+                  })
+                }
+                className="btn-mono inline-flex h-7 items-center gap-1 rounded-md border border-primary/25 bg-card px-2.5 text-[11px] text-primary hover:bg-primary/5 transition-colors"
+              >
+                {t("assistant.cta.create")}
+              </button>
+            )}
           </div>
-        )}
-      </section>
+          <EditableText
+            as="p"
+            multiline
+            value={objectiveText}
+            canEdit={canEdit}
+            maxLength={LIMITS.objective}
+            onSave={(v) => updateSet({ objective: v })}
+            className="font-display text-lg font-semibold leading-snug text-foreground"
+            placeholder="What outcome should this OKR create?"
+          />
+        </section>
+
+        {/* Supporting context, collapsed by default so it never competes with
+            the objective or the key results. */}
+        <details className="group mt-5 border-t border-border/60 pt-3">
+          <summary className="section-label flex cursor-pointer list-none items-center gap-1.5 text-muted-foreground hover:text-primary">
+            <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
+            {t("section.globalAlignment")}
+          </summary>
+          <EditableText
+            as="p"
+            multiline
+            value={alignmentText}
+            canEdit={canEdit}
+            maxLength={LIMITS.alignment}
+            onSave={(v) => updateSet({ alignment: v })}
+            className="mt-2 text-sm leading-relaxed text-muted-foreground"
+            placeholder="How does this connect to the ICF Global focus areas?"
+          />
+        </details>
+
+        {/* Key results are nested inside a warm inset with a blue rail so the
+            objective → key result hierarchy is visible at a glance. */}
+        <section className="mt-6 rounded-2xl border-l-4 border-l-primary bg-bone/60 py-4 pl-5 pr-4">
+          <div className="mb-3 flex items-center justify-between">
+            <SectionLabel>{t("section.keyResults")}</SectionLabel>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() => m.addKr.mutate({ okr_set_id: set.id })}
+                disabled={m.addKr.isPending}
+                className="btn-mono inline-flex items-center gap-1 text-primary hover:underline disabled:opacity-50"
+              >
+                {t("okr.addKeyResult")}
+              </button>
+            )}
+          </div>
+          {set.key_results.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-border/70 bg-card/50 p-4 text-sm italic text-muted-foreground">
+              {t("okr.noKeyResults")}
+            </p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {set.key_results.map((r) => (
+                <KrCard
+                  key={r.id}
+                  kr={r}
+                  onOpen={() => setOpenKrId(r.id)}
+                  secondaryCount={(secondaryByKr.get(r.id) ?? []).length}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
 
       <KrDetailSheet
         kr={openKr}
@@ -739,6 +747,7 @@ function OkrCard({
 
       <AssistantDrawer context={assistant} onClose={() => setAssistant(null)} />
     </article>
+
   );
 }
 
