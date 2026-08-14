@@ -1067,17 +1067,7 @@ function KrDetailSheet({
                           onChange={(v) => update({ milestone_due: v })}
                         />
                       </div>
-                      <div className="rounded-md border border-border/50 bg-card/60 p-4 sm:col-span-2">
-                        <div className="section-label mb-1">{t("kr.originalTarget")}</div>
-                        <EditableText
-                          value={krTarget}
-                          canEdit={canEdit}
-                          maxLength={LIMITS.target}
-                          onSave={(v) => update({ target: v })}
-                          placeholder="—"
-                          className="text-sm font-semibold text-muted-foreground"
-                        />
-                      </div>
+
                     </div>
                   )}
                 </div>
