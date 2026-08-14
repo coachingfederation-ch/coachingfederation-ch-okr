@@ -235,27 +235,28 @@ function Content() {
 
           {step === 0 && (
             <Question title={t("involve.q1.title")} help={t("involve.q1.help")}>
-              {PILLARS.map((p) => (
-                <ChoiceCard
-                  key={p}
-                  selected={answers.pillar === p}
-                  eyebrow={p}
-                  title={pillarName(locale, p)}
-                  body={
-                    pickTranslation(
-                      data.pillars.find((x) => x.code === p) ?? { code: p },
-                      "description",
-                      data.pillars.find((x) => x.code === p)?.description ?? "",
-                      locale,
-                    ) ?? ""
-                  }
-                  accent={`var(--color-pillar-${p.toLowerCase()})`}
-                  onSelect={() => {
-                    setAnswers((a) => ({ ...a, pillar: p }));
-                    setStep(1);
-                  }}
-                />
-              ))}
+              {PILLARS.map((p) => {
+                const summary = data.pillars.find((x) => x.code === p);
+                return (
+                  <ChoiceCard
+                    key={p}
+                    selected={answers.pillar === p}
+                    eyebrow={p}
+                    title={pillarName(locale, p)}
+                    body={
+                      summary
+                        ? pickTranslation(summary, "description", summary.description, locale)
+                        : ""
+                    }
+                    accent={`var(--color-pillar-${p.toLowerCase()})`}
+                    onSelect={() => {
+                      setAnswers((a) => ({ ...a, pillar: p }));
+                      setStep(1);
+                    }}
+                  />
+                );
+              })}
+
               <ChoiceCard
                 selected={answers.pillar === "any"}
                 title={t("involve.q1.any")}
