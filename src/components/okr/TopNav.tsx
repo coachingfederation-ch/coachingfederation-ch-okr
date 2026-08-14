@@ -1,6 +1,13 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import { useLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 export function TopNav() {
   const { t } = useLocale();
@@ -17,6 +24,7 @@ export function TopNav() {
   const isInitiativesActive = path.startsWith("/initiatives");
   const isReportActive = path.startsWith("/report");
   const isPlaygroundActive = path.startsWith("/playground");
+  const moreActive = isReportActive || isPlaygroundActive;
 
   return (
     <nav
@@ -45,20 +53,46 @@ export function TopNav() {
         {t("nav.initiatives")}
       </Link>
 
-      <Link
-        to="/report"
-        className={cn(base, isReportActive ? active : inactive)}
-        aria-current={isReportActive ? "page" : undefined}
-      >
-        {t("report.nav")}
-      </Link>
-      <Link
-        to="/playground"
-        className={cn(base, isPlaygroundActive ? active : inactive)}
-        aria-current={isPlaygroundActive ? "page" : undefined}
-      >
-        {t("playground.nav")}
-      </Link>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className={cn(
+            base,
+            "gap-1 outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+            moreActive ? active : inactive,
+          )}
+          aria-current={moreActive ? "page" : undefined}
+        >
+          {t("nav.more")}
+          <ChevronDown className="size-3.5 opacity-70" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          className="min-w-44 rounded-xl border-border/60 shadow-lg"
+        >
+          <DropdownMenuItem asChild>
+            <Link
+              to="/report"
+              className={cn(
+                "w-full cursor-pointer",
+                isReportActive && "font-semibold text-primary",
+              )}
+            >
+              {t("report.nav")}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              to="/playground"
+              className={cn(
+                "w-full cursor-pointer",
+                isPlaygroundActive && "font-semibold text-primary",
+              )}
+            >
+              {t("playground.nav")}
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </nav>
   );
 }
