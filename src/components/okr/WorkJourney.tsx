@@ -425,7 +425,7 @@ export function WorkJourney({
             {/* Named step rail on desktop; the compact dot row stays for narrow screens. */}
             <aside className="hidden shrink-0 border-r border-border/70 bg-muted/30 px-3 py-6 md:block md:w-60">
               <p className="eyebrow px-2 text-primary">{t("journey.title")}</p>
-              <ol className="mt-3 grid gap-1" aria-label={t("journey.title")}>
+              <ol className="mt-3 flex flex-col gap-1" aria-label={t("journey.title")}>
                 {steps.map((s, i) => {
                   const done = i < index;
                   const current = i === index;
