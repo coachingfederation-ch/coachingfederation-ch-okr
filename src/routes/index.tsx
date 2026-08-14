@@ -69,10 +69,11 @@ export const Route = createFileRoute("/")({
 
 type TimeChoice = "small" | "medium" | "any";
 type HelpChoice = InitiativeHelpNeeded | "any";
-type Answers = { pillar: Pillar | "any" | null; time: TimeChoice | null; help: HelpChoice | null };
+/** `objective` holds an OKR set id, or "any" when the volunteer is open. */
+type Answers = { objective: string | "any" | null; time: TimeChoice | null; help: HelpChoice | null };
 
-const EMPTY: Answers = { pillar: null, time: null, help: null };
-const STORAGE_KEY = "icfs.getInvolved.answers";
+const EMPTY: Answers = { objective: null, time: null, help: null };
+const STORAGE_KEY = "icfs.getInvolved.answers.v2";
 
 /** Smallest commitments read as the lightest time ask. */
 const TIME_FIT: Record<TimeChoice, InitiativeCommitment[]> = {
@@ -115,7 +116,7 @@ function Content() {
       const parsed = JSON.parse(raw) as Answers;
       if (parsed && typeof parsed === "object") {
         setAnswers({ ...EMPTY, ...parsed });
-        if (parsed.pillar && parsed.time && parsed.help) setStep(3);
+        if (parsed.objective && parsed.time && parsed.help) setStep(3);
       }
     } catch {
       /* ignore unreadable session state */
@@ -274,34 +275,31 @@ function Content() {
 
             {step === 0 && (
               <Question title={t("involve.q1.title")} help={t("involve.q1.help")}>
-                {PILLARS.map((p) => {
-                  const summary = data.pillars.find((x) => x.code === p);
-                  return (
-                    <ChoiceCard
-                      key={p}
-                      selected={answers.pillar === p}
-                      eyebrow={p}
-                      title={pillarName(locale, p)}
-                      body={
-                        summary
-                          ? pickTranslation(summary, "description", summary.description, locale)
-                          : ""
-                      }
-                      accent={`var(--color-pillar-${p.toLowerCase()})`}
-                      onSelect={() => {
-                        setAnswers((a) => ({ ...a, pillar: p }));
-                        setStep(1);
-                      }}
-                    />
-                  );
-                })}
+                {data.okr_sets.map((set) => (
+                  <ChoiceCard
+                    key={set.id}
+                    selected={answers.objective === set.id}
+                    eyebrow={`${t("involve.q1.objective")} ${set.number}`}
+                    title={pickTranslation(set, "title", set.title, locale)}
+                    body={pickTranslation(set, "objective", set.objective, locale)}
+                    accent={
+                      set.pillars[0]
+                        ? `var(--color-pillar-${set.pillars[0].toLowerCase()})`
+                        : undefined
+                    }
+                    onSelect={() => {
+                      setAnswers((a) => ({ ...a, objective: set.id }));
+                      setStep(1);
+                    }}
+                  />
+                ))}
 
                 <ChoiceCard
-                  selected={answers.pillar === "any"}
+                  selected={answers.objective === "any"}
                   title={t("involve.q1.any")}
                   body={t("involve.q1.anyHelp")}
                   onSelect={() => {
-                    setAnswers((a) => ({ ...a, pillar: "any" }));
+                    setAnswers((a) => ({ ...a, objective: "any" }));
                     setStep(1);
                   }}
                 />
@@ -345,10 +343,13 @@ function Content() {
             {complete && (
               <ul className="mt-8 flex flex-wrap gap-2">
                 {[
-                  answers.pillar === "any"
+                  answers.objective === "any"
                     ? t("involve.q1.any")
-                    : answers.pillar
-                      ? pillarName(locale, answers.pillar)
+                    : answers.objective
+                      ? (() => {
+                          const set = data.okr_sets.find((x) => x.id === answers.objective);
+                          return set ? pickTranslation(set, "title", set.title, locale) : null;
+                        })()
                       : null,
                   answers.time ? t(`involve.time.${answers.time}` as never) : null,
                   answers.help ? t(`involve.help.${answers.help}` as never) : null,
@@ -754,7 +755,7 @@ function rank(
   locale: Locale,
   t: (key: StringKey) => string,
 ): Match[] {
-  if (!answers.pillar || !answers.time || !answers.help) return [];
+  if (!answers.objective || !answers.time || !answers.help) return [];
   const out: Match[] = [];
 
   for (const set of data.okr_sets) {
@@ -768,9 +769,9 @@ function rank(
         let score = 1;
         const reasons: string[] = [];
 
-        if (answers.pillar !== "any" && set.pillars.includes(answers.pillar)) {
-          score += 3;
-          reasons.push(pillarName(locale, answers.pillar));
+        if (answers.objective !== "any" && set.id === answers.objective) {
+          score += 4;
+          reasons.push(okrTitle);
         }
         if (it.commitment && TIME_FIT[answers.time].includes(it.commitment)) {
           score += answers.time === "any" ? 0 : 2;
