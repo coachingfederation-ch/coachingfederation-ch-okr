@@ -151,11 +151,12 @@ function Content() {
               fetchPriority="high"
               decoding="async"
             />
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="-mx-1 flex w-full max-w-full items-center gap-3 overflow-x-auto px-1 md:w-auto">
               <TopNav />
               <LanguageSwitcher />
               <AuthBadge />
             </div>
+
           </header>
 
           {/* Welcome tile */}
