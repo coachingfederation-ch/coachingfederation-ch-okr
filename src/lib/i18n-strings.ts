@@ -39,7 +39,7 @@ export type StringKey =
   | "kr.lead"
   | "kr.openDetails"
   | "kr.number"
-  | "kr.detailDescription"
+  
   | "kr.section.definition"
   | "kr.parentObjective"
   | "kr.section.measurement"
