@@ -36,13 +36,14 @@ import {
   SIZE_KEY,
 } from "@/components/okr/work-meta";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import {
   AlertDialog,
   AlertDialogAction,
