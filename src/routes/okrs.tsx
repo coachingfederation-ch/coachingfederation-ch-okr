@@ -959,7 +959,14 @@ function KrDetailSheet({
                       />
                     </div>
                   </div>
-                  <div className="mt-5 border-t border-border/60 pt-4">
+                </div>
+              </section>
+
+              {/* Measurement */}
+              <section className="space-y-3">
+                <h3 className="text-base font-bold text-hero">{t("kr.section.measurement")}</h3>
+                <div className="rounded-r-lg border-l-4 border-primary bg-surface p-5 shadow-sm">
+                  <div className="mb-5 border-b border-border/60 pb-4">
                     <div className="section-label mb-1">{t("kr.measure")}</div>
                     <EditableText
                       multiline
@@ -971,14 +978,8 @@ function KrDetailSheet({
                       className="text-sm leading-relaxed text-hero"
                     />
                   </div>
-                </div>
-              </section>
-
-              {/* Measurement */}
-              <section className="space-y-3">
-                <h3 className="text-base font-bold text-hero">{t("kr.section.measurement")}</h3>
-                <div className="rounded-r-lg border-l-4 border-primary bg-surface p-5 shadow-sm">
                   {kr.kr_type === "metric" ? (
+
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="rounded-md border border-border/50 bg-card/60 p-4">
                         <div className="section-label mb-1">{t("kr.baseline2026")}</div>
