@@ -299,9 +299,6 @@ type OkrMutations = ReturnType<typeof useOkrMutations>;
 
 // ---------- Atoms ----------
 
-
-
-
 function PillarChip({
   code,
   canEdit,
@@ -735,7 +732,6 @@ function OkrCard({
 
       <AssistantDrawer context={assistant} onClose={() => setAssistant(null)} />
     </article>
-
   );
 }
 
@@ -774,7 +770,6 @@ function KrCard({
       <div className="mt-auto pt-4">
         <KrMeasurement kr={kr} variant="compact" />
       </div>
-
     </div>
   );
 }
@@ -788,7 +783,6 @@ const KR_INITIATIVE_DOT: Record<string, string> = {
 };
 
 function KrDetailSheet({
-
   kr,
   canEdit,
   m,
@@ -826,7 +820,6 @@ function KrDetailSheet({
   };
 
   const krText = kr ? pickTranslation(kr, "text", kr.text, locale) : "";
-  const krTarget = kr ? pickTranslation(kr, "target", kr.target, locale) : "";
   const krLead = kr ? pickTranslation(kr, "lead", kr.lead, locale) : "";
   const krMeasure = kr ? pickTranslation(kr, "measure", kr.measure, locale) : "";
   const krInstrument = kr ? pickTranslation(kr, "instrument", kr.instrument, locale) : "";
@@ -959,7 +952,14 @@ function KrDetailSheet({
                       />
                     </div>
                   </div>
-                  <div className="mt-5 border-t border-border/60 pt-4">
+                </div>
+              </section>
+
+              {/* Measurement */}
+              <section className="space-y-3">
+                <h3 className="text-base font-bold text-hero">{t("kr.section.measurement")}</h3>
+                <div className="rounded-r-lg border-l-4 border-primary bg-surface p-5 shadow-sm">
+                  <div className="mb-5 border-b border-border/60 pb-4">
                     <div className="section-label mb-1">{t("kr.measure")}</div>
                     <EditableText
                       multiline
@@ -971,13 +971,6 @@ function KrDetailSheet({
                       className="text-sm leading-relaxed text-hero"
                     />
                   </div>
-                </div>
-              </section>
-
-              {/* Measurement */}
-              <section className="space-y-3">
-                <h3 className="text-base font-bold text-hero">{t("kr.section.measurement")}</h3>
-                <div className="rounded-r-lg border-l-4 border-primary bg-surface p-5 shadow-sm">
                   {kr.kr_type === "metric" ? (
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="rounded-md border border-border/50 bg-card/60 p-4">
@@ -1004,7 +997,10 @@ function KrDetailSheet({
                       </div>
                       <div className="relative rounded-md border border-highlight/40 bg-card p-4 shadow-sm">
                         <div className="section-label mb-1 flex items-center gap-1.5 text-highlight">
-                          <span className="h-1.5 w-1.5 rounded-full bg-highlight" aria-hidden="true" />
+                          <span
+                            className="h-1.5 w-1.5 rounded-full bg-highlight"
+                            aria-hidden="true"
+                          />
                           {t("kr.current")}
                         </div>
 
@@ -1033,17 +1029,6 @@ function KrDetailSheet({
                           className="text-xl font-bold text-hero"
                         />
                       </div>
-                      <div className="rounded-md border border-border/50 bg-card/60 p-4">
-                        <div className="section-label mb-1">{t("kr.originalTarget")}</div>
-                        <EditableText
-                          value={krTarget}
-                          canEdit={canEdit}
-                          maxLength={LIMITS.target}
-                          onSave={(v) => update({ target: v })}
-                          placeholder="—"
-                          className="text-sm font-semibold text-muted-foreground"
-                        />
-                      </div>
                     </div>
                   ) : (
                     <div className="grid gap-4 sm:grid-cols-2">
@@ -1065,17 +1050,6 @@ function KrDetailSheet({
                           canEdit={canEdit}
                           value={kr.milestone_due}
                           onChange={(v) => update({ milestone_due: v })}
-                        />
-                      </div>
-                      <div className="rounded-md border border-border/50 bg-card/60 p-4 sm:col-span-2">
-                        <div className="section-label mb-1">{t("kr.originalTarget")}</div>
-                        <EditableText
-                          value={krTarget}
-                          canEdit={canEdit}
-                          maxLength={LIMITS.target}
-                          onSave={(v) => update({ target: v })}
-                          placeholder="—"
-                          className="text-sm font-semibold text-muted-foreground"
                         />
                       </div>
                     </div>
@@ -1139,7 +1113,6 @@ function KrDetailSheet({
                           <ArrowUpRight className="h-4 w-4" />
                         </Link>
                       </li>
-
                     ))}
                   </ul>
                 ) : (
@@ -1260,8 +1233,6 @@ function KrDetailSheet({
           </>
         )}
       </SheetContent>
-
-
     </Sheet>
   );
 }
