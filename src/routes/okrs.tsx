@@ -299,9 +299,6 @@ type OkrMutations = ReturnType<typeof useOkrMutations>;
 
 // ---------- Atoms ----------
 
-
-
-
 function PillarChip({
   code,
   canEdit,
@@ -735,7 +732,6 @@ function OkrCard({
 
       <AssistantDrawer context={assistant} onClose={() => setAssistant(null)} />
     </article>
-
   );
 }
 
@@ -774,7 +770,6 @@ function KrCard({
       <div className="mt-auto pt-4">
         <KrMeasurement kr={kr} variant="compact" />
       </div>
-
     </div>
   );
 }
@@ -788,7 +783,6 @@ const KR_INITIATIVE_DOT: Record<string, string> = {
 };
 
 function KrDetailSheet({
-
   kr,
   canEdit,
   m,
@@ -978,7 +972,6 @@ function KrDetailSheet({
                     />
                   </div>
                   {kr.kr_type === "metric" ? (
-
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="rounded-md border border-border/50 bg-card/60 p-4">
                         <div className="section-label mb-1">{t("kr.baseline2026")}</div>
@@ -1004,7 +997,10 @@ function KrDetailSheet({
                       </div>
                       <div className="relative rounded-md border border-highlight/40 bg-card p-4 shadow-sm">
                         <div className="section-label mb-1 flex items-center gap-1.5 text-highlight">
-                          <span className="h-1.5 w-1.5 rounded-full bg-highlight" aria-hidden="true" />
+                          <span
+                            className="h-1.5 w-1.5 rounded-full bg-highlight"
+                            aria-hidden="true"
+                          />
                           {t("kr.current")}
                         </div>
 
@@ -1056,7 +1052,6 @@ function KrDetailSheet({
                           onChange={(v) => update({ milestone_due: v })}
                         />
                       </div>
-
                     </div>
                   )}
                 </div>
@@ -1118,7 +1113,6 @@ function KrDetailSheet({
                           <ArrowUpRight className="h-4 w-4" />
                         </Link>
                       </li>
-
                     ))}
                   </ul>
                 ) : (
@@ -1239,8 +1233,6 @@ function KrDetailSheet({
           </>
         )}
       </SheetContent>
-
-
     </Sheet>
   );
 }
