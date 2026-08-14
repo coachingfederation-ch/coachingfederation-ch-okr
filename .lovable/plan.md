@@ -1,47 +1,37 @@
-# Calmer key result side panel
+# Playful accents on the OKR card header
 
-Redesign the key result detail panel that opens from an OKR card so it reads as a few quiet, clearly separated sections instead of one long list of labels. Presentation only — same fields, same order of meaning, same inline editing, no data, route or i18n-key changes. Palette (Deep Blue, Blue, Light Blue, Yellow, Bone, White) and the Quicksand / Plus Jakarta Sans pairing stay as they are.
+Add subtle Yellow and Light-Blue accents to the objective number and the Strategic-Focus-Area badges in the OKR card header band, so the deep-blue band feels less flat and more tactile. Presentation only — no data, route, i18n or behaviour changes. Palette and fonts stay as they are.
 
-## Direction: quiet section rhythm
+## Changes (all in `src/routes/index.tsx`)
 
-The panel becomes a fixed header, a scrolling body of three named sections, and a fixed footer for the destructive action.
+### 1. Objective number badge (line ~569)
 
-**Header (sticky)**
-- KR chip plus a muted parent-objective line above the key result text.
-- Key result text in Quicksand at panel-title size; still inline-editable.
-- Short description line and, for editors, the two assistant buttons stay below it.
-- A hairline border separates it from the scrolling body.
+Today the number sits in a translucent-white rounded box (`bg-hero-foreground/10`) on the Deep-Blue band — it reads as neutral. Make it the one playful Yellow accent on the band:
 
-**Section 1 — Definition**
-- Small blue uppercase section heading.
-- Lead, KR number, Type, Measure, Instrument as soft Bone-tinted field tiles in a two-column grid (Measure spans both columns since it is the longest). Each tile keeps its label plus its editable value.
+- Fill: `bg-accent` (ICF Yellow `#EFCB30`), text `text-hero` (Deep Blue) — 9.4:1 contrast, the highest-contrast pairing on the band and within Yellow's "selective emphasis, never dominant" role (one small badge per card).
+- Keep the `h-11 w-11 rounded-2xl` shape and Quicksand bold weight; add a thin `ring-1 ring-hero/10` so it lifts off the blue.
+- This is the only Yellow element on the card header, so it stays restrained.
 
-**Section 2 — Measurement**
-- One white card with a light border holding the whole measurement story: Baseline 2026 / Current / Target 2027 across one row, with Current emphasised as a Light-Blue pill, the thin progress bar underneath, and the "as at" date and baseline-lock control kept in place.
-- The original 2026 target note moves inside this card as a quiet footnote row separated by a hairline, rather than a separate boxed panel.
-- Milestone key results show status and due date in the same card shell instead of the triplet.
+### 2. Strategic-Focus-Area badges — `PillarChip` (line ~333)
 
-**Section 3 — Related initiatives**
-- Section heading with the count and the "Link initiatives" action on the same line.
-- Initiatives as flat white rows with a small status dot, a chevron affordance, and hover in Light Blue — replacing the current striped table look. The "new initiatives are created in the Portfolio" note stays as small muted text under the list.
+Today every SFA badge is an identical white chip with blue text; only the three-letter code carries meaning. Give each a subtle pillar-tinted identity while keeping the code as the non-colour indicator:
 
-**Footer**
-- "Delete key result" pinned at the bottom on a faint Bone strip, so it no longer sits inline after the content.
+- Replace the flat white fill with a low-opacity tint of the badge's own pillar colour: SG → Light Blue, OE → Blue, CE → Deep Blue, each at ~12–15% over the Deep-Blue band (read as a soft coloured chip, not a solid block).
+- Add a small 6px leading dot in the full pillar colour before the code, so the pillar hue is legible at a glance even at small sizes.
+- Keep the chip border in `--color-chip-active-border` (Light Blue) and the code text in Deep-Blue-on-band / white where contrast needs it; verify DE/FR/IT codes still read clearly.
+- The editor "remove" X and the dashed "add" button keep their current styling.
 
-Calm comes from fewer surface types (Bone tiles for definition, one white card for measurement, plain rows for initiatives), consistent 11px blue section headings, and more vertical breathing room between the three groups.
+### 3. Restraint guard
 
-## Technical notes
-
-- All changes in `KrDetailSheet` inside `src/routes/index.tsx`, plus a small layout adjustment in `src/components/okr/KrMeasurement.tsx` if the full variant needs the new card shell.
-- Sheet body becomes a flex column: header, `flex-1 overflow-y-auto` content, footer.
-- Only existing semantic tokens (`bg-surface`, `bg-card`, `text-primary`, `border-border`, `highlight`, `warning`) — no new colours, no hardcoded hex.
-- No changes to mutations, `EditableText`, `PlainSelect`, `PlainDate`, `LinkInitiativesDialog`, or translation keys.
+- No Yellow anywhere else on the header — only the number badge.
+- No new tokens; only existing `--accent`, `--highlight`, `--pillar-*`, `--hero`, `--chip-active-border`.
+- Focus ring and hover states preserved.
 
 ## PR note
 
-- **Summary** — Visual restructure of the key result detail side panel for calmer, clearer grouping; presentation only.
-- **Changes** — UI only: `src/routes/index.tsx` (`KrDetailSheet` header/sections/footer), possibly `src/components/okr/KrMeasurement.tsx` (full variant shell).
+- **Summary** — Adds a Yellow objective-number badge and subtle pillar-tinted SFA badges to the OKR card header for a calmer, more tactile read; presentation only.
+- **Changes** — UI only: `src/routes/index.tsx` (objective number badge fill, `PillarChip` tint + leading dot).
 - **Backend / schema changes** — None.
-- **Testing & verification** — Open the panel signed out and as an editor; confirm every field still shows and saves inline, metric and milestone key results both render, baseline lock and "as at" date work, linking initiatives still opens, delete still works, and DE/FR/IT labels do not clip at tablet and mobile widths.
-- **Risks & rollback** — Low; revert the two files.
-- **Follow-ups** — The initiative detail one-pager keeps its current styling; align later if wanted.
+- **Testing & verification** — Check `/` signed-out and as editor; confirm all five OKR cards render with correct pillar tints, codes remain legible on Deep Blue, focus rings and hover still work, and DE/FR/IT codes do not clip at tablet and mobile widths.
+- **Risks & rollback** — Low; revert the file.
+- **Follow-ups** — None.
