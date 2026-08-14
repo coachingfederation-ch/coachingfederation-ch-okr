@@ -16,7 +16,8 @@ import {
   type Pillar,
 } from "@/lib/okr-schemas";
 import { pickTranslation, useLocale } from "@/lib/i18n";
-import { pillarName } from "@/lib/i18n-strings";
+import { pillarName, type StringKey } from "@/lib/i18n-strings";
+import type { Locale } from "@/lib/i18n-shared";
 import { AVAILABILITY_KEY, COMMITMENT_KEY, HELP_NEEDED_KEY } from "@/components/okr/initiative-meta";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
@@ -125,7 +126,7 @@ function Content() {
   }, [answers]);
 
   const stats = useMemo(() => summarise(data), [data]);
-  const matches = useMemo(() => rank(data, answers, locale), [data, answers, locale]);
+  const matches = useMemo(() => rank(data, answers, locale, t), [data, answers, locale, t]);
 
   const complete = step >= 3;
   const visible = showAll ? matches : matches.slice(0, 6);
@@ -631,14 +632,19 @@ function summarise(data: DashboardDTO) {
  * away hard except closed work: a weaker match still deserves to be visible,
  * it just sorts lower.
  */
-function rank(data: DashboardDTO, answers: Answers, locale: string): Match[] {
+function rank(
+  data: DashboardDTO,
+  answers: Answers,
+  locale: Locale,
+  t: (key: StringKey) => string,
+): Match[] {
   if (!answers.pillar || !answers.time || !answers.help) return [];
   const out: Match[] = [];
 
   for (const set of data.okr_sets) {
-    const okrTitle = pickTranslation(set, "title", set.title, locale as never);
+    const okrTitle = pickTranslation(set, "title", set.title, locale);
     for (const kr of set.key_results) {
-      const krText = pickTranslation(kr, "text", kr.text, locale as never);
+      const krText = pickTranslation(kr, "text", kr.text, locale);
       for (const it of kr.initiatives) {
         if (it.status === "done" || it.status === "canceled") continue;
         if (it.availability !== "open") continue;
@@ -648,15 +654,15 @@ function rank(data: DashboardDTO, answers: Answers, locale: string): Match[] {
 
         if (answers.pillar !== "any" && set.pillars.includes(answers.pillar)) {
           score += 3;
-          reasons.push(answers.pillar);
+          reasons.push(pillarName(locale, answers.pillar));
         }
         if (it.commitment && TIME_FIT[answers.time].includes(it.commitment)) {
           score += answers.time === "any" ? 0 : 2;
-          if (answers.time !== "any") reasons.push(it.commitment);
+          if (answers.time !== "any") reasons.push(t(COMMITMENT_KEY[it.commitment]));
         }
         if (answers.help !== "any" && it.help_needed === answers.help) {
           score += 2;
-          reasons.push(it.help_needed);
+          reasons.push(t(HELP_NEEDED_KEY[it.help_needed]));
         }
 
         out.push({
