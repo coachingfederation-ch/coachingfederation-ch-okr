@@ -458,7 +458,7 @@ export function WorkJourney({
                         >
                           {done ? <Check className="h-3 w-3" /> : i + 1}
                         </span>
-                        <span className="min-w-0 truncate">{t(STEP_TITLE[s])}</span>
+                        <span className="min-w-0 flex-1 leading-snug">{t(STEP_TITLE[s])}</span>
                       </button>
                     </li>
                   );
