@@ -2,7 +2,16 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { ArrowUpRight, Check, Sparkles } from "lucide-react";
+import {
+  ArrowUpRight,
+  Check,
+  Handshake,
+  Megaphone,
+  Sparkles,
+  TrendingUp,
+  Users,
+  ShieldCheck,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { dashboardQueryOptions } from "@/lib/dashboard-query";
