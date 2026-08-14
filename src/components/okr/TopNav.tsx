@@ -21,7 +21,7 @@ export function TopNav() {
   return (
     <nav
       aria-label="Primary"
-      className="inline-flex items-center rounded-full bg-hero-foreground/10 p-0.5"
+      className="flex flex-wrap items-center justify-end gap-0.5 rounded-full bg-hero-foreground/10 p-0.5"
     >
       <Link
         to="/"
