@@ -83,6 +83,16 @@ type Answers = { objective: string | "any" | null; time: TimeChoice | null; help
 const EMPTY: Answers = { objective: null, time: null, help: null };
 const STORAGE_KEY = "icfs.getInvolved.answers.v2";
 
+/** Speaking icons for each objective, keyed by objective number. */
+const OBJECTIVE_ICONS: Record<number, React.ReactNode> = {
+  1: <ShieldCheck className="h-5 w-5" />,
+  2: <Users className="h-5 w-5" />,
+  3: <TrendingUp className="h-5 w-5" />,
+  4: <Handshake className="h-5 w-5" />,
+  5: <Megaphone className="h-5 w-5" />,
+};
+
+
 /** Smallest commitments read as the lightest time ask. */
 const TIME_FIT: Record<TimeChoice, InitiativeCommitment[]> = {
   small: ["one_off"],
