@@ -715,10 +715,6 @@ function InterestSheet({ match, onClose }: { match: Match | null; onClose: () =>
           </>
         )}
       </DialogContent>
-
-          </>
-        )}
-      </DialogContent>
     </Dialog>
 
   );
