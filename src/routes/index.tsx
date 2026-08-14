@@ -40,7 +40,7 @@ import {
   type PillarSummaryDTO,
   type RoleLabel,
 } from "@/lib/okr-schemas";
-import { LOCALES, LOCALE_LABELS, type Locale } from "@/lib/i18n-shared";
+import { type Locale } from "@/lib/i18n-shared";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { pillarName } from "@/lib/i18n-strings";
 import { AssistantDrawer, type AssistantContext } from "@/components/okr/AssistantDrawer";
