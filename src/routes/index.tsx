@@ -640,71 +640,79 @@ function InterestSheet({ match, onClose }: { match: Match | null; onClose: () =>
   };
 
   return (
-    <Sheet open={!!match} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-lg">
+    <Dialog open={!!match} onOpenChange={(open: boolean) => !open && onClose()}>
+      <DialogContent className="max-h-[90vh] gap-0 overflow-y-auto border-none bg-wash p-0 shadow-tile sm:max-w-lg [&>button]:top-5 [&>button]:right-5">
         {match && (
           <>
-            <SheetHeader>
-              <p className="section-label text-left text-primary">{t("involve.interest.cta")}</p>
-              <SheetTitle className="text-left">
+            <DialogHeader className="space-y-3 rounded-t-lg bg-background px-6 pt-6 pb-6 text-left">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-accent/25 px-3 py-1 text-[0.7rem] font-semibold tracking-[0.14em] text-primary uppercase">
+                <Sparkles className="size-3.5" aria-hidden />
+                {t("involve.interest.cta")}
+              </span>
+              <DialogTitle className="text-left text-2xl leading-snug">
                 {pickTranslation(match.initiative, "text", match.initiative.text, locale)}
-              </SheetTitle>
-              <SheetDescription className="text-left">
+              </DialogTitle>
+              <DialogDescription className="text-left">
                 {t("involve.interest.intro")}
-              </SheetDescription>
-            </SheetHeader>
+              </DialogDescription>
+            </DialogHeader>
 
-            {done ? (
-              <p
-                role="status"
-                className="mt-6 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm font-medium text-foreground"
-              >
-                {t("involve.interest.success")}
-              </p>
-            ) : (
-              <div className="mt-6 space-y-4">
-                <Field label={t("involve.interest.name")}>
-                  <input
-                    value={name}
-                    maxLength={100}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
-                  />
-                </Field>
-                <Field label={t("involve.interest.email")}>
-                  <input
-                    type="email"
-                    value={email}
-                    maxLength={255}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
-                  />
-                </Field>
-                <Field label={t("involve.interest.message")}>
-                  <textarea
-                    rows={4}
-                    value={message}
-                    maxLength={1000}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
-                  />
-                </Field>
-
-                <Button
-                  type="button"
-                  className="h-11 w-full"
-                  disabled={!valid || busy}
-                  onClick={() => void send()}
+            <div className="px-6 pt-6 pb-7">
+              {done ? (
+                <p
+                  role="status"
+                  className="rounded-2xl border border-primary/20 bg-background px-4 py-4 text-sm font-medium text-foreground shadow-tile"
                 >
-                  {busy ? t("involve.interest.sending") : t("involve.interest.submit")}
-                </Button>
-                <p className="text-xs text-muted-foreground">{t("involve.interest.privacy")}</p>
-              </div>
-            )}
+                  {t("involve.interest.success")}
+                </p>
+              ) : (
+                <div className="space-y-4 rounded-3xl bg-background p-5 shadow-tile">
+                  <Field label={t("involve.interest.name")}>
+                    <input
+                      value={name}
+                      maxLength={100}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full rounded-xl border border-border bg-wash px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+                    />
+                  </Field>
+                  <Field label={t("involve.interest.email")}>
+                    <input
+                      type="email"
+                      value={email}
+                      maxLength={255}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full rounded-xl border border-border bg-wash px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+                    />
+                  </Field>
+                  <Field label={t("involve.interest.message")}>
+                    <textarea
+                      rows={4}
+                      value={message}
+                      maxLength={1000}
+                      onChange={(e) => setMessage(e.target.value)}
+                      className="w-full rounded-xl border border-border bg-wash px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+                    />
+                  </Field>
+
+                  <Button
+                    type="button"
+                    className="h-12 w-full rounded-full"
+                    disabled={!valid || busy}
+                    onClick={() => void send()}
+                  >
+                    {busy ? t("involve.interest.sending") : t("involve.interest.submit")}
+                  </Button>
+                  <p className="text-center text-xs text-muted-foreground">
+                    {t("involve.interest.privacy")}
+                  </p>
+                </div>
+              )}
+            </div>
           </>
         )}
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
+
   );
 }
 
