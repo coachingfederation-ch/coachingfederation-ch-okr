@@ -561,7 +561,7 @@ function OkrCard({
       <header className="bg-hero px-8 py-6 text-hero-foreground">
         <div className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-start gap-4">
-            <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-hero-foreground/10 font-display text-xl font-bold text-hero-foreground">
+            <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent font-display text-xl font-bold text-hero ring-1 ring-hero/10">
               {set.number}
             </span>
             <div className="min-w-0">
