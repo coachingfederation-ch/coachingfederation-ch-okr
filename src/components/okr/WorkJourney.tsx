@@ -419,35 +419,82 @@ export function WorkJourney({
 
   return (
     <>
-      <Sheet open={open} onOpenChange={requestClose}>
-        <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-xl">
-          <SheetHeader className="border-b px-6 pt-6 pb-4">
-            <p className="eyebrow text-primary">
-              {t("journey.step")} {index + 1} {t("journey.of")} {steps.length}
-            </p>
-            <SheetTitle>{t(STEP_TITLE[step])}</SheetTitle>
-            <SheetDescription>{t(STEP_HELP[step])}</SheetDescription>
-            <ol className="mt-3 flex flex-wrap gap-1.5" aria-label={t("journey.title")}>
-              {steps.map((s, i) => (
-                <li key={s}>
-                  <button
-                    type="button"
-                    onClick={() => i <= index && setIndex(i)}
-                    disabled={i > index}
-                    aria-current={i === index ? "step" : undefined}
-                    className={cn(
-                      "h-1.5 w-8 rounded-full transition-colors",
-                      i === index ? "bg-primary" : i < index ? "bg-highlight" : "bg-border",
-                    )}
-                  >
-                    <span className="sr-only">{t(STEP_TITLE[s])}</span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </SheetHeader>
+      <Dialog open={open} onOpenChange={requestClose}>
+        <DialogContent className="flex max-h-[85vh] w-[min(100vw-2rem,64rem)] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none">
+          <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+            {/* Named step rail on desktop; the compact dot row stays for narrow screens. */}
+            <aside className="hidden shrink-0 border-r border-border/70 bg-muted/30 px-3 py-6 md:block md:w-60">
+              <p className="eyebrow px-2 text-primary">{t("journey.title")}</p>
+              <ol className="mt-3 grid gap-1" aria-label={t("journey.title")}>
+                {steps.map((s, i) => {
+                  const done = i < index;
+                  const current = i === index;
+                  return (
+                    <li key={s}>
+                      <button
+                        type="button"
+                        onClick={() => i <= index && setIndex(i)}
+                        disabled={i > index}
+                        aria-current={current ? "step" : undefined}
+                        className={cn(
+                          "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-sm transition-colors",
+                          current
+                            ? "bg-card font-semibold text-primary shadow-soft"
+                            : done
+                              ? "text-foreground hover:bg-card/70"
+                              : "text-muted-foreground",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold",
+                            current
+                              ? "bg-primary text-primary-foreground"
+                              : done
+                                ? "bg-highlight text-foreground"
+                                : "bg-border text-muted-foreground",
+                          )}
+                          aria-hidden
+                        >
+                          {done ? <Check className="h-3 w-3" /> : i + 1}
+                        </span>
+                        <span className="min-w-0 truncate">{t(STEP_TITLE[s])}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+            </aside>
 
-          <div className="min-w-0 flex-1 overflow-y-auto px-6 py-5">
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+              <DialogHeader className="border-b px-6 pt-6 pb-4 text-left">
+                <p className="eyebrow text-primary">
+                  {t("journey.step")} {index + 1} {t("journey.of")} {steps.length}
+                </p>
+                <DialogTitle>{t(STEP_TITLE[step])}</DialogTitle>
+                <DialogDescription>{t(STEP_HELP[step])}</DialogDescription>
+                <ol className="mt-3 flex flex-wrap gap-1.5 md:hidden" aria-label={t("journey.title")}>
+                  {steps.map((s, i) => (
+                    <li key={s}>
+                      <button
+                        type="button"
+                        onClick={() => i <= index && setIndex(i)}
+                        disabled={i > index}
+                        aria-current={i === index ? "step" : undefined}
+                        className={cn(
+                          "h-1.5 w-8 rounded-full transition-colors",
+                          i === index ? "bg-primary" : i < index ? "bg-highlight" : "bg-border",
+                        )}
+                      >
+                        <span className="sr-only">{t(STEP_TITLE[s])}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </DialogHeader>
+
+              <div className="min-w-0 flex-1 overflow-y-auto px-6 py-5">
+
             {step === "kind" && (
               <div className="grid gap-3">
                 {INITIATIVE_KINDS.map((k) => {
