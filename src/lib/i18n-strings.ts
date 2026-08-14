@@ -40,6 +40,8 @@ export type StringKey =
   | "kr.openDetails"
   | "kr.number"
   | "kr.detailDescription"
+  | "kr.section.definition"
+  | "kr.section.measurement"
   | "kr.deleteConfirm"
   | "kr.deleteConfirmBody"
   | "kr.delete"
@@ -650,6 +652,8 @@ const en: Record<StringKey, string> = {
   "kr.openDetails": "Open details →",
   "kr.number": "KR number",
   "kr.detailDescription": "Owned outcome and the projects that deliver it.",
+  "kr.section.definition": "Definition",
+  "kr.section.measurement": "Measurement",
   "kr.deleteConfirm": "Delete this key result and its initiatives?",
   "kr.deleteConfirmBody":
     "This will permanently delete the key result and its initiatives. This action cannot be undone.",
@@ -1322,6 +1326,8 @@ const de: Record<StringKey, string> = {
   "kr.openDetails": "Details öffnen →",
   "kr.number": "KR-Nummer",
   "kr.detailDescription": "Verantwortetes Ergebnis und die Projekte, die es liefern.",
+  "kr.section.definition": "Definition",
+  "kr.section.measurement": "Messung",
   "kr.deleteConfirm": "Dieses Key Result und seine Initiativen löschen?",
   "kr.deleteConfirmBody":
     "Das Key Result und seine Initiativen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -2008,6 +2014,8 @@ const fr: Record<StringKey, string> = {
   "kr.openDetails": "Voir les détails →",
   "kr.number": "Numéro KR",
   "kr.detailDescription": "Résultat piloté et projets qui le livrent.",
+  "kr.section.definition": "Définition",
+  "kr.section.measurement": "Mesure",
   "kr.deleteConfirm": "Supprimer ce résultat clé et ses initiatives ?",
   "kr.deleteConfirmBody":
     "Le résultat clé et ses initiatives seront définitivement supprimés. Cette action est irréversible.",
@@ -2696,6 +2704,8 @@ const it: Record<StringKey, string> = {
   "kr.openDetails": "Apri dettagli →",
   "kr.number": "Numero KR",
   "kr.detailDescription": "Risultato di cui si è responsabili e i progetti che lo realizzano.",
+  "kr.section.definition": "Definizione",
+  "kr.section.measurement": "Misurazione",
   "kr.deleteConfirm": "Eliminare questo risultato chiave e le sue iniziative?",
   "kr.deleteConfirmBody":
     "Il risultato chiave e le sue iniziative verranno eliminati definitivamente. Questa azione non può essere annullata.",
