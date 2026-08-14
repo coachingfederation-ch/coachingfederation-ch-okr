@@ -644,15 +644,19 @@ function InterestSheet({ match, onClose }: { match: Match | null; onClose: () =>
       <DialogContent className="max-h-[90vh] gap-0 overflow-y-auto border-none bg-wash p-0 shadow-tile sm:max-w-lg [&>button]:top-5 [&>button]:right-5">
         {match && (
           <>
-            <DialogHeader className="space-y-3 rounded-t-lg bg-background px-6 pt-6 pb-6 text-left">
-              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-accent/25 px-3 py-1 text-[0.7rem] font-semibold tracking-[0.14em] text-primary uppercase">
+            <DialogHeader className="relative space-y-3 overflow-hidden rounded-t-lg bg-card px-6 pt-6 pb-6 text-left">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -top-10 -right-8 size-28 rounded-full bg-accent/30"
+              />
+              <span className="relative inline-flex w-fit items-center gap-2 rounded-full bg-highlight/12 px-3 py-1 text-[0.7rem] font-semibold tracking-[0.14em] text-highlight uppercase">
                 <Sparkles className="size-3.5" aria-hidden />
                 {t("involve.interest.cta")}
               </span>
-              <DialogTitle className="text-left text-2xl leading-snug">
+              <DialogTitle className="relative text-left text-2xl leading-snug">
                 {pickTranslation(match.initiative, "text", match.initiative.text, locale)}
               </DialogTitle>
-              <DialogDescription className="text-left">
+              <DialogDescription className="relative text-left text-foreground/70">
                 {t("involve.interest.intro")}
               </DialogDescription>
             </DialogHeader>
@@ -661,18 +665,18 @@ function InterestSheet({ match, onClose }: { match: Match | null; onClose: () =>
               {done ? (
                 <p
                   role="status"
-                  className="rounded-2xl border border-primary/20 bg-background px-4 py-4 text-sm font-medium text-foreground shadow-tile"
+                  className="rounded-3xl bg-card px-5 py-5 text-sm font-medium text-foreground shadow-tile"
                 >
                   {t("involve.interest.success")}
                 </p>
               ) : (
-                <div className="space-y-4 rounded-3xl bg-background p-5 shadow-tile">
+                <div className="space-y-4 rounded-3xl bg-card p-5 shadow-tile">
                   <Field label={t("involve.interest.name")}>
                     <input
                       value={name}
                       maxLength={100}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full rounded-xl border border-border bg-wash px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+                      className="w-full rounded-2xl border border-transparent bg-wash px-4 py-3 text-sm text-foreground focus:border-highlight/40 focus:outline-none focus:ring-2 focus:ring-ring/40"
                     />
                   </Field>
                   <Field label={t("involve.interest.email")}>
@@ -681,7 +685,7 @@ function InterestSheet({ match, onClose }: { match: Match | null; onClose: () =>
                       value={email}
                       maxLength={255}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full rounded-xl border border-border bg-wash px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+                      className="w-full rounded-2xl border border-transparent bg-wash px-4 py-3 text-sm text-foreground focus:border-highlight/40 focus:outline-none focus:ring-2 focus:ring-ring/40"
                     />
                   </Field>
                   <Field label={t("involve.interest.message")}>
@@ -690,19 +694,19 @@ function InterestSheet({ match, onClose }: { match: Match | null; onClose: () =>
                       value={message}
                       maxLength={1000}
                       onChange={(e) => setMessage(e.target.value)}
-                      className="w-full rounded-xl border border-border bg-wash px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+                      className="w-full rounded-2xl border border-transparent bg-wash px-4 py-3 text-sm text-foreground focus:border-highlight/40 focus:outline-none focus:ring-2 focus:ring-ring/40"
                     />
                   </Field>
 
                   <Button
                     type="button"
-                    className="h-12 w-full rounded-full"
+                    className="h-12 w-full rounded-full bg-highlight text-highlight-foreground shadow-lift hover:bg-highlight/90"
                     disabled={!valid || busy}
                     onClick={() => void send()}
                   >
                     {busy ? t("involve.interest.sending") : t("involve.interest.submit")}
                   </Button>
-                  <p className="text-center text-xs text-muted-foreground">
+                  <p className="text-center text-xs text-foreground/60">
                     {t("involve.interest.privacy")}
                   </p>
                 </div>
