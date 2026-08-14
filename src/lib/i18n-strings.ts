@@ -112,6 +112,7 @@ export type StringKey =
   | "initiatives.form.removeSecondaryKr"
   | "initiatives.form.searchKr"
   | "initiative.link"
+  | "initiative.open"
   | "initiative.linkDialog.title"
   | "initiative.linkDialog.description"
   | "initiative.linkDialog.search"
@@ -728,6 +729,7 @@ const en: Record<StringKey, string> = {
   "initiatives.form.removeSecondaryKr": "Remove",
   "initiatives.form.searchKr": "Search Key Results…",
   "initiative.link": "Link initiatives",
+  "initiative.open": "Open initiative",
   "initiative.linkDialog.title": "Link initiatives to this KR",
   "initiative.linkDialog.description":
     "Choose which portfolio initiatives contribute to this key result. Create new initiatives from the Portfolio.",
@@ -1403,6 +1405,7 @@ const de: Record<StringKey, string> = {
   "initiatives.form.removeSecondaryKr": "Entfernen",
   "initiatives.form.searchKr": "Key Results suchen…",
   "initiative.link": "Initiativen verknüpfen",
+  "initiative.open": "Initiative öffnen",
   "initiative.linkDialog.title": "Initiativen mit diesem KR verknüpfen",
   "initiative.linkDialog.description":
     "Wähle, welche Portfolio-Initiativen zu diesem Key Result beitragen. Neue Initiativen werden im Portfolio erstellt.",
@@ -2092,6 +2095,7 @@ const fr: Record<StringKey, string> = {
   "initiatives.form.removeSecondaryKr": "Retirer",
   "initiatives.form.searchKr": "Rechercher des résultats clés…",
   "initiative.link": "Lier des initiatives",
+  "initiative.open": "Ouvrir l'initiative",
   "initiative.linkDialog.title": "Lier des initiatives à ce KR",
   "initiative.linkDialog.description":
     "Choisissez quelles initiatives du portefeuille contribuent à ce résultat clé. Les nouvelles initiatives se créent dans le Portefeuille.",
@@ -2783,6 +2787,7 @@ const it: Record<StringKey, string> = {
   "initiatives.form.removeSecondaryKr": "Rimuovi",
   "initiatives.form.searchKr": "Cerca risultati chiave…",
   "initiative.link": "Collega iniziative",
+  "initiative.open": "Apri iniziativa",
   "initiative.linkDialog.title": "Collega iniziative a questo KR",
   "initiative.linkDialog.description":
     "Scegli quali iniziative del portfolio contribuiscono a questo risultato chiave. Le nuove iniziative si creano nel Portfolio.",
