@@ -170,7 +170,10 @@ function DetailContent() {
       <header className="bg-hero text-hero-foreground print:hidden">
         <div className="mx-auto max-w-5xl px-8 pt-6 pb-12">
           <div className="mb-8 flex items-start justify-between gap-4">
-            <Link to="/initiatives" className="text-xs font-medium text-hero-foreground/80 hover:text-hero-foreground">
+            <Link
+              to="/initiatives"
+              className="text-xs font-medium text-hero-foreground/80 hover:text-hero-foreground"
+            >
               ← {t("work.back")}
             </Link>
             <div className="flex items-center gap-3">
@@ -269,10 +272,14 @@ function DetailContent() {
           <Panel title={t("work.bet")}>
             <div className="grid gap-3">
               {initiative.bet_action && (
-                <Field label={t("work.betAction")}>{text("bet_action", initiative.bet_action)}</Field>
+                <Field label={t("work.betAction")}>
+                  {text("bet_action", initiative.bet_action)}
+                </Field>
               )}
               {initiative.bet_change && (
-                <Field label={t("work.betChange")}>{text("bet_change", initiative.bet_change)}</Field>
+                <Field label={t("work.betChange")}>
+                  {text("bet_change", initiative.bet_change)}
+                </Field>
               )}
               {initiative.bet_question && (
                 <Field label={t("work.betQuestion")}>
@@ -444,13 +451,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 // ---------- Signals ----------
 
-function SignalsPanel({
-  initiative,
-  canEdit,
-}: {
-  initiative: InitiativeDTO;
-  canEdit: boolean;
-}) {
+function SignalsPanel({ initiative, canEdit }: { initiative: InitiativeDTO; canEdit: boolean }) {
   const { locale, t } = useLocale();
   const qc = useQueryClient();
   const addFn = useServerFn(addSignal);
@@ -503,10 +504,7 @@ function SignalsPanel({
       ) : (
         <ul className="grid gap-3">
           {initiative.signals.map((s) => (
-            <li
-              key={s.id}
-              className="rounded-xl border border-border/60 bg-muted/30 p-4"
-            >
+            <li key={s.id} className="rounded-xl border border-border/60 bg-muted/30 p-4">
               <div className="flex items-start justify-between gap-3">
                 <p className="text-sm font-semibold text-foreground">
                   {pickTranslation(s, "name", s.name, locale)}
@@ -608,11 +606,7 @@ function SignalsPanel({
             />
           </div>
           <div>
-            <Button
-              size="sm"
-              onClick={() => add.mutate()}
-              disabled={!name.trim() || add.isPending}
-            >
+            <Button size="sm" onClick={() => add.mutate()} disabled={!name.trim() || add.isPending}>
               {t("work.addSignal")}
             </Button>
           </div>
@@ -624,13 +618,7 @@ function SignalsPanel({
 
 // ---------- Milestones ----------
 
-function MilestonesPanel({
-  initiative,
-  canEdit,
-}: {
-  initiative: InitiativeDTO;
-  canEdit: boolean;
-}) {
+function MilestonesPanel({ initiative, canEdit }: { initiative: InitiativeDTO; canEdit: boolean }) {
   const { locale, t } = useLocale();
   const qc = useQueryClient();
   const addFn = useServerFn(addMilestone);
@@ -743,13 +731,7 @@ function MilestonesPanel({
 
 // ---------- Learning check-ins ----------
 
-function LearningPanel({
-  initiative,
-  canEdit,
-}: {
-  initiative: InitiativeDTO;
-  canEdit: boolean;
-}) {
+function LearningPanel({ initiative, canEdit }: { initiative: InitiativeDTO; canEdit: boolean }) {
   const { locale, t } = useLocale();
   const qc = useQueryClient();
   const addFn = useServerFn(addLearningEntry);

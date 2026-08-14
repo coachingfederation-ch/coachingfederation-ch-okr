@@ -93,7 +93,6 @@ export type StringKey =
   | "kr.lead"
   | "kr.openDetails"
   | "kr.number"
-  
   | "kr.section.definition"
   | "kr.parentObjective"
   | "kr.section.measurement"
@@ -676,7 +675,8 @@ const en: Record<StringKey, string> = {
   "involve.nav": "Get involved",
   "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · GET INVOLVED",
   "involve.title": "Find where you fit in the chapter",
-  "involve.subtitle": "Three short questions, and we will show you the open work that matches your interests, your time and your skills.",
+  "involve.subtitle":
+    "Three short questions, and we will show you the open work that matches your interests, your time and your skills.",
   "involve.cta.start": "Start the three questions",
   "involve.cta.browse": "Browse all work",
   "involve.stat.objectives": "Objectives",
@@ -760,7 +760,7 @@ const en: Record<StringKey, string> = {
   "kr.lead": "Lead",
   "kr.openDetails": "Open details →",
   "kr.number": "KR number",
-  
+
   "kr.section.definition": "Definition",
   "kr.parentObjective": "Parent objective",
   "kr.section.measurement": "Measurement",
@@ -1404,7 +1404,8 @@ const de: Record<StringKey, string> = {
   "involve.nav": "Mitmachen",
   "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · MITMACHEN",
   "involve.title": "Finde deinen Platz im Chapter",
-  "involve.subtitle": "Drei kurze Fragen, und wir zeigen dir die offene Arbeit, die zu deinen Interessen, deiner Zeit und deinen Fähigkeiten passt.",
+  "involve.subtitle":
+    "Drei kurze Fragen, und wir zeigen dir die offene Arbeit, die zu deinen Interessen, deiner Zeit und deinen Fähigkeiten passt.",
   "involve.cta.start": "Die drei Fragen starten",
   "involve.cta.browse": "Alle Arbeiten ansehen",
   "involve.stat.objectives": "Objectives",
@@ -1443,15 +1444,18 @@ const de: Record<StringKey, string> = {
   "involve.results.showAll": "Alle Treffer anzeigen",
   "involve.match.why": "Warum das passt:",
   "involve.interest.cta": "Interesse melden",
-  "involve.interest.intro": "Hinterlasse deine Angaben, und der Steward dieser Arbeit meldet sich bei dir.",
+  "involve.interest.intro":
+    "Hinterlasse deine Angaben, und der Steward dieser Arbeit meldet sich bei dir.",
   "involve.interest.name": "Dein Name",
   "involve.interest.email": "E-Mail",
   "involve.interest.message": "Was du noch ergänzen möchtest (optional)",
   "involve.interest.submit": "Interesse senden",
   "involve.interest.sending": "Wird gesendet…",
   "involve.interest.success": "Danke. Dein Interesse wurde ans Chapter weitergeleitet.",
-  "involve.interest.error": "Dein Interesse konnte nicht gesendet werden. Bitte versuche es erneut.",
-  "involve.interest.privacy": "Wir nutzen deine Angaben nur, um dich zu dieser Arbeit zu kontaktieren.",
+  "involve.interest.error":
+    "Dein Interesse konnte nicht gesendet werden. Bitte versuche es erneut.",
+  "involve.interest.privacy":
+    "Wir nutzen deine Angaben nur, um dich zu dieser Arbeit zu kontaktieren.",
   "hero.eyebrow": "DAS SCHWEIZER CHAPTER DER ICF · OKR-DASHBOARD",
   "hero.title": "Objectives und Key Results 2026-2027 mit globaler Ausrichtung",
   "hero.subtitle":
@@ -1489,7 +1493,7 @@ const de: Record<StringKey, string> = {
   "kr.lead": "Verantwortlich",
   "kr.openDetails": "Details öffnen →",
   "kr.number": "KR-Nummer",
-  
+
   "kr.section.definition": "Definition",
   "kr.parentObjective": "Übergeordnetes Objective",
   "kr.section.measurement": "Messung",
@@ -2147,7 +2151,8 @@ const fr: Record<StringKey, string> = {
   "involve.nav": "Participer",
   "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · PARTICIPER",
   "involve.title": "Trouvez votre place dans le chapitre",
-  "involve.subtitle": "Trois questions courtes, et nous vous montrons les travaux ouverts qui correspondent à vos intérêts, votre temps et vos compétences.",
+  "involve.subtitle":
+    "Trois questions courtes, et nous vous montrons les travaux ouverts qui correspondent à vos intérêts, votre temps et vos compétences.",
   "involve.cta.start": "Commencer les trois questions",
   "involve.cta.browse": "Voir tous les travaux",
   "involve.stat.objectives": "Objectifs",
@@ -2186,7 +2191,8 @@ const fr: Record<StringKey, string> = {
   "involve.results.showAll": "Afficher toutes les correspondances",
   "involve.match.why": "Pourquoi cela correspond :",
   "involve.interest.cta": "Manifester son intérêt",
-  "involve.interest.intro": "Laissez vos coordonnées et le steward de ce travail vous recontactera.",
+  "involve.interest.intro":
+    "Laissez vos coordonnées et le steward de ce travail vous recontactera.",
   "involve.interest.name": "Votre nom",
   "involve.interest.email": "E-mail",
   "involve.interest.message": "Ce que vous souhaitez ajouter (facultatif)",
@@ -2194,7 +2200,8 @@ const fr: Record<StringKey, string> = {
   "involve.interest.sending": "Envoi…",
   "involve.interest.success": "Merci. Votre intérêt a été transmis au chapitre.",
   "involve.interest.error": "Votre intérêt n'a pas pu être envoyé. Veuillez réessayer.",
-  "involve.interest.privacy": "Nous utilisons vos coordonnées uniquement pour vous contacter au sujet de ce travail.",
+  "involve.interest.privacy":
+    "Nous utilisons vos coordonnées uniquement pour vous contacter au sujet de ce travail.",
   "hero.eyebrow": "LE CHAPITRE SUISSE DE L'ICF · TABLEAU DE BORD OKR",
   "hero.title": "Objectifs et key results 2026-2027 avec alignement global",
   "hero.subtitle":
@@ -2232,7 +2239,7 @@ const fr: Record<StringKey, string> = {
   "kr.lead": "Responsable",
   "kr.openDetails": "Voir les détails →",
   "kr.number": "Numéro KR",
-  
+
   "kr.section.definition": "Définition",
   "kr.parentObjective": "Objectif parent",
   "kr.section.measurement": "Mesure",
@@ -2892,7 +2899,8 @@ const it: Record<StringKey, string> = {
   "involve.nav": "Partecipa",
   "involve.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · PARTECIPA",
   "involve.title": "Trova il tuo posto nel chapter",
-  "involve.subtitle": "Tre brevi domande e ti mostriamo il lavoro aperto che corrisponde ai tuoi interessi, al tuo tempo e alle tue competenze.",
+  "involve.subtitle":
+    "Tre brevi domande e ti mostriamo il lavoro aperto che corrisponde ai tuoi interessi, al tuo tempo e alle tue competenze.",
   "involve.cta.start": "Inizia le tre domande",
   "involve.cta.browse": "Vedi tutti i lavori",
   "involve.stat.objectives": "Obiettivi",
@@ -2977,7 +2985,7 @@ const it: Record<StringKey, string> = {
   "kr.lead": "Responsabile",
   "kr.openDetails": "Apri dettagli →",
   "kr.number": "Numero KR",
-  
+
   "kr.section.definition": "Definizione",
   "kr.parentObjective": "Obiettivo di riferimento",
   "kr.section.measurement": "Misurazione",

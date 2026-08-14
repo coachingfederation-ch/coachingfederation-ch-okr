@@ -18,7 +18,11 @@ import {
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { pillarName, type StringKey } from "@/lib/i18n-strings";
 import type { Locale } from "@/lib/i18n-shared";
-import { AVAILABILITY_KEY, COMMITMENT_KEY, HELP_NEEDED_KEY } from "@/components/okr/initiative-meta";
+import {
+  AVAILABILITY_KEY,
+  COMMITMENT_KEY,
+  HELP_NEEDED_KEY,
+} from "@/components/okr/initiative-meta";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { TopNav } from "@/components/okr/TopNav";
 import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
@@ -414,9 +418,7 @@ function ChoiceCard({
             style={{ backgroundColor: accent }}
           />
         )}
-        {eyebrow && (
-          <span className="section-label text-muted-foreground">{eyebrow}</span>
-        )}
+        {eyebrow && <span className="section-label text-muted-foreground">{eyebrow}</span>}
         {selected && <Check className="ml-auto h-4 w-4 text-primary" />}
       </span>
       <span className="mt-1 font-display text-base font-semibold text-foreground">{title}</span>

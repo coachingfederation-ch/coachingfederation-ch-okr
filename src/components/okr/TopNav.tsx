@@ -61,6 +61,4 @@ export function TopNav() {
       </Link>
     </nav>
   );
-
 }
-
