@@ -1189,6 +1189,16 @@ function KrDetailSheet({
                           <span className="min-w-0 flex-1 font-medium">
                             {pickTranslation(it, "text", it.text, locale)}
                           </span>
+                          <Link
+                            to="/initiatives/$initiativeId"
+                            params={{ initiativeId: it.id }}
+                            aria-label={t("initiative.open")}
+                            title={t("initiative.open")}
+                            className="shrink-0 rounded-sm p-0.5 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                          >
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Link>
+
                           {canEdit && (
                             <button
                               type="button"
