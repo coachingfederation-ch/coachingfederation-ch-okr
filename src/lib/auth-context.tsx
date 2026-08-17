@@ -1,69 +1,77 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-
-export const ALLOWED_EMAIL_DOMAIN = "coachingfederation.ch";
-
-function emailAllowed(email: string | null | undefined): boolean {
-  if (!email) return false;
-  const at = email.lastIndexOf("@");
-  return at >= 0 && email.slice(at + 1).toLowerCase() === ALLOWED_EMAIL_DOMAIN;
-}
+import { applyMyRoles, type AccessRole } from "@/lib/access.functions";
 
 type AuthState = {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
+  /** Role mirrored from the ICF Switzerland Welcome app; null = read-only. */
+  role: AccessRole;
   canEdit: boolean;
+  isAdmin: boolean;
 };
 
-const AuthContext = createContext<AuthState>({
+const EMPTY: AuthState = {
   user: null,
   session: null,
   isLoading: true,
+  role: null,
   canEdit: false,
-});
+  isAdmin: false,
+};
 
-function toState(session: Session | null): AuthState {
+const AuthContext = createContext<AuthState>(EMPTY);
+
+function withRole(session: Session | null, role: AccessRole): AuthState {
   return {
     user: session?.user ?? null,
     session: session ?? null,
     isLoading: false,
-    canEdit: !!session?.user && emailAllowed(session.user.email),
+    role,
+    canEdit: role === "editor" || role === "admin",
+    isAdmin: role === "admin",
   };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({
-    user: null,
-    session: null,
-    isLoading: true,
-    canEdit: false,
-  });
+  const [state, setState] = useState<AuthState>(EMPTY);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      const session = data.session ?? null;
-      if (session?.user && !emailAllowed(session.user.email)) {
-        supabase.auth.signOut();
+    let active = true;
+
+    /**
+     * Roles live in the Welcome app and are mirrored here by email. On every
+     * session change we ask the server to provision this user's role from the
+     * mirror, so removals there take effect on the next sign-in.
+     */
+    const resolve = async (session: Session | null) => {
+      if (!session?.user) {
+        if (active) setState(withRole(null, null));
         return;
       }
-      setState(toState(session));
-    });
+      if (active) setState({ ...withRole(session, null), isLoading: true });
+      try {
+        const { role } = await applyMyRoles();
+        if (active) setState(withRole(session, role));
+      } catch {
+        // Role service unavailable: stay signed in, but read-only.
+        if (active) setState(withRole(session, null));
+      }
+    };
+
+    supabase.auth.getSession().then(({ data }) => resolve(data.session ?? null));
 
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user && !emailAllowed(session.user.email)) {
-        if (event === "SIGNED_IN") {
-          toast.error(`Sign-in is restricted to @${ALLOWED_EMAIL_DOMAIN} accounts.`);
-        }
-        supabase.auth.signOut();
-        setState({ user: null, session: null, isLoading: false, canEdit: false });
-        return;
-      }
-      setState(toState(session));
+      if (event === "TOKEN_REFRESHED") return;
+      void resolve(session);
     });
-    return () => sub.subscription.unsubscribe();
+
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
@@ -72,4 +80,3 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-

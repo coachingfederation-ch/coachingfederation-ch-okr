@@ -124,6 +124,8 @@ export type StringKey =
   | "nav.okrs"
   | "nav.initiatives"
   | "nav.more"
+  | "access.readonly.title"
+  | "access.readonly.body"
   // initiative portfolio (kanban)
   | "initiatives.title"
   | "initiatives.subtitle"
@@ -797,6 +799,8 @@ const en: Record<StringKey, string> = {
   "nav.okrs": "OKRs",
   "nav.initiatives": "Initiative Portfolio",
   "nav.more": "More",
+  "access.readonly.title": "You are signed in with view-only access",
+  "access.readonly.body": "Editing rights are managed in the ICF Switzerland member area. Ask an admin to add you as an Editor there, then sign in again.",
   "initiatives.title": "Initiative Portfolio",
   "initiatives.subtitle": "All initiatives across every OKR, grouped by status.",
   "initiatives.filterAllOkrs": "All OKRs",
@@ -1531,6 +1535,8 @@ const de: Record<StringKey, string> = {
   "nav.okrs": "OKRs",
   "nav.initiatives": "Initiativen-Portfolio",
   "nav.more": "Mehr",
+  "access.readonly.title": "Sie sind mit reinem Lesezugriff angemeldet",
+  "access.readonly.body": "Bearbeitungsrechte werden im Mitgliederbereich von ICF Schweiz verwaltet. Bitten Sie eine Administratorin oder einen Administrator, Sie dort als Editor zu erfassen, und melden Sie sich danach erneut an.",
   "initiatives.title": "Initiativen-Portfolio",
   "initiatives.subtitle": "Alle Initiativen über alle OKRs hinweg, nach Status gruppiert.",
   "initiatives.filterAllOkrs": "Alle OKRs",
@@ -2278,6 +2284,8 @@ const fr: Record<StringKey, string> = {
   "nav.okrs": "OKR",
   "nav.initiatives": "Portefeuille d'initiatives",
   "nav.more": "Plus",
+  "access.readonly.title": "Vous êtes connecté avec un accès en lecture seule",
+  "access.readonly.body": "Les droits de modification sont gérés dans l’espace membres d’ICF Suisse. Demandez à un administrateur de vous ajouter comme éditeur, puis reconnectez-vous.",
   "initiatives.title": "Portefeuille d'initiatives",
   "initiatives.subtitle": "Toutes les initiatives, tous OKR confondus, regroupées par statut.",
   "initiatives.filterAllOkrs": "Tous les OKR",
@@ -3025,6 +3033,8 @@ const it: Record<StringKey, string> = {
   "nav.okrs": "OKR",
   "nav.initiatives": "Portfolio iniziative",
   "nav.more": "Altro",
+  "access.readonly.title": "Hai effettuato l’accesso in sola lettura",
+  "access.readonly.body": "I diritti di modifica sono gestiti nell’area soci di ICF Svizzera. Chiedi a un amministratore di aggiungerti come editor e poi accedi di nuovo.",
   "initiatives.title": "Portfolio iniziative",
   "initiatives.subtitle": "Tutte le iniziative di tutti gli OKR, raggruppate per stato.",
   "initiatives.filterAllOkrs": "Tutti gli OKR",
