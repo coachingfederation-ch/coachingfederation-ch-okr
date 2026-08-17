@@ -170,10 +170,36 @@ export async function syncRoleDirectory(): Promise<SyncResult> {
   }
 }
 
+/**
+ * Refresh the mirror when it is older than an hour. Sign-ins are the natural
+ * trigger, so no scheduled job (and no shared key inside the database) is
+ * needed. Failures are swallowed: a stale mirror is better than a failed login.
+ */
+const MAX_MIRROR_AGE_MS = 60 * 60 * 1000;
+
+async function refreshMirrorIfStale(): Promise<void> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: state } = await supabaseAdmin
+      .from("role_sync_state")
+      .select("last_run_at")
+      .eq("id", true)
+      .maybeSingle();
+
+    const lastRun = state?.last_run_at ? Date.parse(state.last_run_at) : 0;
+    if (Date.now() - lastRun < MAX_MIRROR_AGE_MS) return;
+    await syncRoleDirectory();
+  } catch {
+    // Mirror stays as-is; applyRolesForUser still reads the last known state.
+  }
+}
+
 /** Give the signed-in user exactly the role the mirror says they should have. */
 export async function applyRolesForUser(userId: string, email: string): Promise<AppRole | null> {
+  await refreshMirrorIfStale();
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const normalised = normaliseEmail(email);
+
 
   const { data: entry } = await supabaseAdmin
     .from("role_directory")
