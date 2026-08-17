@@ -616,6 +616,27 @@ export type Database = {
         }
         Relationships: []
       }
+      role_overrides: {
+        Row: {
+          created_at: string
+          email: string
+          note: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          note?: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          note?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
       role_sync_state: {
         Row: {
           entry_count: number
