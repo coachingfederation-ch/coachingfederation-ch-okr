@@ -129,11 +129,28 @@ export type SyncResult = { ok: boolean; count: number; error: string };
 export async function syncRoleDirectory(): Promise<SyncResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   try {
-    const entries = await fetchDirectory();
-    if (entries.length === 0) {
+    const fetched = await fetchDirectory();
+    if (fetched.length === 0) {
       // Never wipe access because the source returned an empty list.
       throw new Error("Welcome directory returned no editors or admins");
     }
+
+    /**
+     * Local overrides cover people whose Welcome membership uses a different
+     * address than the Google account they sign in with here. They are merged
+     * on top of the fetched directory and win on conflict.
+     */
+    const { data: overrides } = await supabaseAdmin
+      .from("role_overrides")
+      .select("email, role");
+    const merged = new Map(fetched.map((e) => [e.email, e]));
+    for (const row of overrides ?? []) {
+      const email = normaliseEmail(row.email);
+      if (!email.includes("@")) continue;
+      merged.set(email, { email, role: row.role as AppRole, source_roles: ["override"] });
+    }
+    const entries = [...merged.values()];
+
 
     const syncedAt = new Date().toISOString();
     const { error: upsertError } = await supabaseAdmin.from("role_directory").upsert(
