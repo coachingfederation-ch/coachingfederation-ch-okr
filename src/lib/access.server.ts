@@ -38,7 +38,7 @@ function parseDirectoryPayload(payload: unknown): DirectoryEntry[] {
   const rows: SourceRow[] = Array.isArray(payload)
     ? (payload as SourceRow[])
     : Array.isArray((payload as { members?: unknown } | null)?.members)
-      ? ((payload as { members: SourceRow[] }).members)
+      ? (payload as { members: SourceRow[] }).members
       : [];
 
   const byEmail = new Map<string, DirectoryEntry>();
@@ -136,9 +136,10 @@ export async function syncRoleDirectory(): Promise<SyncResult> {
     }
 
     const syncedAt = new Date().toISOString();
-    const { error: upsertError } = await supabaseAdmin
-      .from("role_directory")
-      .upsert(entries.map((e) => ({ ...e, synced_at: syncedAt })), { onConflict: "email" });
+    const { error: upsertError } = await supabaseAdmin.from("role_directory").upsert(
+      entries.map((e) => ({ ...e, synced_at: syncedAt })),
+      { onConflict: "email" },
+    );
     if (upsertError) throw new Error(upsertError.message);
 
     const { error: pruneError } = await supabaseAdmin
@@ -200,7 +201,6 @@ export async function applyRolesForUser(userId: string, email: string): Promise<
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const normalised = normaliseEmail(email);
 
-
   const { data: entry } = await supabaseAdmin
     .from("role_directory")
     .select("role")
@@ -230,7 +230,12 @@ export async function applyRolesForUser(userId: string, email: string): Promise<
 
 /** Throws unless the caller holds the admin role in this app. */
 export async function assertAdmin(
-  supabase: { rpc: (fn: "has_role", args: { _user_id: string; _role: AppRole }) => PromiseLike<{ data: unknown }> },
+  supabase: {
+    rpc: (
+      fn: "has_role",
+      args: { _user_id: string; _role: AppRole },
+    ) => PromiseLike<{ data: unknown }>;
+  },
   userId: string,
 ): Promise<void> {
   const { data } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });

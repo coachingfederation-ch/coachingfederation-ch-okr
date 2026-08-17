@@ -1478,7 +1478,6 @@ function IndexContent() {
         </div>
       </header>
 
-
       <section className="mx-auto -mt-14 max-w-6xl px-8">
         <div className="grid gap-4 md:grid-cols-3">
           {PILLARS.map((code) => {

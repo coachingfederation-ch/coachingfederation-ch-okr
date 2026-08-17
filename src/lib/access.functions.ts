@@ -31,7 +31,6 @@ export const applyMyRoles = createServerFn({ method: "POST" })
     return { role: role as AccessRole };
   });
 
-
 /** Admin-only view of the mirror and the last sync run. */
 export const getAccessOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -49,4 +48,3 @@ export const syncAccessDirectory = createServerFn({ method: "POST" })
     await assertAdmin(context.supabase, context.userId);
     return syncRoleDirectory();
   });
-
