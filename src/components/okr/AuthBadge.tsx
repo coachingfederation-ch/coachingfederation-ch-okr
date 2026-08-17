@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronDown, LogOut, UserRound } from "lucide-react";
+import { ChevronDown, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useQueryClient } from "@tanstack/react-query";
@@ -12,7 +12,8 @@ import { HEADER_MENU, HEADER_MENU_ITEM, HEADER_PILL, useDismissable } from "./us
  * in it opens an account menu, matching the public ICF Switzerland header.
  */
 export function AuthBadge() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, isAdmin } = useAuth();
+
   const [signingOut, setSigningOut] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const close = React.useCallback(() => setOpen(false), []);
@@ -62,6 +63,13 @@ export function AuthBadge() {
           <p className="border-b border-border/70 px-4 py-3 text-xs leading-5 text-muted-foreground break-all">
             {user.email}
           </p>
+          {isAdmin && (
+            <Link to="/access" role="menuitem" onClick={close} className={HEADER_MENU_ITEM}>
+              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+              Access directory
+            </Link>
+          )}
+
           <button
             type="button"
             role="menuitem"

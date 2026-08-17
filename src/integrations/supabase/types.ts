@@ -595,6 +595,51 @@ export type Database = {
         }
         Relationships: []
       }
+      role_directory: {
+        Row: {
+          email: string
+          role: Database["public"]["Enums"]["app_role"]
+          source_roles: string[]
+          synced_at: string
+        }
+        Insert: {
+          email: string
+          role: Database["public"]["Enums"]["app_role"]
+          source_roles?: string[]
+          synced_at?: string
+        }
+        Update: {
+          email?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          source_roles?: string[]
+          synced_at?: string
+        }
+        Relationships: []
+      }
+      role_sync_state: {
+        Row: {
+          entry_count: number
+          id: boolean
+          last_error: string
+          last_run_at: string | null
+          last_status: string
+        }
+        Insert: {
+          entry_count?: number
+          id?: boolean
+          last_error?: string
+          last_run_at?: string | null
+          last_status?: string
+        }
+        Update: {
+          entry_count?: number
+          id?: boolean
+          last_error?: string
+          last_run_at?: string | null
+          last_status?: string
+        }
+        Relationships: []
+      }
       teams: {
         Row: {
           created_at: string

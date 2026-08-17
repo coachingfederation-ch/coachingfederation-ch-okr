@@ -1397,8 +1397,9 @@ function IndexSuspense() {
 
 function IndexContent() {
   const { data } = useSuspenseQuery(dashboardQueryOptions);
-  const { canEdit } = useAuth();
+  const { canEdit, user, isLoading: authLoading } = useAuth();
   const { locale, t } = useLocale();
+
   const m = useOkrMutations(locale);
 
   const { secondaryByKr, initiativeOrigin } = useMemo(() => {
@@ -1461,9 +1462,22 @@ function IndexContent() {
             )}
           </div>
 
+          {/* Signed in but no mirrored Editor role: say so instead of silently hiding controls. */}
+          {user && !canEdit && !authLoading && (
+            <div className="mt-6 rounded-2xl border border-hero-foreground/20 bg-hero-foreground/10 p-4">
+              <p className="text-sm font-semibold text-hero-foreground">
+                {t("access.readonly.title")}
+              </p>
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-hero-foreground/75">
+                {t("access.readonly.body")}
+              </p>
+            </div>
+          )}
+
           <h2 className="display-lg mt-5 text-hero-foreground">{t("hero.pillarTitle")}</h2>
         </div>
       </header>
+
 
       <section className="mx-auto -mt-14 max-w-6xl px-8">
         <div className="grid gap-4 md:grid-cols-3">

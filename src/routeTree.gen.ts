@@ -14,9 +14,11 @@ import { Route as ReportRouteImport } from './routes/report'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OkrsRouteImport } from './routes/okrs'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AccessRouteImport } from './routes/access'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InitiativesIndexRouteImport } from './routes/initiatives.index'
 import { Route as InitiativesInitiativeIdRouteImport } from './routes/initiatives.$initiativeId'
+import { Route as ApiPublicRoleSyncRouteImport } from './routes/api/public/role-sync'
 
 const StyleGuideRoute = StyleGuideRouteImport.update({
   id: '/style-guide',
@@ -43,6 +45,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccessRoute = AccessRouteImport.update({
+  id: '/access',
+  path: '/access',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -58,9 +65,15 @@ const InitiativesInitiativeIdRoute = InitiativesInitiativeIdRouteImport.update({
   path: '/initiatives/$initiativeId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicRoleSyncRoute = ApiPublicRoleSyncRouteImport.update({
+  id: '/api/public/role-sync',
+  path: '/api/public/role-sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/access': typeof AccessRoute
   '/auth': typeof AuthRoute
   '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
@@ -68,9 +81,11 @@ export interface FileRoutesByFullPath {
   '/style-guide': typeof StyleGuideRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
+  '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/access': typeof AccessRoute
   '/auth': typeof AuthRoute
   '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
@@ -78,10 +93,12 @@ export interface FileRoutesByTo {
   '/style-guide': typeof StyleGuideRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives': typeof InitiativesIndexRoute
+  '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/access': typeof AccessRoute
   '/auth': typeof AuthRoute
   '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
@@ -89,11 +106,13 @@ export interface FileRoutesById {
   '/style-guide': typeof StyleGuideRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
+  '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/access'
     | '/auth'
     | '/okrs'
     | '/playground'
@@ -101,9 +120,11 @@ export interface FileRouteTypes {
     | '/style-guide'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
+    | '/api/public/role-sync'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/access'
     | '/auth'
     | '/okrs'
     | '/playground'
@@ -111,9 +132,11 @@ export interface FileRouteTypes {
     | '/style-guide'
     | '/initiatives/$initiativeId'
     | '/initiatives'
+    | '/api/public/role-sync'
   id:
     | '__root__'
     | '/'
+    | '/access'
     | '/auth'
     | '/okrs'
     | '/playground'
@@ -121,10 +144,12 @@ export interface FileRouteTypes {
     | '/style-guide'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
+    | '/api/public/role-sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccessRoute: typeof AccessRoute
   AuthRoute: typeof AuthRoute
   OkrsRoute: typeof OkrsRoute
   PlaygroundRoute: typeof PlaygroundRoute
@@ -132,6 +157,7 @@ export interface RootRouteChildren {
   StyleGuideRoute: typeof StyleGuideRoute
   InitiativesInitiativeIdRoute: typeof InitiativesInitiativeIdRoute
   InitiativesIndexRoute: typeof InitiativesIndexRoute
+  ApiPublicRoleSyncRoute: typeof ApiPublicRoleSyncRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -171,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/access': {
+      id: '/access'
+      path: '/access'
+      fullPath: '/access'
+      preLoaderRoute: typeof AccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -192,11 +225,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InitiativesInitiativeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/role-sync': {
+      id: '/api/public/role-sync'
+      path: '/api/public/role-sync'
+      fullPath: '/api/public/role-sync'
+      preLoaderRoute: typeof ApiPublicRoleSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccessRoute: AccessRoute,
   AuthRoute: AuthRoute,
   OkrsRoute: OkrsRoute,
   PlaygroundRoute: PlaygroundRoute,
@@ -204,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   StyleGuideRoute: StyleGuideRoute,
   InitiativesInitiativeIdRoute: InitiativesInitiativeIdRoute,
   InitiativesIndexRoute: InitiativesIndexRoute,
+  ApiPublicRoleSyncRoute: ApiPublicRoleSyncRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
