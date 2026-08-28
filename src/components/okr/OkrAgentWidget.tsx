@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { X, RotateCcw } from "lucide-react";
@@ -24,6 +25,20 @@ import agentMark from "@/assets/okr-agent-mark.png";
 
 const STORAGE_KEY = "icfs.agent.chat";
 
+/**
+ * Aspira opens with a greeting and starter questions that match what the
+ * person is looking at, and the same key is sent to the server so the model
+ * knows the context of the conversation.
+ */
+function pageKey(pathname: string): string {
+  if (pathname === "/") return "home";
+  if (pathname.startsWith("/okrs")) return "okrs";
+  if (pathname.startsWith("/initiatives")) return "initiatives";
+  if (pathname.startsWith("/playground")) return "playground";
+  if (pathname.startsWith("/report")) return "report";
+  return "";
+}
+
 function loadStored(): UIMessage[] {
   if (typeof window === "undefined") return [];
   try {
@@ -38,6 +53,8 @@ function loadStored(): UIMessage[] {
 export function OkrAgentWidget() {
   const { t, locale } = useLocale();
   const { session } = useAuth();
+  const pathname = useRouterState({ select: (st) => st.location.pathname });
+  const page = pageKey(pathname);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [initial, setInitial] = useState<UIMessage[]>([]);
@@ -59,6 +76,7 @@ export function OkrAgentWidget() {
       setInput={setInput}
       initialMessages={initial}
       locale={locale}
+      page={page}
       authed={Boolean(session)}
       t={t}
       panelRef={panelRef}
@@ -73,6 +91,7 @@ type SurfaceProps = {
   setInput: (v: string) => void;
   initialMessages: UIMessage[];
   locale: string;
+  page: string;
   authed: boolean;
   t: (k: never) => string;
   panelRef: React.RefObject<HTMLDivElement | null>;
@@ -85,6 +104,7 @@ function AgentSurface({
   setInput,
   initialMessages,
   locale,
+  page,
   authed,
   t,
   panelRef,
@@ -94,7 +114,7 @@ function AgentSurface({
     messages: initialMessages,
     transport: new DefaultChatTransport({
       api: "/api/chat",
-      body: () => ({ locale, authed }),
+      body: () => ({ locale, authed, page }),
     }),
   });
 
@@ -125,7 +145,13 @@ function AgentSurface({
     void sendMessage({ text: value });
   };
 
-  const starters = [tr("agent.s1"), tr("agent.s2"), tr("agent.s3")];
+  // Fall back to the generic copy on routes without their own context.
+  const key = (suffix: string) => {
+    const scoped = page ? tr(`agent.ctx.${page}.${suffix}`) : "";
+    return scoped && !scoped.startsWith("agent.") ? scoped : tr(`agent.${suffix}`);
+  };
+  const greeting = key("greeting");
+  const starters = [key("s1"), key("s2"), key("s3")];
 
   return (
     <>
@@ -224,7 +250,7 @@ function AgentSurface({
               {messages.length === 0 && (
                 <div className="motion-safe:animate-[agent-rise_320ms_ease-out] space-y-3">
                   <p className="rounded-2xl bg-muted/60 px-3 py-2 text-sm text-foreground">
-                    {tr("agent.greeting")}
+                    {greeting}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {starters.map((s) => (
