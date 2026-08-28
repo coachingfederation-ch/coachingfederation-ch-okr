@@ -12,7 +12,20 @@ const LANG_NAME: Record<string, string> = {
   it: "Italian",
 };
 
-function systemPrompt(locale: string) {
+const PAGE_CONTEXT: Record<string, string> = {
+  home: "The person is on the volunteer entry page, exploring where they could contribute. Lean towards helping them find work that matches their interests.",
+  okrs: "The person is on the OKR dashboard, looking at the chapter's objectives and key results. Lean towards explaining what they see and how the pieces connect.",
+  initiatives:
+    "The person is in the initiative portfolio, looking at concrete work items and their phases. Lean towards initiatives, ownership and next steps.",
+  initiative:
+    "The person has one initiative open in detail. Lean towards that kind of work: scoping, owners, phases and how it ladders up to a key result.",
+  playground:
+    "The person is in the public OKR playground, a practice sandbox. Lean towards teaching the drafting pattern; nothing here is live data.",
+  report:
+    "The person is on the printable board report. Lean towards reading and interpreting progress across the portfolio.",
+};
+
+function systemPrompt(locale: string, page?: string) {
   return [
     "You are Aspira, the OKR companion for The Switzerland Chapter of ICF, a friendly guide inside the chapter's OKR dashboard. Introduce yourself by name when it feels natural.",
     "You do two things: explain how the chapter's goal setting works, and help people draft objectives, key results and initiatives.",
@@ -28,14 +41,19 @@ function systemPrompt(locale: string) {
     "- Point editors to where a draft can be entered: 'Create with Assistant' on an OKR set, or the work journey in the initiative portfolio. You cannot enter it for them.",
     "- Keep answers short and scannable. Use terminology exactly: The Switzerland Chapter of ICF, Steward, Customer, Strategic Focus Area.",
     `- Always answer in ${LANG_NAME[locale] ?? "English"}.`,
-  ].join("\n");
+    page && PAGE_CONTEXT[page]
+      ? `Current page context: ${PAGE_CONTEXT[page]} Do not mention that you know which page they are on unless it helps.`
+      : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        let body: { messages?: UIMessage[]; locale?: string; authed?: boolean };
+        let body: { messages?: UIMessage[]; locale?: string; authed?: boolean; page?: string };
         try {
           body = await request.json();
         } catch {
@@ -58,7 +76,7 @@ export const Route = createFileRoute("/api/chat")({
         try {
           const result = streamText({
             model: gatewayModel(),
-            system: systemPrompt(body.locale ?? "en"),
+            system: systemPrompt(body.locale ?? "en", body.page),
             messages: await convertToModelMessages(messages),
             tools: assistantTools,
             stopWhen: stepCountIs(8),

@@ -683,6 +683,26 @@ export type StringKey =
   | "agent.s2"
   | "agent.s3"
   | "agent.error"
+  | "agent.ctx.home.greeting"
+  | "agent.ctx.home.s1"
+  | "agent.ctx.home.s2"
+  | "agent.ctx.home.s3"
+  | "agent.ctx.okrs.greeting"
+  | "agent.ctx.okrs.s1"
+  | "agent.ctx.okrs.s2"
+  | "agent.ctx.okrs.s3"
+  | "agent.ctx.initiatives.greeting"
+  | "agent.ctx.initiatives.s1"
+  | "agent.ctx.initiatives.s2"
+  | "agent.ctx.initiatives.s3"
+  | "agent.ctx.playground.greeting"
+  | "agent.ctx.playground.s1"
+  | "agent.ctx.playground.s2"
+  | "agent.ctx.playground.s3"
+  | "agent.ctx.report.greeting"
+  | "agent.ctx.report.s1"
+  | "agent.ctx.report.s2"
+  | "agent.ctx.report.s3"
   | "agent.thinking";
 
 const en: Record<StringKey, string> = {
@@ -1428,6 +1448,26 @@ const en: Record<StringKey, string> = {
   "agent.s3": "Help me draft an initiative",
   "agent.error": "Something went wrong. Please try again.",
   "agent.thinking": "Thinking…",
+  "agent.ctx.home.greeting": "Hi, I'm Aspira! Looking for a place to contribute? Tell me what interests you and I'll point you to the work behind it.",
+  "agent.ctx.home.s1": "Where could I help as a volunteer?",
+  "agent.ctx.home.s2": "What is the chapter working on right now?",
+  "agent.ctx.home.s3": "Explain what an objective is, simply",
+  "agent.ctx.okrs.greeting": "Hi, I'm Aspira! I can walk you through any objective or key result on this page — or help you draft a new one.",
+  "agent.ctx.okrs.s1": "Summarise objective 2 for me",
+  "agent.ctx.okrs.s2": "How is this objective measured?",
+  "agent.ctx.okrs.s3": "How does a key result differ from an initiative?",
+  "agent.ctx.initiatives.greeting": "Hi, I'm Aspira! Ask me about any initiative in the portfolio, or let's shape a new one together.",
+  "agent.ctx.initiatives.s1": "Which initiatives are in progress?",
+  "agent.ctx.initiatives.s2": "Which key result does this work support?",
+  "agent.ctx.initiatives.s3": "Help me draft an initiative",
+  "agent.ctx.playground.greeting": "Hi, I'm Aspira! This is a safe sandbox — let's practise writing an objective and key results together.",
+  "agent.ctx.playground.s1": "Help me draft an objective",
+  "agent.ctx.playground.s2": "What makes a key result measurable?",
+  "agent.ctx.playground.s3": "Check my draft for quality",
+  "agent.ctx.report.greeting": "Hi, I'm Aspira! I can help you read this report — progress, gaps, and what the numbers mean.",
+  "agent.ctx.report.s1": "Where are we behind?",
+  "agent.ctx.report.s2": "Which key results have no baseline?",
+  "agent.ctx.report.s3": "Summarise progress for the board",
 };
 
 const de: Record<StringKey, string> = {
@@ -2191,6 +2231,26 @@ const de: Record<StringKey, string> = {
   "agent.s3": "Hilf mir, eine Initiative zu entwerfen",
   "agent.error": "Etwas ist schiefgelaufen. Bitte nochmals versuchen.",
   "agent.thinking": "Denkt nach…",
+  "agent.ctx.home.greeting": "Hallo, ich bin Aspira! Auf der Suche nach einem Beitrag? Sag mir, was dich interessiert, und ich zeige dir die passende Arbeit.",
+  "agent.ctx.home.s1": "Wo könnte ich als Freiwillige:r helfen?",
+  "agent.ctx.home.s2": "Woran arbeitet das Chapter gerade?",
+  "agent.ctx.home.s3": "Erkläre mir einfach, was ein Objective ist",
+  "agent.ctx.okrs.greeting": "Hallo, ich bin Aspira! Ich erkläre dir jedes Objective oder Key Result auf dieser Seite – oder helfe beim Entwurf.",
+  "agent.ctx.okrs.s1": "Fasse Objective 2 zusammen",
+  "agent.ctx.okrs.s2": "Wie wird dieses Objective gemessen?",
+  "agent.ctx.okrs.s3": "Wie unterscheidet sich ein Key Result von einer Initiative?",
+  "agent.ctx.initiatives.greeting": "Hallo, ich bin Aspira! Frag mich zu jeder Initiative im Portfolio – oder gestalten wir gemeinsam eine neue.",
+  "agent.ctx.initiatives.s1": "Welche Initiativen laufen gerade?",
+  "agent.ctx.initiatives.s2": "Auf welches Key Result zahlt diese Arbeit ein?",
+  "agent.ctx.initiatives.s3": "Hilf mir, eine Initiative zu entwerfen",
+  "agent.ctx.playground.greeting": "Hallo, ich bin Aspira! Das hier ist ein sicherer Übungsraum – üben wir gemeinsam Objective und Key Results.",
+  "agent.ctx.playground.s1": "Hilf mir, ein Objective zu entwerfen",
+  "agent.ctx.playground.s2": "Was macht ein Key Result messbar?",
+  "agent.ctx.playground.s3": "Prüfe die Qualität meines Entwurfs",
+  "agent.ctx.report.greeting": "Hallo, ich bin Aspira! Ich helfe dir, diesen Bericht zu lesen: Fortschritt, Lücken und was die Zahlen bedeuten.",
+  "agent.ctx.report.s1": "Wo liegen wir zurück?",
+  "agent.ctx.report.s2": "Welche Key Results haben keine Baseline?",
+  "agent.ctx.report.s3": "Fasse den Fortschritt für den Vorstand zusammen",
 };
 
 const fr: Record<StringKey, string> = {
@@ -2955,6 +3015,26 @@ const fr: Record<StringKey, string> = {
   "agent.s3": "Aidez-moi à rédiger une initiative",
   "agent.error": "Une erreur est survenue. Merci de réessayer.",
   "agent.thinking": "Réflexion…",
+  "agent.ctx.home.greeting": "Bonjour, je suis Aspira ! Vous cherchez où contribuer ? Dites-moi ce qui vous intéresse et je vous montre le travail correspondant.",
+  "agent.ctx.home.s1": "Où pourrais-je aider comme bénévole ?",
+  "agent.ctx.home.s2": "Sur quoi le chapitre travaille-t-il ?",
+  "agent.ctx.home.s3": "Expliquez simplement ce qu'est un objectif",
+  "agent.ctx.okrs.greeting": "Bonjour, je suis Aspira ! Je peux vous expliquer chaque objectif ou résultat clé de cette page, ou vous aider à en rédiger un.",
+  "agent.ctx.okrs.s1": "Résumez l'objectif 2",
+  "agent.ctx.okrs.s2": "Comment cet objectif est-il mesuré ?",
+  "agent.ctx.okrs.s3": "Quelle différence entre résultat clé et initiative ?",
+  "agent.ctx.initiatives.greeting": "Bonjour, je suis Aspira ! Posez-moi une question sur une initiative du portefeuille, ou créons-en une ensemble.",
+  "agent.ctx.initiatives.s1": "Quelles initiatives sont en cours ?",
+  "agent.ctx.initiatives.s2": "Quel résultat clé ce travail soutient-il ?",
+  "agent.ctx.initiatives.s3": "Aidez-moi à rédiger une initiative",
+  "agent.ctx.playground.greeting": "Bonjour, je suis Aspira ! Ceci est un bac à sable : entraînons-nous à rédiger un objectif et ses résultats clés.",
+  "agent.ctx.playground.s1": "Aidez-moi à rédiger un objectif",
+  "agent.ctx.playground.s2": "Qu'est-ce qui rend un résultat clé mesurable ?",
+  "agent.ctx.playground.s3": "Vérifiez la qualité de mon brouillon",
+  "agent.ctx.report.greeting": "Bonjour, je suis Aspira ! Je peux vous aider à lire ce rapport : progrès, écarts et sens des chiffres.",
+  "agent.ctx.report.s1": "Où sommes-nous en retard ?",
+  "agent.ctx.report.s2": "Quels résultats clés n'ont pas de référence ?",
+  "agent.ctx.report.s3": "Résumez les progrès pour le comité",
 };
 
 const it: Record<StringKey, string> = {
@@ -3712,6 +3792,26 @@ const it: Record<StringKey, string> = {
   "agent.s3": "Aiutami a redigere un'iniziativa",
   "agent.error": "Qualcosa è andato storto. Riprova.",
   "agent.thinking": "Sto pensando…",
+  "agent.ctx.home.greeting": "Ciao, sono Aspira! Cerchi dove contribuire? Dimmi cosa ti interessa e ti mostro il lavoro collegato.",
+  "agent.ctx.home.s1": "Dove potrei aiutare come volontario?",
+  "agent.ctx.home.s2": "A cosa sta lavorando il chapter?",
+  "agent.ctx.home.s3": "Spiegami in modo semplice cos'è un obiettivo",
+  "agent.ctx.okrs.greeting": "Ciao, sono Aspira! Posso spiegarti ogni obiettivo o risultato chiave di questa pagina, o aiutarti a redigerne uno.",
+  "agent.ctx.okrs.s1": "Riassumi l'obiettivo 2",
+  "agent.ctx.okrs.s2": "Come si misura questo obiettivo?",
+  "agent.ctx.okrs.s3": "Che differenza c'è tra risultato chiave e iniziativa?",
+  "agent.ctx.initiatives.greeting": "Ciao, sono Aspira! Chiedimi di qualsiasi iniziativa del portafoglio, oppure creiamone una insieme.",
+  "agent.ctx.initiatives.s1": "Quali iniziative sono in corso?",
+  "agent.ctx.initiatives.s2": "Quale risultato chiave sostiene questo lavoro?",
+  "agent.ctx.initiatives.s3": "Aiutami a redigere un'iniziativa",
+  "agent.ctx.playground.greeting": "Ciao, sono Aspira! Questo è uno spazio di prova: esercitiamoci a scrivere un obiettivo e i risultati chiave.",
+  "agent.ctx.playground.s1": "Aiutami a redigere un obiettivo",
+  "agent.ctx.playground.s2": "Cosa rende misurabile un risultato chiave?",
+  "agent.ctx.playground.s3": "Controlla la qualità della mia bozza",
+  "agent.ctx.report.greeting": "Ciao, sono Aspira! Posso aiutarti a leggere questo report: progressi, lacune e significato dei numeri.",
+  "agent.ctx.report.s1": "Dove siamo indietro?",
+  "agent.ctx.report.s2": "Quali risultati chiave non hanno una baseline?",
+  "agent.ctx.report.s3": "Riassumi i progressi per il board",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
