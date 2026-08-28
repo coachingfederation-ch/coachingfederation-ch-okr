@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/lib/auth-context";
 import { LocaleProvider } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
+import { OkrAgentWidget } from "@/components/okr/OkrAgentWidget";
 
 function NotFoundComponent() {
   return (
@@ -150,6 +151,7 @@ function RootComponent() {
           <Toaster richColors position="top-right" />
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
+          <OkrAgentWidget />
         </AuthProvider>
       </LocaleProvider>
     </QueryClientProvider>
