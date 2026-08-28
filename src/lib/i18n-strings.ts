@@ -670,7 +670,20 @@ export type StringKey =
   | "report.value.notDefined"
   | "report.value.unassigned"
   | "report.kr.milestone"
-  | "report.kr.due";
+  | "report.kr.due"
+  | "agent.title"
+  | "agent.subtitle"
+  | "agent.open"
+  | "agent.close"
+  | "agent.placeholder"
+  | "agent.startOver"
+  | "agent.disclaimer"
+  | "agent.greeting"
+  | "agent.s1"
+  | "agent.s2"
+  | "agent.s3"
+  | "agent.error"
+  | "agent.thinking";
 
 const en: Record<StringKey, string> = {
   "involve.panel.title": "Volunteer interest",
@@ -1402,6 +1415,19 @@ const en: Record<StringKey, string> = {
   "journey.discardConfirm": "Discard",
   "journey.childFailed": "The work was created, but some signals or milestones could not be saved.",
   "journey.reviewNothing": "Nothing captured yet.",
+  "agent.title": "OKR Agent",
+  "agent.subtitle": "Ask about goals, or draft one together",
+  "agent.open": "Open the OKR Agent",
+  "agent.close": "Close",
+  "agent.placeholder": "Ask a question…",
+  "agent.startOver": "Start over",
+  "agent.disclaimer": "Read-only guide. Nothing is saved.",
+  "agent.greeting": "Hi! I can explain how our objectives, key results and initiatives fit together — or help you draft one.",
+  "agent.s1": "How does a key result differ from an initiative?",
+  "agent.s2": "What is objective 2 about?",
+  "agent.s3": "Help me draft an initiative",
+  "agent.error": "Something went wrong. Please try again.",
+  "agent.thinking": "Thinking…",
 };
 
 const de: Record<StringKey, string> = {
@@ -2152,6 +2178,19 @@ const de: Record<StringKey, string> = {
   "journey.childFailed":
     "Die Arbeit wurde erstellt, aber einzelne Signale oder Meilensteine konnten nicht gespeichert werden.",
   "journey.reviewNothing": "Noch nichts erfasst.",
+  "agent.title": "OKR-Agent",
+  "agent.subtitle": "Fragen zu Zielen stellen oder gemeinsam entwerfen",
+  "agent.open": "OKR-Agent öffnen",
+  "agent.close": "Schliessen",
+  "agent.placeholder": "Frage stellen…",
+  "agent.startOver": "Neu beginnen",
+  "agent.disclaimer": "Nur Beratung. Es wird nichts gespeichert.",
+  "agent.greeting": "Hallo! Ich erkläre, wie Objectives, Key Results und Initiativen zusammenspielen – oder helfe beim Entwurf.",
+  "agent.s1": "Worin unterscheidet sich ein Key Result von einer Initiative?",
+  "agent.s2": "Worum geht es bei Objective 2?",
+  "agent.s3": "Hilf mir, eine Initiative zu entwerfen",
+  "agent.error": "Etwas ist schiefgelaufen. Bitte nochmals versuchen.",
+  "agent.thinking": "Denkt nach…",
 };
 
 const fr: Record<StringKey, string> = {
@@ -2903,6 +2942,19 @@ const fr: Record<StringKey, string> = {
   "journey.childFailed":
     "Le travail a \u00e9t\u00e9 cr\u00e9\u00e9, mais certains signaux ou jalons n'ont pas pu \u00eatre enregistr\u00e9s.",
   "journey.reviewNothing": "Rien de saisi pour l'instant.",
+  "agent.title": "Agent OKR",
+  "agent.subtitle": "Poser une question sur les objectifs ou en rédiger un ensemble",
+  "agent.open": "Ouvrir l'agent OKR",
+  "agent.close": "Fermer",
+  "agent.placeholder": "Poser une question…",
+  "agent.startOver": "Recommencer",
+  "agent.disclaimer": "Guide en lecture seule. Rien n'est enregistré.",
+  "agent.greeting": "Bonjour ! Je peux expliquer comment s'articulent objectifs, résultats clés et initiatives, ou vous aider à en rédiger un.",
+  "agent.s1": "Quelle est la différence entre un résultat clé et une initiative ?",
+  "agent.s2": "De quoi parle l'objectif 2 ?",
+  "agent.s3": "Aidez-moi à rédiger une initiative",
+  "agent.error": "Une erreur est survenue. Merci de réessayer.",
+  "agent.thinking": "Réflexion…",
 };
 
 const it: Record<StringKey, string> = {
@@ -3647,6 +3699,19 @@ const it: Record<StringKey, string> = {
   "journey.childFailed":
     "Il lavoro \u00e8 stato creato, ma alcuni segnali o traguardi non sono stati salvati.",
   "journey.reviewNothing": "Ancora nulla inserito.",
+  "agent.title": "Agente OKR",
+  "agent.subtitle": "Fai domande sugli obiettivi o creane uno insieme",
+  "agent.open": "Apri l'agente OKR",
+  "agent.close": "Chiudi",
+  "agent.placeholder": "Fai una domanda…",
+  "agent.startOver": "Ricomincia",
+  "agent.disclaimer": "Guida in sola lettura. Non viene salvato nulla.",
+  "agent.greeting": "Ciao! Posso spiegare come si collegano obiettivi, risultati chiave e iniziative, oppure aiutarti a redigerne uno.",
+  "agent.s1": "Che differenza c'è tra un risultato chiave e un'iniziativa?",
+  "agent.s2": "Di cosa tratta l'obiettivo 2?",
+  "agent.s3": "Aiutami a redigere un'iniziativa",
+  "agent.error": "Qualcosa è andato storto. Riprova.",
+  "agent.thinking": "Sto pensando…",
 };
 
 export const STRINGS: Record<Locale, Record<StringKey, string>> = {
