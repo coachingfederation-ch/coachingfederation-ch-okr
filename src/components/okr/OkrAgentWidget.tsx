@@ -136,7 +136,7 @@ function AgentSurface({
         aria-label={open ? tr("agent.close") : tr("agent.open")}
         aria-expanded={open}
         className={cn(
-          "group fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full",
+          "group fixed bottom-5 right-5 z-50 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full",
           "bg-primary text-primary-foreground shadow-lg shadow-primary/25",
           "transition-transform duration-300 hover:scale-105 active:scale-95",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -156,7 +156,7 @@ function AgentSurface({
             width={512}
             height={512}
             loading="lazy"
-            className="relative size-9 drop-shadow-sm"
+            className="relative size-14 drop-shadow-sm motion-safe:animate-[agent-wiggle_6s_ease-in-out_infinite] motion-safe:group-hover:animate-[agent-perk_600ms_ease-out]"
           />
         )}
       </button>
@@ -175,8 +175,15 @@ function AgentSurface({
           )}
         >
           <header className="flex items-start gap-3 border-b border-border bg-[#F8F0E4] px-4 py-3">
-            <span className="relative mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
-              <img src={agentMark} alt="" width={512} height={512} loading="lazy" className="size-7" />
+            <span className="relative mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10">
+              <img
+                src={agentMark}
+                alt=""
+                width={512}
+                height={512}
+                loading="lazy"
+                className="size-9 motion-safe:animate-[agent-wiggle_6s_ease-in-out_infinite]"
+              />
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-display text-sm font-semibold text-foreground">
