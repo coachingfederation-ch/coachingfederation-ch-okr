@@ -248,7 +248,7 @@ function AgentSurface({
                   >
                     <MessageContent
                       className={cn(
-                        "text-sm",
+                        "w-full min-w-0 text-sm [&_table]:block [&_table]:w-full [&_table]:overflow-x-auto [&_pre]:overflow-x-auto",
                         m.role === "user" && "bg-primary text-primary-foreground",
                       )}
                     >
