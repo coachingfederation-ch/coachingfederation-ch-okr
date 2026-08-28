@@ -18,6 +18,7 @@ import { Route as AccessRouteImport } from './routes/access'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InitiativesIndexRouteImport } from './routes/initiatives.index'
 import { Route as InitiativesInitiativeIdRouteImport } from './routes/initiatives.$initiativeId'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiPublicRoleSyncRouteImport } from './routes/api/public/role-sync'
 
 const StyleGuideRoute = StyleGuideRouteImport.update({
@@ -65,6 +66,11 @@ const InitiativesInitiativeIdRoute = InitiativesInitiativeIdRouteImport.update({
   path: '/initiatives/$initiativeId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicRoleSyncRoute = ApiPublicRoleSyncRouteImport.update({
   id: '/api/public/role-sync',
   path: '/api/public/role-sync',
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/api/chat': typeof ApiChatRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/api/chat': typeof ApiChatRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/api/chat': typeof ApiChatRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/api/chat'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
     | '/api/public/role-sync'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/api/chat'
     | '/initiatives/$initiativeId'
     | '/initiatives'
     | '/api/public/role-sync'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/api/chat'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
     | '/api/public/role-sync'
@@ -155,6 +167,7 @@ export interface RootRouteChildren {
   PlaygroundRoute: typeof PlaygroundRoute
   ReportRoute: typeof ReportRoute
   StyleGuideRoute: typeof StyleGuideRoute
+  ApiChatRoute: typeof ApiChatRoute
   InitiativesInitiativeIdRoute: typeof InitiativesInitiativeIdRoute
   InitiativesIndexRoute: typeof InitiativesIndexRoute
   ApiPublicRoleSyncRoute: typeof ApiPublicRoleSyncRoute
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InitiativesInitiativeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/role-sync': {
       id: '/api/public/role-sync'
       path: '/api/public/role-sync'
@@ -243,6 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlaygroundRoute: PlaygroundRoute,
   ReportRoute: ReportRoute,
   StyleGuideRoute: StyleGuideRoute,
+  ApiChatRoute: ApiChatRoute,
   InitiativesInitiativeIdRoute: InitiativesInitiativeIdRoute,
   InitiativesIndexRoute: InitiativesIndexRoute,
   ApiPublicRoleSyncRoute: ApiPublicRoleSyncRoute,

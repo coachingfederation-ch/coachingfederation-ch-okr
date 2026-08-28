@@ -59,7 +59,7 @@ export const Route = createFileRoute("/api/chat")({
           const result = streamText({
             model: gatewayModel(),
             system: systemPrompt(body.locale ?? "en"),
-            messages: convertToModelMessages(messages),
+            messages: await convertToModelMessages(messages),
             tools: assistantTools,
             stopWhen: stepCountIs(8),
           });
