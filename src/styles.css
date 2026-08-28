@@ -303,3 +303,24 @@
     break-after: avoid;
   }
 }
+
+/* OKR Agent — playful launcher/panel motion (reduced-motion safe via motion-safe:) */
+@keyframes agent-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes agent-halo {
+  0%, 100% { transform: scale(1); opacity: 0.35; }
+  50% { transform: scale(1.35); opacity: 0; }
+}
+
+@keyframes agent-pop {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes agent-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
