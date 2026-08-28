@@ -21,7 +21,7 @@ A floating assistant, mirroring the one on the ICF Switzerland Welcome site, ava
 
 ## Design
 
-A round launcher button in the bottom corner using the ICF blue, opening a calm panel: Bone/white surfaces, Quicksand heading, Plus Jakarta Sans body, yellow accent on the header, existing tokens only. Two or three suggested starter questions on first open ("How does a key result differ from an initiative?", "What is objective 2 about?", "Help me draft an initiative"). Full keyboard access, 44px targets, reduced-motion respected, mobile takes the full width.
+Friendly and playful, in the spirit of the x.ai bot: a round blue launcher in the bottom corner with a small character-like mark that blinks or gently bobs, a soft yellow halo that pulses slowly when idle and settles on hover, and a springy pop as the panel opens. The panel itself stays warm and readable — Bone/white surfaces, Quicksand heading, Plus Jakarta Sans body, a yellow accent on the header, existing tokens only — with a lively three-dot thinking indicator and messages that fade and rise in as they arrive. Two or three suggested starter questions appear as light-blue chips on first open ("How does a key result differ from an initiative?", "What is objective 2 about?", "Help me draft an initiative"). Motion stays subtle and short, never distracting: full keyboard access, 44px targets, reduced-motion respected (all looping and entrance animation disabled), mobile takes the full width.
 
 ## Technical notes
 
