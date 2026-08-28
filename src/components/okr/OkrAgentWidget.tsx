@@ -17,7 +17,7 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { Button } from "@/components/ui/button";
-import { useI18n } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 import agentMark from "@/assets/okr-agent-mark.png";
@@ -36,7 +36,7 @@ function loadStored(): UIMessage[] {
 }
 
 export function OkrAgentWidget() {
-  const { t, locale } = useI18n();
+  const { t, locale } = useLocale();
   const { session } = useAuth();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -247,7 +247,6 @@ function AgentSurface({
                     className="motion-safe:animate-[agent-rise_260ms_ease-out]"
                   >
                     <MessageContent
-                      variant={m.role === "user" ? "contained" : "flat"}
                       className={cn(
                         "text-sm",
                         m.role === "user" && "bg-primary text-primary-foreground",
