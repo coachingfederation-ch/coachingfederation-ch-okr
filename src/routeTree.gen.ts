@@ -18,6 +18,7 @@ import { Route as AccessRouteImport } from './routes/access'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InitiativesIndexRouteImport } from './routes/initiatives.index'
 import { Route as InitiativesInitiativeIdRouteImport } from './routes/initiatives.$initiativeId'
+import { Route as ApiVoiceTokenRouteImport } from './routes/api/voice-token'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiPublicRoleSyncRouteImport } from './routes/api/public/role-sync'
 
@@ -66,6 +67,11 @@ const InitiativesInitiativeIdRoute = InitiativesInitiativeIdRouteImport.update({
   path: '/initiatives/$initiativeId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVoiceTokenRoute = ApiVoiceTokenRouteImport.update({
+  id: '/api/voice-token',
+  path: '/api/voice-token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/style-guide'
     | '/api/chat'
+    | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
     | '/api/public/role-sync'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/style-guide'
     | '/api/chat'
+    | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives'
     | '/api/public/role-sync'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/style-guide'
     | '/api/chat'
+    | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
     | '/api/public/role-sync'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   ReportRoute: typeof ReportRoute
   StyleGuideRoute: typeof StyleGuideRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiVoiceTokenRoute: typeof ApiVoiceTokenRoute
   InitiativesInitiativeIdRoute: typeof InitiativesInitiativeIdRoute
   InitiativesIndexRoute: typeof InitiativesIndexRoute
   ApiPublicRoleSyncRoute: typeof ApiPublicRoleSyncRoute
@@ -238,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InitiativesInitiativeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/voice-token': {
+      id: '/api/voice-token'
+      path: '/api/voice-token'
+      fullPath: '/api/voice-token'
+      preLoaderRoute: typeof ApiVoiceTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportRoute: ReportRoute,
   StyleGuideRoute: StyleGuideRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiVoiceTokenRoute: ApiVoiceTokenRoute,
   InitiativesInitiativeIdRoute: InitiativesInitiativeIdRoute,
   InitiativesIndexRoute: InitiativesIndexRoute,
   ApiPublicRoleSyncRoute: ApiPublicRoleSyncRoute,
