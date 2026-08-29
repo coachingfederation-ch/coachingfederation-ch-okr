@@ -142,12 +142,20 @@ export type VoiceSession = {
   objectives: { number: number; title: string }[];
 };
 
-export async function createVoiceSession(rawLocale: string): Promise<VoiceSession> {
+export async function createVoiceSession(
+  rawLocale: string,
+  swissGerman = false,
+): Promise<VoiceSession> {
   const apiKey = process.env["ELEVENLABS_API_KEY"];
   if (!apiKey) throw new Error("Voice is not connected for this project");
 
   const locale = normalizeLocale(rawLocale);
 
+  // The Swiss German narrator is a voice variant of German, not its own locale.
+  const voiceId =
+    swissGerman && locale === "de"
+      ? SWISS_GERMAN_VOICE_ID
+      : (VOICE_ID[locale] ?? VOICE_ID["en"]!);
 
   const snapshot = await strategySnapshot();
 
@@ -168,7 +176,7 @@ export async function createVoiceSession(rawLocale: string): Promise<VoiceSessio
     token,
     prompt: voicePrompt(locale, snapshot),
     firstMessage: FIRST_MESSAGE[locale] ?? FIRST_MESSAGE["en"]!,
-    voiceId: VOICE_ID,
+    voiceId,
     language: locale,
     objectives: snapshot.map((s) => ({ number: s.number, title: s.title })),
   };
