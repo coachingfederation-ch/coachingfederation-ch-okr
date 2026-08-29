@@ -2,15 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, stepCountIs, type UIMessage } from "ai";
 import { gatewayModel } from "@/lib/ai-gateway.server";
 import { CHAPTER_KNOWLEDGE } from "@/lib/assistant/knowledge";
+import { ASPIRA_IDENTITY, ASPIRA_PERSONALITY, LANG_NAME } from "@/lib/assistant/persona";
 import { assistantTools } from "@/lib/assistant/tools.server";
 import { checkRateLimit } from "@/lib/ai-drafts.server";
 
-const LANG_NAME: Record<string, string> = {
-  en: "English",
-  de: "German (Swiss orthography, never ß)",
-  fr: "French",
-  it: "Italian",
-};
 
 const PAGE_CONTEXT: Record<string, string> = {
   home: "The person is on the volunteer entry page, exploring where they could contribute. Lean towards helping them find work that matches their interests.",
