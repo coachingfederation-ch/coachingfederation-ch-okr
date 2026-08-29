@@ -129,12 +129,17 @@ export type VoiceSession = {
   prompt: string;
   firstMessage: string;
   voiceId: string;
+  /** Session language passed to the agent override (en | de | fr | it). */
+  language: string;
   objectives: { number: number; title: string }[];
 };
 
-export async function createVoiceSession(locale: string): Promise<VoiceSession> {
+export async function createVoiceSession(rawLocale: string): Promise<VoiceSession> {
   const apiKey = process.env["ELEVENLABS_API_KEY"];
   if (!apiKey) throw new Error("Voice is not connected for this project");
+
+  const locale = normalizeLocale(rawLocale);
+
 
   const snapshot = await strategySnapshot();
 
