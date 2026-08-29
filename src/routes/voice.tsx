@@ -305,7 +305,7 @@ function VoiceContent() {
                         {s.number}
                       </span>
                       <span className="text-sm font-medium leading-snug text-foreground">
-                        {pickTranslation(s, "title", locale)}
+                        {pickTranslation(s, "title", s.title, locale)}
                       </span>
                     </li>
                   );
