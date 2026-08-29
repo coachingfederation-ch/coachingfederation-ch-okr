@@ -63,6 +63,8 @@ function VoiceContent() {
   const { session } = useAuth();
 
   const [muted, setMuted] = useState(false);
+  // Voice-only variant of German; picked up when the next call starts.
+  const [swissGerman, setSwissGerman] = useState(false);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
@@ -121,7 +123,11 @@ function VoiceContent() {
       const res = await fetch("/api/voice-token", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ locale, authed: Boolean(session) }),
+        body: JSON.stringify({
+          locale,
+          authed: Boolean(session),
+          swissGerman: locale === "de" && swissGerman,
+        }),
       });
       if (!res.ok) throw new Error(await res.text());
       const s = (await res.json()) as {
