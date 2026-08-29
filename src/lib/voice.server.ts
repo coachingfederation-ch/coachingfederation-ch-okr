@@ -159,9 +159,9 @@ export async function createVoiceSession(rawLocale: string): Promise<VoiceSessio
     agentId: VOICE_AGENT_ID,
     token,
     prompt: voicePrompt(locale, snapshot),
-    firstMessage:
-      "Hi, I'm Aspira. I can walk you through the chapter's strategy, objective by objective — or jump straight to whichever one you're curious about. Where shall we start?",
+    firstMessage: FIRST_MESSAGE[locale] ?? FIRST_MESSAGE["en"]!,
     voiceId: VOICE_ID,
+    language: locale,
     objectives: snapshot.map((s) => ({ number: s.number, title: s.title })),
   };
 }
