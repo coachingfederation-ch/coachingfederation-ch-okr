@@ -137,7 +137,11 @@ function VoiceContent() {
         conversationToken: s.token,
         connectionType: "webrtc",
         overrides: {
-          agent: { prompt: { prompt: s.prompt }, firstMessage: s.firstMessage, language: "en" },
+          agent: {
+            prompt: { prompt: s.prompt },
+            firstMessage: s.firstMessage,
+            language: s.language,
+          },
           tts: { voiceId: s.voiceId },
         },
       });
