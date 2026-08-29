@@ -129,7 +129,7 @@ function VoiceContent() {
         prompt: string;
         firstMessage: string;
         voiceId: string;
-        language: string;
+        language: "en" | "de" | "fr" | "it";
       };
 
       setLines([]);
