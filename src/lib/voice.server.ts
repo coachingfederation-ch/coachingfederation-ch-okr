@@ -14,10 +14,18 @@ import { ASPIRA_IDENTITY, ASPIRA_PERSONALITY, LANG_NAME } from "@/lib/assistant/
 export const VOICE_AGENT_ID = "agent_8601m16f5mgmfmh9jbq3q93m4sqj";
 
 /**
- * One multilingual voice for all four languages — Sarah reads DE, FR and IT
- * as naturally as EN, so the chapter keeps a single recognisable narrator.
+ * One narrator per language — a native-sounding voice beats a single
+ * multilingual one, so each locale gets its own.
  */
-const VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
+const VOICE_ID: Record<string, string> = {
+  en: "6rOxfAnZpbM3VIEhFaeV",
+  de: "t6LrOJGOwJlvBxDA0qqG",
+  fr: "gAx9hUOvSB0WdmtuJSBl",
+  it: "uC9VI5XrTxXRNlCzGSKR",
+};
+
+/** Optional playful Swiss German narrator, offered only on top of German. */
+const SWISS_GERMAN_VOICE_ID = "ogdlaxy0T9rCSVdH0VJM";
 
 /**
  * Greetings written natively per language rather than translated, so the
