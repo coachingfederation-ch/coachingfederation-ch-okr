@@ -8,6 +8,8 @@ import { dashboardQueryOptions } from "@/lib/dashboard-query";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { TopNav } from "@/components/okr/TopNav";
 import { AuthBadge } from "@/components/okr/AuthBadge";
 import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
@@ -156,7 +158,7 @@ function VoiceContent() {
     } finally {
       setStarting(false);
     }
-  }, [conversation, locale, session, t]);
+  }, [conversation, locale, session, swissGerman, t]);
 
   const stateLabel = starting
     ? t("voice.connecting")
@@ -272,6 +274,22 @@ function VoiceContent() {
                 </Button>
               )}
             </div>
+
+            {locale === "de" && (
+              <div className="mt-4 flex min-h-11 items-center justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-2 text-left">
+                <Label htmlFor="swiss-german" className="text-sm font-medium text-foreground">
+                  {t("voice.swiss")}
+                  <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                    {t("voice.swissHint")}
+                  </span>
+                </Label>
+                <Switch
+                  id="swiss-german"
+                  checked={swissGerman}
+                  onCheckedChange={setSwissGerman}
+                />
+              </div>
+            )}
 
             {error && (
               <p className="mt-3 text-sm text-destructive" role="alert">
