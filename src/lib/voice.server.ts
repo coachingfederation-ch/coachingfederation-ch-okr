@@ -14,18 +14,29 @@ import { ASPIRA_IDENTITY, ASPIRA_PERSONALITY, LANG_NAME } from "@/lib/assistant/
 export const VOICE_AGENT_ID = "agent_8601m16f5mgmfmh9jbq3q93m4sqj";
 
 /**
- * One narrator per language — a native-sounding voice beats a single
- * multilingual one, so each locale gets its own.
+ * Swiss German is a voice variant, not a language ElevenLabs supports as its
+ * own preset, so it lives on a twin agent whose default voice is the Swiss
+ * narrator and whose spoken language is standard German.
+ */
+export const SWISS_GERMAN_AGENT_ID = "agent_1501m16kxy6dfp6rbb8apjyk2yv4";
+
+/**
+ * One narrator per language. These are pinned on the agent itself (default
+ * voice for English, language presets for de/fr/it) because a language preset
+ * always wins over a per-session `tts.voiceId` override — sending the voice
+ * from the client silently fell back to the agent default. The map is kept
+ * here only so the session response can report which narrator is speaking.
  */
 const VOICE_ID: Record<string, string> = {
   en: "6rOxfAnZpbM3VIEhFaeV",
   de: "t6LrOJGOwJlvBxDA0qqG",
   fr: "gAx9hUOvSB0WdmtuJSBl",
-  it: "uC9VI5XrTxXRNlCzGSKR",
+  it: "litDcG1avVppv4R90BLu",
 };
 
 /** Optional playful Swiss German narrator, offered only on top of German. */
 const SWISS_GERMAN_VOICE_ID = "ogdlaxy0T9rCSVdH0VJM";
+
 
 /**
  * Greetings written natively per language rather than translated, so the
@@ -152,15 +163,14 @@ export async function createVoiceSession(
   const locale = normalizeLocale(rawLocale);
 
   // The Swiss German narrator is a voice variant of German, not its own locale.
-  const voiceId =
-    swissGerman && locale === "de"
-      ? SWISS_GERMAN_VOICE_ID
-      : (VOICE_ID[locale] ?? VOICE_ID["en"]!);
+  const useSwiss = swissGerman && locale === "de";
+  const agentId = useSwiss ? SWISS_GERMAN_AGENT_ID : VOICE_AGENT_ID;
+  const voiceId = useSwiss ? SWISS_GERMAN_VOICE_ID : (VOICE_ID[locale] ?? VOICE_ID["en"]!);
 
   const snapshot = await strategySnapshot();
 
   const res = await fetch(
-    `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${VOICE_AGENT_ID}`,
+    `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${agentId}`,
     { headers: { "xi-api-key": apiKey } },
   );
   if (!res.ok) {
@@ -172,7 +182,7 @@ export async function createVoiceSession(
   if (!token) throw new Error("Voice session returned no token");
 
   return {
-    agentId: VOICE_AGENT_ID,
+    agentId,
     token,
     prompt: voicePrompt(locale, snapshot),
     firstMessage: FIRST_MESSAGE[locale] ?? FIRST_MESSAGE["en"]!,
@@ -180,4 +190,5 @@ export async function createVoiceSession(
     language: locale,
     objectives: snapshot.map((s) => ({ number: s.number, title: s.title })),
   };
+
 }

@@ -150,9 +150,12 @@ function VoiceContent() {
             firstMessage: s.firstMessage,
             language: s.language,
           },
-          tts: { voiceId: s.voiceId },
+          // The narrator is pinned on the agent (default voice for English,
+          // language presets for de/fr/it, a twin agent for Swiss German).
+          // A per-session tts override loses against a language preset.
         },
       });
+
     } catch (err) {
       setError(err instanceof Error ? err.message : t("voice.error"));
     } finally {
