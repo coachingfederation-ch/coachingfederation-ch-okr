@@ -14,18 +14,29 @@ import { ASPIRA_IDENTITY, ASPIRA_PERSONALITY, LANG_NAME } from "@/lib/assistant/
 export const VOICE_AGENT_ID = "agent_8601m16f5mgmfmh9jbq3q93m4sqj";
 
 /**
- * One narrator per language — a native-sounding voice beats a single
- * multilingual one, so each locale gets its own.
+ * Swiss German is a voice variant, not a language ElevenLabs supports as its
+ * own preset, so it lives on a twin agent whose default voice is the Swiss
+ * narrator and whose spoken language is standard German.
+ */
+export const SWISS_GERMAN_AGENT_ID = "agent_1501m16kxy6dfp6rbb8apjyk2yv4";
+
+/**
+ * One narrator per language. These are pinned on the agent itself (default
+ * voice for English, language presets for de/fr/it) because a language preset
+ * always wins over a per-session `tts.voiceId` override — sending the voice
+ * from the client silently fell back to the agent default. The map is kept
+ * here only so the session response can report which narrator is speaking.
  */
 const VOICE_ID: Record<string, string> = {
   en: "6rOxfAnZpbM3VIEhFaeV",
   de: "t6LrOJGOwJlvBxDA0qqG",
   fr: "gAx9hUOvSB0WdmtuJSBl",
-  it: "uC9VI5XrTxXRNlCzGSKR",
+  it: "litDcG1avVppv4R90BLu",
 };
 
 /** Optional playful Swiss German narrator, offered only on top of German. */
 const SWISS_GERMAN_VOICE_ID = "ogdlaxy0T9rCSVdH0VJM";
+
 
 /**
  * Greetings written natively per language rather than translated, so the
