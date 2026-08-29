@@ -3883,6 +3883,8 @@ const it: Record<StringKey, string> = {
   "voice.permissionDenied": "Per la conversazione serve l'accesso al microfono. Consentilo nel browser e riprova.",
   "voice.disclaimer": "Guida in sola lettura. Nulla viene salvato e la conversazione non viene conservata.",
   "voice.langNote": "Aspira parla nella lingua selezionata in alto – tedesco, francese, italiano o inglese. Per cambiare, termina la conversazione, cambia lingua e ricomincia.",
+  "voice.swiss": "Svizzero tedesco (divertente)",
+  "voice.swissHint": "Cambia solo la voce. Attivo alla prossima conversazione.",
   "voice.objectivesTitle": "Obiettivi",
   "voice.transcript": "Trascrizione",
   "voice.transcriptEmpty": "La trascrizione compare qui appena inizia la conversazione.",
