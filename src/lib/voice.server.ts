@@ -13,8 +13,27 @@ import { ASPIRA_IDENTITY, ASPIRA_PERSONALITY, LANG_NAME } from "@/lib/assistant/
  */
 export const VOICE_AGENT_ID = "agent_8601m16f5mgmfmh9jbq3q93m4sqj";
 
-/** Voices chosen for a calm, clear narration. English MVP uses Sarah. */
+/**
+ * One multilingual voice for all four languages — Sarah reads DE, FR and IT
+ * as naturally as EN, so the chapter keeps a single recognisable narrator.
+ */
 const VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
+
+/**
+ * Greetings written natively per language rather than translated, so the
+ * opening line sounds like a person and not like a localisation string.
+ */
+const FIRST_MESSAGE: Record<string, string> = {
+  en: "Hi, I'm Aspira. I can walk you through the chapter's strategy, objective by objective — or jump straight to whichever one you're curious about. Where shall we start?",
+  de: "Hallo, ich bin Aspira. Ich kann dich Objective für Objective durch die Strategie des Chapters führen – oder wir springen direkt zu dem, was dich interessiert. Womit fangen wir an?",
+  fr: "Bonjour, je suis Aspira. Je peux vous présenter la stratégie du chapitre, objectif par objectif – ou aller directement à celui qui vous intéresse. Par quoi commençons-nous ?",
+  it: "Ciao, sono Aspira. Posso accompagnarti nella strategia del chapter, obiettivo per obiettivo – oppure andiamo subito a quello che ti interessa. Da dove cominciamo?",
+};
+
+/** Anything unexpected falls back to English rather than failing the call. */
+function normalizeLocale(locale: string): string {
+  return locale in FIRST_MESSAGE ? locale : "en";
+}
 
 function publicClient() {
   const url = process.env["SUPABASE_URL"];
