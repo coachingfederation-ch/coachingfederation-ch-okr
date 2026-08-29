@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import { X, RotateCcw } from "lucide-react";
+import { X, RotateCcw, Mic } from "lucide-react";
+
 
 import {
   Conversation,
