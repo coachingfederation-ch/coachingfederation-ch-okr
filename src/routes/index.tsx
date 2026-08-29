@@ -202,7 +202,9 @@ function Content() {
           </section>
 
           {/* Live pulse of the chapter, so the page opens with real facts. */}
-          <section className="col-span-12 lg:col-span-4">
+          {/* Stat tiles are supporting context; hidden on phones to keep the
+              volunteer journey above the fold. */}
+          <section className="col-span-12 hidden md:block lg:col-span-4">
             <dl className="grid h-full gap-5 sm:grid-cols-3 lg:grid-cols-1">
               {[
                 {
