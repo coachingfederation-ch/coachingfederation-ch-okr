@@ -14,10 +14,18 @@ import { ASPIRA_IDENTITY, ASPIRA_PERSONALITY, LANG_NAME } from "@/lib/assistant/
 export const VOICE_AGENT_ID = "agent_8601m16f5mgmfmh9jbq3q93m4sqj";
 
 /**
- * One multilingual voice for all four languages — Sarah reads DE, FR and IT
- * as naturally as EN, so the chapter keeps a single recognisable narrator.
+ * One narrator per language — a native-sounding voice beats a single
+ * multilingual one, so each locale gets its own.
  */
-const VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
+const VOICE_ID: Record<string, string> = {
+  en: "6rOxfAnZpbM3VIEhFaeV",
+  de: "t6LrOJGOwJlvBxDA0qqG",
+  fr: "gAx9hUOvSB0WdmtuJSBl",
+  it: "uC9VI5XrTxXRNlCzGSKR",
+};
+
+/** Optional playful Swiss German narrator, offered only on top of German. */
+const SWISS_GERMAN_VOICE_ID = "ogdlaxy0T9rCSVdH0VJM";
 
 /**
  * Greetings written natively per language rather than translated, so the
@@ -134,12 +142,20 @@ export type VoiceSession = {
   objectives: { number: number; title: string }[];
 };
 
-export async function createVoiceSession(rawLocale: string): Promise<VoiceSession> {
+export async function createVoiceSession(
+  rawLocale: string,
+  swissGerman = false,
+): Promise<VoiceSession> {
   const apiKey = process.env["ELEVENLABS_API_KEY"];
   if (!apiKey) throw new Error("Voice is not connected for this project");
 
   const locale = normalizeLocale(rawLocale);
 
+  // The Swiss German narrator is a voice variant of German, not its own locale.
+  const voiceId =
+    swissGerman && locale === "de"
+      ? SWISS_GERMAN_VOICE_ID
+      : (VOICE_ID[locale] ?? VOICE_ID["en"]!);
 
   const snapshot = await strategySnapshot();
 
@@ -160,7 +176,7 @@ export async function createVoiceSession(rawLocale: string): Promise<VoiceSessio
     token,
     prompt: voicePrompt(locale, snapshot),
     firstMessage: FIRST_MESSAGE[locale] ?? FIRST_MESSAGE["en"]!,
-    voiceId: VOICE_ID,
+    voiceId,
     language: locale,
     objectives: snapshot.map((s) => ({ number: s.number, title: s.title })),
   };

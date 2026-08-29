@@ -12,7 +12,7 @@ export const Route = createFileRoute("/api/voice-token")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        let body: { locale?: string; authed?: boolean } = {};
+        let body: { locale?: string; authed?: boolean; swissGerman?: boolean } = {};
         try {
           body = await request.json();
         } catch {
@@ -30,7 +30,10 @@ export const Route = createFileRoute("/api/voice-token")({
         }
 
         try {
-          const session = await createVoiceSession(body.locale ?? "en");
+          const session = await createVoiceSession(
+            body.locale ?? "en",
+            body.swissGerman === true,
+          );
           return Response.json(session, {
             headers: { "cache-control": "no-store" },
           });

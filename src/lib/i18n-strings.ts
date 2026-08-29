@@ -687,6 +687,8 @@ export type StringKey =
   | "voice.permissionDenied"
   | "voice.disclaimer"
   | "voice.langNote"
+  | "voice.swiss"
+  | "voice.swissHint"
   | "voice.objectivesTitle"
   | "voice.transcript"
   | "voice.transcriptEmpty"
@@ -1473,6 +1475,8 @@ const en: Record<StringKey, string> = {
   "voice.permissionDenied": "Microphone access is needed for the conversation. Please allow it in your browser and try again.",
   "voice.disclaimer": "Read-only guide. Nothing is saved and the conversation is not stored.",
   "voice.langNote": "Aspira speaks the language selected in the header — German, French, Italian or English. To switch, end the conversation, change the language and start again.",
+  "voice.swiss": "Swiss German (fun)",
+  "voice.swissHint": "Changes the voice only. Applies to the next conversation.",
   "voice.objectivesTitle": "Objectives",
   "voice.transcript": "Transcript",
   "voice.transcriptEmpty": "The transcript appears here once the conversation starts.",
@@ -2278,6 +2282,8 @@ const de: Record<StringKey, string> = {
   "voice.permissionDenied": "Für das Gespräch wird Zugriff auf das Mikrofon benötigt. Bitte erlaube ihn im Browser und versuche es erneut.",
   "voice.disclaimer": "Nur lesend. Es wird nichts gespeichert, das Gespräch wird nicht aufbewahrt.",
   "voice.langNote": "Aspira spricht in der oben gewählten Sprache – Deutsch, Französisch, Italienisch oder Englisch. Zum Wechseln das Gespräch beenden, die Sprache ändern und neu starten.",
+  "voice.swiss": "Schweizerdeutsch (Spass)",
+  "voice.swissHint": "Ändert nur die Stimme. Gilt ab dem nächsten Gespräch.",
   "voice.objectivesTitle": "Objectives",
   "voice.transcript": "Transkript",
   "voice.transcriptEmpty": "Das Transkript erscheint hier, sobald das Gespräch beginnt.",
@@ -3084,6 +3090,8 @@ const fr: Record<StringKey, string> = {
   "voice.permissionDenied": "L'accès au microphone est nécessaire pour la conversation. Autorisez-le dans votre navigateur, puis réessayez.",
   "voice.disclaimer": "Guide en lecture seule. Rien n'est enregistré, la conversation n'est pas conservée.",
   "voice.langNote": "Aspira parle la langue sélectionnée en haut de page – allemand, français, italien ou anglais. Pour changer, terminez la conversation, changez de langue et relancez-la.",
+  "voice.swiss": "Suisse allemand (fun)",
+  "voice.swissHint": "Change uniquement la voix. Actif à la prochaine conversation.",
   "voice.objectivesTitle": "Objectifs",
   "voice.transcript": "Transcription",
   "voice.transcriptEmpty": "La transcription apparaîtra ici dès le début de la conversation.",
@@ -3883,6 +3891,8 @@ const it: Record<StringKey, string> = {
   "voice.permissionDenied": "Per la conversazione serve l'accesso al microfono. Consentilo nel browser e riprova.",
   "voice.disclaimer": "Guida in sola lettura. Nulla viene salvato e la conversazione non viene conservata.",
   "voice.langNote": "Aspira parla nella lingua selezionata in alto – tedesco, francese, italiano o inglese. Per cambiare, termina la conversazione, cambia lingua e ricomincia.",
+  "voice.swiss": "Svizzero tedesco (divertente)",
+  "voice.swissHint": "Cambia solo la voce. Attivo alla prossima conversazione.",
   "voice.objectivesTitle": "Obiettivi",
   "voice.transcript": "Trascrizione",
   "voice.transcriptEmpty": "La trascrizione compare qui appena inizia la conversazione.",
