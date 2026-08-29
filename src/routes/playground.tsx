@@ -2,9 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 
 import { useLocale } from "@/lib/i18n";
-import { AuthBadge } from "@/components/okr/AuthBadge";
-import { TopNav } from "@/components/okr/TopNav";
-import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { PracticeWizard } from "@/components/okr/PracticeWizard";
 import { OkrChain } from "@/components/okr/OkrChain";
 import {
@@ -17,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
 import { type PlaygroundMode } from "@/lib/playground-drafts";
+import { HeaderControls } from "@/components/okr/HeaderControls";
 
 export const Route = createFileRoute("/playground")({
   head: () => ({
@@ -99,11 +97,7 @@ function PlaygroundPage() {
               fetchPriority="high"
               decoding="async"
             />
-            <div className="flex flex-wrap items-center gap-3">
-              <TopNav />
-              <LanguageSwitcher />
-              <AuthBadge />
-            </div>
+            <HeaderControls />
           </div>
 
           <div className="max-w-3xl">

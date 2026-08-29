@@ -11,9 +11,6 @@ import {
 } from "@/lib/okr-schemas";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import type { StringKey } from "@/lib/i18n-strings";
-import { AuthBadge } from "@/components/okr/AuthBadge";
-import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
-import { TopNav } from "@/components/okr/TopNav";
 import { WorkJourney } from "@/components/okr/WorkJourney";
 import { WorkCard } from "@/components/okr/WorkCard";
 import { KIND_PLURAL_KEY } from "@/components/okr/work-meta";
@@ -29,6 +26,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
+import { HeaderControls } from "@/components/okr/HeaderControls";
 
 const dashboardQueryOptions = queryOptions({
   queryKey: ["dashboard"] as const,
@@ -205,11 +203,7 @@ function InitiativesContent() {
               fetchPriority="high"
               decoding="async"
             />
-            <div className="flex items-center gap-3">
-              <TopNav />
-              <LanguageSwitcher />
-              <AuthBadge />
-            </div>
+            <HeaderControls />
           </div>
 
           <div className="max-w-3xl">

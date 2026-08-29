@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
+import { HeaderControls } from "@/components/okr/HeaderControls";
 
 export const Route = createFileRoute("/style-guide")({
   head: () => ({
@@ -98,10 +99,7 @@ function StyleGuidePage() {
               alt="ICF Switzerland Charter Chapter"
               className="h-20 w-auto -ml-3 -mt-2"
             />
-            <div className="flex items-center gap-3">
-              <TopNav />
-              <AuthBadge />
-            </div>
+            <HeaderControls />
           </div>
 
           <div className="max-w-3xl">

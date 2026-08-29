@@ -10,12 +10,10 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { TopNav } from "@/components/okr/TopNav";
-import { AuthBadge } from "@/components/okr/AuthBadge";
-import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
 import agentMark from "@/assets/okr-agent-mark.png";
+import { HeaderControls } from "@/components/okr/HeaderControls";
 
 export const Route = createFileRoute("/voice")({
   head: () => ({
@@ -183,11 +181,7 @@ function VoiceContent() {
             height={56}
             decoding="async"
           />
-          <div className="flex flex-wrap items-center justify-end gap-3">
-            <TopNav />
-            <LanguageSwitcher />
-            <AuthBadge />
-          </div>
+          <HeaderControls />
         </div>
       </header>
 

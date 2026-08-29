@@ -34,9 +34,6 @@ import {
 } from "@/lib/okr-schemas";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
-import { AuthBadge } from "@/components/okr/AuthBadge";
-import { TopNav } from "@/components/okr/TopNav";
-import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { EditInitiativeDialog } from "@/components/okr/EditInitiativeDialog";
 import { listInitiativeInterests } from "@/lib/interests.functions";
 import {
@@ -71,6 +68,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { HeaderControls } from "@/components/okr/HeaderControls";
 
 const dashboardQueryOptions = queryOptions({
   queryKey: ["dashboard"] as const,
@@ -176,11 +174,7 @@ function DetailContent() {
             >
               ← {t("work.back")}
             </Link>
-            <div className="flex items-center gap-3">
-              <TopNav />
-              <LanguageSwitcher />
-              <AuthBadge />
-            </div>
+            <HeaderControls />
           </div>
 
           <div className="flex flex-wrap items-center gap-2">

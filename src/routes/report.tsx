@@ -15,15 +15,13 @@ import {
   type OkrSetDTO,
 } from "@/lib/okr-schemas";
 import { buildReportModel, type ObjectiveReport, type ReportModel } from "@/lib/report-data";
-import { AuthBadge } from "@/components/okr/AuthBadge";
-import { TopNav } from "@/components/okr/TopNav";
-import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import {
   PortfolioChart,
   ReadinessByObjectiveChart,
   ReadinessChart,
 } from "@/components/okr/ReportCharts";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
+import { HeaderControls } from "@/components/okr/HeaderControls";
 
 export const Route = createFileRoute("/report")({
   head: () => ({
@@ -115,11 +113,7 @@ function ReportContent() {
             height={56}
             decoding="async"
           />
-          <div className="flex items-center gap-3">
-            <TopNav />
-            <LanguageSwitcher />
-            <AuthBadge />
-          </div>
+          <HeaderControls />
         </div>
       </header>
 
