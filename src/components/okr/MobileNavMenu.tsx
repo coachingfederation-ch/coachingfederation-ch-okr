@@ -85,9 +85,7 @@ export function MobileNavMenu({ className }: { className?: string }) {
         className="w-[86vw] max-w-sm border-l-0 bg-hero p-0 text-hero-foreground"
       >
         <SheetHeader className="px-5 pt-5 pb-2 text-left">
-          <SheetTitle className="font-heading text-lg text-hero-foreground">
-            {t("nav.more")}
-          </SheetTitle>
+          <SheetTitle className="sr-only">Menu</SheetTitle>
         </SheetHeader>
 
         <nav aria-label="Primary" className="px-4 pb-2">
