@@ -163,15 +163,14 @@ export async function createVoiceSession(
   const locale = normalizeLocale(rawLocale);
 
   // The Swiss German narrator is a voice variant of German, not its own locale.
-  const voiceId =
-    swissGerman && locale === "de"
-      ? SWISS_GERMAN_VOICE_ID
-      : (VOICE_ID[locale] ?? VOICE_ID["en"]!);
+  const useSwiss = swissGerman && locale === "de";
+  const agentId = useSwiss ? SWISS_GERMAN_AGENT_ID : VOICE_AGENT_ID;
+  const voiceId = useSwiss ? SWISS_GERMAN_VOICE_ID : (VOICE_ID[locale] ?? VOICE_ID["en"]!);
 
   const snapshot = await strategySnapshot();
 
   const res = await fetch(
-    `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${VOICE_AGENT_ID}`,
+    `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${agentId}`,
     { headers: { "xi-api-key": apiKey } },
   );
   if (!res.ok) {
@@ -183,7 +182,7 @@ export async function createVoiceSession(
   if (!token) throw new Error("Voice session returned no token");
 
   return {
-    agentId: VOICE_AGENT_ID,
+    agentId,
     token,
     prompt: voicePrompt(locale, snapshot),
     firstMessage: FIRST_MESSAGE[locale] ?? FIRST_MESSAGE["en"]!,
@@ -191,4 +190,5 @@ export async function createVoiceSession(
     language: locale,
     objectives: snapshot.map((s) => ({ number: s.number, title: s.title })),
   };
+
 }
