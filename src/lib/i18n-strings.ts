@@ -671,6 +671,28 @@ export type StringKey =
   | "report.value.unassigned"
   | "report.kr.milestone"
   | "report.kr.due"
+  | "voice.nav"
+  | "voice.eyebrow"
+  | "voice.title"
+  | "voice.subtitle"
+  | "voice.start"
+  | "voice.connecting"
+  | "voice.ready"
+  | "voice.listening"
+  | "voice.speaking"
+  | "voice.stop"
+  | "voice.mute"
+  | "voice.unmute"
+  | "voice.error"
+  | "voice.permissionDenied"
+  | "voice.disclaimer"
+  | "voice.langNote"
+  | "voice.objectivesTitle"
+  | "voice.transcript"
+  | "voice.transcriptEmpty"
+  | "voice.you"
+  | "voice.aspira"
+  | "agent.voiceCta"
   | "agent.title"
   | "agent.subtitle"
   | "agent.open"
@@ -1435,6 +1457,28 @@ const en: Record<StringKey, string> = {
   "journey.discardConfirm": "Discard",
   "journey.childFailed": "The work was created, but some signals or milestones could not be saved.",
   "journey.reviewNothing": "Nothing captured yet.",
+  "voice.nav": "Talk with Aspira",
+  "voice.eyebrow": "Spoken walkthrough",
+  "voice.title": "Talk with Aspira about the strategy",
+  "voice.subtitle": "Let Aspira talk you through the objectives and key results out loud — and interrupt her with questions whenever you like.",
+  "voice.start": "Start talking",
+  "voice.connecting": "Connecting…",
+  "voice.ready": "Ready when you are",
+  "voice.listening": "Listening…",
+  "voice.speaking": "Aspira is speaking…",
+  "voice.stop": "End conversation",
+  "voice.mute": "Mute microphone",
+  "voice.unmute": "Unmute microphone",
+  "voice.error": "Something went wrong. Please try again.",
+  "voice.permissionDenied": "Microphone access is needed for the conversation. Please allow it in your browser and try again.",
+  "voice.disclaimer": "Read-only guide. Nothing is saved and the conversation is not stored.",
+  "voice.langNote": "Spoken in English for now. German, French and Italian are coming next.",
+  "voice.objectivesTitle": "Objectives",
+  "voice.transcript": "Transcript",
+  "voice.transcriptEmpty": "The transcript appears here once the conversation starts.",
+  "voice.you": "You",
+  "voice.aspira": "Aspira",
+  "agent.voiceCta": "Talk to me instead",
   "agent.title": "Aspira",
   "agent.subtitle": "Your OKR companion — ask or draft together",
   "agent.open": "Open Aspira",
@@ -2218,6 +2262,28 @@ const de: Record<StringKey, string> = {
   "journey.childFailed":
     "Die Arbeit wurde erstellt, aber einzelne Signale oder Meilensteine konnten nicht gespeichert werden.",
   "journey.reviewNothing": "Noch nichts erfasst.",
+  "voice.nav": "Mit Aspira sprechen",
+  "voice.eyebrow": "Gesprochener Rundgang",
+  "voice.title": "Sprich mit Aspira über die Strategie",
+  "voice.subtitle": "Lass dir die Objectives und Key Results von Aspira laut erklären – und unterbrich sie jederzeit mit Fragen.",
+  "voice.start": "Gespräch starten",
+  "voice.connecting": "Verbinden …",
+  "voice.ready": "Bereit, wenn du es bist",
+  "voice.listening": "Ich höre zu …",
+  "voice.speaking": "Aspira spricht …",
+  "voice.stop": "Gespräch beenden",
+  "voice.mute": "Mikrofon stummschalten",
+  "voice.unmute": "Stummschaltung aufheben",
+  "voice.error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+  "voice.permissionDenied": "Für das Gespräch wird Zugriff auf das Mikrofon benötigt. Bitte erlaube ihn im Browser und versuche es erneut.",
+  "voice.disclaimer": "Nur lesend. Es wird nichts gespeichert, das Gespräch wird nicht aufbewahrt.",
+  "voice.langNote": "Vorerst auf Englisch. Deutsch, Französisch und Italienisch folgen.",
+  "voice.objectivesTitle": "Objectives",
+  "voice.transcript": "Transkript",
+  "voice.transcriptEmpty": "Das Transkript erscheint hier, sobald das Gespräch beginnt.",
+  "voice.you": "Du",
+  "voice.aspira": "Aspira",
+  "agent.voiceCta": "Lieber sprechen",
   "agent.title": "Aspira",
   "agent.subtitle": "Deine OKR-Begleitung – fragen oder gemeinsam entwerfen",
   "agent.open": "Aspira öffnen",
@@ -3002,6 +3068,28 @@ const fr: Record<StringKey, string> = {
   "journey.childFailed":
     "Le travail a \u00e9t\u00e9 cr\u00e9\u00e9, mais certains signaux ou jalons n'ont pas pu \u00eatre enregistr\u00e9s.",
   "journey.reviewNothing": "Rien de saisi pour l'instant.",
+  "voice.nav": "Parler avec Aspira",
+  "voice.eyebrow": "Visite guidée vocale",
+  "voice.title": "Parlez de la stratégie avec Aspira",
+  "voice.subtitle": "Laissez Aspira vous présenter à voix haute les objectifs et les key results – et interrompez-la avec vos questions quand vous voulez.",
+  "voice.start": "Démarrer la conversation",
+  "voice.connecting": "Connexion…",
+  "voice.ready": "Prêt quand vous l'êtes",
+  "voice.listening": "J'écoute…",
+  "voice.speaking": "Aspira parle…",
+  "voice.stop": "Terminer la conversation",
+  "voice.mute": "Couper le micro",
+  "voice.unmute": "Réactiver le micro",
+  "voice.error": "Une erreur est survenue. Veuillez réessayer.",
+  "voice.permissionDenied": "L'accès au microphone est nécessaire pour la conversation. Autorisez-le dans votre navigateur, puis réessayez.",
+  "voice.disclaimer": "Guide en lecture seule. Rien n'est enregistré, la conversation n'est pas conservée.",
+  "voice.langNote": "En anglais pour l'instant. L'allemand, le français et l'italien suivront.",
+  "voice.objectivesTitle": "Objectifs",
+  "voice.transcript": "Transcription",
+  "voice.transcriptEmpty": "La transcription apparaîtra ici dès le début de la conversation.",
+  "voice.you": "Vous",
+  "voice.aspira": "Aspira",
+  "agent.voiceCta": "Plutôt en parler",
   "agent.title": "Aspira",
   "agent.subtitle": "Votre compagnon OKR — poser une question ou rédiger ensemble",
   "agent.open": "Ouvrir Aspira",
@@ -3779,6 +3867,28 @@ const it: Record<StringKey, string> = {
   "journey.childFailed":
     "Il lavoro \u00e8 stato creato, ma alcuni segnali o traguardi non sono stati salvati.",
   "journey.reviewNothing": "Ancora nulla inserito.",
+  "voice.nav": "Parla con Aspira",
+  "voice.eyebrow": "Percorso vocale",
+  "voice.title": "Parla della strategia con Aspira",
+  "voice.subtitle": "Lascia che Aspira ti racconti a voce gli obiettivi e i key result, e interrompila con le tue domande quando vuoi.",
+  "voice.start": "Avvia la conversazione",
+  "voice.connecting": "Connessione…",
+  "voice.ready": "Pronta quando vuoi",
+  "voice.listening": "Ti ascolto…",
+  "voice.speaking": "Aspira sta parlando…",
+  "voice.stop": "Termina la conversazione",
+  "voice.mute": "Disattiva il microfono",
+  "voice.unmute": "Riattiva il microfono",
+  "voice.error": "Qualcosa è andato storto. Riprova.",
+  "voice.permissionDenied": "Per la conversazione serve l'accesso al microfono. Consentilo nel browser e riprova.",
+  "voice.disclaimer": "Guida in sola lettura. Nulla viene salvato e la conversazione non viene conservata.",
+  "voice.langNote": "Per ora in inglese. Tedesco, francese e italiano seguiranno.",
+  "voice.objectivesTitle": "Obiettivi",
+  "voice.transcript": "Trascrizione",
+  "voice.transcriptEmpty": "La trascrizione compare qui appena inizia la conversazione.",
+  "voice.you": "Tu",
+  "voice.aspira": "Aspira",
+  "agent.voiceCta": "Preferisco parlare",
   "agent.title": "Aspira",
   "agent.subtitle": "Il tuo compagno OKR — chiedi o crea insieme",
   "agent.open": "Apri Aspira",

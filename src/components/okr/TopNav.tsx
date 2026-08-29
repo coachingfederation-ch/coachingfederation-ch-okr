@@ -24,7 +24,9 @@ export function TopNav() {
   const isInitiativesActive = path.startsWith("/initiatives");
   const isReportActive = path.startsWith("/report");
   const isPlaygroundActive = path.startsWith("/playground");
-  const moreActive = isReportActive || isPlaygroundActive;
+  const isVoiceActive = path.startsWith("/voice");
+  const moreActive = isReportActive || isPlaygroundActive || isVoiceActive;
+
 
   return (
     <nav
@@ -71,6 +73,17 @@ export function TopNav() {
         >
           <DropdownMenuItem asChild>
             <Link
+              to="/voice"
+              className={cn(
+                "w-full cursor-pointer",
+                isVoiceActive && "font-semibold text-primary",
+              )}
+            >
+              {t("voice.nav")}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
               to="/report"
               className={cn(
                 "w-full cursor-pointer",
@@ -91,6 +104,7 @@ export function TopNav() {
               {t("playground.nav")}
             </Link>
           </DropdownMenuItem>
+
         </DropdownMenuContent>
       </DropdownMenu>
     </nav>

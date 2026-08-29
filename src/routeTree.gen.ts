@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VoiceRouteImport } from './routes/voice'
 import { Route as StyleGuideRouteImport } from './routes/style-guide'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as PlaygroundRouteImport } from './routes/playground'
@@ -18,9 +19,15 @@ import { Route as AccessRouteImport } from './routes/access'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InitiativesIndexRouteImport } from './routes/initiatives.index'
 import { Route as InitiativesInitiativeIdRouteImport } from './routes/initiatives.$initiativeId'
+import { Route as ApiVoiceTokenRouteImport } from './routes/api/voice-token'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiPublicRoleSyncRouteImport } from './routes/api/public/role-sync'
 
+const VoiceRoute = VoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StyleGuideRoute = StyleGuideRouteImport.update({
   id: '/style-guide',
   path: '/style-guide',
@@ -66,6 +73,11 @@ const InitiativesInitiativeIdRoute = InitiativesInitiativeIdRouteImport.update({
   path: '/initiatives/$initiativeId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVoiceTokenRoute = ApiVoiceTokenRouteImport.update({
+  id: '/api/voice-token',
+  path: '/api/voice-token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -85,7 +97,9 @@ export interface FileRoutesByFullPath {
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/voice': typeof VoiceRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -98,7 +112,9 @@ export interface FileRoutesByTo {
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/voice': typeof VoiceRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -112,7 +128,9 @@ export interface FileRoutesById {
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
   '/style-guide': typeof StyleGuideRoute
+  '/voice': typeof VoiceRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
@@ -127,7 +145,9 @@ export interface FileRouteTypes {
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/voice'
     | '/api/chat'
+    | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
     | '/api/public/role-sync'
@@ -140,7 +160,9 @@ export interface FileRouteTypes {
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/voice'
     | '/api/chat'
+    | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives'
     | '/api/public/role-sync'
@@ -153,7 +175,9 @@ export interface FileRouteTypes {
     | '/playground'
     | '/report'
     | '/style-guide'
+    | '/voice'
     | '/api/chat'
+    | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
     | '/api/public/role-sync'
@@ -167,7 +191,9 @@ export interface RootRouteChildren {
   PlaygroundRoute: typeof PlaygroundRoute
   ReportRoute: typeof ReportRoute
   StyleGuideRoute: typeof StyleGuideRoute
+  VoiceRoute: typeof VoiceRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiVoiceTokenRoute: typeof ApiVoiceTokenRoute
   InitiativesInitiativeIdRoute: typeof InitiativesInitiativeIdRoute
   InitiativesIndexRoute: typeof InitiativesIndexRoute
   ApiPublicRoleSyncRoute: typeof ApiPublicRoleSyncRoute
@@ -175,6 +201,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/voice': {
+      id: '/voice'
+      path: '/voice'
+      fullPath: '/voice'
+      preLoaderRoute: typeof VoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/style-guide': {
       id: '/style-guide'
       path: '/style-guide'
@@ -238,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InitiativesInitiativeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/voice-token': {
+      id: '/api/voice-token'
+      path: '/api/voice-token'
+      fullPath: '/api/voice-token'
+      preLoaderRoute: typeof ApiVoiceTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -263,7 +303,9 @@ const rootRouteChildren: RootRouteChildren = {
   PlaygroundRoute: PlaygroundRoute,
   ReportRoute: ReportRoute,
   StyleGuideRoute: StyleGuideRoute,
+  VoiceRoute: VoiceRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiVoiceTokenRoute: ApiVoiceTokenRoute,
   InitiativesInitiativeIdRoute: InitiativesInitiativeIdRoute,
   InitiativesIndexRoute: InitiativesIndexRoute,
   ApiPublicRoleSyncRoute: ApiPublicRoleSyncRoute,

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import { X, RotateCcw } from "lucide-react";
+import { X, RotateCcw, Mic } from "lucide-react";
+
 
 import {
   Conversation,
@@ -314,9 +315,20 @@ function AgentSurface({
                 <PromptInputSubmit status={status} disabled={!input.trim() && !busy} />
               </PromptInputFooter>
             </PromptInput>
-            <p className="mt-2 text-center text-[11px] text-muted-foreground">
-              {tr("agent.disclaimer")}
-            </p>
+            <div className="mt-2 flex flex-col items-center gap-1">
+              <Link
+                to="/voice"
+                onClick={() => setOpen(false)}
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[#5778FA]/35 bg-[#5778FA]/10 px-3 text-xs font-semibold text-primary transition-colors hover:bg-[#5778FA]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Mic className="size-3.5" aria-hidden />
+                {tr("agent.voiceCta")}
+              </Link>
+              <p className="text-center text-[11px] text-muted-foreground">
+                {tr("agent.disclaimer")}
+              </p>
+            </div>
+
           </div>
         </div>
       )}
