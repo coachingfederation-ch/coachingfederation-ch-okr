@@ -10,7 +10,7 @@ Replace the single shared narrator with a per-language voice, and add an optiona
 | German | t6LrOJGOwJlvBxDA0qqG |
 | Swiss German (fun) | ogdlaxy0T9rCSVdH0VJM |
 | French | gAx9hUOvSB0WdmtuJSBl |
-| Italian | litDcG1avVppv4R90BLu |
+| Italian | uC9VI5XrTxXRNlCzGSKR |
 
 ## Swiss German toggle
 
