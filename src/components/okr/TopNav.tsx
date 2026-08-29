@@ -24,7 +24,9 @@ export function TopNav() {
   const isInitiativesActive = path.startsWith("/initiatives");
   const isReportActive = path.startsWith("/report");
   const isPlaygroundActive = path.startsWith("/playground");
-  const moreActive = isReportActive || isPlaygroundActive;
+  const isVoiceActive = path.startsWith("/voice");
+  const moreActive = isReportActive || isPlaygroundActive || isVoiceActive;
+
 
   return (
     <nav
