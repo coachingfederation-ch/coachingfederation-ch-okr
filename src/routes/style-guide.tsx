@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Plus, X, ChevronDown } from "lucide-react";
 
 import { TopNav } from "@/components/okr/TopNav";
-import { AuthBadge } from "@/components/okr/AuthBadge";
+
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -375,8 +375,10 @@ function StyleGuidePage() {
             </div>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            Use <Code>&lt;TopNav /&gt;</Code> from <Code>@/components/okr/TopNav</Code>. Do not
-            build ad-hoc nav bars.
+            Use <Code>&lt;HeaderControls /&gt;</Code> from{" "}
+            <Code>@/components/okr/HeaderControls</Code> in every page header: it renders this
+            cluster on desktop and collapses to a single menu button below <Code>md</Code>. Do
+            not build ad-hoc nav bars.
           </p>
         </Section>
 
