@@ -48,9 +48,6 @@ import { EditableText } from "@/components/okr/EditableText";
 import { KrMeasurement } from "@/components/okr/KrMeasurement";
 import { formatSwissDate } from "@/components/okr/kr-metrics";
 
-import { AuthBadge } from "@/components/okr/AuthBadge";
-import { TopNav } from "@/components/okr/TopNav";
-import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { LinkInitiativesDialog } from "@/components/okr/LinkInitiativesDialog";
 
 import {
@@ -79,6 +76,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
+import { HeaderControls } from "@/components/okr/HeaderControls";
 
 const dashboardQueryOptions = queryOptions({
   queryKey: ["dashboard"] as const,
@@ -1435,11 +1433,7 @@ function IndexContent() {
               fetchPriority="high"
               decoding="async"
             />
-            <div className="flex items-center gap-3">
-              <TopNav />
-              <LanguageSwitcher />
-              <AuthBadge />
-            </div>
+            <HeaderControls />
           </div>
 
           <div className="flex flex-wrap items-start justify-between gap-6">

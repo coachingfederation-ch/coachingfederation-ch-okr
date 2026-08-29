@@ -31,9 +31,6 @@ import {
   COMMITMENT_KEY,
   HELP_NEEDED_KEY,
 } from "@/components/okr/initiative-meta";
-import { AuthBadge } from "@/components/okr/AuthBadge";
-import { TopNav } from "@/components/okr/TopNav";
-import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -45,6 +42,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
+import { HeaderControls } from "@/components/okr/HeaderControls";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -171,11 +169,7 @@ function Content() {
               fetchPriority="high"
               decoding="async"
             />
-            <div className="flex w-full max-w-full flex-wrap items-center justify-end gap-3 md:w-auto">
-              <TopNav />
-              <LanguageSwitcher />
-              <AuthBadge />
-            </div>
+            <HeaderControls />
 
           </header>
 
