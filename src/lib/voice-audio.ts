@@ -146,6 +146,8 @@ function relaxIosCaptureProcessing(track: MediaStreamTrack): void {
 class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   private audioElements: HTMLAudioElement[] = [];
   private nodes: AudioNode[] = [];
+  /** Diagnostics teardown callbacks; empty unless the debug panel is on. */
+  private disposers: Array<() => void> = [];
   private ctx: AudioContext | null = null;
   private readonly analysisDisabled = isIosLike();
 
