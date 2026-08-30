@@ -16,6 +16,8 @@ import agentMark from "@/assets/okr-agent-mark.png";
 import { HeaderControls } from "@/components/okr/HeaderControls";
 import {
   acquireSharedAudioContext,
+  isIosLike,
+  prepareIosAudioSession,
   releaseSharedAudioContext,
   useSharedVoiceAudio,
 } from "@/lib/voice-audio";
@@ -134,8 +136,11 @@ function VoiceContent() {
   const start = useCallback(async () => {
     setError(null);
     setStarting(true);
-    // Taken inside the click handler so Safari unlocks the context on a gesture.
-    if (!audioHeld.current) {
+    // iOS: no Web Audio graph at all, just the right audio session for a call.
+    if (isIosLike()) {
+      prepareIosAudioSession();
+    } else if (!audioHeld.current) {
+      // Taken inside the click handler so the context unlocks on a gesture.
       try {
         acquireSharedAudioContext();
         audioHeld.current = true;
