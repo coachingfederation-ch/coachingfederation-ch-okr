@@ -138,7 +138,6 @@ function VoiceContent() {
     setStarting(true);
     const ios = isIosLike();
     // iOS: no app-owned Web Audio graph, just the right audio session for a call.
-    // (On the WebSocket path the SDK builds and owns its own playback graph.)
     if (ios) {
       prepareIosAudioSession();
     } else if (!audioHeld.current) {
@@ -166,9 +165,9 @@ function VoiceContent() {
           locale,
           authed: Boolean(session),
           swissGerman: locale === "de" && swissGerman,
-          // iOS crackles on the WebRTC playback route even with a longer
-          // playout buffer, so phones stream plain audio over a WebSocket.
-          transport: ios ? "websocket" : "webrtc",
+          // WebSocket playback sounded worse on iOS than the tuned WebRTC
+          // route, so every device stays on WebRTC.
+          transport: "webrtc",
         }),
       });
       if (!res.ok) throw new Error(await res.text());
@@ -194,20 +193,11 @@ function VoiceContent() {
       };
 
       setLines([]);
-      // Falls back to WebRTC if the signed URL could not be minted.
-      if (s.transport === "websocket" && s.signedUrl) {
-        conversation.startSession({
-          signedUrl: s.signedUrl,
-          connectionType: "websocket",
-          overrides,
-        });
-      } else {
-        conversation.startSession({
-          conversationToken: s.token,
-          connectionType: "webrtc",
-          overrides,
-        });
-      }
+      conversation.startSession({
+        conversationToken: s.token,
+        connectionType: "webrtc",
+        overrides,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("voice.error"));
     } finally {
