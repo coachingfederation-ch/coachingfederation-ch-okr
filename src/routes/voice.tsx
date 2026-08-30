@@ -21,6 +21,8 @@ import {
   releaseSharedAudioContext,
   useSharedVoiceAudio,
 } from "@/lib/voice-audio";
+import { logVoiceEvent, setVoiceDiagnosticsEnabled } from "@/lib/voice-diagnostics";
+import { VoiceDebugPanel } from "@/components/okr/VoiceDebugPanel";
 
 export const Route = createFileRoute("/voice")({
   head: () => ({
@@ -72,6 +74,8 @@ function VoiceContent() {
   const [muted, setMuted] = useState(false);
   // Voice-only variant of German; picked up when the next call starts.
   const [swissGerman, setSwissGerman] = useState(false);
+  // Diagnostics are opt-in; nothing is collected while this is off.
+  const [debug, setDebug] = useState(false);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
@@ -96,8 +100,14 @@ function VoiceContent() {
         },
       ]);
     },
-    onError: (message) => setError(message || t("voice.error")),
-    onDisconnect: () => setHighlighted(null),
+    onError: (message) => {
+      logVoiceEvent("error", message ?? "unknown");
+      setError(message || t("voice.error"));
+    },
+    onDisconnect: () => {
+      logVoiceEvent("session", "disconnected");
+      setHighlighted(null);
+    },
     clientTools: {
       /** Aspira calls this before she starts on an objective, so the page follows along. */
       highlight_objective: ({ number }: { number?: number | string }) => {
@@ -114,6 +124,16 @@ function VoiceContent() {
 
   const status = conversation.status;
   const connected = status === "connected";
+
+  // Toggle collection with the switch, and always stop it on unmount.
+  useEffect(() => {
+    setVoiceDiagnosticsEnabled(debug);
+    return () => setVoiceDiagnosticsEnabled(false);
+  }, [debug]);
+
+  useEffect(() => {
+    logVoiceEvent("session", `status=${status}`);
+  }, [status]);
 
   // Keep the running transcript pinned to the newest line.
   useEffect(() => {
@@ -328,6 +348,17 @@ function VoiceContent() {
               </div>
             )}
 
+            {/* Diagnostics: English-only, must be on before the call starts. */}
+            <div className="mt-3 flex min-h-11 items-center justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-2 text-left">
+              <Label htmlFor="voice-debug" className="text-sm font-medium text-foreground">
+                Debug
+                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                  Switch on before starting a call to record audio statistics.
+                </span>
+              </Label>
+              <Switch id="voice-debug" checked={debug} onCheckedChange={setDebug} />
+            </div>
+
             {error && (
               <p className="mt-3 text-sm text-destructive" role="alert">
                 {error}
@@ -406,6 +437,8 @@ function VoiceContent() {
                 )}
               </div>
             </section>
+
+            {debug && <VoiceDebugPanel />}
           </div>
         </div>
       </div>

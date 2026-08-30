@@ -4,6 +4,12 @@ import {
   type WebRTCAudioAdapter,
 } from "@elevenlabs/client/internal";
 import type { RemoteAudioTrack } from "livekit-client";
+import {
+  isVoiceDiagnosticsEnabled,
+  logVoiceEvent,
+  startStatsPolling,
+  watchAudioElement,
+} from "@/lib/voice-diagnostics";
 
 /**
  * Aspira's realtime voice call used to run on two separate AudioContexts per
@@ -140,6 +146,8 @@ function relaxIosCaptureProcessing(track: MediaStreamTrack): void {
 class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   private audioElements: HTMLAudioElement[] = [];
   private nodes: AudioNode[] = [];
+  /** Diagnostics teardown callbacks; empty unless the debug panel is on. */
+  private disposers: Array<() => void> = [];
   private ctx: AudioContext | null = null;
   private readonly analysisDisabled = isIosLike();
 
@@ -186,6 +194,14 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     el.style.display = "none";
     document.body.appendChild(el);
     this.audioElements.push(el);
+
+    // Diagnostics are inert unless the debug panel is switched on.
+    if (isVoiceDiagnosticsEnabled()) {
+      logVoiceEvent("track", `remote audio attached (ios=${this.analysisDisabled})`);
+      this.disposers.push(watchAudioElement(el));
+      const receiver = (track as RemoteAudioTrack & { receiver?: RTCRtpReceiver }).receiver;
+      this.disposers.push(startStatsPolling(receiver));
+    }
   }
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
@@ -227,6 +243,8 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   }
 
   cleanup() {
+    for (const dispose of this.disposers) dispose();
+    this.disposers = [];
     for (const node of this.nodes) {
       try {
         node.disconnect();
