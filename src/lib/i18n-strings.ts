@@ -686,6 +686,7 @@ export type StringKey =
   | "voice.error"
   | "voice.permissionDenied"
   | "voice.disclaimer"
+  | "voice.headphonesHint"
   | "voice.langNote"
   | "voice.swiss"
   | "voice.swissHint"
@@ -1474,6 +1475,7 @@ const en: Record<StringKey, string> = {
   "voice.error": "Something went wrong. Please try again.",
   "voice.permissionDenied": "Microphone access is needed for the conversation. Please allow it in your browser and try again.",
   "voice.disclaimer": "Read-only guide. Nothing is saved and the conversation is not stored.",
+  "voice.headphonesHint": "On iPhone and iPad, headphones or earbuds give the clearest sound.",
   "voice.langNote": "Aspira speaks the language selected in the header — German, French, Italian or English. To switch, end the conversation, change the language and start again.",
   "voice.swiss": "Swiss German (fun)",
   "voice.swissHint": "Changes the voice only. Applies to the next conversation.",
@@ -2281,6 +2283,7 @@ const de: Record<StringKey, string> = {
   "voice.error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
   "voice.permissionDenied": "Für das Gespräch wird Zugriff auf das Mikrofon benötigt. Bitte erlaube ihn im Browser und versuche es erneut.",
   "voice.disclaimer": "Nur lesend. Es wird nichts gespeichert, das Gespräch wird nicht aufbewahrt.",
+  "voice.headphonesHint": "Auf iPhone und iPad klingt das Gespräch mit Kopfhörern am klarsten.",
   "voice.langNote": "Aspira spricht in der oben gewählten Sprache – Deutsch, Französisch, Italienisch oder Englisch. Zum Wechseln das Gespräch beenden, die Sprache ändern und neu starten.",
   "voice.swiss": "Schweizerdeutsch (Spass)",
   "voice.swissHint": "Ändert nur die Stimme. Gilt ab dem nächsten Gespräch.",
@@ -3089,6 +3092,7 @@ const fr: Record<StringKey, string> = {
   "voice.error": "Une erreur est survenue. Veuillez réessayer.",
   "voice.permissionDenied": "L'accès au microphone est nécessaire pour la conversation. Autorisez-le dans votre navigateur, puis réessayez.",
   "voice.disclaimer": "Guide en lecture seule. Rien n'est enregistré, la conversation n'est pas conservée.",
+  "voice.headphonesHint": "Sur iPhone et iPad, un casque ou des écouteurs offrent le son le plus clair.",
   "voice.langNote": "Aspira parle la langue sélectionnée en haut de page – allemand, français, italien ou anglais. Pour changer, terminez la conversation, changez de langue et relancez-la.",
   "voice.swiss": "Suisse allemand (fun)",
   "voice.swissHint": "Change uniquement la voix. Actif à la prochaine conversation.",
@@ -3890,6 +3894,7 @@ const it: Record<StringKey, string> = {
   "voice.error": "Qualcosa è andato storto. Riprova.",
   "voice.permissionDenied": "Per la conversazione serve l'accesso al microfono. Consentilo nel browser e riprova.",
   "voice.disclaimer": "Guida in sola lettura. Nulla viene salvato e la conversazione non viene conservata.",
+  "voice.headphonesHint": "Su iPhone e iPad, cuffie o auricolari offrono l'audio più nitido.",
   "voice.langNote": "Aspira parla nella lingua selezionata in alto – tedesco, francese, italiano o inglese. Per cambiare, termina la conversazione, cambia lingua e ricomincia.",
   "voice.swiss": "Svizzero tedesco (divertente)",
   "voice.swissHint": "Cambia solo la voce. Attivo alla prossima conversazione.",
