@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { ConversationProvider, useConversation } from "@elevenlabs/react";
-import { Mic, MicOff, PhoneOff, Loader2, AudioLines } from "lucide-react";
+import { Mic, MicOff, PhoneOff, Loader2, AudioLines, Headphones } from "lucide-react";
 
 import { dashboardQueryOptions } from "@/lib/dashboard-query";
 import { pickTranslation, useLocale } from "@/lib/i18n";
@@ -21,8 +21,6 @@ import {
   releaseSharedAudioContext,
   useSharedVoiceAudio,
 } from "@/lib/voice-audio";
-import { logVoiceEvent, setVoiceDiagnosticsEnabled } from "@/lib/voice-diagnostics";
-import { VoiceDebugPanel } from "@/components/okr/VoiceDebugPanel";
 
 export const Route = createFileRoute("/voice")({
   head: () => ({
@@ -74,8 +72,8 @@ function VoiceContent() {
   const [muted, setMuted] = useState(false);
   // Voice-only variant of German; picked up when the next call starts.
   const [swissGerman, setSwissGerman] = useState(false);
-  // Diagnostics are opt-in; nothing is collected while this is off.
-  const [debug, setDebug] = useState(false);
+  // iPhone/iPad only: set after mount so SSR and hydration agree.
+  const [isIos, setIsIos] = useState(false);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
@@ -101,11 +99,9 @@ function VoiceContent() {
       ]);
     },
     onError: (message) => {
-      logVoiceEvent("error", message ?? "unknown");
       setError(message || t("voice.error"));
     },
     onDisconnect: () => {
-      logVoiceEvent("session", "disconnected");
       setHighlighted(null);
     },
     clientTools: {
@@ -125,15 +121,10 @@ function VoiceContent() {
   const status = conversation.status;
   const connected = status === "connected";
 
-  // Toggle collection with the switch, and always stop it on unmount.
+  // Headphone hint is iOS-only; detect after mount to keep hydration stable.
   useEffect(() => {
-    setVoiceDiagnosticsEnabled(debug);
-    return () => setVoiceDiagnosticsEnabled(false);
-  }, [debug]);
-
-  useEffect(() => {
-    logVoiceEvent("session", `status=${status}`);
-  }, [status]);
+    setIsIos(isIosLike());
+  }, []);
 
   // Keep the running transcript pinned to the newest line.
   useEffect(() => {
@@ -348,16 +339,15 @@ function VoiceContent() {
               </div>
             )}
 
-            {/* Diagnostics: English-only, must be on before the call starts. */}
-            <div className="mt-3 flex min-h-11 items-center justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-2 text-left">
-              <Label htmlFor="voice-debug" className="text-sm font-medium text-foreground">
-                Debug
-                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
-                  Switch on before starting a call to record audio statistics.
-                </span>
-              </Label>
-              <Switch id="voice-debug" checked={debug} onCheckedChange={setDebug} />
-            </div>
+            {/* iOS routes a hands-free call through its own voice-processing
+                loudspeaker path, which is where the residual crackle lives;
+                headphones bypass it entirely. */}
+            {isIos && (
+              <p className="mt-4 flex items-start gap-2 rounded-2xl border border-border bg-card px-4 py-3 text-left text-xs leading-relaxed text-muted-foreground">
+                <Headphones className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+                {t("voice.headphonesHint")}
+              </p>
+            )}
 
             {error && (
               <p className="mt-3 text-sm text-destructive" role="alert">
@@ -437,8 +427,6 @@ function VoiceContent() {
                 )}
               </div>
             </section>
-
-            {debug && <VoiceDebugPanel />}
           </div>
         </div>
       </div>

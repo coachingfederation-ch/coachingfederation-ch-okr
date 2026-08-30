@@ -4,13 +4,6 @@ import {
   type WebRTCAudioAdapter,
 } from "@elevenlabs/client/internal";
 import type { RemoteAudioTrack } from "livekit-client";
-import {
-  getVoiceExperiments,
-  isVoiceDiagnosticsEnabled,
-  logVoiceEvent,
-  startStatsPolling,
-  watchAudioElement,
-} from "@/lib/voice-diagnostics";
 
 /**
  * Aspira's realtime voice call used to run on two separate AudioContexts per
@@ -64,28 +57,21 @@ export function isIosLike(): boolean {
 }
 
 /**
- * Ask iOS for a specific audio session so a live call keeps a full-bandwidth
- * playback route instead of falling back to the narrowband voice route.
- * Safari 16.4+; a no-op everywhere else. The applied value is read back and
- * logged, because assignment can be silently ignored.
+ * Put iOS into the call audio session before a session starts (Safari 16.4+,
+ * a no-op elsewhere).
+ *
+ * On-device diagnostics settled the options: `playback` and leaving the
+ * session on `auto` both block microphone access, so `play-and-record` is the
+ * only usable value for a two-way call.
  */
 export function prepareIosAudioSession(): void {
-  const requested = getVoiceExperiments().audioSession;
   const session = (navigator as unknown as { audioSession?: { type: string } }).audioSession;
-  if (!session) {
-    logVoiceEvent("audioSession", "unsupported on this browser");
-    return;
-  }
-  if (requested === "off") {
-    logVoiceEvent("audioSession", `left as-is, readback=${session.type}`);
-    return;
-  }
+  if (!session) return;
   try {
-    session.type = requested;
+    session.type = "play-and-record";
   } catch {
     /* unsupported value on this Safari build */
   }
-  logVoiceEvent("audioSession", `set=${requested} readback=${session.type}`);
 }
 
 /** Volume/frequency readout backed by an AnalyserNode on the shared context. */
@@ -115,73 +101,26 @@ const SILENT_VOLUME = {
 };
 
 /**
- * Seconds of incoming audio iOS should buffer before playing it. Phones lose
- * packets far more often than desktops; without a cushion the player runs dry
- * mid-word and that underflow is what you hear as crackle. ~200 ms costs a
- * barely perceptible delay and covers ordinary Wi-Fi/cellular jitter.
- */
-const IOS_PLAYOUT_DELAY_SECONDS = 0.2;
-
-/**
- * Shape the capture chain on iOS according to the active experiment.
+ * Shape the iOS capture chain for a hands-free call.
  *
- * `mixed` is the setting we shipped: echo cancellation on, noise suppression
- * and auto gain off. `default` leaves the device alone, `off` disables all
- * three. Safari silently ignores constraints it does not implement, so the
- * applied settings are read back and logged rather than assumed.
+ * Echo cancellation stays on: without it the agent hears herself through the
+ * loudspeaker. Noise suppression and auto gain are off because they colour
+ * speech without helping here. Device diagnostics showed the residual
+ * loudspeaker crackle comes from Apple's own voice-processing route, not from
+ * these constraints, so this configuration is fixed rather than tunable.
+ * Safari silently ignores constraints it does not implement.
  */
 function applyIosCaptureProcessing(track: MediaStreamTrack): void {
-  const mode = getVoiceExperiments().micProcessing;
-  if (mode === "default") {
-    logVoiceEvent("mic", "device default processing (no constraints applied)");
-    return;
-  }
-  const constraints: MediaTrackConstraints =
-    mode === "off"
-      ? {
-          echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: false,
-          channelCount: 1,
-        }
-      : {
-          echoCancellation: true,
-          noiseSuppression: false,
-          autoGainControl: false,
-          channelCount: 1,
-        };
   void track
-    .applyConstraints(constraints)
-    .then(() => {
-      const s = track.getSettings();
-      logVoiceEvent(
-        "mic",
-        `mode=${mode} aec=${s.echoCancellation} ns=${s.noiseSuppression} agc=${s.autoGainControl} ch=${s.channelCount}`,
-      );
+    .applyConstraints({
+      echoCancellation: true,
+      noiseSuppression: false,
+      autoGainControl: false,
+      channelCount: 1,
     })
     .catch(() => {
-      logVoiceEvent("mic", `mode=${mode} constraints rejected — keeping device default`);
+      /* keep the device default when Safari rejects the set */
     });
-}
-
-/**
- * Ask the remote (agent) track for a single channel. The stream arrives as
- * 2-channel Opus; a stereo downmix inside the phone's voice-processing route is
- * one of the remaining crackle suspects. WebKit may refuse — the result is
- * logged either way so a test run is self-describing.
- */
-function applyMonoRemote(track: RemoteAudioTrack): void {
-  const mst = track.mediaStreamTrack;
-  if (!mst?.applyConstraints) {
-    logVoiceEvent("mono", "remote track exposes no constraint surface");
-    return;
-  }
-  void mst
-    .applyConstraints({ channelCount: 1 })
-    .then(() => logVoiceEvent("mono", `applied, settings ch=${mst.getSettings().channelCount}`))
-    .catch((e: unknown) =>
-      logVoiceEvent("mono", `rejected: ${e instanceof Error ? e.name : String(e)}`),
-    );
 }
 
 /**
@@ -196,8 +135,6 @@ function applyMonoRemote(track: RemoteAudioTrack): void {
 class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   private audioElements: HTMLAudioElement[] = [];
   private nodes: AudioNode[] = [];
-  /** Diagnostics teardown callbacks; empty unless the debug panel is on. */
-  private disposers: Array<() => void> = [];
   private ctx: AudioContext | null = null;
   private readonly analysisDisabled = isIosLike();
 
@@ -220,15 +157,9 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     el.setAttribute("playsinline", "");
     (el as HTMLAudioElement & { playsInline?: boolean }).playsInline = true;
     if (this.analysisDisabled) {
-      const withDelay = track as RemoteAudioTrack & {
-        setPlayoutDelay?: (seconds: number) => void;
-      };
-      try {
-        withDelay.setPlayoutDelay?.(IOS_PLAYOUT_DELAY_SECONDS);
-      } catch {
-        /* receiver does not expose a playout delay hint */
-      }
-      if (getVoiceExperiments().mono) applyMonoRemote(track);
+      // No extra playout delay: device captures showed zero concealment, so a
+      // cushion only adds latency to a live conversation.
+      //
       // An interruption (notification, lock screen) can pause the element;
       // iOS does not resume it on its own, and silence reads as a dropped call.
       el.addEventListener("pause", () => {
@@ -246,14 +177,6 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     el.style.display = "none";
     document.body.appendChild(el);
     this.audioElements.push(el);
-
-    // Diagnostics are inert unless the debug panel is switched on.
-    if (isVoiceDiagnosticsEnabled()) {
-      logVoiceEvent("track", `remote audio attached (ios=${this.analysisDisabled})`);
-      this.disposers.push(watchAudioElement(el));
-      const receiver = (track as RemoteAudioTrack & { receiver?: RTCRtpReceiver }).receiver;
-      this.disposers.push(startStatsPolling(receiver));
-    }
   }
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
@@ -295,8 +218,6 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   }
 
   cleanup() {
-    for (const dispose of this.disposers) dispose();
-    this.disposers = [];
     for (const node of this.nodes) {
       try {
         node.disconnect();

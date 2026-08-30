@@ -686,6 +686,7 @@ export type StringKey =
   | "voice.error"
   | "voice.permissionDenied"
   | "voice.disclaimer"
+  | "voice.headphonesHint"
   | "voice.langNote"
   | "voice.swiss"
   | "voice.swissHint"
@@ -857,7 +858,8 @@ const en: Record<StringKey, string> = {
   "nav.initiatives": "Initiative Portfolio",
   "nav.more": "More",
   "access.readonly.title": "You are signed in with view-only access",
-  "access.readonly.body": "Editing rights are managed in the ICF Switzerland member area. Ask an admin to add you as an Editor there, then sign in again.",
+  "access.readonly.body":
+    "Editing rights are managed in the ICF Switzerland member area. Ask an admin to add you as an Editor there, then sign in again.",
   "initiatives.title": "Initiative Portfolio",
   "initiatives.subtitle": "All initiatives across every OKR, grouped by status.",
   "initiatives.filterAllOkrs": "All OKRs",
@@ -1462,7 +1464,8 @@ const en: Record<StringKey, string> = {
   "voice.nav": "Talk with Aspira",
   "voice.eyebrow": "Spoken walkthrough",
   "voice.title": "Talk with Aspira about the strategy",
-  "voice.subtitle": "Let Aspira talk you through the objectives and key results out loud — and interrupt her with questions whenever you like.",
+  "voice.subtitle":
+    "Let Aspira talk you through the objectives and key results out loud — and interrupt her with questions whenever you like.",
   "voice.start": "Start talking",
   "voice.connecting": "Connecting…",
   "voice.ready": "Ready when you are",
@@ -1472,9 +1475,12 @@ const en: Record<StringKey, string> = {
   "voice.mute": "Mute microphone",
   "voice.unmute": "Unmute microphone",
   "voice.error": "Something went wrong. Please try again.",
-  "voice.permissionDenied": "Microphone access is needed for the conversation. Please allow it in your browser and try again.",
+  "voice.permissionDenied":
+    "Microphone access is needed for the conversation. Please allow it in your browser and try again.",
   "voice.disclaimer": "Read-only guide. Nothing is saved and the conversation is not stored.",
-  "voice.langNote": "Aspira speaks the language selected in the header — German, French, Italian or English. To switch, end the conversation, change the language and start again.",
+  "voice.headphonesHint": "On iPhone and iPad, headphones or earbuds give the clearest sound.",
+  "voice.langNote":
+    "Aspira speaks the language selected in the header — German, French, Italian or English. To switch, end the conversation, change the language and start again.",
   "voice.swiss": "Swiss German (fun)",
   "voice.swissHint": "Changes the voice only. Applies to the next conversation.",
   "voice.objectivesTitle": "Objectives",
@@ -1490,29 +1496,35 @@ const en: Record<StringKey, string> = {
   "agent.placeholder": "Ask a question…",
   "agent.startOver": "Start over",
   "agent.disclaimer": "Read-only guide. Nothing is saved.",
-  "agent.greeting": "Hi, I'm Aspira! I can explain how our objectives, key results and initiatives fit together — or help you draft one.",
+  "agent.greeting":
+    "Hi, I'm Aspira! I can explain how our objectives, key results and initiatives fit together — or help you draft one.",
   "agent.s1": "How does a key result differ from an initiative?",
   "agent.s2": "What is objective 2 about?",
   "agent.s3": "Help me draft an initiative",
   "agent.error": "Something went wrong. Please try again.",
   "agent.thinking": "Thinking…",
-  "agent.ctx.home.greeting": "Hi, I'm Aspira! Looking for a place to contribute? Tell me what interests you and I'll point you to the work behind it.",
+  "agent.ctx.home.greeting":
+    "Hi, I'm Aspira! Looking for a place to contribute? Tell me what interests you and I'll point you to the work behind it.",
   "agent.ctx.home.s1": "Where could I help as a volunteer?",
   "agent.ctx.home.s2": "What is the chapter working on right now?",
   "agent.ctx.home.s3": "Explain what an objective is, simply",
-  "agent.ctx.okrs.greeting": "Hi, I'm Aspira! I can walk you through any objective or key result on this page — or help you draft a new one.",
+  "agent.ctx.okrs.greeting":
+    "Hi, I'm Aspira! I can walk you through any objective or key result on this page — or help you draft a new one.",
   "agent.ctx.okrs.s1": "Summarise objective 2 for me",
   "agent.ctx.okrs.s2": "How is this objective measured?",
   "agent.ctx.okrs.s3": "How does a key result differ from an initiative?",
-  "agent.ctx.initiatives.greeting": "Hi, I'm Aspira! Ask me about any initiative in the portfolio, or let's shape a new one together.",
+  "agent.ctx.initiatives.greeting":
+    "Hi, I'm Aspira! Ask me about any initiative in the portfolio, or let's shape a new one together.",
   "agent.ctx.initiatives.s1": "Which initiatives are in progress?",
   "agent.ctx.initiatives.s2": "Which key result does this work support?",
   "agent.ctx.initiatives.s3": "Help me draft an initiative",
-  "agent.ctx.playground.greeting": "Hi, I'm Aspira! This is a safe sandbox — let's practise writing an objective and key results together.",
+  "agent.ctx.playground.greeting":
+    "Hi, I'm Aspira! This is a safe sandbox — let's practise writing an objective and key results together.",
   "agent.ctx.playground.s1": "Help me draft an objective",
   "agent.ctx.playground.s2": "What makes a key result measurable?",
   "agent.ctx.playground.s3": "Check my draft for quality",
-  "agent.ctx.report.greeting": "Hi, I'm Aspira! I can help you read this report — progress, gaps, and what the numbers mean.",
+  "agent.ctx.report.greeting":
+    "Hi, I'm Aspira! I can help you read this report — progress, gaps, and what the numbers mean.",
   "agent.ctx.report.s1": "Where are we behind?",
   "agent.ctx.report.s2": "Which key results have no baseline?",
   "agent.ctx.report.s3": "Summarise progress for the board",
@@ -1650,7 +1662,8 @@ const de: Record<StringKey, string> = {
   "nav.initiatives": "Initiativen-Portfolio",
   "nav.more": "Mehr",
   "access.readonly.title": "Sie sind mit reinem Lesezugriff angemeldet",
-  "access.readonly.body": "Bearbeitungsrechte werden im Mitgliederbereich von ICF Schweiz verwaltet. Bitten Sie eine Administratorin oder einen Administrator, Sie dort als Editor zu erfassen, und melden Sie sich danach erneut an.",
+  "access.readonly.body":
+    "Bearbeitungsrechte werden im Mitgliederbereich von ICF Schweiz verwaltet. Bitten Sie eine Administratorin oder einen Administrator, Sie dort als Editor zu erfassen, und melden Sie sich danach erneut an.",
   "initiatives.title": "Initiativen-Portfolio",
   "initiatives.subtitle": "Alle Initiativen über alle OKRs hinweg, nach Status gruppiert.",
   "initiatives.filterAllOkrs": "Alle OKRs",
@@ -2269,7 +2282,8 @@ const de: Record<StringKey, string> = {
   "voice.nav": "Mit Aspira sprechen",
   "voice.eyebrow": "Gesprochener Rundgang",
   "voice.title": "Sprich mit Aspira über die Strategie",
-  "voice.subtitle": "Lass dir die Objectives und Key Results von Aspira laut erklären – und unterbrich sie jederzeit mit Fragen.",
+  "voice.subtitle":
+    "Lass dir die Objectives und Key Results von Aspira laut erklären – und unterbrich sie jederzeit mit Fragen.",
   "voice.start": "Gespräch starten",
   "voice.connecting": "Verbinden …",
   "voice.ready": "Bereit, wenn du es bist",
@@ -2279,9 +2293,12 @@ const de: Record<StringKey, string> = {
   "voice.mute": "Mikrofon stummschalten",
   "voice.unmute": "Stummschaltung aufheben",
   "voice.error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-  "voice.permissionDenied": "Für das Gespräch wird Zugriff auf das Mikrofon benötigt. Bitte erlaube ihn im Browser und versuche es erneut.",
+  "voice.permissionDenied":
+    "Für das Gespräch wird Zugriff auf das Mikrofon benötigt. Bitte erlaube ihn im Browser und versuche es erneut.",
   "voice.disclaimer": "Nur lesend. Es wird nichts gespeichert, das Gespräch wird nicht aufbewahrt.",
-  "voice.langNote": "Aspira spricht in der oben gewählten Sprache – Deutsch, Französisch, Italienisch oder Englisch. Zum Wechseln das Gespräch beenden, die Sprache ändern und neu starten.",
+  "voice.headphonesHint": "Auf iPhone und iPad klingt das Gespräch mit Kopfhörern am klarsten.",
+  "voice.langNote":
+    "Aspira spricht in der oben gewählten Sprache – Deutsch, Französisch, Italienisch oder Englisch. Zum Wechseln das Gespräch beenden, die Sprache ändern und neu starten.",
   "voice.swiss": "Schweizerdeutsch (Spass)",
   "voice.swissHint": "Ändert nur die Stimme. Gilt ab dem nächsten Gespräch.",
   "voice.objectivesTitle": "Objectives",
@@ -2297,29 +2314,35 @@ const de: Record<StringKey, string> = {
   "agent.placeholder": "Frage stellen…",
   "agent.startOver": "Neu beginnen",
   "agent.disclaimer": "Nur Beratung. Es wird nichts gespeichert.",
-  "agent.greeting": "Hallo, ich bin Aspira! Ich erkläre, wie Objectives, Key Results und Initiativen zusammenspielen – oder helfe beim Entwurf.",
+  "agent.greeting":
+    "Hallo, ich bin Aspira! Ich erkläre, wie Objectives, Key Results und Initiativen zusammenspielen – oder helfe beim Entwurf.",
   "agent.s1": "Worin unterscheidet sich ein Key Result von einer Initiative?",
   "agent.s2": "Worum geht es bei Objective 2?",
   "agent.s3": "Hilf mir, eine Initiative zu entwerfen",
   "agent.error": "Etwas ist schiefgelaufen. Bitte nochmals versuchen.",
   "agent.thinking": "Denkt nach…",
-  "agent.ctx.home.greeting": "Hallo, ich bin Aspira! Auf der Suche nach einem Beitrag? Sag mir, was dich interessiert, und ich zeige dir die passende Arbeit.",
+  "agent.ctx.home.greeting":
+    "Hallo, ich bin Aspira! Auf der Suche nach einem Beitrag? Sag mir, was dich interessiert, und ich zeige dir die passende Arbeit.",
   "agent.ctx.home.s1": "Wo könnte ich als Freiwillige:r helfen?",
   "agent.ctx.home.s2": "Woran arbeitet das Chapter gerade?",
   "agent.ctx.home.s3": "Erkläre mir einfach, was ein Objective ist",
-  "agent.ctx.okrs.greeting": "Hallo, ich bin Aspira! Ich erkläre dir jedes Objective oder Key Result auf dieser Seite – oder helfe beim Entwurf.",
+  "agent.ctx.okrs.greeting":
+    "Hallo, ich bin Aspira! Ich erkläre dir jedes Objective oder Key Result auf dieser Seite – oder helfe beim Entwurf.",
   "agent.ctx.okrs.s1": "Fasse Objective 2 zusammen",
   "agent.ctx.okrs.s2": "Wie wird dieses Objective gemessen?",
   "agent.ctx.okrs.s3": "Wie unterscheidet sich ein Key Result von einer Initiative?",
-  "agent.ctx.initiatives.greeting": "Hallo, ich bin Aspira! Frag mich zu jeder Initiative im Portfolio – oder gestalten wir gemeinsam eine neue.",
+  "agent.ctx.initiatives.greeting":
+    "Hallo, ich bin Aspira! Frag mich zu jeder Initiative im Portfolio – oder gestalten wir gemeinsam eine neue.",
   "agent.ctx.initiatives.s1": "Welche Initiativen laufen gerade?",
   "agent.ctx.initiatives.s2": "Auf welches Key Result zahlt diese Arbeit ein?",
   "agent.ctx.initiatives.s3": "Hilf mir, eine Initiative zu entwerfen",
-  "agent.ctx.playground.greeting": "Hallo, ich bin Aspira! Das hier ist ein sicherer Übungsraum – üben wir gemeinsam Objective und Key Results.",
+  "agent.ctx.playground.greeting":
+    "Hallo, ich bin Aspira! Das hier ist ein sicherer Übungsraum – üben wir gemeinsam Objective und Key Results.",
   "agent.ctx.playground.s1": "Hilf mir, ein Objective zu entwerfen",
   "agent.ctx.playground.s2": "Was macht ein Key Result messbar?",
   "agent.ctx.playground.s3": "Prüfe die Qualität meines Entwurfs",
-  "agent.ctx.report.greeting": "Hallo, ich bin Aspira! Ich helfe dir, diesen Bericht zu lesen: Fortschritt, Lücken und was die Zahlen bedeuten.",
+  "agent.ctx.report.greeting":
+    "Hallo, ich bin Aspira! Ich helfe dir, diesen Bericht zu lesen: Fortschritt, Lücken und was die Zahlen bedeuten.",
   "agent.ctx.report.s1": "Wo liegen wir zurück?",
   "agent.ctx.report.s2": "Welche Key Results haben keine Baseline?",
   "agent.ctx.report.s3": "Fasse den Fortschritt für den Vorstand zusammen",
@@ -2456,7 +2479,8 @@ const fr: Record<StringKey, string> = {
   "nav.initiatives": "Portefeuille d'initiatives",
   "nav.more": "Plus",
   "access.readonly.title": "Vous êtes connecté avec un accès en lecture seule",
-  "access.readonly.body": "Les droits de modification sont gérés dans l’espace membres d’ICF Suisse. Demandez à un administrateur de vous ajouter comme éditeur, puis reconnectez-vous.",
+  "access.readonly.body":
+    "Les droits de modification sont gérés dans l’espace membres d’ICF Suisse. Demandez à un administrateur de vous ajouter comme éditeur, puis reconnectez-vous.",
   "initiatives.title": "Portefeuille d'initiatives",
   "initiatives.subtitle": "Toutes les initiatives, tous OKR confondus, regroupées par statut.",
   "initiatives.filterAllOkrs": "Tous les OKR",
@@ -3077,7 +3101,8 @@ const fr: Record<StringKey, string> = {
   "voice.nav": "Parler avec Aspira",
   "voice.eyebrow": "Visite guidée vocale",
   "voice.title": "Parlez de la stratégie avec Aspira",
-  "voice.subtitle": "Laissez Aspira vous présenter à voix haute les objectifs et les key results – et interrompez-la avec vos questions quand vous voulez.",
+  "voice.subtitle":
+    "Laissez Aspira vous présenter à voix haute les objectifs et les key results – et interrompez-la avec vos questions quand vous voulez.",
   "voice.start": "Démarrer la conversation",
   "voice.connecting": "Connexion…",
   "voice.ready": "Prêt quand vous l'êtes",
@@ -3087,9 +3112,14 @@ const fr: Record<StringKey, string> = {
   "voice.mute": "Couper le micro",
   "voice.unmute": "Réactiver le micro",
   "voice.error": "Une erreur est survenue. Veuillez réessayer.",
-  "voice.permissionDenied": "L'accès au microphone est nécessaire pour la conversation. Autorisez-le dans votre navigateur, puis réessayez.",
-  "voice.disclaimer": "Guide en lecture seule. Rien n'est enregistré, la conversation n'est pas conservée.",
-  "voice.langNote": "Aspira parle la langue sélectionnée en haut de page – allemand, français, italien ou anglais. Pour changer, terminez la conversation, changez de langue et relancez-la.",
+  "voice.permissionDenied":
+    "L'accès au microphone est nécessaire pour la conversation. Autorisez-le dans votre navigateur, puis réessayez.",
+  "voice.disclaimer":
+    "Guide en lecture seule. Rien n'est enregistré, la conversation n'est pas conservée.",
+  "voice.headphonesHint":
+    "Sur iPhone et iPad, un casque ou des écouteurs offrent le son le plus clair.",
+  "voice.langNote":
+    "Aspira parle la langue sélectionnée en haut de page – allemand, français, italien ou anglais. Pour changer, terminez la conversation, changez de langue et relancez-la.",
   "voice.swiss": "Suisse allemand (fun)",
   "voice.swissHint": "Change uniquement la voix. Actif à la prochaine conversation.",
   "voice.objectivesTitle": "Objectifs",
@@ -3105,29 +3135,35 @@ const fr: Record<StringKey, string> = {
   "agent.placeholder": "Poser une question…",
   "agent.startOver": "Recommencer",
   "agent.disclaimer": "Guide en lecture seule. Rien n'est enregistré.",
-  "agent.greeting": "Bonjour, je suis Aspira ! Je peux expliquer comment s'articulent objectifs, résultats clés et initiatives, ou vous aider à en rédiger un.",
+  "agent.greeting":
+    "Bonjour, je suis Aspira ! Je peux expliquer comment s'articulent objectifs, résultats clés et initiatives, ou vous aider à en rédiger un.",
   "agent.s1": "Quelle est la différence entre un résultat clé et une initiative ?",
   "agent.s2": "De quoi parle l'objectif 2 ?",
   "agent.s3": "Aidez-moi à rédiger une initiative",
   "agent.error": "Une erreur est survenue. Merci de réessayer.",
   "agent.thinking": "Réflexion…",
-  "agent.ctx.home.greeting": "Bonjour, je suis Aspira ! Vous cherchez où contribuer ? Dites-moi ce qui vous intéresse et je vous montre le travail correspondant.",
+  "agent.ctx.home.greeting":
+    "Bonjour, je suis Aspira ! Vous cherchez où contribuer ? Dites-moi ce qui vous intéresse et je vous montre le travail correspondant.",
   "agent.ctx.home.s1": "Où pourrais-je aider comme bénévole ?",
   "agent.ctx.home.s2": "Sur quoi le chapitre travaille-t-il ?",
   "agent.ctx.home.s3": "Expliquez simplement ce qu'est un objectif",
-  "agent.ctx.okrs.greeting": "Bonjour, je suis Aspira ! Je peux vous expliquer chaque objectif ou résultat clé de cette page, ou vous aider à en rédiger un.",
+  "agent.ctx.okrs.greeting":
+    "Bonjour, je suis Aspira ! Je peux vous expliquer chaque objectif ou résultat clé de cette page, ou vous aider à en rédiger un.",
   "agent.ctx.okrs.s1": "Résumez l'objectif 2",
   "agent.ctx.okrs.s2": "Comment cet objectif est-il mesuré ?",
   "agent.ctx.okrs.s3": "Quelle différence entre résultat clé et initiative ?",
-  "agent.ctx.initiatives.greeting": "Bonjour, je suis Aspira ! Posez-moi une question sur une initiative du portefeuille, ou créons-en une ensemble.",
+  "agent.ctx.initiatives.greeting":
+    "Bonjour, je suis Aspira ! Posez-moi une question sur une initiative du portefeuille, ou créons-en une ensemble.",
   "agent.ctx.initiatives.s1": "Quelles initiatives sont en cours ?",
   "agent.ctx.initiatives.s2": "Quel résultat clé ce travail soutient-il ?",
   "agent.ctx.initiatives.s3": "Aidez-moi à rédiger une initiative",
-  "agent.ctx.playground.greeting": "Bonjour, je suis Aspira ! Ceci est un bac à sable : entraînons-nous à rédiger un objectif et ses résultats clés.",
+  "agent.ctx.playground.greeting":
+    "Bonjour, je suis Aspira ! Ceci est un bac à sable : entraînons-nous à rédiger un objectif et ses résultats clés.",
   "agent.ctx.playground.s1": "Aidez-moi à rédiger un objectif",
   "agent.ctx.playground.s2": "Qu'est-ce qui rend un résultat clé mesurable ?",
   "agent.ctx.playground.s3": "Vérifiez la qualité de mon brouillon",
-  "agent.ctx.report.greeting": "Bonjour, je suis Aspira ! Je peux vous aider à lire ce rapport : progrès, écarts et sens des chiffres.",
+  "agent.ctx.report.greeting":
+    "Bonjour, je suis Aspira ! Je peux vous aider à lire ce rapport : progrès, écarts et sens des chiffres.",
   "agent.ctx.report.s1": "Où sommes-nous en retard ?",
   "agent.ctx.report.s2": "Quels résultats clés n'ont pas de référence ?",
   "agent.ctx.report.s3": "Résumez les progrès pour le comité",
@@ -3262,7 +3298,8 @@ const it: Record<StringKey, string> = {
   "nav.initiatives": "Portfolio iniziative",
   "nav.more": "Altro",
   "access.readonly.title": "Hai effettuato l’accesso in sola lettura",
-  "access.readonly.body": "I diritti di modifica sono gestiti nell’area soci di ICF Svizzera. Chiedi a un amministratore di aggiungerti come editor e poi accedi di nuovo.",
+  "access.readonly.body":
+    "I diritti di modifica sono gestiti nell’area soci di ICF Svizzera. Chiedi a un amministratore di aggiungerti come editor e poi accedi di nuovo.",
   "initiatives.title": "Portfolio iniziative",
   "initiatives.subtitle": "Tutte le iniziative di tutti gli OKR, raggruppate per stato.",
   "initiatives.filterAllOkrs": "Tutti gli OKR",
@@ -3878,7 +3915,8 @@ const it: Record<StringKey, string> = {
   "voice.nav": "Parla con Aspira",
   "voice.eyebrow": "Percorso vocale",
   "voice.title": "Parla della strategia con Aspira",
-  "voice.subtitle": "Lascia che Aspira ti racconti a voce gli obiettivi e i key result, e interrompila con le tue domande quando vuoi.",
+  "voice.subtitle":
+    "Lascia che Aspira ti racconti a voce gli obiettivi e i key result, e interrompila con le tue domande quando vuoi.",
   "voice.start": "Avvia la conversazione",
   "voice.connecting": "Connessione…",
   "voice.ready": "Pronta quando vuoi",
@@ -3888,9 +3926,13 @@ const it: Record<StringKey, string> = {
   "voice.mute": "Disattiva il microfono",
   "voice.unmute": "Riattiva il microfono",
   "voice.error": "Qualcosa è andato storto. Riprova.",
-  "voice.permissionDenied": "Per la conversazione serve l'accesso al microfono. Consentilo nel browser e riprova.",
-  "voice.disclaimer": "Guida in sola lettura. Nulla viene salvato e la conversazione non viene conservata.",
-  "voice.langNote": "Aspira parla nella lingua selezionata in alto – tedesco, francese, italiano o inglese. Per cambiare, termina la conversazione, cambia lingua e ricomincia.",
+  "voice.permissionDenied":
+    "Per la conversazione serve l'accesso al microfono. Consentilo nel browser e riprova.",
+  "voice.disclaimer":
+    "Guida in sola lettura. Nulla viene salvato e la conversazione non viene conservata.",
+  "voice.headphonesHint": "Su iPhone e iPad, cuffie o auricolari offrono l'audio più nitido.",
+  "voice.langNote":
+    "Aspira parla nella lingua selezionata in alto – tedesco, francese, italiano o inglese. Per cambiare, termina la conversazione, cambia lingua e ricomincia.",
   "voice.swiss": "Svizzero tedesco (divertente)",
   "voice.swissHint": "Cambia solo la voce. Attivo alla prossima conversazione.",
   "voice.objectivesTitle": "Obiettivi",
@@ -3906,29 +3948,35 @@ const it: Record<StringKey, string> = {
   "agent.placeholder": "Fai una domanda…",
   "agent.startOver": "Ricomincia",
   "agent.disclaimer": "Guida in sola lettura. Non viene salvato nulla.",
-  "agent.greeting": "Ciao, sono Aspira! Posso spiegare come si collegano obiettivi, risultati chiave e iniziative, oppure aiutarti a redigerne uno.",
+  "agent.greeting":
+    "Ciao, sono Aspira! Posso spiegare come si collegano obiettivi, risultati chiave e iniziative, oppure aiutarti a redigerne uno.",
   "agent.s1": "Che differenza c'è tra un risultato chiave e un'iniziativa?",
   "agent.s2": "Di cosa tratta l'obiettivo 2?",
   "agent.s3": "Aiutami a redigere un'iniziativa",
   "agent.error": "Qualcosa è andato storto. Riprova.",
   "agent.thinking": "Sto pensando…",
-  "agent.ctx.home.greeting": "Ciao, sono Aspira! Cerchi dove contribuire? Dimmi cosa ti interessa e ti mostro il lavoro collegato.",
+  "agent.ctx.home.greeting":
+    "Ciao, sono Aspira! Cerchi dove contribuire? Dimmi cosa ti interessa e ti mostro il lavoro collegato.",
   "agent.ctx.home.s1": "Dove potrei aiutare come volontario?",
   "agent.ctx.home.s2": "A cosa sta lavorando il chapter?",
   "agent.ctx.home.s3": "Spiegami in modo semplice cos'è un obiettivo",
-  "agent.ctx.okrs.greeting": "Ciao, sono Aspira! Posso spiegarti ogni obiettivo o risultato chiave di questa pagina, o aiutarti a redigerne uno.",
+  "agent.ctx.okrs.greeting":
+    "Ciao, sono Aspira! Posso spiegarti ogni obiettivo o risultato chiave di questa pagina, o aiutarti a redigerne uno.",
   "agent.ctx.okrs.s1": "Riassumi l'obiettivo 2",
   "agent.ctx.okrs.s2": "Come si misura questo obiettivo?",
   "agent.ctx.okrs.s3": "Che differenza c'è tra risultato chiave e iniziativa?",
-  "agent.ctx.initiatives.greeting": "Ciao, sono Aspira! Chiedimi di qualsiasi iniziativa del portafoglio, oppure creiamone una insieme.",
+  "agent.ctx.initiatives.greeting":
+    "Ciao, sono Aspira! Chiedimi di qualsiasi iniziativa del portafoglio, oppure creiamone una insieme.",
   "agent.ctx.initiatives.s1": "Quali iniziative sono in corso?",
   "agent.ctx.initiatives.s2": "Quale risultato chiave sostiene questo lavoro?",
   "agent.ctx.initiatives.s3": "Aiutami a redigere un'iniziativa",
-  "agent.ctx.playground.greeting": "Ciao, sono Aspira! Questo è uno spazio di prova: esercitiamoci a scrivere un obiettivo e i risultati chiave.",
+  "agent.ctx.playground.greeting":
+    "Ciao, sono Aspira! Questo è uno spazio di prova: esercitiamoci a scrivere un obiettivo e i risultati chiave.",
   "agent.ctx.playground.s1": "Aiutami a redigere un obiettivo",
   "agent.ctx.playground.s2": "Cosa rende misurabile un risultato chiave?",
   "agent.ctx.playground.s3": "Controlla la qualità della mia bozza",
-  "agent.ctx.report.greeting": "Ciao, sono Aspira! Posso aiutarti a leggere questo report: progressi, lacune e significato dei numeri.",
+  "agent.ctx.report.greeting":
+    "Ciao, sono Aspira! Posso aiutarti a leggere questo report: progressi, lacune e significato dei numeri.",
   "agent.ctx.report.s1": "Dove siamo indietro?",
   "agent.ctx.report.s2": "Quali risultati chiave non hanno una baseline?",
   "agent.ctx.report.s3": "Riassumi i progressi per il board",
