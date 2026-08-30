@@ -127,6 +127,49 @@ export function VoiceDebugPanel() {
         </Button>
       </div>
 
+      {/* Experiments: read when a call starts, so set them before pressing Start. */}
+      <div className="mt-3 rounded-xl border border-border p-3">
+        <p className="text-xs font-semibold text-foreground">Experiments (iOS playback route)</p>
+        <p className="mt-0.5 text-[11px] text-muted-foreground">
+          Applied when a call starts — change these before pressing Start, then listen and copy the
+          log.
+        </p>
+        <div className="mt-2 space-y-1">
+          <Segmented
+            label="Audio session"
+            value={x.audioSession}
+            options={[
+              { value: "play-and-record", label: "play-and-record" },
+              { value: "playback", label: "playback" },
+              { value: "off", label: "leave auto" },
+            ]}
+            onChange={(v) => setVoiceExperiment("audioSession", v)}
+          />
+          <Segmented
+            label="Mic processing"
+            value={x.micProcessing}
+            options={[
+              { value: "mixed", label: "current" },
+              { value: "default", label: "device default" },
+              { value: "off", label: "all off" },
+            ]}
+            onChange={(v) => setVoiceExperiment("micProcessing", v)}
+          />
+          <div className="flex min-h-11 items-center justify-between gap-2">
+            <Label htmlFor="voice-exp-mono" className="text-xs font-medium text-muted-foreground">
+              Mono remote audio
+            </Label>
+            <Switch
+              id="voice-exp-mono"
+              checked={x.mono}
+              onCheckedChange={(v) => setVoiceExperiment("mono", v)}
+            />
+          </div>
+        </div>
+      </div>
+
+
+
       <dl className="mt-3 grid gap-x-4 gap-y-1 font-mono text-xs sm:grid-cols-2">
         {rows.map(([label, value]) => (
           <div key={label} className="flex justify-between gap-3 border-b border-border/50 py-1">
