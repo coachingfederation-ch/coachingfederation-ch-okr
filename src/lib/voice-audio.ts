@@ -15,8 +15,10 @@ import type { RemoteAudioTrack } from "livekit-client";
  * This module keeps a single page-level AudioContext, created with
  * `latencyHint: "playback"` so the browser is allowed a larger buffer and can
  * ride out underflows, and routes both microphone input and output analysis
- * through it. Playback itself still rides the LiveKit <audio> element, which is
+ * through it. Playback itself still rides the LiveKit audio element, which is
  * how the SDK works in WebRTC mode.
+ *
+ * On iOS the graph is skipped entirely — see SharedContextAudioAdapter below.
  */
 
 let sharedContext: AudioContext | null = null;
@@ -47,6 +49,29 @@ export function releaseSharedAudioContext(): void {
   }
 }
 
+/** iOS/iPadOS Safari, including iPads that report themselves as "Macintosh". */
+export function isIosLike(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  return /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+}
+
+/**
+ * Ask iOS for the "play and record" audio session so a live call keeps a
+ * full-bandwidth playback route instead of falling back to the narrowband
+ * voice route, which is what turns Aspira's speech into crackle on a phone.
+ * Safari 16.4+; a no-op everywhere else.
+ */
+export function prepareIosAudioSession(): void {
+  const session = (navigator as unknown as { audioSession?: { type: string } }).audioSession;
+  if (!session) return;
+  try {
+    session.type = "play-and-record";
+  } catch {
+    /* unsupported value on this Safari build */
+  }
+}
+
 /** Volume/frequency readout backed by an AnalyserNode on the shared context. */
 function analyserVolumeProvider(analyser: AnalyserNode) {
   const raw = new Uint8Array(analyser.frequencyBinCount);
@@ -67,14 +92,26 @@ function analyserVolumeProvider(analyser: AnalyserNode) {
   };
 }
 
+/** Volume readout used on iOS, where the audio graph stays empty. */
+const SILENT_VOLUME = {
+  getVolume: () => 0,
+  getByteFrequencyData: (buffer: Uint8Array<ArrayBuffer>) => buffer.fill(0),
+};
+
 /**
  * Drop-in replacement for the SDK's web adapter that never creates a context of
  * its own: input and output analysis share the one graph above.
+ *
+ * On iOS no analysis runs at all. Every MediaStream tap there pulls the live
+ * call through Web Audio on top of the element playback, and that second
+ * consumer is a known source of clipping on Safari. This page never renders
+ * volume meters, so nothing visible is lost.
  */
 class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   private audioElements: HTMLAudioElement[] = [];
   private nodes: AudioNode[] = [];
   private ctx: AudioContext | null = null;
+  private readonly analysisDisabled = isIosLike();
 
   /** One reference per adapter, taken on first use and released on cleanup. */
   private context(): AudioContext {
@@ -90,6 +127,9 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     const el = track.attach();
     el.autoplay = true;
     el.controls = false;
+    // Without playsInline iOS can hand the stream to the fullscreen player.
+    el.setAttribute("playsinline", "");
+    (el as HTMLAudioElement & { playsInline?: boolean }).playsInline = true;
     if (outputDeviceId && el.setSinkId) {
       try {
         await el.setSinkId(outputDeviceId);
@@ -103,6 +143,7 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   }
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
+    if (this.analysisDisabled) return { volumeProvider: SILENT_VOLUME };
     const ctx = this.context();
     const analyser = ctx.createAnalyser();
     const source = ctx.createMediaStreamSource(new MediaStream([mediaStreamTrack]));
@@ -112,6 +153,7 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   }
 
   async setupOutputAnalysis(track: RemoteAudioTrack): Promise<AnalysisResult> {
+    if (this.analysisDisabled) return { volumeProvider: SILENT_VOLUME };
     const ctx = this.context();
     const analyser = ctx.createAnalyser();
     analyser.fftSize = 2048;
