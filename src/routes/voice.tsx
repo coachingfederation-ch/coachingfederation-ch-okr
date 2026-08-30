@@ -115,13 +115,31 @@ function VoiceContent() {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: "smooth" });
   }, [lines]);
 
-  // Never leave a live microphone behind when the page unmounts.
+  // Never leave a live microphone or an open audio graph behind on unmount.
   const endSession = conversation.endSession;
-  useEffect(() => () => endSession(), [endSession]);
+  useEffect(
+    () => () => {
+      endSession();
+      if (audioHeld.current) {
+        audioHeld.current = false;
+        releaseSharedAudioContext();
+      }
+    },
+    [endSession],
+  );
 
   const start = useCallback(async () => {
     setError(null);
     setStarting(true);
+    // Taken inside the click handler so Safari unlocks the context on a gesture.
+    if (!audioHeld.current) {
+      try {
+        acquireSharedAudioContext();
+        audioHeld.current = true;
+      } catch {
+        /* no Web Audio: the SDK still plays through the audio element */
+      }
+    }
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
