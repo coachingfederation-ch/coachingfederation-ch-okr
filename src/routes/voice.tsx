@@ -16,6 +16,8 @@ import agentMark from "@/assets/okr-agent-mark.png";
 import { HeaderControls } from "@/components/okr/HeaderControls";
 import {
   acquireSharedAudioContext,
+  isIosLike,
+  prepareIosAudioSession,
   releaseSharedAudioContext,
   useSharedVoiceAudio,
 } from "@/lib/voice-audio";
