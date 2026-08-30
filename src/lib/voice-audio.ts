@@ -231,12 +231,14 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
       } catch {
         /* receiver does not expose a playout delay hint */
       }
+      if (getVoiceExperiments().mono) applyMonoRemote(track);
       // An interruption (notification, lock screen) can pause the element;
       // iOS does not resume it on its own, and silence reads as a dropped call.
       el.addEventListener("pause", () => {
         void el.play().catch(() => {});
       });
     }
+
     if (outputDeviceId && el.setSinkId) {
       try {
         await el.setSinkId(outputDeviceId);
