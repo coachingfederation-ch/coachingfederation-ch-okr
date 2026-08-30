@@ -243,6 +243,8 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   }
 
   cleanup() {
+    for (const dispose of this.disposers) dispose();
+    this.disposers = [];
     for (const node of this.nodes) {
       try {
         node.disconnect();
