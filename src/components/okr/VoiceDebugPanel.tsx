@@ -2,18 +2,69 @@ import * as React from "react";
 import { Copy, Check } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 import {
   formatVoiceDiagnostics,
   getVoiceDiagnostics,
+  setVoiceExperiment,
   subscribeVoiceDiagnostics,
+  type VoiceExperiments,
   type VoiceStats,
 } from "@/lib/voice-diagnostics";
 
-const EMPTY = { stats: null as unknown as VoiceStats, log: [] as [] };
+const EMPTY = {
+  stats: null as unknown as VoiceStats,
+  log: [] as [],
+  experiments: {
+    audioSession: "play-and-record",
+    mono: false,
+    micProcessing: "mixed",
+  } as VoiceExperiments,
+};
 
 function num(v: number | null | undefined, digits = 1, suffix = "") {
   return v === null || v === undefined ? "—" : `${v.toFixed(digits)}${suffix}`;
 }
+
+/** Small segmented control for the multi-value experiment flags. */
+function Segmented<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: ReadonlyArray<{ value: T; label: string }>;
+  onChange: (next: T) => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 py-1">
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      <div role="group" aria-label={label} className="flex flex-wrap gap-1">
+        {options.map((o) => (
+          <button
+            key={o.value}
+            type="button"
+            aria-pressed={value === o.value}
+            onClick={() => onChange(o.value)}
+            className={cn(
+              "min-h-11 rounded-full border border-border px-3 text-xs font-medium transition-colors",
+              value === o.value
+                ? "border-transparent bg-primary text-primary-foreground"
+                : "bg-background text-foreground hover:bg-muted",
+            )}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
 /**
  * Diagnostic surface for the realtime call. Deliberately English-only and
