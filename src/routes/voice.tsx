@@ -74,6 +74,8 @@ function VoiceContent() {
   const [muted, setMuted] = useState(false);
   // Voice-only variant of German; picked up when the next call starts.
   const [swissGerman, setSwissGerman] = useState(false);
+  // Diagnostics are opt-in; nothing is collected while this is off.
+  const [debug, setDebug] = useState(false);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
