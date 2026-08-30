@@ -162,15 +162,9 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     el.setAttribute("playsinline", "");
     (el as HTMLAudioElement & { playsInline?: boolean }).playsInline = true;
     if (this.analysisDisabled) {
-      const withDelay = track as RemoteAudioTrack & {
-        setPlayoutDelay?: (seconds: number) => void;
-      };
-      try {
-        withDelay.setPlayoutDelay?.(IOS_PLAYOUT_DELAY_SECONDS);
-      } catch {
-        /* receiver does not expose a playout delay hint */
-      }
-      if (getVoiceExperiments().mono) applyMonoRemote(track);
+      // No extra playout delay: device captures showed zero concealment, so a
+      // cushion only adds latency to a live conversation.
+      //
       // An interruption (notification, lock screen) can pause the element;
       // iOS does not resume it on its own, and silence reads as a dropped call.
       el.addEventListener("pause", () => {
@@ -188,15 +182,8 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     el.style.display = "none";
     document.body.appendChild(el);
     this.audioElements.push(el);
-
-    // Diagnostics are inert unless the debug panel is switched on.
-    if (isVoiceDiagnosticsEnabled()) {
-      logVoiceEvent("track", `remote audio attached (ios=${this.analysisDisabled})`);
-      this.disposers.push(watchAudioElement(el));
-      const receiver = (track as RemoteAudioTrack & { receiver?: RTCRtpReceiver }).receiver;
-      this.disposers.push(startStatsPolling(receiver));
-    }
   }
+
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
     if (this.analysisDisabled) {
