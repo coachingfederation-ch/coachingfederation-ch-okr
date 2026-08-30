@@ -75,6 +75,12 @@ function VoiceContent() {
   const [lines, setLines] = useState<Line[]>([]);
   const [highlighted, setHighlighted] = useState<number | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
+  const audioHeld = useRef(false);
+
+  // Input and output analysis share one AudioContext (latencyHint "playback"),
+  // so iOS Safari sees a single audio graph and buffers can absorb underflows.
+  useSharedVoiceAudio();
+
 
   const conversation = useConversation({
     micMuted: muted,
