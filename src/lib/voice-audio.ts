@@ -63,20 +63,30 @@ export function isIosLike(): boolean {
 }
 
 /**
- * Ask iOS for the "play and record" audio session so a live call keeps a
- * full-bandwidth playback route instead of falling back to the narrowband
- * voice route, which is what turns Aspira's speech into crackle on a phone.
- * Safari 16.4+; a no-op everywhere else.
+ * Ask iOS for a specific audio session so a live call keeps a full-bandwidth
+ * playback route instead of falling back to the narrowband voice route.
+ * Safari 16.4+; a no-op everywhere else. The applied value is read back and
+ * logged, because assignment can be silently ignored.
  */
 export function prepareIosAudioSession(): void {
+  const requested = getVoiceExperiments().audioSession;
   const session = (navigator as unknown as { audioSession?: { type: string } }).audioSession;
-  if (!session) return;
+  if (!session) {
+    logVoiceEvent("audioSession", "unsupported on this browser");
+    return;
+  }
+  if (requested === "off") {
+    logVoiceEvent("audioSession", `left as-is, readback=${session.type}`);
+    return;
+  }
   try {
-    session.type = "play-and-record";
+    session.type = requested;
   } catch {
     /* unsupported value on this Safari build */
   }
+  logVoiceEvent("audioSession", `set=${requested} readback=${session.type}`);
 }
+
 
 /** Volume/frequency readout backed by an AnalyserNode on the shared context. */
 function analyserVolumeProvider(analyser: AnalyserNode) {
