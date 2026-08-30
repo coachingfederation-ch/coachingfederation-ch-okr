@@ -259,7 +259,7 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
     if (this.analysisDisabled) {
-      relaxIosCaptureProcessing(mediaStreamTrack);
+      applyIosCaptureProcessing(mediaStreamTrack);
       return { volumeProvider: SILENT_VOLUME };
     }
     const ctx = this.context();
