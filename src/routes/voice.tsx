@@ -138,7 +138,6 @@ function VoiceContent() {
     setStarting(true);
     const ios = isIosLike();
     // iOS: no app-owned Web Audio graph, just the right audio session for a call.
-    // (On the WebSocket path the SDK builds and owns its own playback graph.)
     if (ios) {
       prepareIosAudioSession();
     } else if (!audioHeld.current) {
