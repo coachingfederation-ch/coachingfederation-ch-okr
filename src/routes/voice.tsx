@@ -438,6 +438,8 @@ function VoiceContent() {
                 )}
               </div>
             </section>
+
+            {debug && <VoiceDebugPanel />}
           </div>
         </div>
       </div>
