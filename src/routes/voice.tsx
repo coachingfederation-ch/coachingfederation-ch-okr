@@ -81,14 +81,17 @@ function VoiceContent() {
   // so iOS Safari sees a single audio graph and buffers can absorb underflows.
   useSharedVoiceAudio();
 
-
   const conversation = useConversation({
     micMuted: muted,
     onMessage: ({ message, source }) => {
       if (!message) return;
       setLines((prev) => [
         ...prev.slice(-40),
-        { id: `${Date.now()}-${prev.length}`, role: source === "user" ? "user" : "aspira", text: message },
+        {
+          id: `${Date.now()}-${prev.length}`,
+          role: source === "user" ? "user" : "aspira",
+          text: message,
+        },
       ]);
     },
     onError: (message) => setError(message || t("voice.error")),
@@ -182,7 +185,6 @@ function VoiceContent() {
           // A per-session tts override loses against a language preset.
         },
       });
-
     } catch (err) {
       setError(err instanceof Error ? err.message : t("voice.error"));
     } finally {
@@ -309,11 +311,7 @@ function VoiceContent() {
                     {t("voice.swissHint")}
                   </span>
                 </Label>
-                <Switch
-                  id="swiss-german"
-                  checked={swissGerman}
-                  onCheckedChange={setSwissGerman}
-                />
+                <Switch id="swiss-german" checked={swissGerman} onCheckedChange={setSwissGerman} />
               </div>
             )}
 
@@ -345,9 +343,7 @@ function VoiceContent() {
                       key={s.id}
                       className={cn(
                         "flex items-start gap-3 rounded-2xl border p-3 transition-colors",
-                        on
-                          ? "border-[#5778FA] bg-[#5778FA]/10"
-                          : "border-border bg-card",
+                        on ? "border-[#5778FA] bg-[#5778FA]/10" : "border-border bg-card",
                       )}
                       aria-current={on ? "true" : undefined}
                     >
