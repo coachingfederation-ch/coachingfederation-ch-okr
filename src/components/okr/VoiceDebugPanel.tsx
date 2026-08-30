@@ -84,6 +84,8 @@ export function VoiceDebugPanel() {
   }, [snap.log]);
 
   const s = snap.stats;
+  const x = snap.experiments;
+
   const rows: Array<[string, string]> = [
     ["Uptime", num(s?.uptime, 0, " s")],
     ["Jitter", `${num(s?.jitterMs)} ms (peak ${num(s?.jitterPeakMs)})`],
