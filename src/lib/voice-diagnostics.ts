@@ -150,6 +150,8 @@ export function setVoiceDiagnosticsEnabled(next: boolean) {
     log = [];
     logVoiceEvent("debug", "collection started");
     logVoiceEvent("device", describeDevice());
+    logVoiceEvent("experiments", describeExperiments());
+
   } else {
     stats = EMPTY_STATS;
     log = [];
