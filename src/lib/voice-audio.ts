@@ -99,6 +99,36 @@ const SILENT_VOLUME = {
 };
 
 /**
+ * Seconds of incoming audio iOS should buffer before playing it. Phones lose
+ * packets far more often than desktops; without a cushion the player runs dry
+ * mid-word and that underflow is what you hear as crackle. ~200 ms costs a
+ * barely perceptible delay and covers ordinary Wi-Fi/cellular jitter.
+ */
+const IOS_PLAYOUT_DELAY_SECONDS = 0.2;
+
+/**
+ * Loosen the capture chain on iOS. The SDK asks for noise suppression and auto
+ * gain on top of echo cancellation; that combination pushes the device onto its
+ * narrowband voice-processing route, which degrades the playback side of the
+ * same session. Echo cancellation stays on — the phone speaker needs it.
+ *
+ * Safari silently ignores constraints it does not implement, so this is a
+ * best-effort nudge rather than a guarantee.
+ */
+function relaxIosCaptureProcessing(track: MediaStreamTrack): void {
+  void track
+    .applyConstraints({
+      echoCancellation: true,
+      noiseSuppression: false,
+      autoGainControl: false,
+      channelCount: 1,
+    })
+    .catch(() => {
+      /* constraint unsupported on this build — keep the default capture */
+    });
+}
+
+/**
  * Drop-in replacement for the SDK's web adapter that never creates a context of
  * its own: input and output analysis share the one graph above.
  *
@@ -127,9 +157,25 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     const el = track.attach();
     el.autoplay = true;
     el.controls = false;
+    el.muted = false;
     // Without playsInline iOS can hand the stream to the fullscreen player.
     el.setAttribute("playsinline", "");
     (el as HTMLAudioElement & { playsInline?: boolean }).playsInline = true;
+    if (this.analysisDisabled) {
+      const withDelay = track as RemoteAudioTrack & {
+        setPlayoutDelay?: (seconds: number) => void;
+      };
+      try {
+        withDelay.setPlayoutDelay?.(IOS_PLAYOUT_DELAY_SECONDS);
+      } catch {
+        /* receiver does not expose a playout delay hint */
+      }
+      // An interruption (notification, lock screen) can pause the element;
+      // iOS does not resume it on its own, and silence reads as a dropped call.
+      el.addEventListener("pause", () => {
+        void el.play().catch(() => {});
+      });
+    }
     if (outputDeviceId && el.setSinkId) {
       try {
         await el.setSinkId(outputDeviceId);
@@ -143,7 +189,10 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   }
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
-    if (this.analysisDisabled) return { volumeProvider: SILENT_VOLUME };
+    if (this.analysisDisabled) {
+      relaxIosCaptureProcessing(mediaStreamTrack);
+      return { volumeProvider: SILENT_VOLUME };
+    }
     const ctx = this.context();
     const analyser = ctx.createAnalyser();
     const source = ctx.createMediaStreamSource(new MediaStream([mediaStreamTrack]));
