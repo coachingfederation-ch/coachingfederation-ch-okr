@@ -21,6 +21,8 @@ import {
   releaseSharedAudioContext,
   useSharedVoiceAudio,
 } from "@/lib/voice-audio";
+import { logVoiceEvent, setVoiceDiagnosticsEnabled } from "@/lib/voice-diagnostics";
+import { VoiceDebugPanel } from "@/components/okr/VoiceDebugPanel";
 
 export const Route = createFileRoute("/voice")({
   head: () => ({
