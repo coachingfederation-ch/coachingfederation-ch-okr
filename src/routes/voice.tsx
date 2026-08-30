@@ -14,6 +14,11 @@ import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
 import agentMark from "@/assets/okr-agent-mark.png";
 import { HeaderControls } from "@/components/okr/HeaderControls";
+import {
+  acquireSharedAudioContext,
+  releaseSharedAudioContext,
+  useSharedVoiceAudio,
+} from "@/lib/voice-audio";
 
 export const Route = createFileRoute("/voice")({
   head: () => ({
@@ -70,6 +75,11 @@ function VoiceContent() {
   const [lines, setLines] = useState<Line[]>([]);
   const [highlighted, setHighlighted] = useState<number | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
+  const audioHeld = useRef(false);
+
+  // Input and output analysis share one AudioContext (latencyHint "playback"),
+  // so iOS Safari sees a single audio graph and buffers can absorb underflows.
+  useSharedVoiceAudio();
 
   const conversation = useConversation({
     micMuted: muted,
@@ -77,7 +87,11 @@ function VoiceContent() {
       if (!message) return;
       setLines((prev) => [
         ...prev.slice(-40),
-        { id: `${Date.now()}-${prev.length}`, role: source === "user" ? "user" : "aspira", text: message },
+        {
+          id: `${Date.now()}-${prev.length}`,
+          role: source === "user" ? "user" : "aspira",
+          text: message,
+        },
       ]);
     },
     onError: (message) => setError(message || t("voice.error")),
@@ -104,13 +118,31 @@ function VoiceContent() {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: "smooth" });
   }, [lines]);
 
-  // Never leave a live microphone behind when the page unmounts.
+  // Never leave a live microphone or an open audio graph behind on unmount.
   const endSession = conversation.endSession;
-  useEffect(() => () => endSession(), [endSession]);
+  useEffect(
+    () => () => {
+      endSession();
+      if (audioHeld.current) {
+        audioHeld.current = false;
+        releaseSharedAudioContext();
+      }
+    },
+    [endSession],
+  );
 
   const start = useCallback(async () => {
     setError(null);
     setStarting(true);
+    // Taken inside the click handler so Safari unlocks the context on a gesture.
+    if (!audioHeld.current) {
+      try {
+        acquireSharedAudioContext();
+        audioHeld.current = true;
+      } catch {
+        /* no Web Audio: the SDK still plays through the audio element */
+      }
+    }
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
@@ -153,7 +185,6 @@ function VoiceContent() {
           // A per-session tts override loses against a language preset.
         },
       });
-
     } catch (err) {
       setError(err instanceof Error ? err.message : t("voice.error"));
     } finally {
@@ -280,11 +311,7 @@ function VoiceContent() {
                     {t("voice.swissHint")}
                   </span>
                 </Label>
-                <Switch
-                  id="swiss-german"
-                  checked={swissGerman}
-                  onCheckedChange={setSwissGerman}
-                />
+                <Switch id="swiss-german" checked={swissGerman} onCheckedChange={setSwissGerman} />
               </div>
             )}
 
@@ -316,9 +343,7 @@ function VoiceContent() {
                       key={s.id}
                       className={cn(
                         "flex items-start gap-3 rounded-2xl border p-3 transition-colors",
-                        on
-                          ? "border-[#5778FA] bg-[#5778FA]/10"
-                          : "border-border bg-card",
+                        on ? "border-[#5778FA] bg-[#5778FA]/10" : "border-border bg-card",
                       )}
                       aria-current={on ? "true" : undefined}
                     >
