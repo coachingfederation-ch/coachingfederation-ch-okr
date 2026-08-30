@@ -186,6 +186,14 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     el.style.display = "none";
     document.body.appendChild(el);
     this.audioElements.push(el);
+
+    // Diagnostics are inert unless the debug panel is switched on.
+    if (isVoiceDiagnosticsEnabled()) {
+      logVoiceEvent("track", `remote audio attached (ios=${this.analysisDisabled})`);
+      this.disposers.push(watchAudioElement(el));
+      const receiver = (track as RemoteAudioTrack & { receiver?: RTCRtpReceiver }).receiver;
+      this.disposers.push(startStatsPolling(receiver));
+    }
   }
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
