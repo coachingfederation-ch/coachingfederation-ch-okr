@@ -74,16 +74,16 @@ function analyserVolumeProvider(analyser: AnalyserNode) {
 class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   private audioElements: HTMLAudioElement[] = [];
   private nodes: AudioNode[] = [];
-  private held = false;
+  private ctx: AudioContext | null = null;
 
+  /** One reference per adapter, taken on first use and released on cleanup. */
   private context(): AudioContext {
-    if (!this.held) {
-      this.held = true;
-      return acquireSharedAudioContext();
+    if (!this.ctx || this.ctx.state === "closed") {
+      this.ctx = acquireSharedAudioContext();
+    } else if (this.ctx.state === "suspended") {
+      void this.ctx.resume().catch(() => {});
     }
-    return acquireSharedAudioContext.call(null) && sharedContext
-      ? (releaseSharedAudioContext(), sharedContext!)
-      : acquireSharedAudioContext();
+    return this.ctx;
   }
 
   async attachRemoteTrack(track: RemoteAudioTrack, outputDeviceId: string | null) {
