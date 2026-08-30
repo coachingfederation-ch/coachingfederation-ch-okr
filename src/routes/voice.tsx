@@ -194,20 +194,11 @@ function VoiceContent() {
       };
 
       setLines([]);
-      // Falls back to WebRTC if the signed URL could not be minted.
-      if (s.transport === "websocket" && s.signedUrl) {
-        conversation.startSession({
-          signedUrl: s.signedUrl,
-          connectionType: "websocket",
-          overrides,
-        });
-      } else {
-        conversation.startSession({
-          conversationToken: s.token,
-          connectionType: "webrtc",
-          overrides,
-        });
-      }
+      conversation.startSession({
+        conversationToken: s.token,
+        connectionType: "webrtc",
+        overrides,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("voice.error"));
     } finally {
