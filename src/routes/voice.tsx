@@ -166,9 +166,9 @@ function VoiceContent() {
           locale,
           authed: Boolean(session),
           swissGerman: locale === "de" && swissGerman,
-          // iOS crackles on the WebRTC playback route even with a longer
-          // playout buffer, so phones stream plain audio over a WebSocket.
-          transport: ios ? "websocket" : "webrtc",
+          // WebSocket playback sounded worse on iOS than the tuned WebRTC
+          // route, so every device stays on WebRTC.
+          transport: "webrtc",
         }),
       });
       if (!res.ok) throw new Error(await res.text());
