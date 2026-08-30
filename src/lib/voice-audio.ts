@@ -12,7 +12,6 @@ import {
   watchAudioElement,
 } from "@/lib/voice-diagnostics";
 
-
 /**
  * Aspira's realtime voice call used to run on two separate AudioContexts per
  * session: the SDK's default web adapter creates one for microphone level
@@ -88,7 +87,6 @@ export function prepareIosAudioSession(): void {
   }
   logVoiceEvent("audioSession", `set=${requested} readback=${session.type}`);
 }
-
 
 /** Volume/frequency readout backed by an AnalyserNode on the shared context. */
 function analyserVolumeProvider(analyser: AnalyserNode) {
@@ -185,7 +183,6 @@ function applyMonoRemote(track: RemoteAudioTrack): void {
       logVoiceEvent("mono", `rejected: ${e instanceof Error ? e.name : String(e)}`),
     );
 }
-
 
 /**
  * Drop-in replacement for the SDK's web adapter that never creates a context of

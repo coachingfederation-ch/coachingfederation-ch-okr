@@ -127,7 +127,6 @@ function describeExperiments(): string {
   return `audioSession=${experiments.audioSession} mono=${experiments.mono} micProcessing=${experiments.micProcessing}`;
 }
 
-
 export function subscribeVoiceDiagnostics(listener: () => void) {
   listeners.add(listener);
   return () => listeners.delete(listener);
@@ -151,7 +150,6 @@ export function setVoiceDiagnosticsEnabled(next: boolean) {
     logVoiceEvent("debug", "collection started");
     logVoiceEvent("device", describeDevice());
     logVoiceEvent("experiments", describeExperiments());
-
   } else {
     stats = EMPTY_STATS;
     log = [];
@@ -348,7 +346,6 @@ export function formatVoiceDiagnostics(): string {
     `codec             ${s.codec ?? "—"} ${s.sampleRate ?? "—"}Hz ch=${s.channels ?? "—"}`,
     `audio level       ${fmt(s.audioLevel, 3)} energy=${fmt(s.totalEnergy, 3)}`,
     `experiments       ${describeExperiments()}`,
-
   ].join("\n");
   const body = snapshot.log
     .map((e) => `${e.t.toFixed(1).padStart(6)}s  ${e.kind}${e.detail ? `  ${e.detail}` : ""}`)

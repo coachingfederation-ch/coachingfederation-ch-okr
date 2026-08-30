@@ -65,7 +65,6 @@ function Segmented<T extends string>({
   );
 }
 
-
 /**
  * Diagnostic surface for the realtime call. Deliberately English-only and
  * plain: it exists to be read on a phone and pasted back into a bug report.
@@ -169,8 +168,6 @@ export function VoiceDebugPanel() {
           </div>
         </div>
       </div>
-
-
 
       <dl className="mt-3 grid gap-x-4 gap-y-1 font-mono text-xs sm:grid-cols-2">
         {rows.map(([label, value]) => (
