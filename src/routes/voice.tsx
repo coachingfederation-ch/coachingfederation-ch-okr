@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { ConversationProvider, useConversation } from "@elevenlabs/react";
-import { Mic, MicOff, PhoneOff, Loader2, AudioLines } from "lucide-react";
+import { Mic, MicOff, PhoneOff, Loader2, AudioLines, Headphones } from "lucide-react";
 
 import { dashboardQueryOptions } from "@/lib/dashboard-query";
 import { pickTranslation, useLocale } from "@/lib/i18n";
