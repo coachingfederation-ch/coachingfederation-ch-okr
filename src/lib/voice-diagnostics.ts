@@ -55,16 +55,76 @@ const EMPTY_STATS: VoiceStats = {
 
 const MAX_LOG = 200;
 
+/**
+ * Playback-route experiments for the iOS crackle hunt. The diagnostics run of
+ * 2026-08-30 showed a clean stream (no loss, no concealment), so the artefact
+ * is produced after decoding — on the device's own audio route. These flags let
+ * one physical phone A/B the three remaining suspects in a single sitting.
+ * Defaults reproduce today's behaviour exactly.
+ */
+export type VoiceExperiments = {
+  /** `off` leaves WebKit's `auto` route selection alone. */
+  audioSession: "off" | "play-and-record" | "playback";
+  /** Ask the remote audio track for a single channel instead of stereo Opus. */
+  mono: boolean;
+  /** `mixed` is the current AEC-on / NS-off / AGC-off override. */
+  micProcessing: "default" | "mixed" | "off";
+};
+
+const DEFAULT_EXPERIMENTS: VoiceExperiments = {
+  audioSession: "play-and-record",
+  mono: false,
+  micProcessing: "mixed",
+};
+
+const EXPERIMENTS_KEY = "aspira.voice.experiments";
+
+function loadExperiments(): VoiceExperiments {
+  if (typeof window === "undefined") return DEFAULT_EXPERIMENTS;
+  try {
+    const raw = window.sessionStorage.getItem(EXPERIMENTS_KEY);
+    if (!raw) return DEFAULT_EXPERIMENTS;
+    return { ...DEFAULT_EXPERIMENTS, ...(JSON.parse(raw) as Partial<VoiceExperiments>) };
+  } catch {
+    return DEFAULT_EXPERIMENTS;
+  }
+}
+
 let enabled = false;
 let startedAt = 0;
 let stats: VoiceStats = EMPTY_STATS;
 let log: VoiceLogEntry[] = [];
-let snapshot = { stats, log };
+let experiments: VoiceExperiments = loadExperiments();
+let snapshot = { stats, log, experiments };
 const listeners = new Set<() => void>();
 
 function emit() {
-  snapshot = { stats, log };
+  snapshot = { stats, log, experiments };
   for (const l of listeners) l();
+}
+
+/** Read the active experiment flags (used at session start, always defined). */
+export function getVoiceExperiments(): VoiceExperiments {
+  return experiments;
+}
+
+export function setVoiceExperiment<K extends keyof VoiceExperiments>(
+  key: K,
+  value: VoiceExperiments[K],
+): void {
+  experiments = { ...experiments, [key]: value };
+  // Survive a reload mid-testing so a combination is not lost by accident.
+  try {
+    window.sessionStorage.setItem(EXPERIMENTS_KEY, JSON.stringify(experiments));
+  } catch {
+    /* storage unavailable (private mode) — flags stay in memory */
+  }
+  logVoiceEvent("experiment", `${key}=${String(value)}`);
+  emit();
+}
+
+function describeExperiments(): string {
+  return `audioSession=${experiments.audioSession} mono=${experiments.mono} micProcessing=${experiments.micProcessing}`;
 }
 
 export function subscribeVoiceDiagnostics(listener: () => void) {
@@ -89,6 +149,7 @@ export function setVoiceDiagnosticsEnabled(next: boolean) {
     log = [];
     logVoiceEvent("debug", "collection started");
     logVoiceEvent("device", describeDevice());
+    logVoiceEvent("experiments", describeExperiments());
   } else {
     stats = EMPTY_STATS;
     log = [];
@@ -284,6 +345,7 @@ export function formatVoiceDiagnostics(): string {
     `playout delay     ${fmt(s.playoutDelayMs)} ms`,
     `codec             ${s.codec ?? "—"} ${s.sampleRate ?? "—"}Hz ch=${s.channels ?? "—"}`,
     `audio level       ${fmt(s.audioLevel, 3)} energy=${fmt(s.totalEnergy, 3)}`,
+    `experiments       ${describeExperiments()}`,
   ].join("\n");
   const body = snapshot.log
     .map((e) => `${e.t.toFixed(1).padStart(6)}s  ${e.kind}${e.detail ? `  ${e.detail}` : ""}`)

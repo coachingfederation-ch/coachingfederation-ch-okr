@@ -2,17 +2,67 @@ import * as React from "react";
 import { Copy, Check } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 import {
   formatVoiceDiagnostics,
   getVoiceDiagnostics,
+  setVoiceExperiment,
   subscribeVoiceDiagnostics,
+  type VoiceExperiments,
   type VoiceStats,
 } from "@/lib/voice-diagnostics";
 
-const EMPTY = { stats: null as unknown as VoiceStats, log: [] as [] };
+const EMPTY = {
+  stats: null as unknown as VoiceStats,
+  log: [] as [],
+  experiments: {
+    audioSession: "play-and-record",
+    mono: false,
+    micProcessing: "mixed",
+  } as VoiceExperiments,
+};
 
 function num(v: number | null | undefined, digits = 1, suffix = "") {
   return v === null || v === undefined ? "—" : `${v.toFixed(digits)}${suffix}`;
+}
+
+/** Small segmented control for the multi-value experiment flags. */
+function Segmented<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: ReadonlyArray<{ value: T; label: string }>;
+  onChange: (next: T) => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 py-1">
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      <div role="group" aria-label={label} className="flex flex-wrap gap-1">
+        {options.map((o) => (
+          <button
+            key={o.value}
+            type="button"
+            aria-pressed={value === o.value}
+            onClick={() => onChange(o.value)}
+            className={cn(
+              "min-h-11 rounded-full border border-border px-3 text-xs font-medium transition-colors",
+              value === o.value
+                ? "border-transparent bg-primary text-primary-foreground"
+                : "bg-background text-foreground hover:bg-muted",
+            )}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -33,6 +83,8 @@ export function VoiceDebugPanel() {
   }, [snap.log]);
 
   const s = snap.stats;
+  const x = snap.experiments;
+
   const rows: Array<[string, string]> = [
     ["Uptime", num(s?.uptime, 0, " s")],
     ["Jitter", `${num(s?.jitterMs)} ms (peak ${num(s?.jitterPeakMs)})`],
@@ -74,6 +126,47 @@ export function VoiceDebugPanel() {
           )}
           {copied ? "Copied" : "Copy"}
         </Button>
+      </div>
+
+      {/* Experiments: read when a call starts, so set them before pressing Start. */}
+      <div className="mt-3 rounded-xl border border-border p-3">
+        <p className="text-xs font-semibold text-foreground">Experiments (iOS playback route)</p>
+        <p className="mt-0.5 text-[11px] text-muted-foreground">
+          Applied when a call starts — change these before pressing Start, then listen and copy the
+          log.
+        </p>
+        <div className="mt-2 space-y-1">
+          <Segmented
+            label="Audio session"
+            value={x.audioSession}
+            options={[
+              { value: "play-and-record", label: "play-and-record" },
+              { value: "playback", label: "playback" },
+              { value: "off", label: "leave auto" },
+            ]}
+            onChange={(v) => setVoiceExperiment("audioSession", v)}
+          />
+          <Segmented
+            label="Mic processing"
+            value={x.micProcessing}
+            options={[
+              { value: "mixed", label: "current" },
+              { value: "default", label: "device default" },
+              { value: "off", label: "all off" },
+            ]}
+            onChange={(v) => setVoiceExperiment("micProcessing", v)}
+          />
+          <div className="flex min-h-11 items-center justify-between gap-2">
+            <Label htmlFor="voice-exp-mono" className="text-xs font-medium text-muted-foreground">
+              Mono remote audio
+            </Label>
+            <Switch
+              id="voice-exp-mono"
+              checked={x.mono}
+              onCheckedChange={(v) => setVoiceExperiment("mono", v)}
+            />
+          </div>
+        </div>
       </div>
 
       <dl className="mt-3 grid gap-x-4 gap-y-1 font-mono text-xs sm:grid-cols-2">
