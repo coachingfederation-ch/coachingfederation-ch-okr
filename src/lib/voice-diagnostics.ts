@@ -347,6 +347,8 @@ export function formatVoiceDiagnostics(): string {
     `playout delay     ${fmt(s.playoutDelayMs)} ms`,
     `codec             ${s.codec ?? "—"} ${s.sampleRate ?? "—"}Hz ch=${s.channels ?? "—"}`,
     `audio level       ${fmt(s.audioLevel, 3)} energy=${fmt(s.totalEnergy, 3)}`,
+    `experiments       ${describeExperiments()}`,
+
   ].join("\n");
   const body = snapshot.log
     .map((e) => `${e.t.toFixed(1).padStart(6)}s  ${e.kind}${e.detail ? `  ${e.detail}` : ""}`)
