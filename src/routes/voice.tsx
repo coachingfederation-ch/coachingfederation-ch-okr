@@ -100,11 +100,9 @@ function VoiceContent() {
       ]);
     },
     onError: (message) => {
-      logVoiceEvent("error", message ?? "unknown");
       setError(message || t("voice.error"));
     },
     onDisconnect: () => {
-      logVoiceEvent("session", "disconnected");
       setHighlighted(null);
     },
     clientTools: {
