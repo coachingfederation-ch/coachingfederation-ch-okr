@@ -100,8 +100,14 @@ function VoiceContent() {
         },
       ]);
     },
-    onError: (message) => setError(message || t("voice.error")),
-    onDisconnect: () => setHighlighted(null),
+    onError: (message) => {
+      logVoiceEvent("error", message ?? "unknown");
+      setError(message || t("voice.error"));
+    },
+    onDisconnect: () => {
+      logVoiceEvent("session", "disconnected");
+      setHighlighted(null);
+    },
     clientTools: {
       /** Aspira calls this before she starts on an objective, so the page follows along. */
       highlight_objective: ({ number }: { number?: number | string }) => {
