@@ -58,29 +58,23 @@ export function isIosLike(): boolean {
 }
 
 /**
- * Ask iOS for a specific audio session so a live call keeps a full-bandwidth
- * playback route instead of falling back to the narrowband voice route.
- * Safari 16.4+; a no-op everywhere else. The applied value is read back and
- * logged, because assignment can be silently ignored.
+ * Put iOS into the call audio session before a session starts (Safari 16.4+,
+ * a no-op elsewhere).
+ *
+ * On-device diagnostics settled the options: `playback` and leaving the
+ * session on `auto` both block microphone access, so `play-and-record` is the
+ * only usable value for a two-way call.
  */
 export function prepareIosAudioSession(): void {
-  const requested = getVoiceExperiments().audioSession;
   const session = (navigator as unknown as { audioSession?: { type: string } }).audioSession;
-  if (!session) {
-    logVoiceEvent("audioSession", "unsupported on this browser");
-    return;
-  }
-  if (requested === "off") {
-    logVoiceEvent("audioSession", `left as-is, readback=${session.type}`);
-    return;
-  }
+  if (!session) return;
   try {
-    session.type = requested;
+    session.type = "play-and-record";
   } catch {
     /* unsupported value on this Safari build */
   }
-  logVoiceEvent("audioSession", `set=${requested} readback=${session.type}`);
 }
+
 
 /** Volume/frequency readout backed by an AnalyserNode on the shared context. */
 function analyserVolumeProvider(analyser: AnalyserNode) {
