@@ -135,7 +135,6 @@ function VoiceContent() {
     logVoiceEvent("session", `status=${status}`);
   }, [status]);
 
-
   // Keep the running transcript pinned to the newest line.
   useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: "smooth" });
