@@ -103,74 +103,28 @@ const SILENT_VOLUME = {
 };
 
 /**
- * Seconds of incoming audio iOS should buffer before playing it. Phones lose
- * packets far more often than desktops; without a cushion the player runs dry
- * mid-word and that underflow is what you hear as crackle. ~200 ms costs a
- * barely perceptible delay and covers ordinary Wi-Fi/cellular jitter.
- */
-const IOS_PLAYOUT_DELAY_SECONDS = 0.2;
-
-/**
- * Shape the capture chain on iOS according to the active experiment.
+ * Shape the iOS capture chain for a hands-free call.
  *
- * `mixed` is the setting we shipped: echo cancellation on, noise suppression
- * and auto gain off. `default` leaves the device alone, `off` disables all
- * three. Safari silently ignores constraints it does not implement, so the
- * applied settings are read back and logged rather than assumed.
+ * Echo cancellation stays on: without it the agent hears herself through the
+ * loudspeaker. Noise suppression and auto gain are off because they colour
+ * speech without helping here. Device diagnostics showed the residual
+ * loudspeaker crackle comes from Apple's own voice-processing route, not from
+ * these constraints, so this configuration is fixed rather than tunable.
+ * Safari silently ignores constraints it does not implement.
  */
 function applyIosCaptureProcessing(track: MediaStreamTrack): void {
-  const mode = getVoiceExperiments().micProcessing;
-  if (mode === "default") {
-    logVoiceEvent("mic", "device default processing (no constraints applied)");
-    return;
-  }
-  const constraints: MediaTrackConstraints =
-    mode === "off"
-      ? {
-          echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: false,
-          channelCount: 1,
-        }
-      : {
-          echoCancellation: true,
-          noiseSuppression: false,
-          autoGainControl: false,
-          channelCount: 1,
-        };
   void track
-    .applyConstraints(constraints)
-    .then(() => {
-      const s = track.getSettings();
-      logVoiceEvent(
-        "mic",
-        `mode=${mode} aec=${s.echoCancellation} ns=${s.noiseSuppression} agc=${s.autoGainControl} ch=${s.channelCount}`,
-      );
+    .applyConstraints({
+      echoCancellation: true,
+      noiseSuppression: false,
+      autoGainControl: false,
+      channelCount: 1,
     })
     .catch(() => {
-      logVoiceEvent("mic", `mode=${mode} constraints rejected — keeping device default`);
+      /* keep the device default when Safari rejects the set */
     });
 }
 
-/**
- * Ask the remote (agent) track for a single channel. The stream arrives as
- * 2-channel Opus; a stereo downmix inside the phone's voice-processing route is
- * one of the remaining crackle suspects. WebKit may refuse — the result is
- * logged either way so a test run is self-describing.
- */
-function applyMonoRemote(track: RemoteAudioTrack): void {
-  const mst = track.mediaStreamTrack;
-  if (!mst?.applyConstraints) {
-    logVoiceEvent("mono", "remote track exposes no constraint surface");
-    return;
-  }
-  void mst
-    .applyConstraints({ channelCount: 1 })
-    .then(() => logVoiceEvent("mono", `applied, settings ch=${mst.getSettings().channelCount}`))
-    .catch((e: unknown) =>
-      logVoiceEvent("mono", `rejected: ${e instanceof Error ? e.name : String(e)}`),
-    );
-}
 
 /**
  * Drop-in replacement for the SDK's web adapter that never creates a context of
