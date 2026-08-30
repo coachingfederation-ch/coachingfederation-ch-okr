@@ -122,15 +122,10 @@ function VoiceContent() {
   const status = conversation.status;
   const connected = status === "connected";
 
-  // Toggle collection with the switch, and always stop it on unmount.
+  // Headphone hint is iOS-only; detect after mount to keep hydration stable.
   useEffect(() => {
-    setVoiceDiagnosticsEnabled(debug);
-    return () => setVoiceDiagnosticsEnabled(false);
-  }, [debug]);
-
-  useEffect(() => {
-    logVoiceEvent("session", `status=${status}`);
-  }, [status]);
+    setIsIos(isIosLike());
+  }, []);
 
   // Keep the running transcript pinned to the newest line.
   useEffect(() => {
