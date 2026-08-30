@@ -14,6 +14,11 @@ import { cn } from "@/lib/utils";
 import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
 import agentMark from "@/assets/okr-agent-mark.png";
 import { HeaderControls } from "@/components/okr/HeaderControls";
+import {
+  acquireSharedAudioContext,
+  releaseSharedAudioContext,
+  useSharedVoiceAudio,
+} from "@/lib/voice-audio";
 
 export const Route = createFileRoute("/voice")({
   head: () => ({
