@@ -340,16 +340,15 @@ function VoiceContent() {
               </div>
             )}
 
-            {/* Diagnostics: English-only, must be on before the call starts. */}
-            <div className="mt-3 flex min-h-11 items-center justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-2 text-left">
-              <Label htmlFor="voice-debug" className="text-sm font-medium text-foreground">
-                Debug
-                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
-                  Switch on before starting a call to record audio statistics.
-                </span>
-              </Label>
-              <Switch id="voice-debug" checked={debug} onCheckedChange={setDebug} />
-            </div>
+            {/* iOS routes a hands-free call through its own voice-processing
+                loudspeaker path, which is where the residual crackle lives;
+                headphones bypass it entirely. */}
+            {isIos && (
+              <p className="mt-4 flex items-start gap-2 rounded-2xl border border-border bg-card px-4 py-3 text-left text-xs leading-relaxed text-muted-foreground">
+                <Headphones className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+                {t("voice.headphonesHint")}
+              </p>
+            )}
 
             {error && (
               <p className="mt-3 text-sm text-destructive" role="alert">
