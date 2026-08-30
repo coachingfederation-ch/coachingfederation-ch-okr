@@ -136,8 +136,10 @@ function VoiceContent() {
   const start = useCallback(async () => {
     setError(null);
     setStarting(true);
-    // iOS: no Web Audio graph at all, just the right audio session for a call.
-    if (isIosLike()) {
+    const ios = isIosLike();
+    // iOS: no app-owned Web Audio graph, just the right audio session for a call.
+    // (On the WebSocket path the SDK builds and owns its own playback graph.)
+    if (ios) {
       prepareIosAudioSession();
     } else if (!audioHeld.current) {
       // Taken inside the click handler so the context unlocks on a gesture.
@@ -164,32 +166,48 @@ function VoiceContent() {
           locale,
           authed: Boolean(session),
           swissGerman: locale === "de" && swissGerman,
+          // iOS crackles on the WebRTC playback route even with a longer
+          // playout buffer, so phones stream plain audio over a WebSocket.
+          transport: ios ? "websocket" : "webrtc",
         }),
       });
       if (!res.ok) throw new Error(await res.text());
       const s = (await res.json()) as {
         token: string;
+        signedUrl: string;
+        transport: "webrtc" | "websocket";
         prompt: string;
         firstMessage: string;
         voiceId: string;
         language: "en" | "de" | "fr" | "it";
       };
 
-      setLines([]);
-      conversation.startSession({
-        conversationToken: s.token,
-        connectionType: "webrtc",
-        overrides: {
-          agent: {
-            prompt: { prompt: s.prompt },
-            firstMessage: s.firstMessage,
-            language: s.language,
-          },
-          // The narrator is pinned on the agent (default voice for English,
-          // language presets for de/fr/it, a twin agent for Swiss German).
-          // A per-session tts override loses against a language preset.
+      const overrides = {
+        agent: {
+          prompt: { prompt: s.prompt },
+          firstMessage: s.firstMessage,
+          language: s.language,
         },
-      });
+        // The narrator is pinned on the agent (default voice for English,
+        // language presets for de/fr/it, a twin agent for Swiss German).
+        // A per-session tts override loses against a language preset.
+      };
+
+      setLines([]);
+      // Falls back to WebRTC if the signed URL could not be minted.
+      if (s.transport === "websocket" && s.signedUrl) {
+        conversation.startSession({
+          signedUrl: s.signedUrl,
+          connectionType: "websocket",
+          overrides,
+        });
+      } else {
+        conversation.startSession({
+          conversationToken: s.token,
+          connectionType: "webrtc",
+          overrides,
+        });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : t("voice.error"));
     } finally {

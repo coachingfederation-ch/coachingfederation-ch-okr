@@ -37,7 +37,6 @@ const VOICE_ID: Record<string, string> = {
 /** Optional playful Swiss German narrator, offered only on top of German. */
 const SWISS_GERMAN_VOICE_ID = "ogdlaxy0T9rCSVdH0VJM";
 
-
 /**
  * Greetings written natively per language rather than translated, so the
  * opening line sounds like a person and not like a localisation string.
@@ -142,9 +141,15 @@ function voicePrompt(locale: string, snapshot: Snapshot[]) {
   ].join("\n");
 }
 
+export type VoiceTransport = "webrtc" | "websocket";
+
 export type VoiceSession = {
   agentId: string;
+  /** WebRTC credential; empty string when the session is WebSocket. */
   token: string;
+  /** WebSocket credential; empty string when the session is WebRTC. */
+  signedUrl: string;
+  transport: VoiceTransport;
   prompt: string;
   firstMessage: string;
   voiceId: string;
@@ -153,9 +158,41 @@ export type VoiceSession = {
   objectives: { number: number; title: string }[];
 };
 
+/**
+ * Mints the credential the requested transport needs. WebRTC uses a
+ * conversation token; WebSocket needs a signed conversation URL. iOS asks for
+ * the WebSocket variant because its WebRTC playback route crackles.
+ */
+async function mintCredential(
+  apiKey: string,
+  agentId: string,
+  transport: VoiceTransport,
+): Promise<{ token: string; signedUrl: string }> {
+  const url =
+    transport === "websocket"
+      ? `https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?agent_id=${agentId}`
+      : `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${agentId}`;
+
+  const res = await fetch(url, { headers: { "xi-api-key": apiKey } });
+  if (!res.ok) {
+    const body = await res.text();
+    console.error(`[voice] ${transport} credential request failed [${res.status}]: ${body}`);
+    throw new Error(`Voice session could not be started [${res.status}]`);
+  }
+
+  const payload = (await res.json()) as { token?: string; signed_url?: string };
+  if (transport === "websocket") {
+    if (!payload.signed_url) throw new Error("Voice session returned no signed URL");
+    return { token: "", signedUrl: payload.signed_url };
+  }
+  if (!payload.token) throw new Error("Voice session returned no token");
+  return { token: payload.token, signedUrl: "" };
+}
+
 export async function createVoiceSession(
   rawLocale: string,
   swissGerman = false,
+  transport: VoiceTransport = "webrtc",
 ): Promise<VoiceSession> {
   const apiKey = process.env["ELEVENLABS_API_KEY"];
   if (!apiKey) throw new Error("Voice is not connected for this project");
@@ -169,26 +206,17 @@ export async function createVoiceSession(
 
   const snapshot = await strategySnapshot();
 
-  const res = await fetch(
-    `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${agentId}`,
-    { headers: { "xi-api-key": apiKey } },
-  );
-  if (!res.ok) {
-    const body = await res.text();
-    console.error(`[voice] token request failed [${res.status}]: ${body}`);
-    throw new Error(`Voice session could not be started [${res.status}]`);
-  }
-  const { token } = (await res.json()) as { token?: string };
-  if (!token) throw new Error("Voice session returned no token");
+  const { token, signedUrl } = await mintCredential(apiKey, agentId, transport);
 
   return {
     agentId,
     token,
+    signedUrl,
+    transport,
     prompt: voicePrompt(locale, snapshot),
     firstMessage: FIRST_MESSAGE[locale] ?? FIRST_MESSAGE["en"]!,
     voiceId,
     language: locale,
     objectives: snapshot.map((s) => ({ number: s.number, title: s.title })),
   };
-
 }
