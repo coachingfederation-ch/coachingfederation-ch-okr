@@ -128,7 +128,6 @@ function relaxIosCaptureProcessing(track: MediaStreamTrack): void {
     });
 }
 
-
 /**
  * Drop-in replacement for the SDK's web adapter that never creates a context of
  * its own: input and output analysis share the one graph above.
@@ -201,7 +200,6 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     this.nodes.push(source, analyser);
     return { volumeProvider: analyserVolumeProvider(analyser), analyser };
   }
-
 
   async setupOutputAnalysis(track: RemoteAudioTrack): Promise<AnalysisResult> {
     if (this.analysisDisabled) return { volumeProvider: SILENT_VOLUME };
