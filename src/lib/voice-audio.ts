@@ -158,9 +158,25 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     const el = track.attach();
     el.autoplay = true;
     el.controls = false;
+    el.muted = false;
     // Without playsInline iOS can hand the stream to the fullscreen player.
     el.setAttribute("playsinline", "");
     (el as HTMLAudioElement & { playsInline?: boolean }).playsInline = true;
+    if (this.analysisDisabled) {
+      const withDelay = track as RemoteAudioTrack & {
+        setPlayoutDelay?: (seconds: number) => void;
+      };
+      try {
+        withDelay.setPlayoutDelay?.(IOS_PLAYOUT_DELAY_SECONDS);
+      } catch {
+        /* receiver does not expose a playout delay hint */
+      }
+      // An interruption (notification, lock screen) can pause the element;
+      // iOS does not resume it on its own, and silence reads as a dropped call.
+      el.addEventListener("pause", () => {
+        void el.play().catch(() => {});
+      });
+    }
     if (outputDeviceId && el.setSinkId) {
       try {
         await el.setSinkId(outputDeviceId);
@@ -174,7 +190,10 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
   }
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
-    if (this.analysisDisabled) return { volumeProvider: SILENT_VOLUME };
+    if (this.analysisDisabled) {
+      relaxIosCaptureProcessing(mediaStreamTrack);
+      return { volumeProvider: SILENT_VOLUME };
+    }
     const ctx = this.context();
     const analyser = ctx.createAnalyser();
     const source = ctx.createMediaStreamSource(new MediaStream([mediaStreamTrack]));
@@ -182,6 +201,7 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     this.nodes.push(source, analyser);
     return { volumeProvider: analyserVolumeProvider(analyser), analyser };
   }
+
 
   async setupOutputAnalysis(track: RemoteAudioTrack): Promise<AnalysisResult> {
     if (this.analysisDisabled) return { volumeProvider: SILENT_VOLUME };
