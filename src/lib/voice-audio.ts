@@ -5,7 +5,6 @@ import {
 } from "@elevenlabs/client/internal";
 import type { RemoteAudioTrack } from "livekit-client";
 
-
 /**
  * Aspira's realtime voice call used to run on two separate AudioContexts per
  * session: the SDK's default web adapter creates one for microphone level
@@ -75,7 +74,6 @@ export function prepareIosAudioSession(): void {
   }
 }
 
-
 /** Volume/frequency readout backed by an AnalyserNode on the shared context. */
 function analyserVolumeProvider(analyser: AnalyserNode) {
   const raw = new Uint8Array(analyser.frequencyBinCount);
@@ -124,7 +122,6 @@ function applyIosCaptureProcessing(track: MediaStreamTrack): void {
       /* keep the device default when Safari rejects the set */
     });
 }
-
 
 /**
  * Drop-in replacement for the SDK's web adapter that never creates a context of
@@ -181,7 +178,6 @@ class SharedContextAudioAdapter implements WebRTCAudioAdapter {
     document.body.appendChild(el);
     this.audioElements.push(el);
   }
-
 
   setupInputAnalysis(mediaStreamTrack: MediaStreamTrack): AnalysisResult {
     if (this.analysisDisabled) {

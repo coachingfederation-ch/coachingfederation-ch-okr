@@ -22,7 +22,6 @@ import {
   useSharedVoiceAudio,
 } from "@/lib/voice-audio";
 
-
 export const Route = createFileRoute("/voice")({
   head: () => ({
     meta: [
