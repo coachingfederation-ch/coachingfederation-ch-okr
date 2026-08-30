@@ -4,6 +4,12 @@ import {
   type WebRTCAudioAdapter,
 } from "@elevenlabs/client/internal";
 import type { RemoteAudioTrack } from "livekit-client";
+import {
+  isVoiceDiagnosticsEnabled,
+  logVoiceEvent,
+  startStatsPolling,
+  watchAudioElement,
+} from "@/lib/voice-diagnostics";
 
 /**
  * Aspira's realtime voice call used to run on two separate AudioContexts per
