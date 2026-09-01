@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { RefreshCw, ShieldCheck } from "lucide-react";
+import { Network, RefreshCw, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { getAccessOverview, syncAccessDirectory } from "@/lib/access.functions";
+import { getStructureOverview, syncStructure } from "@/lib/op-structure.functions";
 import { useAuth } from "@/lib/auth-context";
 import { formatSwissDate } from "@/components/okr/kr-metrics";
 import { AuthBadge } from "@/components/okr/AuthBadge";
