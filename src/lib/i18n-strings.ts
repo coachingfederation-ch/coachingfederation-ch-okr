@@ -72,6 +72,11 @@ export type StringKey =
   | "auth.continueWithGoogle"
   | "auth.pleaseWait"
   | "auth.back"
+  | "auth.welcomeHint"
+  | "auth.notAuthorizedTitle"
+  | "auth.notAuthorizedBody"
+  | "auth.notAuthorizedHelp"
+  | "auth.tryAnotherAccount"
   // sections
   | "section.objective"
   | "section.globalAlignment"
