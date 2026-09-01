@@ -238,6 +238,7 @@ async function refreshStructureIfStale(): Promise<void> {
 /** Give the signed-in user exactly the role the mirror says they should have. */
 export async function applyRolesForUser(userId: string, email: string): Promise<AppRole | null> {
   await refreshMirrorIfStale();
+  await refreshStructureIfStale();
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const normalised = normaliseEmail(email);
 
