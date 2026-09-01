@@ -56,6 +56,27 @@ function AccessPage() {
     onError: (err) => toast.error(err instanceof Error ? err.message : "Sync failed"),
   });
 
+  // Teams are the Welcome app's operational structure, mirrored here.
+  const fetchStructure = useServerFn(getStructureOverview);
+  const runStructureSync = useServerFn(syncStructure);
+
+  const structure = useQuery({
+    queryKey: ["structure-overview"],
+    queryFn: () => fetchStructure(),
+    enabled: isAdmin,
+  });
+
+  const structureSync = useMutation({
+    mutationFn: () => runStructureSync(),
+    onSuccess: (result) => {
+      if (result.ok) toast.success(`Synced ${result.count} units from the member area.`);
+      else toast.error(result.error || "Sync failed");
+      void queryClient.invalidateQueries({ queryKey: ["structure-overview"] });
+      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Sync failed"),
+  });
+
   return (
     <main className="min-h-dvh">
       <header className="bg-hero px-8 py-6 text-hero-foreground">
