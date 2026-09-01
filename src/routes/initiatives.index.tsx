@@ -180,7 +180,12 @@ function InitiativesContent() {
       byTeam.set(key, arr);
     }
     const ordered: { id: string; label: string; items: FlatInitiative[] }[] = [];
-    for (const team of data.teams) {
+    // Visible teams keep the structure's own order; a hidden community that
+    // still carries work is appended rather than swallowed.
+    const seen = new Set<string>();
+    for (const team of [...teams, ...data.teams]) {
+      if (seen.has(team.id)) continue;
+      seen.add(team.id);
       const items = byTeam.get(team.id);
       if (items?.length) {
         ordered.push({
@@ -195,7 +200,7 @@ function InitiativesContent() {
       ordered.push({ id: "none", label: t("work.noTeam"), items: orphans });
     }
     return ordered;
-  }, [filtered, data.teams, teamNameById, t]);
+  }, [filtered, teams, data.teams, teamNameById, t]);
 
   return (
     <main className="min-h-dvh">
