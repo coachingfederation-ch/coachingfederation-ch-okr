@@ -1606,6 +1606,14 @@ const de: Record<StringKey, string> = {
   "auth.continueWithGoogle": "Mit Google fortfahren",
   "auth.pleaseWait": "Bitte warten…",
   "auth.back": "← Zurück zum Dashboard",
+  "auth.welcomeHint":
+    "Der Zugang kommt aus ICF Switzerland Welcome. Melde dich mit demselben Google-Konto an, das du dort nutzt.",
+  "auth.notAuthorizedTitle": "Noch kein Bearbeitungszugang",
+  "auth.notAuthorizedBody":
+    "Dein ICF-Switzerland-Welcome-Konto hat noch keine Editor- oder Admin-Rolle, deshalb ist eine Anmeldung an diesem Dashboard nicht möglich. Das Dashboard bleibt auch ohne Anmeldung vollständig einsehbar.",
+  "auth.notAuthorizedHelp":
+    "Bitte eine Chapter-Adminperson, dir in ICF Switzerland Welcome die Editor-Rolle zu geben, und versuche es dann erneut.",
+  "auth.tryAnotherAccount": "Anderes Konto versuchen",
   "section.objective": "Objective",
   "section.globalAlignment": "Globale Ausrichtung",
   "section.keyResults": "Key Results",
