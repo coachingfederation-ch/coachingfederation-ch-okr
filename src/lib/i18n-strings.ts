@@ -229,6 +229,7 @@ export type StringKey =
   | "work.filterTeam"
   | "work.filterAllTeams"
   | "work.noTeam"
+  | "work.includeCommunities"
   | "work.team"
   | "work.size"
   | "work.size.small"
@@ -1327,6 +1328,7 @@ const en: Record<StringKey, string> = {
   "work.filterTeam": "Team",
   "work.filterAllTeams": "All teams",
   "work.noTeam": "No team yet",
+  "work.includeCommunities": "Include communities",
   "work.team": "Team",
   "work.size": "Size",
   "work.size.small": "Small",
@@ -2140,6 +2142,7 @@ const de: Record<StringKey, string> = {
   "work.filterTeam": "Team",
   "work.filterAllTeams": "Alle Teams",
   "work.noTeam": "Noch kein Team",
+  "work.includeCommunities": "Communities einbeziehen",
   "work.team": "Team",
   "work.size": "Umfang",
   "work.size.small": "Klein",
@@ -2960,6 +2963,7 @@ const fr: Record<StringKey, string> = {
   "work.filterTeam": "Équipe",
   "work.filterAllTeams": "Toutes les équipes",
   "work.noTeam": "Pas encore d'équipe",
+  "work.includeCommunities": "Inclure les communautés",
   "work.team": "Équipe",
   "work.size": "Ampleur",
   "work.size.small": "Petit",
@@ -3775,6 +3779,7 @@ const it: Record<StringKey, string> = {
   "work.filterTeam": "Team",
   "work.filterAllTeams": "Tutti i team",
   "work.noTeam": "Nessun team",
+  "work.includeCommunities": "Includi le community",
   "work.team": "Team",
   "work.size": "Dimensione",
   "work.size.small": "Piccolo",
