@@ -568,6 +568,30 @@ export type Database = {
         }
         Relationships: []
       }
+      op_structure_sync_state: {
+        Row: {
+          entry_count: number
+          id: boolean
+          last_error: string
+          last_run_at: string | null
+          last_status: string
+        }
+        Insert: {
+          entry_count?: number
+          id?: boolean
+          last_error?: string
+          last_run_at?: string | null
+          last_status?: string
+        }
+        Update: {
+          entry_count?: number
+          id?: boolean
+          last_error?: string
+          last_run_at?: string | null
+          last_status?: string
+        }
+        Relationships: []
+      }
       pillar_summaries: {
         Row: {
           code: string
@@ -664,7 +688,10 @@ export type Database = {
       teams: {
         Row: {
           created_at: string
+          external_slug: string | null
           id: string
+          is_active: boolean
+          is_community: boolean
           name: string
           position: number
           source_lang: string
@@ -673,7 +700,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          external_slug?: string | null
           id?: string
+          is_active?: boolean
+          is_community?: boolean
           name?: string
           position?: number
           source_lang?: string
@@ -682,7 +712,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          external_slug?: string | null
           id?: string
+          is_active?: boolean
+          is_community?: boolean
           name?: string
           position?: number
           source_lang?: string
