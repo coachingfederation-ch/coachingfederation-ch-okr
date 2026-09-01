@@ -57,7 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const resolve = async (session: Session | null) => {
       if (!session?.user) {
         // The sign-out that follows a rejection must not erase its explanation.
-        if (active) setState((prev) => ({ ...withRole(null, null), rejectedEmail: prev.rejectedEmail }));
+        if (active)
+          setState((prev) => ({ ...withRole(null, null), rejectedEmail: prev.rejectedEmail }));
         return;
       }
       if (active) setState({ ...withRole(session, null), isLoading: true });
@@ -67,7 +68,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Welcome governs access: an unknown account never keeps a session here.
           await supabase.auth.signOut();
           if (active) {
-            setState({ ...withRole(null, null), rejectedEmail: email || (session.user.email ?? "") });
+            setState({
+              ...withRole(null, null),
+              rejectedEmail: email || (session.user.email ?? ""),
+            });
           }
           return;
         }

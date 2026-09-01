@@ -262,7 +262,6 @@ export async function applyRolesForUser(userId: string, email: string): Promise<
 
   const role = (entry?.role ?? null) as AppRole | null;
 
-
   const { data: current } = await supabaseAdmin
     .from("user_roles")
     .select("id, role")

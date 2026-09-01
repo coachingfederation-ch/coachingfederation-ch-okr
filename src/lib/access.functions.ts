@@ -33,7 +33,6 @@ export const applyMyRoles = createServerFn({ method: "POST" })
     return { role: role as AccessRole, allowed: role !== null, email };
   });
 
-
 /** Admin-only view of the mirror and the last sync run. */
 export const getAccessOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
