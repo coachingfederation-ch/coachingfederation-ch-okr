@@ -212,6 +212,29 @@ async function refreshMirrorIfStale(): Promise<void> {
   }
 }
 
+/**
+ * The teams list mirrors the same Welcome app, so it rides on the same trigger:
+ * refresh it at most hourly when someone signs in. Kept separate from the role
+ * mirror so a failure on one side never blocks the other.
+ */
+async function refreshStructureIfStale(): Promise<void> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: state } = await supabaseAdmin
+      .from("op_structure_sync_state")
+      .select("last_run_at")
+      .eq("id", true)
+      .maybeSingle();
+
+    const lastRun = state?.last_run_at ? Date.parse(state.last_run_at) : 0;
+    if (Date.now() - lastRun < MAX_MIRROR_AGE_MS) return;
+    const { syncOpStructure } = await import("./op-structure.server");
+    await syncOpStructure();
+  } catch {
+    // Teams stay as they are; a stale team list is better than a failed sign-in.
+  }
+}
+
 /** Give the signed-in user exactly the role the mirror says they should have. */
 export async function applyRolesForUser(userId: string, email: string): Promise<AppRole | null> {
   await refreshMirrorIfStale();
