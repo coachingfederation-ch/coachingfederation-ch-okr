@@ -168,6 +168,61 @@ function AccessPage() {
                 </ul>
               )}
             </div>
+
+            <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-soft">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-6 py-4">
+                <div className="flex items-center gap-2">
+                  <Network className="h-4 w-4 text-primary" aria-hidden="true" />
+                  <h2 className="text-sm font-semibold text-hero">
+                    Operational structure ({structure.data?.units.length ?? 0})
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => structureSync.mutate()}
+                  disabled={structureSync.isPending}
+                  className="btn-mono inline-flex h-11 items-center gap-2 rounded-full bg-primary px-5 text-primary-foreground shadow-sm transition-shadow hover:shadow disabled:opacity-50"
+                >
+                  <RefreshCw
+                    className={structureSync.isPending ? "h-4 w-4 animate-spin" : "h-4 w-4"}
+                  />
+                  Sync now
+                </button>
+              </div>
+              <div className="px-6 py-4">
+                <p className="text-sm text-muted-foreground">
+                  Teams in the OKR portfolio mirror the operational structure of the member area.
+                  They are edited there, not here.
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {structure.data?.lastRunAt
+                    ? `Last sync: ${formatSwissDate(structure.data.lastRunAt.slice(0, 10))} · ${structure.data.lastStatus}`
+                    : "Never run yet"}
+                </p>
+                {structure.data?.lastError ? (
+                  <p className="mt-1 break-words text-sm text-destructive">
+                    {structure.data.lastError}
+                  </p>
+                ) : null}
+              </div>
+              {structure.data && structure.data.units.length > 0 ? (
+                <ul className="divide-y divide-border/70 border-t border-border/70">
+                  {structure.data.units.map((unit) => (
+                    <li
+                      key={unit.id}
+                      className="flex flex-wrap items-center justify-between gap-3 px-6 py-3"
+                    >
+                      <span className="min-w-0 text-sm text-hero">{unit.name}</span>
+                      {unit.is_community ? (
+                        <span className="inline-flex h-6 items-center rounded-full bg-surface px-2.5 text-[11px] font-semibold uppercase tracking-wide text-primary">
+                          community
+                        </span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           </div>
         )}
       </section>
