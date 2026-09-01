@@ -140,9 +140,7 @@ export async function syncRoleDirectory(): Promise<SyncResult> {
      * address than the Google account they sign in with here. They are merged
      * on top of the fetched directory and win on conflict.
      */
-    const { data: overrides } = await supabaseAdmin
-      .from("role_overrides")
-      .select("email, role");
+    const { data: overrides } = await supabaseAdmin.from("role_overrides").select("email, role");
     const merged = new Map(fetched.map((e) => [e.email, e]));
     for (const row of overrides ?? []) {
       const email = normaliseEmail(row.email);
@@ -150,7 +148,6 @@ export async function syncRoleDirectory(): Promise<SyncResult> {
       merged.set(email, { email, role: row.role as AppRole, source_roles: ["override"] });
     }
     const entries = [...merged.values()];
-
 
     const syncedAt = new Date().toISOString();
     const { error: upsertError } = await supabaseAdmin.from("role_directory").upsert(
