@@ -366,6 +366,8 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         id: r.id,
         name: r.name,
         position: r.position,
+        external_slug: (r as { external_slug?: string | null }).external_slug ?? null,
+        is_community: (r as { is_community?: boolean }).is_community ?? false,
         translations: (r as { translations?: TranslationsMap }).translations ?? {},
         source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
       })) as TeamDTO[],
