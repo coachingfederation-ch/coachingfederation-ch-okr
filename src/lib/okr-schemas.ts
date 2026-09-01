@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { LOCALES, type Locale, type TranslationsMap } from "./i18n-shared";
 
-
-
 export type Pillar = "SG" | "OE" | "CE";
 export const PILLARS: Pillar[] = ["SG", "OE", "CE"];
 
@@ -23,11 +21,7 @@ export const INITIATIVE_STATUSES: InitiativeStatus[] = [
  * status is 'planned' and must be ignored everywhere else.
  */
 export type InitiativeAvailability = "open" | "blocked" | "parked";
-export const INITIATIVE_AVAILABILITIES: InitiativeAvailability[] = [
-  "open",
-  "blocked",
-  "parked",
-];
+export const INITIATIVE_AVAILABILITIES: InitiativeAvailability[] = ["open", "blocked", "parked"];
 
 /** What a volunteer is signing up for, in time. */
 export type InitiativeCommitment = "one_off" | "recurring" | "workstream";
@@ -39,24 +33,13 @@ export const INITIATIVE_COMMITMENTS: InitiativeCommitment[] = [
 
 /** What kind of person the initiative is looking for. */
 export type InitiativeHelpNeeded = "lead" | "helpers" | "skill";
-export const INITIATIVE_HELP_NEEDED: InitiativeHelpNeeded[] = [
-  "lead",
-  "helpers",
-  "skill",
-];
-
+export const INITIATIVE_HELP_NEEDED: InitiativeHelpNeeded[] = ["lead", "helpers", "skill"];
 
 export type KrType = "metric" | "milestone";
 export const KR_TYPES: KrType[] = ["metric", "milestone"];
 
 export type MilestoneStatus = "not_started" | "in_progress" | "done";
-export const MILESTONE_STATUSES: MilestoneStatus[] = [
-  "not_started",
-  "in_progress",
-  "done",
-];
-
-
+export const MILESTONE_STATUSES: MilestoneStatus[] = ["not_started", "in_progress", "done"];
 
 export const ROLE_LABELS = ["Owner", "Steward", "Contact"] as const;
 export type RoleLabel = (typeof ROLE_LABELS)[number];
@@ -103,22 +86,25 @@ export const LIMITS = {
   authorName: 100,
 };
 
-
-
 const trimmedString = (max: number) =>
-  z.string().trim().max(max, { message: `Must be ${max} characters or fewer` });
+  z
+    .string()
+    .trim()
+    .max(max, { message: `Must be ${max} characters or fewer` });
 
 export const uuidSchema = z.string().uuid();
 
 export const localeSchema = z.enum(LOCALES);
-
 
 export const okrSetPatchSchema = z.object({
   title: trimmedString(LIMITS.title).optional(),
   role_label: z.enum(ROLE_LABELS).optional(),
   role_name: trimmedString(LIMITS.roleName).optional(),
   customer: trimmedString(LIMITS.customer).optional(),
-  pillars: z.array(z.enum(["SG", "OE", "CE"])).max(3).optional(),
+  pillars: z
+    .array(z.enum(["SG", "OE", "CE"]))
+    .max(3)
+    .optional(),
   objective: trimmedString(LIMITS.objective).optional(),
   alignment: trimmedString(LIMITS.alignment).optional(),
 });
@@ -144,17 +130,12 @@ export const keyResultPatchSchema = z.object({
   milestone_due: dateOrNull.optional(),
 });
 
-
 /**
  * ASPIRE-style work kinds. All three live in the same `initiatives` table;
  * `kind` decides how much planning structure a card carries.
  */
 export type InitiativeKind = "candidate" | "simple_task" | "initiative";
-export const INITIATIVE_KINDS: InitiativeKind[] = [
-  "candidate",
-  "simple_task",
-  "initiative",
-];
+export const INITIATIVE_KINDS: InitiativeKind[] = ["candidate", "simple_task", "initiative"];
 
 export type WorkSize = "small" | "medium";
 export const WORK_SIZES: WorkSize[] = ["small", "medium"];
@@ -163,11 +144,7 @@ export type PhaseType = "delivery" | "discovery";
 export const PHASE_TYPES: PhaseType[] = ["delivery", "discovery"];
 
 export type BetConfidence = "pretty_confident" | "worth_testing" | "wild_card";
-export const BET_CONFIDENCES: BetConfidence[] = [
-  "pretty_confident",
-  "worth_testing",
-  "wild_card",
-];
+export const BET_CONFIDENCES: BetConfidence[] = ["pretty_confident", "worth_testing", "wild_card"];
 
 export type EvidenceType = "see" | "hear" | "measure";
 export const EVIDENCE_TYPES: EvidenceType[] = ["see", "hear", "measure"];
@@ -176,12 +153,7 @@ export type SignalDirection = "up" | "down";
 export const SIGNAL_DIRECTIONS: SignalDirection[] = ["up", "down"];
 
 export type LearningDecision = "growing" | "tweak" | "surprise" | "let_go";
-export const LEARNING_DECISIONS: LearningDecision[] = [
-  "growing",
-  "tweak",
-  "surprise",
-  "let_go",
-];
+export const LEARNING_DECISIONS: LearningDecision[] = ["growing", "tweak", "surprise", "let_go"];
 
 const planningFields = {
   kind: z.enum(["candidate", "simple_task", "initiative"]).optional(),
@@ -198,10 +170,7 @@ const planningFields = {
   bet_action: trimmedString(LIMITS.betPart).optional(),
   bet_change: trimmedString(LIMITS.betPart).optional(),
   bet_question: trimmedString(LIMITS.betPart).optional(),
-  confidence: z
-    .enum(["pretty_confident", "worth_testing", "wild_card"])
-    .nullable()
-    .optional(),
+  confidence: z.enum(["pretty_confident", "worth_testing", "wild_card"]).nullable().optional(),
   // `learning_checkpoint` is a real date column: an empty string must become
   // NULL, otherwise Postgres rejects the update with an invalid date syntax.
   learning_checkpoint: dateOrNull.optional(),
@@ -266,8 +235,6 @@ export const learningEntryPatchSchema = z.object({
   next_move: trimmedString(LIMITS.learningText).optional(),
 });
 
-
-
 export const alignmentRowPatchSchema = z.object({
   pillar: trimmedString(LIMITS.alignmentPillar).optional(),
   sg: z.enum(["none", "secondary", "primary"]).optional(),
@@ -296,6 +263,9 @@ export type TeamDTO = WithTranslations & {
   id: string;
   name: string;
   position: number;
+  /** Slug of the matching unit in the Welcome app's operational structure. */
+  external_slug: string | null;
+  is_community: boolean;
 };
 
 export type SignalDTO = WithTranslations & {
@@ -376,8 +346,6 @@ export type InitiativeDTO = WithTranslations & {
   learning_entries: LearningEntryDTO[];
 };
 
-
-
 export type KeyResultDTO = WithTranslations & {
   id: string;
   okr_set_id: string;
@@ -438,7 +406,7 @@ export const TRANSLATABLE_FIELDS = {
   // NOT translatable — they must never be sent through the translator.
   key_results: ["text", "target", "lead", "measure", "instrument"] as const,
 
-    // Enum fields (availability, commitment, help_needed) are NOT translatable —
+  // Enum fields (availability, commitment, help_needed) are NOT translatable —
   // their labels come from the i18n strings.
   initiatives: [
     "text",
@@ -453,7 +421,7 @@ export const TRANSLATABLE_FIELDS = {
     "bet_action",
     "bet_change",
     "bet_question",
-    
+
     "support_needed",
     "out_of_scope",
     "lead_name",
@@ -473,5 +441,3 @@ export const TRANSLATABLE_FIELDS = {
   alignment_rows: ["pillar", "how"] as const,
   pillar_summaries: ["label", "description"] as const,
 } as const;
-
-

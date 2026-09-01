@@ -16,6 +16,7 @@ import { WorkCard } from "@/components/okr/WorkCard";
 import { KIND_PLURAL_KEY } from "@/components/okr/work-meta";
 import type { FlatInitiative } from "@/components/okr/initiative-meta";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -98,7 +99,16 @@ function InitiativesContent() {
   const [krFilter, setKrFilter] = useState<string>("all");
   const [kindFilter, setKindFilter] = useState<string>("all");
   const [teamFilter, setTeamFilter] = useState<string>("all");
+  const [showCommunities, setShowCommunities] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+
+  // Teams mirror the Welcome app's operational structure. Communities live in
+  // the same structure but are not delivery teams, so they stay out of the way
+  // unless someone asks for them.
+  const teams = useMemo(
+    () => data.teams.filter((team) => showCommunities || !team.is_community),
+    [data.teams, showCommunities],
+  );
 
   const teamNameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -171,7 +181,12 @@ function InitiativesContent() {
       byTeam.set(key, arr);
     }
     const ordered: { id: string; label: string; items: FlatInitiative[] }[] = [];
-    for (const team of data.teams) {
+    // Visible teams keep the structure's own order; a hidden community that
+    // still carries work is appended rather than swallowed.
+    const seen = new Set<string>();
+    for (const team of [...teams, ...data.teams]) {
+      if (seen.has(team.id)) continue;
+      seen.add(team.id);
       const items = byTeam.get(team.id);
       if (items?.length) {
         ordered.push({
@@ -186,7 +201,7 @@ function InitiativesContent() {
       ordered.push({ id: "none", label: t("work.noTeam"), items: orphans });
     }
     return ordered;
-  }, [filtered, data.teams, teamNameById, t]);
+  }, [filtered, teams, data.teams, teamNameById, t]);
 
   return (
     <main className="min-h-dvh">
@@ -242,7 +257,7 @@ function InitiativesContent() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t("work.filterAllTeams")}</SelectItem>
-                  {data.teams.map((team) => (
+                  {teams.map((team) => (
                     <SelectItem key={team.id} value={team.id}>
                       {teamNameById.get(team.id) ?? team.name}
                     </SelectItem>
@@ -251,6 +266,17 @@ function InitiativesContent() {
                 </SelectContent>
               </Select>
             </FilterBlock>
+
+            <label className="flex min-h-11 cursor-pointer items-center gap-2 text-xs font-medium text-muted-foreground">
+              <Checkbox
+                checked={showCommunities}
+                onCheckedChange={(v) => {
+                  setShowCommunities(v === true);
+                  setTeamFilter("all");
+                }}
+              />
+              <span className="uppercase tracking-wider">{t("work.includeCommunities")}</span>
+            </label>
 
             <FilterBlock label={t("initiatives.filterOkr")}>
               <Select

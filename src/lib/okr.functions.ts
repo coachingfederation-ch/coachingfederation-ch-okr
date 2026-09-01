@@ -155,7 +155,8 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         supabase.from("initiative_secondary_krs").select("initiative_id,kr_id"),
         supabase
           .from("teams")
-          .select("id,name,position,translations,source_lang")
+          .select("id,name,position,is_community,external_slug,translations,source_lang")
+          .eq("is_active", true)
           .order("position", { ascending: true }),
         supabase
           .from("initiative_signals")
@@ -365,6 +366,8 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         id: r.id,
         name: r.name,
         position: r.position,
+        external_slug: (r as { external_slug?: string | null }).external_slug ?? null,
+        is_community: (r as { is_community?: boolean }).is_community ?? false,
         translations: (r as { translations?: TranslationsMap }).translations ?? {},
         source_lang: ((r as { source_lang?: string }).source_lang ?? "en") as Locale,
       })) as TeamDTO[],

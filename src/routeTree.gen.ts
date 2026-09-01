@@ -22,6 +22,7 @@ import { Route as InitiativesInitiativeIdRouteImport } from './routes/initiative
 import { Route as ApiVoiceTokenRouteImport } from './routes/api/voice-token'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiPublicRoleSyncRouteImport } from './routes/api/public/role-sync'
+import { Route as ApiPublicOpStructureSyncRouteImport } from './routes/api/public/op-structure-sync'
 
 const VoiceRoute = VoiceRouteImport.update({
   id: '/voice',
@@ -88,6 +89,12 @@ const ApiPublicRoleSyncRoute = ApiPublicRoleSyncRouteImport.update({
   path: '/api/public/role-sync',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicOpStructureSyncRoute =
+  ApiPublicOpStructureSyncRouteImport.update({
+    id: '/api/public/op-structure-sync',
+    path: '/api/public/op-structure-sync',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
+  '/api/public/op-structure-sync': typeof ApiPublicOpStructureSyncRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +125,7 @@ export interface FileRoutesByTo {
   '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives': typeof InitiativesIndexRoute
+  '/api/public/op-structure-sync': typeof ApiPublicOpStructureSyncRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
 }
 export interface FileRoutesById {
@@ -133,6 +142,7 @@ export interface FileRoutesById {
   '/api/voice-token': typeof ApiVoiceTokenRoute
   '/initiatives/$initiativeId': typeof InitiativesInitiativeIdRoute
   '/initiatives/': typeof InitiativesIndexRoute
+  '/api/public/op-structure-sync': typeof ApiPublicOpStructureSyncRoute
   '/api/public/role-sync': typeof ApiPublicRoleSyncRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
+    | '/api/public/op-structure-sync'
     | '/api/public/role-sync'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives'
+    | '/api/public/op-structure-sync'
     | '/api/public/role-sync'
   id:
     | '__root__'
@@ -180,6 +192,7 @@ export interface FileRouteTypes {
     | '/api/voice-token'
     | '/initiatives/$initiativeId'
     | '/initiatives/'
+    | '/api/public/op-structure-sync'
     | '/api/public/role-sync'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +209,7 @@ export interface RootRouteChildren {
   ApiVoiceTokenRoute: typeof ApiVoiceTokenRoute
   InitiativesInitiativeIdRoute: typeof InitiativesInitiativeIdRoute
   InitiativesIndexRoute: typeof InitiativesIndexRoute
+  ApiPublicOpStructureSyncRoute: typeof ApiPublicOpStructureSyncRoute
   ApiPublicRoleSyncRoute: typeof ApiPublicRoleSyncRoute
 }
 
@@ -292,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicRoleSyncRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/op-structure-sync': {
+      id: '/api/public/op-structure-sync'
+      path: '/api/public/op-structure-sync'
+      fullPath: '/api/public/op-structure-sync'
+      preLoaderRoute: typeof ApiPublicOpStructureSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -308,6 +329,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceTokenRoute: ApiVoiceTokenRoute,
   InitiativesInitiativeIdRoute: InitiativesInitiativeIdRoute,
   InitiativesIndexRoute: InitiativesIndexRoute,
+  ApiPublicOpStructureSyncRoute: ApiPublicOpStructureSyncRoute,
   ApiPublicRoleSyncRoute: ApiPublicRoleSyncRoute,
 }
 export const routeTree = rootRouteImport
