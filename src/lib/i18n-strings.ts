@@ -802,6 +802,14 @@ const en: Record<StringKey, string> = {
   "auth.continueWithGoogle": "Continue with Google",
   "auth.pleaseWait": "Please wait…",
   "auth.back": "← Back to dashboard",
+  "auth.welcomeHint":
+    "Access comes from ICF Switzerland Welcome. Use the same Google account you sign in with there.",
+  "auth.notAuthorizedTitle": "No editing access yet",
+  "auth.notAuthorizedBody":
+    "Your ICF Switzerland Welcome account doesn't have an editor or admin role yet, so signing in to this dashboard isn't possible. The dashboard stays fully readable without signing in.",
+  "auth.notAuthorizedHelp":
+    "Ask a chapter admin to give you the editor role in ICF Switzerland Welcome, then try again.",
+  "auth.tryAnotherAccount": "Try another account",
   "section.objective": "Objective",
   "section.globalAlignment": "Global alignment",
   "section.keyResults": "Key results",
