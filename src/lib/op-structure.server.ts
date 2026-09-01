@@ -117,24 +117,36 @@ export async function syncOpStructure(): Promise<StructureSyncResult> {
       else byName.set(normaliseName(row.name), { id: row.id });
     }
 
-    // Slug wins; a name match binds a locally seeded team to its unit once.
-    const rows = units.map((unit, index) => {
-      const match = bySlug.get(unit.slug) ?? byName.get(normaliseName(unit.name));
-      return {
-        ...(match ? { id: match.id } : {}),
-        external_slug: unit.slug,
-        name: unit.name,
-        position: index + 1,
-        is_community: unit.is_community,
-        is_active: true,
-        translations: translationsFor(unit),
-        source_lang: "en",
-      };
-    });
+    /**
+     * One-time binding: a locally seeded team that matches a unit by name gets
+     * its slug stamped on first, so the upsert below can key purely on the slug
+     * (sending an `id` instead would collide with the primary key on insert).
+     */
+    for (const unit of units) {
+      if (bySlug.has(unit.slug)) continue;
+      const match = byName.get(normaliseName(unit.name));
+      if (!match) continue;
+      const { error: bindError } = await supabaseAdmin
+        .from("teams")
+        .update({ external_slug: unit.slug })
+        .eq("id", match.id);
+      if (bindError) throw new Error(bindError.message);
+    }
+
+    const rows = units.map((unit, index) => ({
+      external_slug: unit.slug,
+      name: unit.name,
+      position: index + 1,
+      is_community: unit.is_community,
+      is_active: true,
+      translations: translationsFor(unit),
+      source_lang: "en",
+    }));
 
     const { error: upsertError } = await supabaseAdmin
       .from("teams")
       .upsert(rows, { onConflict: "external_slug" });
+
     if (upsertError) throw new Error(upsertError.message);
 
     // Anything the structure no longer contains goes away; initiatives that
