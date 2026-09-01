@@ -296,6 +296,9 @@ export type TeamDTO = WithTranslations & {
   id: string;
   name: string;
   position: number;
+  /** Slug of the matching unit in the Welcome app's operational structure. */
+  external_slug: string | null;
+  is_community: boolean;
 };
 
 export type SignalDTO = WithTranslations & {
