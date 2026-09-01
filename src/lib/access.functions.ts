@@ -21,6 +21,8 @@ export type AccessOverviewDTO = {
 /**
  * Provision the signed-in user's role from the mirrored Welcome directory.
  * A user can only ever provision themselves — the id comes from their token.
+ * `allowed` is false when the Welcome app knows nothing about this address:
+ * the dashboard then ends the session rather than leaving a stranger signed in.
  */
 export const applyMyRoles = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -28,7 +30,7 @@ export const applyMyRoles = createServerFn({ method: "POST" })
     const { applyRolesForUser } = await import("./access.server");
     const email = typeof context.claims["email"] === "string" ? context.claims["email"] : "";
     const role = await applyRolesForUser(context.userId, email);
-    return { role: role as AccessRole };
+    return { role: role as AccessRole, allowed: role !== null, email };
   });
 
 /** Admin-only view of the mirror and the last sync run. */

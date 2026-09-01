@@ -11,6 +11,12 @@ type AuthState = {
   role: AccessRole;
   canEdit: boolean;
   isAdmin: boolean;
+  /**
+   * Email of an account that signed in with Google but is not an editor or
+   * admin in the Welcome app. The session is ended immediately; this keeps the
+   * reason around so /auth can explain what happened.
+   */
+  rejectedEmail: string | null;
 };
 
 const EMPTY: AuthState = {
@@ -20,6 +26,7 @@ const EMPTY: AuthState = {
   role: null,
   canEdit: false,
   isAdmin: false,
+  rejectedEmail: null,
 };
 
 const AuthContext = createContext<AuthState>(EMPTY);
@@ -32,6 +39,7 @@ function withRole(session: Session | null, role: AccessRole): AuthState {
     role,
     canEdit: role === "editor" || role === "admin",
     isAdmin: role === "admin",
+    rejectedEmail: null,
   };
 }
 
@@ -48,12 +56,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
      */
     const resolve = async (session: Session | null) => {
       if (!session?.user) {
-        if (active) setState(withRole(null, null));
+        // The sign-out that follows a rejection must not erase its explanation.
+        if (active)
+          setState((prev) => ({ ...withRole(null, null), rejectedEmail: prev.rejectedEmail }));
         return;
       }
       if (active) setState({ ...withRole(session, null), isLoading: true });
       try {
-        const { role } = await applyMyRoles();
+        const { role, allowed, email } = await applyMyRoles();
+        if (!allowed) {
+          // Welcome governs access: an unknown account never keeps a session here.
+          await supabase.auth.signOut();
+          if (active) {
+            setState({
+              ...withRole(null, null),
+              rejectedEmail: email || (session.user.email ?? ""),
+            });
+          }
+          return;
+        }
         if (active) setState(withRole(session, role));
       } catch {
         // Role service unavailable: stay signed in, but read-only.

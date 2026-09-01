@@ -72,6 +72,11 @@ export type StringKey =
   | "auth.continueWithGoogle"
   | "auth.pleaseWait"
   | "auth.back"
+  | "auth.welcomeHint"
+  | "auth.notAuthorizedTitle"
+  | "auth.notAuthorizedBody"
+  | "auth.notAuthorizedHelp"
+  | "auth.tryAnotherAccount"
   // sections
   | "section.objective"
   | "section.globalAlignment"
@@ -802,6 +807,14 @@ const en: Record<StringKey, string> = {
   "auth.continueWithGoogle": "Continue with Google",
   "auth.pleaseWait": "Please wait…",
   "auth.back": "← Back to dashboard",
+  "auth.welcomeHint":
+    "Access comes from ICF Switzerland Welcome. Use the same Google account you sign in with there.",
+  "auth.notAuthorizedTitle": "No editing access yet",
+  "auth.notAuthorizedBody":
+    "Your ICF Switzerland Welcome account doesn't have an editor or admin role yet, so signing in to this dashboard isn't possible. The dashboard stays fully readable without signing in.",
+  "auth.notAuthorizedHelp":
+    "Ask a chapter admin to give you the editor role in ICF Switzerland Welcome, then try again.",
+  "auth.tryAnotherAccount": "Try another account",
   "section.objective": "Objective",
   "section.globalAlignment": "Global alignment",
   "section.keyResults": "Key results",
@@ -1606,6 +1619,14 @@ const de: Record<StringKey, string> = {
   "auth.continueWithGoogle": "Mit Google fortfahren",
   "auth.pleaseWait": "Bitte warten…",
   "auth.back": "← Zurück zum Dashboard",
+  "auth.welcomeHint":
+    "Der Zugang kommt aus ICF Switzerland Welcome. Melde dich mit demselben Google-Konto an, das du dort nutzt.",
+  "auth.notAuthorizedTitle": "Noch kein Bearbeitungszugang",
+  "auth.notAuthorizedBody":
+    "Dein ICF-Switzerland-Welcome-Konto hat noch keine Editor- oder Admin-Rolle, deshalb ist eine Anmeldung an diesem Dashboard nicht möglich. Das Dashboard bleibt auch ohne Anmeldung vollständig einsehbar.",
+  "auth.notAuthorizedHelp":
+    "Bitte eine Chapter-Adminperson, dir in ICF Switzerland Welcome die Editor-Rolle zu geben, und versuche es dann erneut.",
+  "auth.tryAnotherAccount": "Anderes Konto versuchen",
   "section.objective": "Objective",
   "section.globalAlignment": "Globale Ausrichtung",
   "section.keyResults": "Key Results",
@@ -2424,6 +2445,14 @@ const fr: Record<StringKey, string> = {
   "auth.continueWithGoogle": "Continuer avec Google",
   "auth.pleaseWait": "Veuillez patienter…",
   "auth.back": "← Retour au tableau de bord",
+  "auth.welcomeHint":
+    "Les accès proviennent d'ICF Switzerland Welcome. Utilisez le même compte Google que là-bas.",
+  "auth.notAuthorizedTitle": "Pas encore d'accès en édition",
+  "auth.notAuthorizedBody":
+    "Votre compte ICF Switzerland Welcome n'a pas encore de rôle éditeur ou admin, la connexion à ce tableau de bord n'est donc pas possible. Le tableau de bord reste entièrement consultable sans connexion.",
+  "auth.notAuthorizedHelp":
+    "Demandez à un admin du chapitre de vous attribuer le rôle d'éditeur dans ICF Switzerland Welcome, puis réessayez.",
+  "auth.tryAnotherAccount": "Essayer un autre compte",
   "section.objective": "Objectif",
   "section.globalAlignment": "Alignement global",
   "section.keyResults": "Résultats clés",
@@ -3244,6 +3273,14 @@ const it: Record<StringKey, string> = {
   "auth.continueWithGoogle": "Continua con Google",
   "auth.pleaseWait": "Attendere…",
   "auth.back": "← Torna alla dashboard",
+  "auth.welcomeHint":
+    "L'accesso proviene da ICF Switzerland Welcome. Usa lo stesso account Google con cui accedi lì.",
+  "auth.notAuthorizedTitle": "Ancora nessun accesso di modifica",
+  "auth.notAuthorizedBody":
+    "Il tuo account ICF Switzerland Welcome non ha ancora diritti di editor o admin, quindi l'accesso a questa dashboard non è possibile. La dashboard resta comunque completamente consultabile senza accesso.",
+  "auth.notAuthorizedHelp":
+    "Chiedi a un admin del capitolo di assegnarti il ruolo di editor in ICF Switzerland Welcome, poi riprova.",
+  "auth.tryAnotherAccount": "Prova con un altro account",
   "section.objective": "Obiettivo",
   "section.globalAlignment": "Allineamento globale",
   "section.keyResults": "Risultati chiave",
