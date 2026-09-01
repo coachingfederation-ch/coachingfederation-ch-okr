@@ -239,13 +239,29 @@ export async function applyRolesForUser(userId: string, email: string): Promise<
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const normalised = normaliseEmail(email);
 
-  const { data: entry } = await supabaseAdmin
-    .from("role_directory")
-    .select("role")
-    .eq("email", normalised)
-    .maybeSingle();
+  const lookup = async () =>
+    (
+      await supabaseAdmin
+        .from("role_directory")
+        .select("role")
+        .eq("email", normalised)
+        .maybeSingle()
+    ).data;
+
+  let entry = await lookup();
+
+  /**
+   * An unknown email is the one case where a stale mirror is expensive: someone
+   * made editor in Welcome minutes ago would be turned away. Force one refresh
+   * before we conclude they have no access.
+   */
+  if (!entry) {
+    await syncRoleDirectory();
+    entry = await lookup();
+  }
 
   const role = (entry?.role ?? null) as AppRole | null;
+
 
   const { data: current } = await supabaseAdmin
     .from("user_roles")
