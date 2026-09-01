@@ -16,6 +16,7 @@ import { WorkCard } from "@/components/okr/WorkCard";
 import { KIND_PLURAL_KEY } from "@/components/okr/work-meta";
 import type { FlatInitiative } from "@/components/okr/initiative-meta";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
