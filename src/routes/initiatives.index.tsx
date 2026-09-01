@@ -278,7 +278,6 @@ function InitiativesContent() {
               <span className="uppercase tracking-wider">{t("work.includeCommunities")}</span>
             </label>
 
-
             <FilterBlock label={t("initiatives.filterOkr")}>
               <Select
                 value={okrFilter}
