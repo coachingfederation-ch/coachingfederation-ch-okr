@@ -3244,6 +3244,14 @@ const it: Record<StringKey, string> = {
   "auth.continueWithGoogle": "Continua con Google",
   "auth.pleaseWait": "Attendere…",
   "auth.back": "← Torna alla dashboard",
+  "auth.welcomeHint":
+    "L'accesso proviene da ICF Switzerland Welcome. Usa lo stesso account Google con cui accedi lì.",
+  "auth.notAuthorizedTitle": "Ancora nessun accesso di modifica",
+  "auth.notAuthorizedBody":
+    "Il tuo account ICF Switzerland Welcome non ha ancora diritti di editor o admin, quindi l'accesso a questa dashboard non è possibile. La dashboard resta comunque completamente consultabile senza accesso.",
+  "auth.notAuthorizedHelp":
+    "Chiedi a un admin del capitolo di assegnarti il ruolo di editor in ICF Switzerland Welcome, poi riprova.",
+  "auth.tryAnotherAccount": "Prova con un altro account",
   "section.objective": "Obiettivo",
   "section.globalAlignment": "Allineamento globale",
   "section.keyResults": "Risultati chiave",
