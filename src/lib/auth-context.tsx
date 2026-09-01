@@ -56,7 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
      */
     const resolve = async (session: Session | null) => {
       if (!session?.user) {
-        if (active) setState(withRole(null, null));
+        // The sign-out that follows a rejection must not erase its explanation.
+        if (active) setState((prev) => ({ ...withRole(null, null), rejectedEmail: prev.rejectedEmail }));
         return;
       }
       if (active) setState({ ...withRole(session, null), isLoading: true });
