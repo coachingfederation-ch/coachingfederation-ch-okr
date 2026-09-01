@@ -256,7 +256,7 @@ function InitiativesContent() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t("work.filterAllTeams")}</SelectItem>
-                  {data.teams.map((team) => (
+                  {teams.map((team) => (
                     <SelectItem key={team.id} value={team.id}>
                       {teamNameById.get(team.id) ?? team.name}
                     </SelectItem>
@@ -265,6 +265,18 @@ function InitiativesContent() {
                 </SelectContent>
               </Select>
             </FilterBlock>
+
+            <label className="flex min-h-11 cursor-pointer items-center gap-2 text-xs font-medium text-muted-foreground">
+              <Checkbox
+                checked={showCommunities}
+                onCheckedChange={(v) => {
+                  setShowCommunities(v === true);
+                  setTeamFilter("all");
+                }}
+              />
+              <span className="uppercase tracking-wider">{t("work.includeCommunities")}</span>
+            </label>
+
 
             <FilterBlock label={t("initiatives.filterOkr")}>
               <Select
