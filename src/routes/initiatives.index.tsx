@@ -98,7 +98,16 @@ function InitiativesContent() {
   const [krFilter, setKrFilter] = useState<string>("all");
   const [kindFilter, setKindFilter] = useState<string>("all");
   const [teamFilter, setTeamFilter] = useState<string>("all");
+  const [showCommunities, setShowCommunities] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+
+  // Teams mirror the Welcome app's operational structure. Communities live in
+  // the same structure but are not delivery teams, so they stay out of the way
+  // unless someone asks for them.
+  const teams = useMemo(
+    () => data.teams.filter((team) => showCommunities || !team.is_community),
+    [data.teams, showCommunities],
+  );
 
   const teamNameById = useMemo(() => {
     const map = new Map<string, string>();
