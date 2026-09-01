@@ -2424,6 +2424,14 @@ const fr: Record<StringKey, string> = {
   "auth.continueWithGoogle": "Continuer avec Google",
   "auth.pleaseWait": "Veuillez patienter…",
   "auth.back": "← Retour au tableau de bord",
+  "auth.welcomeHint":
+    "Les accès proviennent d'ICF Switzerland Welcome. Utilisez le même compte Google que là-bas.",
+  "auth.notAuthorizedTitle": "Pas encore d'accès en édition",
+  "auth.notAuthorizedBody":
+    "Votre compte ICF Switzerland Welcome n'a pas encore de rôle éditeur ou admin, la connexion à ce tableau de bord n'est donc pas possible. Le tableau de bord reste entièrement consultable sans connexion.",
+  "auth.notAuthorizedHelp":
+    "Demandez à un admin du chapitre de vous attribuer le rôle d'éditeur dans ICF Switzerland Welcome, puis réessayez.",
+  "auth.tryAnotherAccount": "Essayer un autre compte",
   "section.objective": "Objectif",
   "section.globalAlignment": "Alignement global",
   "section.keyResults": "Résultats clés",
