@@ -793,7 +793,7 @@ const en: Record<StringKey, string> = {
   "involve.interest.error": "Your interest could not be sent. Please try again.",
   "involve.interest.privacy": "We only use your details to contact you about this work.",
   "hero.eyebrow": "THE SWITZERLAND CHAPTER OF ICF · OKR DASHBOARD",
-  "hero.title": "2026-2027 ICF Switzerland Goals",
+  "hero.title": "2026-2027\nICF Switzerland Goals",
   "hero.subtitle":
     "One inspiring, customer-centric Objective per Strategic Pillar — aligned to the ICF Global Strategic Plan 2026–2029",
   "hero.pillarTitle": "ICF Global Strategic Focus Areas (SFAs) 2026-2029",
