@@ -13,6 +13,7 @@ import { TopNav } from "@/components/okr/TopNav";
 import { LanguageSwitcher } from "@/components/okr/LanguageSwitcher";
 
 export const Route = createFileRoute("/access")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Access directory — The Switzerland Chapter of ICF" },

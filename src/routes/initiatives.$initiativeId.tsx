@@ -76,6 +76,7 @@ const dashboardQueryOptions = queryOptions({
 });
 
 export const Route = createFileRoute("/initiatives/$initiativeId")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Initiative one-pager — The Switzerland Chapter of ICF" },

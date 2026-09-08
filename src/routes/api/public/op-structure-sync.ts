@@ -6,6 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
  * trigger a sync.
  */
 export const Route = createFileRoute("/api/public/op-structure-sync")({
+  staticData: { sitemap: false },
   server: {
     handlers: {
       POST: async ({ request }) => {

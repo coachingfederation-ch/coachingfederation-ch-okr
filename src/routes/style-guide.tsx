@@ -17,6 +17,7 @@ import icfLogo from "@/assets/icf-switzerland-charter-chapter.png.asset.json";
 import { HeaderControls } from "@/components/okr/HeaderControls";
 
 export const Route = createFileRoute("/style-guide")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Style Guide — ICF Switzerland OKR" },

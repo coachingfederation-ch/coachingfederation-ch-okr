@@ -9,6 +9,7 @@ import { createVoiceSession } from "@/lib/voice.server";
  * through the chapter's voice minutes.
  */
 export const Route = createFileRoute("/api/voice-token")({
+  staticData: { sitemap: false },
   server: {
     handlers: {
       POST: async ({ request }) => {

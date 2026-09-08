@@ -47,6 +47,7 @@ function systemPrompt(locale: string, page?: string) {
 }
 
 export const Route = createFileRoute("/api/chat")({
+  staticData: { sitemap: false },
   server: {
     handlers: {
       POST: async ({ request }) => {

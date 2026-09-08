@@ -6,6 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
  * anonymous caller cannot trigger a sync.
  */
 export const Route = createFileRoute("/api/public/role-sync")({
+  staticData: { sitemap: false },
   server: {
     handlers: {
       POST: async ({ request }) => {
