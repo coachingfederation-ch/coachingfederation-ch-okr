@@ -1,0 +1,16 @@
+# ASPIRE — The Switzerland Chapter of ICF
+
+> Public OKR dashboard of The Switzerland Chapter of ICF: the chapter's 2026–2027 objectives, key results, and initiatives, aligned to the ICF Global Strategic Plan 2026–2029.
+
+## Pages
+
+- [Home](/): Overview of the chapter's strategic work and how volunteers can get involved.
+- [Objectives and Key Results](/okrs): The 2026–2027 objectives, key results, stewards, and global alignment.
+- [Initiatives](/initiatives): The initiative portfolio and how initiatives connect to key results.
+- [Report](/report): Printable summary of the objectives, key results, and initiatives.
+- [Voice](/voice): Spoken walkthrough of the strategy in English, German, French, and Italian.
+
+## Optional
+
+- [OKR Playground](/playground): Practice sandbox for drafting objectives, key results, and initiatives.
+- [Style guide](/style-guide): Visual reference for the dashboard's design system.
