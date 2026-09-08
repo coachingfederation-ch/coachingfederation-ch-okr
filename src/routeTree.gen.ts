@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VoiceRouteImport } from './routes/voice'
 import { Route as StyleGuideRouteImport } from './routes/style-guide'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OkrsRouteImport } from './routes/okrs'
@@ -32,6 +33,11 @@ const VoiceRoute = VoiceRouteImport.update({
 const StyleGuideRoute = StyleGuideRouteImport.update({
   id: '/style-guide',
   path: '/style-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReportRoute = ReportRouteImport.update({
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/style-guide': typeof StyleGuideRoute
   '/voice': typeof VoiceRoute
   '/api/chat': typeof ApiChatRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/style-guide': typeof StyleGuideRoute
   '/voice': typeof VoiceRoute
   '/api/chat': typeof ApiChatRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/okrs': typeof OkrsRoute
   '/playground': typeof PlaygroundRoute
   '/report': typeof ReportRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/style-guide': typeof StyleGuideRoute
   '/voice': typeof VoiceRoute
   '/api/chat': typeof ApiChatRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/okrs'
     | '/playground'
     | '/report'
+    | '/sitemap.xml'
     | '/style-guide'
     | '/voice'
     | '/api/chat'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/okrs'
     | '/playground'
     | '/report'
+    | '/sitemap.xml'
     | '/style-guide'
     | '/voice'
     | '/api/chat'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/okrs'
     | '/playground'
     | '/report'
+    | '/sitemap.xml'
     | '/style-guide'
     | '/voice'
     | '/api/chat'
@@ -203,6 +215,7 @@ export interface RootRouteChildren {
   OkrsRoute: typeof OkrsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   ReportRoute: typeof ReportRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StyleGuideRoute: typeof StyleGuideRoute
   VoiceRoute: typeof VoiceRoute
   ApiChatRoute: typeof ApiChatRoute
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/style-guide'
       fullPath: '/style-guide'
       preLoaderRoute: typeof StyleGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/report': {
@@ -323,6 +343,7 @@ const rootRouteChildren: RootRouteChildren = {
   OkrsRoute: OkrsRoute,
   PlaygroundRoute: PlaygroundRoute,
   ReportRoute: ReportRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   StyleGuideRoute: StyleGuideRoute,
   VoiceRoute: VoiceRoute,
   ApiChatRoute: ApiChatRoute,

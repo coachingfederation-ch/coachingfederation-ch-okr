@@ -84,6 +84,7 @@ const dashboardQueryOptions = queryOptions({
 });
 
 export const Route = createFileRoute("/okrs")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "ICFS OKR Dashboard" },

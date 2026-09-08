@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useLocale } from "@/lib/i18n";
 
 export const Route = createFileRoute("/auth")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Sign in — ICFS OKR Dashboard" },

@@ -23,6 +23,7 @@ import {
 } from "@/lib/voice-audio";
 
 export const Route = createFileRoute("/voice")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Talk with Aspira — Spoken OKR walkthrough" },

@@ -17,6 +17,7 @@ import { type PlaygroundMode } from "@/lib/playground-drafts";
 import { HeaderControls } from "@/components/okr/HeaderControls";
 
 export const Route = createFileRoute("/playground")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "OKR Playground — The Switzerland Chapter of ICF" },
