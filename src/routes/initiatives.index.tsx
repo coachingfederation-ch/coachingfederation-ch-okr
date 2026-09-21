@@ -236,6 +236,68 @@ function InitiativesContent() {
     return ordered;
   }, [filtered, teams, data.teams, teamNameById, t]);
 
+  // --- Drag and drop -------------------------------------------------------
+  // Editors move a card between status columns and team sections; the board
+  // updates at once and the write follows, so a slow save never blocks the
+  // gesture. A failed write restores the previous board.
+  const queryClient = useQueryClient();
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+  const activeItem = activeId ? (flat.find((i) => i.id === activeId) ?? null) : null;
+
+  function columnIds(teamId: string, status: InitiativeStatus) {
+    return filtered
+      .filter((i) => (i.team_id ?? NO_TEAM) === teamId && i.status === status)
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((i) => i.id);
+  }
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(String(event.active.id));
+  }
+
+  async function handleDragEnd(event: DragEndEvent) {
+    setActiveId(null);
+    const dragId = String(event.active.id);
+    const overId = event.over ? String(event.over.id) : null;
+    if (!overId) return;
+    const moved = flat.find((i) => i.id === dragId);
+    if (!moved) return;
+
+    let dest = parseColumnId(overId);
+    if (!dest) {
+      const overItem = flat.find((i) => i.id === overId);
+      if (!overItem) return;
+      dest = { teamId: overItem.team_id ?? NO_TEAM, status: overItem.status };
+    }
+
+    const before = columnIds(dest.teamId, dest.status);
+    const without = before.filter((id) => id !== dragId);
+    const overIndex = without.indexOf(overId);
+    const orderedIds = [...without];
+    orderedIds.splice(overIndex >= 0 ? overIndex : without.length, 0, dragId);
+
+    const teamId = dest.teamId === NO_TEAM ? null : dest.teamId;
+    const sameColumn = moved.status === dest.status && (moved.team_id ?? null) === teamId;
+    if (sameColumn && before.join("|") === orderedIds.join("|")) return;
+
+    const previous = queryClient.getQueryData<DashboardDTO>(["dashboard"]);
+    const status = dest.status;
+    queryClient.setQueryData<DashboardDTO>(["dashboard"], (old) =>
+      old ? applyMove(old, dragId, status, teamId, orderedIds) : old,
+    );
+    try {
+      await moveInitiative({ data: { id: dragId, status, team_id: teamId, orderedIds } });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    } catch {
+      if (previous) queryClient.setQueryData(["dashboard"], previous);
+      toast.error(t("work.moveFailed"));
+    }
+  }
+
   return (
     <main className="min-h-dvh">
       <header className="bg-hero text-hero-foreground">
