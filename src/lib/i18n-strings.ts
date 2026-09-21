@@ -248,6 +248,8 @@ export type StringKey =
   | "work.open"
   | "work.empty"
   | "work.emptyStatus"
+  | "work.dragHandle"
+  | "work.moveFailed"
   | "work.idea"
   | "work.whyNow"
   | "work.proposedOwner"
@@ -1355,6 +1357,8 @@ const en: Record<StringKey, string> = {
   "work.open": "Open the one-pager",
   "work.empty": "No work matches these filters.",
   "work.emptyStatus": "Nothing here yet",
+  "work.dragHandle": "Move this card (drag, or press space and use the arrow keys)",
+  "work.moveFailed": "The move could not be saved. The board has been restored.",
   "work.idea": "The idea",
   "work.whyNow": "Why now",
   "work.proposedOwner": "Proposed owner",
@@ -2177,6 +2181,9 @@ const de: Record<StringKey, string> = {
   "work.open": "One-Pager öffnen",
   "work.empty": "Keine Arbeit entspricht diesen Filtern.",
   "work.emptyStatus": "Noch nichts hier",
+  "work.dragHandle": "Karte verschieben (ziehen oder Leertaste und Pfeiltasten)",
+  "work.moveFailed":
+    "Das Verschieben konnte nicht gespeichert werden. Das Board wurde zurückgesetzt.",
   "work.idea": "Die Idee",
   "work.whyNow": "Warum jetzt",
   "work.proposedOwner": "Vorgeschlagene Verantwortung",
@@ -3006,6 +3013,8 @@ const fr: Record<StringKey, string> = {
   "work.open": "Ouvrir le résumé",
   "work.empty": "Aucun travail ne correspond à ces filtres.",
   "work.emptyStatus": "Rien pour l'instant",
+  "work.dragHandle": "Déplacer cette carte (glisser, ou espace puis flèches)",
+  "work.moveFailed": "Le déplacement n'a pas pu être enregistré. Le tableau a été rétabli.",
   "work.idea": "L'idée",
   "work.whyNow": "Pourquoi maintenant",
   "work.proposedOwner": "Responsable proposé",
@@ -3830,6 +3839,9 @@ const it: Record<StringKey, string> = {
   "work.open": "Apri la scheda",
   "work.empty": "Nessun lavoro corrisponde a questi filtri.",
   "work.emptyStatus": "Ancora nulla",
+  "work.dragHandle": "Sposta questa scheda (trascina, oppure spazio e frecce)",
+  "work.moveFailed":
+    "Non è stato possibile salvare lo spostamento. La bacheca è stata ripristinata.",
   "work.idea": "L'idea",
   "work.whyNow": "Perché ora",
   "work.proposedOwner": "Responsabile proposto",
