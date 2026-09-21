@@ -1,11 +1,33 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense, useMemo, useState } from "react";
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  closestCorners,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
+import { toast } from "sonner";
 
-import { getDashboard } from "@/lib/okr.functions";
+import { getDashboard, moveInitiative } from "@/lib/okr.functions";
 import {
   INITIATIVE_KINDS,
   INITIATIVE_STATUSES,
+  type DashboardDTO,
   type InitiativeStatus,
   type OkrSetDTO,
 } from "@/lib/okr-schemas";
@@ -33,6 +55,16 @@ const dashboardQueryOptions = queryOptions({
   queryKey: ["dashboard"] as const,
   queryFn: () => getDashboard(),
 });
+
+/** Column ids encode where a card lands: which team, which status. */
+const NO_TEAM = "none";
+const columnId = (teamId: string, status: InitiativeStatus) => `${teamId}::${status}`;
+function parseColumnId(id: string): { teamId: string; status: InitiativeStatus } | null {
+  const [teamId, status] = id.split("::");
+  if (!teamId || !status) return null;
+  if (!(INITIATIVE_STATUSES as readonly string[]).includes(status)) return null;
+  return { teamId, status: status as InitiativeStatus };
+}
 
 export const Route = createFileRoute("/initiatives/")({
   staticData: { sitemap: true },
