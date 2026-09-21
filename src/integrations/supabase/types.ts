@@ -299,6 +299,7 @@ export type Database = {
             | null
           confidence: Database["public"]["Enums"]["bet_confidence"] | null
           created_at: string
+          created_by: string | null
           description: string
           end_date: string | null
           help_needed:
@@ -341,6 +342,7 @@ export type Database = {
             | null
           confidence?: Database["public"]["Enums"]["bet_confidence"] | null
           created_at?: string
+          created_by?: string | null
           description?: string
           end_date?: string | null
           help_needed?:
@@ -383,6 +385,7 @@ export type Database = {
             | null
           confidence?: Database["public"]["Enums"]["bet_confidence"] | null
           created_at?: string
+          created_by?: string | null
           description?: string
           end_date?: string | null
           help_needed?:
@@ -759,7 +762,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "editor" | "admin"
+      app_role: "editor" | "admin" | "member"
       bet_confidence: "pretty_confident" | "worth_testing" | "wild_card"
       contribution: "none" | "secondary" | "primary"
       evidence_type: "see" | "hear" | "measure"
@@ -900,7 +903,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["editor", "admin"],
+      app_role: ["editor", "admin", "member"],
       bet_confidence: ["pretty_confident", "worth_testing", "wild_card"],
       contribution: ["none", "secondary", "primary"],
       evidence_type: ["see", "hear", "measure"],
