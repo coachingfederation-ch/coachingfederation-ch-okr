@@ -3013,6 +3013,8 @@ const fr: Record<StringKey, string> = {
   "work.open": "Ouvrir le résumé",
   "work.empty": "Aucun travail ne correspond à ces filtres.",
   "work.emptyStatus": "Rien pour l'instant",
+  "work.dragHandle": "Déplacer cette carte (glisser, ou espace puis flèches)",
+  "work.moveFailed": "Le déplacement n'a pas pu être enregistré. Le tableau a été rétabli.",
   "work.idea": "L'idée",
   "work.whyNow": "Pourquoi maintenant",
   "work.proposedOwner": "Responsable proposé",
