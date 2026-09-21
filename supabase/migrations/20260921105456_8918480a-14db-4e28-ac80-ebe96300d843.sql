@@ -1,0 +1,2 @@
+DROP POLICY "Editors can view interests" ON public.initiative_interests;
+CREATE POLICY "Editors can view interests" ON public.initiative_interests FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'editor'::app_role) OR public.has_role(auth.uid(), 'admin'::app_role));
