@@ -460,11 +460,32 @@ function InitiativesContent() {
             {t("work.empty")}
           </p>
         ) : (
-          <div className="grid gap-10">
-            {groups.map((group) => (
-              <TeamGroup key={group.id} label={group.label} items={group.items} />
-            ))}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragCancel={() => setActiveId(null)}
+          >
+            <div className="grid gap-10">
+              {groups.map((group) => (
+                <TeamGroup
+                  key={group.id}
+                  teamId={group.id}
+                  label={group.label}
+                  items={group.items}
+                  canEdit={canEdit}
+                />
+              ))}
+            </div>
+            <DragOverlay>
+              {activeItem ? (
+                <div className="w-[280px] rotate-1 opacity-95">
+                  <WorkCard item={activeItem} />
+                </div>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
         )}
 
         <p className="mt-10 text-center text-xs text-muted-foreground">
