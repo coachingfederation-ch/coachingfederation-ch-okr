@@ -1357,6 +1357,8 @@ const en: Record<StringKey, string> = {
   "work.open": "Open the one-pager",
   "work.empty": "No work matches these filters.",
   "work.emptyStatus": "Nothing here yet",
+  "work.dragHandle": "Move this card (drag, or press space and use the arrow keys)",
+  "work.moveFailed": "The move could not be saved. The board has been restored.",
   "work.idea": "The idea",
   "work.whyNow": "Why now",
   "work.proposedOwner": "Proposed owner",
