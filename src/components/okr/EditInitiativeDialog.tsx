@@ -4,11 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Plus, X as XIcon } from "lucide-react";
 
-import {
-  updateInitiative,
-  deleteInitiative,
-  setInitiativeSecondaryKrs,
-} from "@/lib/okr.functions";
+import { updateInitiative, deleteInitiative, setInitiativeSecondaryKrs } from "@/lib/okr.functions";
 import {
   BET_CONFIDENCES,
   INITIATIVE_AVAILABILITIES,
@@ -30,18 +26,8 @@ import {
   type PhaseType,
   type WorkSize,
 } from "@/lib/okr-schemas";
-import {
-  CONFIDENCE_KEY,
-  KIND_KEY,
-  PHASE_TYPE_KEY,
-  SIZE_KEY,
-} from "./work-meta";
-import {
-  AMBER_NOTE,
-  AVAILABILITY_KEY,
-  COMMITMENT_KEY,
-  HELP_NEEDED_KEY,
-} from "./initiative-meta";
+import { CONFIDENCE_KEY, KIND_KEY, PHASE_TYPE_KEY, SIZE_KEY } from "./work-meta";
+import { AMBER_NOTE, AVAILABILITY_KEY, COMMITMENT_KEY, HELP_NEEDED_KEY } from "./initiative-meta";
 import { pickTranslation, useLocale } from "@/lib/i18n";
 
 import type { StringKey } from "@/lib/i18n-strings";
@@ -85,8 +71,8 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-
 const STATUS_KEY: Record<InitiativeStatus, StringKey> = {
+  proposed: "initiatives.status.proposed",
   planned: "initiatives.status.planned",
   in_progress: "initiatives.status.in_progress",
   done: "initiatives.status.done",
@@ -94,6 +80,7 @@ const STATUS_KEY: Record<InitiativeStatus, StringKey> = {
 };
 
 const STATUS_DOT: Record<InitiativeStatus, string> = {
+  proposed: "bg-highlight/70",
   planned: "bg-slate-400",
   in_progress: "bg-primary",
   done: "bg-emerald-500",
@@ -126,8 +113,7 @@ export function EditInitiativeDialog({
           return {
             krLabel: k.kr || "—",
             krText: pickTranslation(k, "text", k.text, locale) || "Untitled KR",
-            okrTitle:
-              pickTranslation(s, "title", s.title, locale) || "Untitled OKR",
+            okrTitle: pickTranslation(s, "title", s.title, locale) || "Untitled OKR",
             okrNumber: s.number,
           };
         }
@@ -149,16 +135,13 @@ export function EditInitiativeDialog({
     for (const s of dashboard.okr_sets) {
       for (const k of s.key_results) {
         const label = k.kr || "—";
-        const chip =
-          `${s.number}.` +
-          (label.includes(".") ? label.split(".")[1] : label);
+        const chip = `${s.number}.` + (label.includes(".") ? label.split(".")[1] : label);
         list.push({
           id: k.id,
           okrNumber: s.number,
           krLabel: label,
           krText: pickTranslation(k, "text", k.text, locale) || "Untitled KR",
-          okrTitle:
-            pickTranslation(s, "title", s.title, locale) || "Untitled OKR",
+          okrTitle: pickTranslation(s, "title", s.title, locale) || "Untitled OKR",
           chip,
         });
       }
@@ -214,9 +197,7 @@ export function EditInitiativeDialog({
       );
       setCommitment(initiative.commitment ?? null);
       setHelpNeeded(initiative.help_needed ?? null);
-      setSkillNote(
-        pickTranslation(initiative, "skill_note", initiative.skill_note, locale) || "",
-      );
+      setSkillNote(pickTranslation(initiative, "skill_note", initiative.skill_note, locale) || "");
       setSecondaryIds(initiative.secondary_kr_ids ?? []);
       const tr = (field: string, value: string) =>
         pickTranslation(initiative, field, value, locale) || "";
@@ -300,7 +281,6 @@ export function EditInitiativeDialog({
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
   });
-
 
   const remove = useMutation({
     mutationFn: () => {
@@ -399,7 +379,12 @@ export function EditInitiativeDialog({
                   {canEdit && (
                     <Popover open={pickerOpen} onOpenChange={setPickerOpen}>
                       <PopoverTrigger asChild>
-                        <Button type="button" variant="outline" size="sm" className="w-full justify-start">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="w-full justify-start"
+                        >
                           <Plus className="h-4 w-4 mr-1" />
                           {t("initiatives.form.addSecondaryKr")}
                         </Button>
@@ -409,16 +394,13 @@ export function EditInitiativeDialog({
                         align="start"
                       >
                         <Command className="bg-background">
-
                           <CommandInput placeholder={t("initiatives.form.searchKr")} />
                           <CommandList>
                             <CommandEmpty>—</CommandEmpty>
                             <CommandGroup>
                               {allKrs
                                 .filter(
-                                  (k) =>
-                                    k.id !== initiative.kr_id &&
-                                    !secondaryIds.includes(k.id),
+                                  (k) => k.id !== initiative.kr_id && !secondaryIds.includes(k.id),
                                 )
                                 .map((k) => (
                                   <CommandItem
@@ -453,8 +435,6 @@ export function EditInitiativeDialog({
                 </div>
               </div>
             )}
-
-
 
             <div className="grid gap-1.5 min-w-0">
               <Label htmlFor="ei-title">{t("initiatives.form.title")}</Label>
@@ -921,11 +901,7 @@ export function EditInitiativeDialog({
 
         <SheetFooter className="px-6 py-4 border-t flex-row items-center gap-2 sm:justify-between">
           {canEdit ? (
-            <Button
-              variant="destructive"
-              onClick={() => setConfirmOpen(true)}
-              disabled={busy}
-            >
+            <Button variant="destructive" onClick={() => setConfirmOpen(true)} disabled={busy}>
               {t("initiatives.delete")}
             </Button>
           ) : (
@@ -948,14 +924,10 @@ export function EditInitiativeDialog({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t("initiatives.deleteConfirmTitle")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t("initiatives.deleteConfirmBody")}
-            </AlertDialogDescription>
+            <AlertDialogDescription>{t("initiatives.deleteConfirmBody")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={remove.isPending}>
-              {t("common.cancel")}
-            </AlertDialogCancel>
+            <AlertDialogCancel disabled={remove.isPending}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault();

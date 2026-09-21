@@ -145,7 +145,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         supabase
           .from("initiatives")
           .select(
-            "id,okr_set_id,kr_id,text,owner,description,status,availability,blocked_reason,commitment,help_needed,skill_note,updated_at,sort_order,translations,source_lang,kind,size,team_id,idea,why_now,proposed_owner,start_date,end_date,phase,phase_type,aspiration,bet_action,bet_change,bet_question,confidence,learning_checkpoint,support_needed,out_of_scope,lead_name",
+            "id,okr_set_id,kr_id,text,owner,description,status,availability,blocked_reason,commitment,help_needed,skill_note,updated_at,sort_order,translations,source_lang,kind,size,team_id,idea,why_now,proposed_owner,start_date,end_date,phase,phase_type,aspiration,bet_action,bet_change,bet_question,confidence,learning_checkpoint,support_needed,out_of_scope,lead_name,created_by",
           )
           .order("sort_order", { ascending: true }),
         supabase
@@ -264,6 +264,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         owner: r.owner ?? "",
         description: r.description ?? "",
         status: (r.status as InitiativeDTO["status"]) ?? "planned",
+        created_by: r.created_by ?? null,
         availability: (r.availability as InitiativeDTO["availability"]) ?? "open",
         blocked_reason: r.blocked_reason ?? "",
         commitment: (r.commitment as InitiativeDTO["commitment"]) ?? null,
@@ -555,6 +556,18 @@ export const addInitiative = createServerFn({ method: "POST" })
       .parse(raw),
   )
   .handler(async ({ data, context }) => {
+    /**
+     * Members (mirrored from the Welcome app) may only put proposals forward.
+     * The database enforces this too; forcing the status here keeps the error
+     * out of their way instead of letting the insert bounce off RLS.
+     */
+    const [{ data: isEditor }, { data: isAdmin }] = await Promise.all([
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "editor" }),
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
+    ]);
+    const canEdit = isEditor === true || isAdmin === true;
+    const status = canEdit ? (data.status ?? "planned") : "proposed";
+
     const { data: krRow, error: krErr } = await context.supabase
       .from("key_results")
       .select("okr_set_id")
@@ -577,7 +590,8 @@ export const addInitiative = createServerFn({ method: "POST" })
         text: data.text,
         owner: data.owner ?? "",
         description: data.description ?? "",
-        status: data.status ?? "planned",
+        status,
+        created_by: context.userId,
         kind: data.kind ?? "initiative",
         team_id: data.team_id ?? null,
         idea: data.idea ?? "",
@@ -673,7 +687,7 @@ export const moveInitiative = createServerFn({ method: "POST" })
     z
       .object({
         id: uuidSchema,
-        status: z.enum(["planned", "in_progress", "done", "canceled"]),
+        status: z.enum(["proposed", "planned", "in_progress", "done", "canceled"]),
         team_id: uuidSchema.nullable(),
         orderedIds: z.array(uuidSchema).max(200),
       })

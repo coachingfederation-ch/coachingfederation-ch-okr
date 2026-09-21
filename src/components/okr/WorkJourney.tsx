@@ -79,6 +79,7 @@ type InitiativeDraft = {
 };
 
 const STATUS_KEY: Record<InitiativeStatus, StringKey> = {
+  proposed: "initiatives.status.proposed",
   planned: "initiatives.status.planned",
   in_progress: "initiatives.status.in_progress",
   done: "initiatives.status.done",

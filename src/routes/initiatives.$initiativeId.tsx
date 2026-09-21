@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import {
   queryOptions,
   useMutation,
@@ -17,8 +17,10 @@ import {
   addSignal,
   deleteLearningEntry,
   deleteMilestone,
+  deleteInitiative,
   deleteSignal,
   getDashboard,
+  updateInitiative,
 } from "@/lib/okr.functions";
 import {
   EVIDENCE_TYPES,
@@ -35,6 +37,7 @@ import {
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { EditInitiativeDialog } from "@/components/okr/EditInitiativeDialog";
+import { ProposeDialog } from "@/components/okr/ProposeDialog";
 import { listInitiativeInterests } from "@/lib/interests.functions";
 import {
   AVAILABILITY_CHIP,
@@ -122,9 +125,14 @@ function DetailFallback() {
 function DetailContent() {
   const { initiativeId } = useParams({ from: "/initiatives/$initiativeId" });
   const { data } = useSuspenseQuery(dashboardQueryOptions);
-  const { canEdit } = useAuth();
+  const { canEdit, canPropose, user } = useAuth();
   const { locale, t } = useLocale();
+  const qc = useQueryClient();
+  const acceptFn = useServerFn(updateInitiative);
+  const withdrawFn = useServerFn(deleteInitiative);
+  const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
+  const [proposalEditOpen, setProposalEditOpen] = useState(false);
 
   let initiative: InitiativeDTO | null = null;
   let kr: KeyResultDTO | null = null;
@@ -197,6 +205,11 @@ function DetailContent() {
                 {teamName}
               </span>
             )}
+            {initiative.status === "proposed" && (
+              <span className="inline-flex h-6 items-center rounded-full border border-highlight/60 bg-highlight/20 px-2.5 text-[11px] font-semibold">
+                {t("initiatives.status.proposed")}
+              </span>
+            )}
             {initiative.status === "planned" && (
               <span
                 className={cn(
@@ -218,6 +231,43 @@ function DetailContent() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">
+            {canEdit && initiative.status === "proposed" && (
+              <Button
+                size="sm"
+                onClick={async () => {
+                  await acceptFn({
+                    data: { id: initiativeId, patch: { status: "planned" }, sourceLang: locale },
+                  });
+                  await qc.invalidateQueries({ queryKey: ["dashboard"] });
+                  toast.success(t("proposal.accepted"));
+                }}
+              >
+                {t("proposal.accept")}
+              </Button>
+            )}
+            {!canEdit &&
+              canPropose &&
+              initiative.status === "proposed" &&
+              initiative.created_by === user?.id && (
+                <>
+                  <Button variant="secondary" size="sm" onClick={() => setProposalEditOpen(true)}>
+                    {t("work.editPlan")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-transparent text-hero-foreground"
+                    onClick={async () => {
+                      await withdrawFn({ data: { id: initiativeId } });
+                      await qc.invalidateQueries({ queryKey: ["dashboard"] });
+                      toast.success(t("proposal.withdrawn"));
+                      void navigate({ to: "/initiatives" });
+                    }}
+                  >
+                    {t("proposal.withdraw")}
+                  </Button>
+                </>
+              )}
             {canEdit && (
               <Button variant="secondary" size="sm" onClick={() => setEditOpen(true)}>
                 {t("work.editPlan")}
@@ -354,6 +404,13 @@ function DetailContent() {
 
         {canEdit && <InterestPanel initiativeId={initiative.id} />}
       </div>
+
+      <ProposeDialog
+        open={proposalEditOpen}
+        onOpenChange={setProposalEditOpen}
+        dashboard={data}
+        initiative={initiative}
+      />
 
       <EditInitiativeDialog
         open={editOpen}

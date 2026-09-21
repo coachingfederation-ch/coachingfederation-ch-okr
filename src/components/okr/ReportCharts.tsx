@@ -1,16 +1,7 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Legend,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, Legend, Tooltip, XAxis, YAxis } from "recharts";
 import { useLocale } from "@/lib/i18n";
 import { pickTranslation } from "@/lib/i18n";
-import { INITIATIVE_STATUSES, type InitiativeStatus } from "@/lib/okr-schemas";
+import { DELIVERY_STATUSES, type InitiativeStatus } from "@/lib/okr-schemas";
 import type { ReportModel } from "@/lib/report-data";
 
 /**
@@ -33,6 +24,7 @@ const COLORS = {
 };
 
 const STATUS_FILL: Record<InitiativeStatus, string> = {
+  proposed: COLORS.muted,
   planned: COLORS.light,
   in_progress: COLORS.blue,
   done: COLORS.deep,
@@ -168,7 +160,7 @@ export function PortfolioChart({ model }: { model: ReportModel }) {
       aria-label={`${t("report.portfolio.title")} — ${rows
         .map(
           (r) =>
-            `${r.name}: ${INITIATIVE_STATUSES.map(
+            `${r.name}: ${DELIVERY_STATUSES.map(
               (s) => `${r[s]} ${t(`initiatives.status.${s}` as const)}`,
             ).join(", ")}`,
         )
@@ -186,7 +178,7 @@ export function PortfolioChart({ model }: { model: ReportModel }) {
         <YAxis type="category" dataKey="name" width={210} tick={axisStyle} />
         <Tooltip cursor={false} />
         <Legend wrapperStyle={{ fontSize: 11 }} />
-        {INITIATIVE_STATUSES.map((s) => (
+        {DELIVERY_STATUSES.map((s) => (
           <Bar
             key={s}
             dataKey={s}

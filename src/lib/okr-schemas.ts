@@ -7,13 +7,23 @@ export const PILLARS: Pillar[] = ["SG", "OE", "CE"];
 export type Contribution = "none" | "secondary" | "primary";
 export const CONTRIBUTION_CYCLE: Contribution[] = ["none", "secondary", "primary"];
 
-export type InitiativeStatus = "planned" | "in_progress" | "done" | "canceled";
+/**
+ * 'proposed' is the entry point for members mirrored from the Welcome app:
+ * anyone listed there can put an idea forward, everyone can read it, and an
+ * editor accepts it by moving it to 'planned'.
+ */
+export type InitiativeStatus = "proposed" | "planned" | "in_progress" | "done" | "canceled";
 export const INITIATIVE_STATUSES: InitiativeStatus[] = [
+  "proposed",
   "planned",
   "in_progress",
   "done",
   "canceled",
 ];
+/** Statuses that count as accepted delivery work (proposals are not yet work). */
+export const DELIVERY_STATUSES: InitiativeStatus[] = INITIATIVE_STATUSES.filter(
+  (s) => s !== "proposed",
+);
 
 /**
  * Why a *planned* initiative is or is not moving. Deliberately separate from
@@ -310,6 +320,8 @@ export type InitiativeDTO = WithTranslations & {
   owner: string;
   description: string;
   status: InitiativeStatus;
+  /** Who filed the row; only used to let a member manage their own proposal. */
+  created_by: string | null;
   /** Only meaningful while `status` is 'planned'. */
   availability: InitiativeAvailability;
   blocked_reason: string;

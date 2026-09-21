@@ -10,16 +10,20 @@ import type { Database } from "@/integrations/supabase/types";
 
 export type AppRole = Database["public"]["Enums"]["app_role"];
 
-/** Welcome roles that map onto this app's two levels. Everything else is read-only. */
+/** Welcome roles that map onto this app's edit levels. */
 const ADMIN_SOURCE_ROLES = new Set(["admin", "administrator"]);
 const EDITOR_SOURCE_ROLES = new Set(["editor", "publisher", "organizer"]);
 
-/** Highest level wins; null means "no edit rights here". */
-export function mapSourceRoles(roles: readonly string[]): AppRole | null {
+/**
+ * Highest level wins. Everyone the Welcome app lists is at least a `member`:
+ * they may sign in here and propose new initiatives, nothing more. `null` is
+ * reserved for people Welcome does not know at all.
+ */
+export function mapSourceRoles(roles: readonly string[]): AppRole {
   const normalised = roles.map((r) => r.trim().toLowerCase());
   if (normalised.some((r) => ADMIN_SOURCE_ROLES.has(r))) return "admin";
   if (normalised.some((r) => EDITOR_SOURCE_ROLES.has(r))) return "editor";
-  return null;
+  return "member";
 }
 
 export function normaliseEmail(email: string | null | undefined): string {
@@ -31,6 +35,9 @@ const DEFAULT_DIRECTORY_URL =
   "https://project--9b53a55c-a944-4840-b29d-ad56f7d750f4.lovable.app/api/public/role-directory";
 
 type DirectoryEntry = { email: string; role: AppRole; source_roles: string[] };
+
+/** Strength order used when the same person appears more than once. */
+const RANK: Record<AppRole, number> = { member: 1, editor: 2, admin: 3 };
 
 type SourceRow = { email?: unknown; roles?: unknown };
 
@@ -49,10 +56,9 @@ function parseDirectoryPayload(payload: unknown): DirectoryEntry[] {
       ? row.roles.filter((r): r is string => typeof r === "string")
       : [];
     const role = mapSourceRoles(sourceRoles);
-    if (!role) continue;
-    // admin beats editor when a person appears twice
+    // the strongest level wins when a person appears twice
     const existing = byEmail.get(email);
-    if (existing && existing.role === "admin") continue;
+    if (existing && RANK[existing.role] >= RANK[role]) continue;
     byEmail.set(email, { email, role, source_roles: sourceRoles });
   }
   return [...byEmail.values()];
@@ -132,7 +138,7 @@ export async function syncRoleDirectory(): Promise<SyncResult> {
     const fetched = await fetchDirectory();
     if (fetched.length === 0) {
       // Never wipe access because the source returned an empty list.
-      throw new Error("Welcome directory returned no editors or admins");
+      throw new Error("Welcome directory returned no members");
     }
 
     /**

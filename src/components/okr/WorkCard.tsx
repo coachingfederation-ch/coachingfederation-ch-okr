@@ -27,7 +27,8 @@ export function WorkCard({ item }: { item: FlatInitiative }) {
   const owner = pickTranslation(item, "owner", item.owner, locale);
   const idea = pickTranslation(item, "idea", item.idea, locale);
   const aspiration = pickTranslation(item, "aspiration", item.aspiration, locale);
-  const summary = aspiration || idea || pickTranslation(item, "description", item.description, locale);
+  const summary =
+    aspiration || idea || pickTranslation(item, "description", item.description, locale);
 
   const latest = item.learning_entries[0] ?? null;
   const range = formatDateRange(item.start_date, item.end_date, locale);
@@ -44,8 +45,7 @@ export function WorkCard({ item }: { item: FlatInitiative }) {
           {t(KIND_KEY[item.kind])}
         </span>
         <span className="inline-flex h-5 items-center rounded bg-primary/10 px-1.5 text-[10px] font-bold text-primary">
-          {item.okrNumber}.
-          {item.krLabel.includes(".") ? item.krLabel.split(".")[1] : item.krLabel}
+          {item.okrNumber}.{item.krLabel.includes(".") ? item.krLabel.split(".")[1] : item.krLabel}
         </span>
         {item.secondaryLabels.map((label) => (
           <span
@@ -56,6 +56,11 @@ export function WorkCard({ item }: { item: FlatInitiative }) {
             {label}
           </span>
         ))}
+        {item.status === "proposed" && (
+          <span className="inline-flex h-5 items-center rounded-full border border-highlight/60 bg-highlight/20 px-2 text-[10px] font-semibold text-foreground">
+            {t("initiatives.status.proposed")}
+          </span>
+        )}
         {item.status === "planned" && (
           <span
             className={cn(

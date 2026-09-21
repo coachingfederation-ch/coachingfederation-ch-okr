@@ -10,11 +10,13 @@ type AuthState = {
   /** Role mirrored from the ICF Switzerland Welcome app; null = read-only. */
   role: AccessRole;
   canEdit: boolean;
+  /** Members may put new initiatives forward, but change nothing else. */
+  canPropose: boolean;
   isAdmin: boolean;
   /**
-   * Email of an account that signed in with Google but is not an editor or
-   * admin in the Welcome app. The session is ended immediately; this keeps the
-   * reason around so /auth can explain what happened.
+   * Email of an account that signed in with Google but is not listed in the
+   * Welcome app. The session is ended immediately; this keeps the reason
+   * around so /auth can explain what happened.
    */
   rejectedEmail: string | null;
 };
@@ -25,6 +27,7 @@ const EMPTY: AuthState = {
   isLoading: true,
   role: null,
   canEdit: false,
+  canPropose: false,
   isAdmin: false,
   rejectedEmail: null,
 };
@@ -38,6 +41,7 @@ function withRole(session: Session | null, role: AccessRole): AuthState {
     isLoading: false,
     role,
     canEdit: role === "editor" || role === "admin",
+    canPropose: role === "member" || role === "editor" || role === "admin",
     isAdmin: role === "admin",
     rejectedEmail: null,
   };

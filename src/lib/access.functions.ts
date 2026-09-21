@@ -2,11 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export type AccessRole = "editor" | "admin" | null;
+export type AccessRole = "member" | "editor" | "admin" | null;
 
 export type DirectoryEntryDTO = {
   email: string;
-  role: "editor" | "admin";
+  role: "member" | "editor" | "admin";
   synced_at: string;
 };
 

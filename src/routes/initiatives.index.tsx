@@ -34,6 +34,7 @@ import {
 import { pickTranslation, useLocale } from "@/lib/i18n";
 import type { StringKey } from "@/lib/i18n-strings";
 import { WorkJourney } from "@/components/okr/WorkJourney";
+import { ProposeDialog } from "@/components/okr/ProposeDialog";
 import { WorkCard } from "@/components/okr/WorkCard";
 import { KIND_PLURAL_KEY } from "@/components/okr/work-meta";
 import type { FlatInitiative } from "@/components/okr/initiative-meta";
@@ -98,12 +99,14 @@ export const Route = createFileRoute("/initiatives/")({
 });
 
 const STATUS_DOT: Record<InitiativeStatus, string> = {
+  proposed: "bg-highlight/70",
   planned: "bg-muted-foreground/40",
   in_progress: "bg-highlight",
   done: "bg-primary",
   canceled: "bg-border",
 };
 const STATUS_KEY: Record<InitiativeStatus, StringKey> = {
+  proposed: "initiatives.status.proposed",
   planned: "initiatives.status.planned",
   in_progress: "initiatives.status.in_progress",
   done: "initiatives.status.done",
@@ -125,7 +128,7 @@ function InitiativesFallback() {
 
 function InitiativesContent() {
   const { data } = useSuspenseQuery(dashboardQueryOptions);
-  const { canEdit } = useAuth();
+  const { canEdit, canPropose } = useAuth();
   const { locale, t } = useLocale();
 
   const [okrFilter, setOkrFilter] = useState<string>("all");
@@ -134,6 +137,7 @@ function InitiativesContent() {
   const [teamFilter, setTeamFilter] = useState<string>("all");
   const [showCommunities, setShowCommunities] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+  const [proposeOpen, setProposeOpen] = useState(false);
 
   // Teams mirror the Welcome app's operational structure. Communities live in
   // the same structure but are not delivery teams, so they stay out of the way
@@ -415,6 +419,11 @@ function InitiativesContent() {
               <span className="text-xs text-muted-foreground">
                 {filtered.length} / {flat.length}
               </span>
+              {canPropose && !canEdit && (
+                <Button size="sm" onClick={() => setProposeOpen(true)}>
+                  {t("propose.button")}
+                </Button>
+              )}
               {canEdit && (
                 <Button size="sm" onClick={() => setCreateOpen(true)}>
                   + {t("journey.add")}
@@ -495,6 +504,13 @@ function InitiativesContent() {
         </p>
       </section>
 
+      <ProposeDialog
+        open={proposeOpen}
+        onOpenChange={setProposeOpen}
+        dashboard={data}
+        defaultKrId={krFilter !== "all" ? krFilter : undefined}
+      />
+
       <WorkJourney
         open={createOpen}
         onOpenChange={setCreateOpen}
@@ -518,6 +534,7 @@ function TeamGroup({
 }) {
   const { t } = useLocale();
   const byStatus: Record<InitiativeStatus, FlatInitiative[]> = {
+    proposed: [],
     planned: [],
     in_progress: [],
     done: [],
@@ -536,7 +553,7 @@ function TeamGroup({
           {items.length} · {t("work.count")}
         </span>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         {INITIATIVE_STATUSES.map((status) => (
           <StatusColumn
             key={status}

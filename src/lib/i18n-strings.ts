@@ -148,6 +148,21 @@ export type StringKey =
   | "initiatives.status.in_progress"
   | "initiatives.status.done"
   | "initiatives.status.canceled"
+  | "initiatives.status.proposed"
+  | "propose.button"
+  | "propose.title"
+  | "propose.intro"
+  | "propose.kr"
+  | "propose.whyNow"
+  | "propose.team"
+  | "propose.teamNone"
+  | "propose.submit"
+  | "propose.success"
+  | "propose.error"
+  | "proposal.accept"
+  | "proposal.accepted"
+  | "proposal.withdraw"
+  | "proposal.withdrawn"
   | "initiatives.new"
   | "initiatives.newTitle"
   | "initiatives.form.kr"
@@ -813,7 +828,7 @@ const en: Record<StringKey, string> = {
     "Access comes from ICF Switzerland Welcome. Use the same Google account you sign in with there.",
   "auth.notAuthorizedTitle": "No editing access yet",
   "auth.notAuthorizedBody":
-    "Your ICF Switzerland Welcome account doesn't have an editor or admin role yet, so signing in to this dashboard isn't possible. The dashboard stays fully readable without signing in.",
+    "This Google account is not listed in ICF Switzerland Welcome, so signing in to this dashboard is not possible. The dashboard stays fully readable without signing in.",
   "auth.notAuthorizedHelp":
     "Ask a chapter admin to give you the editor role in ICF Switzerland Welcome, then try again.",
   "auth.tryAnotherAccount": "Try another account",
@@ -892,6 +907,21 @@ const en: Record<StringKey, string> = {
   "initiatives.status.in_progress": "In Progress",
   "initiatives.status.done": "Done",
   "initiatives.status.canceled": "Canceled",
+  "initiatives.status.proposed": "Proposed",
+  "propose.button": "+ Propose",
+  "propose.title": "Propose an initiative",
+  "propose.intro": "Editors review proposals and accept the ones the chapter takes on.",
+  "propose.kr": "Which Key Result does it serve?",
+  "propose.whyNow": "Why now?",
+  "propose.team": "Team (optional)",
+  "propose.teamNone": "No team",
+  "propose.submit": "Send proposal",
+  "propose.success": "Proposal sent — editors will pick it up.",
+  "propose.error": "Could not send the proposal.",
+  "proposal.accept": "Accept proposal",
+  "proposal.accepted": "Accepted — now planned.",
+  "proposal.withdraw": "Withdraw proposal",
+  "proposal.withdrawn": "Proposal withdrawn.",
   "initiatives.new": "+ New initiative",
   "initiatives.newTitle": "New initiative",
   "initiatives.form.kr": "Key Result",
@@ -1627,7 +1657,7 @@ const de: Record<StringKey, string> = {
     "Der Zugang kommt aus ICF Switzerland Welcome. Melde dich mit demselben Google-Konto an, das du dort nutzt.",
   "auth.notAuthorizedTitle": "Noch kein Bearbeitungszugang",
   "auth.notAuthorizedBody":
-    "Dein ICF-Switzerland-Welcome-Konto hat noch keine Editor- oder Admin-Rolle, deshalb ist eine Anmeldung an diesem Dashboard nicht möglich. Das Dashboard bleibt auch ohne Anmeldung vollständig einsehbar.",
+    "Dieses Google-Konto ist in ICF Switzerland Welcome nicht eingetragen, deshalb ist eine Anmeldung an diesem Dashboard nicht möglich. Das Dashboard bleibt auch ohne Anmeldung vollständig einsehbar.",
   "auth.notAuthorizedHelp":
     "Bitte eine Chapter-Adminperson, dir in ICF Switzerland Welcome die Editor-Rolle zu geben, und versuche es dann erneut.",
   "auth.tryAnotherAccount": "Anderes Konto versuchen",
@@ -1707,6 +1737,21 @@ const de: Record<StringKey, string> = {
   "initiatives.status.in_progress": "In Arbeit",
   "initiatives.status.done": "Erledigt",
   "initiatives.status.canceled": "Abgebrochen",
+  "initiatives.status.proposed": "Vorgeschlagen",
+  "propose.button": "+ Vorschlagen",
+  "propose.title": "Initiative vorschlagen",
+  "propose.intro": "Redaktionsberechtigte prüfen Vorschläge und nehmen passende an.",
+  "propose.kr": "Welches Key Result unterstützt sie?",
+  "propose.whyNow": "Warum jetzt?",
+  "propose.team": "Team (optional)",
+  "propose.teamNone": "Kein Team",
+  "propose.submit": "Vorschlag senden",
+  "propose.success": "Vorschlag gesendet — Redaktionsberechtigte schauen ihn sich an.",
+  "propose.error": "Der Vorschlag konnte nicht gesendet werden.",
+  "proposal.accept": "Vorschlag annehmen",
+  "proposal.accepted": "Angenommen — jetzt geplant.",
+  "proposal.withdraw": "Vorschlag zurückziehen",
+  "proposal.withdrawn": "Vorschlag zurückgezogen.",
   "initiatives.new": "+ Neue Initiative",
   "initiatives.newTitle": "Neue Initiative",
   "initiatives.form.kr": "Key Result",
@@ -2456,7 +2501,7 @@ const fr: Record<StringKey, string> = {
     "Les accès proviennent d'ICF Switzerland Welcome. Utilisez le même compte Google que là-bas.",
   "auth.notAuthorizedTitle": "Pas encore d'accès en édition",
   "auth.notAuthorizedBody":
-    "Votre compte ICF Switzerland Welcome n'a pas encore de rôle éditeur ou admin, la connexion à ce tableau de bord n'est donc pas possible. Le tableau de bord reste entièrement consultable sans connexion.",
+    "Ce compte Google n'est pas répertorié dans ICF Switzerland Welcome, la connexion à ce tableau de bord n'est donc pas possible. Le tableau de bord reste entièrement consultable sans connexion.",
   "auth.notAuthorizedHelp":
     "Demandez à un admin du chapitre de vous attribuer le rôle d'éditeur dans ICF Switzerland Welcome, puis réessayez.",
   "auth.tryAnotherAccount": "Essayer un autre compte",
@@ -2536,6 +2581,22 @@ const fr: Record<StringKey, string> = {
   "initiatives.status.in_progress": "En cours",
   "initiatives.status.done": "Terminée",
   "initiatives.status.canceled": "Annulée",
+  "initiatives.status.proposed": "Proposée",
+  "propose.button": "+ Proposer",
+  "propose.title": "Proposer une initiative",
+  "propose.intro":
+    "Les éditeurs examinent les propositions et acceptent celles que le chapitre retient.",
+  "propose.kr": "Quel Key Result sert-elle ?",
+  "propose.whyNow": "Pourquoi maintenant ?",
+  "propose.team": "Équipe (facultatif)",
+  "propose.teamNone": "Aucune équipe",
+  "propose.submit": "Envoyer la proposition",
+  "propose.success": "Proposition envoyée — les éditeurs la prendront en main.",
+  "propose.error": "Impossible d'envoyer la proposition.",
+  "proposal.accept": "Accepter la proposition",
+  "proposal.accepted": "Acceptée — désormais planifiée.",
+  "proposal.withdraw": "Retirer la proposition",
+  "proposal.withdrawn": "Proposition retirée.",
   "initiatives.new": "+ Nouvelle initiative",
   "initiatives.newTitle": "Nouvelle initiative",
   "initiatives.form.kr": "Résultat clé",
@@ -3286,7 +3347,7 @@ const it: Record<StringKey, string> = {
     "L'accesso proviene da ICF Switzerland Welcome. Usa lo stesso account Google con cui accedi lì.",
   "auth.notAuthorizedTitle": "Ancora nessun accesso di modifica",
   "auth.notAuthorizedBody":
-    "Il tuo account ICF Switzerland Welcome non ha ancora diritti di editor o admin, quindi l'accesso a questa dashboard non è possibile. La dashboard resta comunque completamente consultabile senza accesso.",
+    "Questo account Google non è presente in ICF Switzerland Welcome, quindi l'accesso a questa dashboard non è possibile. La dashboard resta comunque completamente consultabile senza accesso.",
   "auth.notAuthorizedHelp":
     "Chiedi a un admin del capitolo di assegnarti il ruolo di editor in ICF Switzerland Welcome, poi riprova.",
   "auth.tryAnotherAccount": "Prova con un altro account",
@@ -3366,6 +3427,22 @@ const it: Record<StringKey, string> = {
   "initiatives.status.in_progress": "In corso",
   "initiatives.status.done": "Completata",
   "initiatives.status.canceled": "Annullata",
+  "initiatives.status.proposed": "Proposta",
+  "propose.button": "+ Proponi",
+  "propose.title": "Proponi un'iniziativa",
+  "propose.intro":
+    "Gli editor esaminano le proposte e accettano quelle che il capitolo porta avanti.",
+  "propose.kr": "Quale Key Result sostiene?",
+  "propose.whyNow": "Perché adesso?",
+  "propose.team": "Team (facoltativo)",
+  "propose.teamNone": "Nessun team",
+  "propose.submit": "Invia la proposta",
+  "propose.success": "Proposta inviata — gli editor la prenderanno in carico.",
+  "propose.error": "Impossibile inviare la proposta.",
+  "proposal.accept": "Accetta la proposta",
+  "proposal.accepted": "Accettata — ora pianificata.",
+  "proposal.withdraw": "Ritira la proposta",
+  "proposal.withdrawn": "Proposta ritirata.",
   "initiatives.new": "+ Nuova iniziativa",
   "initiatives.newTitle": "Nuova iniziativa",
   "initiatives.form.kr": "Risultato chiave",
