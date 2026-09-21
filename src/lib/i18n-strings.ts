@@ -2181,6 +2181,8 @@ const de: Record<StringKey, string> = {
   "work.open": "One-Pager öffnen",
   "work.empty": "Keine Arbeit entspricht diesen Filtern.",
   "work.emptyStatus": "Noch nichts hier",
+  "work.dragHandle": "Karte verschieben (ziehen oder Leertaste und Pfeiltasten)",
+  "work.moveFailed": "Das Verschieben konnte nicht gespeichert werden. Das Board wurde zurueckgesetzt.",
   "work.idea": "Die Idee",
   "work.whyNow": "Warum jetzt",
   "work.proposedOwner": "Vorgeschlagene Verantwortung",
