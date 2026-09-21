@@ -2182,7 +2182,8 @@ const de: Record<StringKey, string> = {
   "work.empty": "Keine Arbeit entspricht diesen Filtern.",
   "work.emptyStatus": "Noch nichts hier",
   "work.dragHandle": "Karte verschieben (ziehen oder Leertaste und Pfeiltasten)",
-  "work.moveFailed": "Das Verschieben konnte nicht gespeichert werden. Das Board wurde zurueckgesetzt.",
+  "work.moveFailed":
+    "Das Verschieben konnte nicht gespeichert werden. Das Board wurde zurückgesetzt.",
   "work.idea": "Die Idee",
   "work.whyNow": "Warum jetzt",
   "work.proposedOwner": "Vorgeschlagene Verantwortung",
