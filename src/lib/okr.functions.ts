@@ -658,6 +658,54 @@ export const updateInitiative = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+/**
+ * Move a card on the portfolio board: change its status and/or team, and
+ * rewrite the order of the destination column.
+ *
+ * The client sends the destination column's ids in the order the reader now
+ * sees them; the server re-stamps `sort_order` for exactly those rows. Only
+ * relative order inside a column is meaningful, so we reuse the lowest slot
+ * already held by the column and step in tens from there.
+ */
+export const moveInitiative = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({
+        id: uuidSchema,
+        status: z.enum(["planned", "in_progress", "done", "canceled"]),
+        team_id: uuidSchema.nullable(),
+        orderedIds: z.array(uuidSchema).max(200),
+      })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("initiatives")
+      .update({ status: data.status, team_id: data.team_id })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+
+    if (data.orderedIds.length > 0) {
+      const { data: rows, error: readErr } = await context.supabase
+        .from("initiatives")
+        .select("id,sort_order")
+        .in("id", data.orderedIds);
+      if (readErr) throw new Error(readErr.message);
+      const existing = (rows ?? []).map((r: { sort_order: number | null }) => r.sort_order ?? 0);
+      const base = existing.length > 0 ? Math.min(...existing) : 0;
+      for (let i = 0; i < data.orderedIds.length; i++) {
+        const { error: upErr } = await context.supabase
+          .from("initiatives")
+          .update({ sort_order: base + i * 10 })
+          .eq("id", data.orderedIds[i]);
+        if (upErr) throw new Error(upErr.message);
+      }
+    }
+    return { ok: true };
+  });
+
+
 export const deleteInitiative = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))
