@@ -505,7 +505,17 @@ function InitiativesContent() {
   );
 }
 
-function TeamGroup({ label, items }: { label: string; items: FlatInitiative[] }) {
+function TeamGroup({
+  teamId,
+  label,
+  items,
+  canEdit,
+}: {
+  teamId: string;
+  label: string;
+  items: FlatInitiative[];
+  canEdit: boolean;
+}) {
   const { t } = useLocale();
   const byStatus: Record<InitiativeStatus, FlatInitiative[]> = {
     planned: [],
@@ -514,6 +524,9 @@ function TeamGroup({ label, items }: { label: string; items: FlatInitiative[] })
     canceled: [],
   };
   for (const it of items) byStatus[it.status].push(it);
+  for (const status of INITIATIVE_STATUSES) {
+    byStatus[status].sort((a, b) => a.sort_order - b.sort_order);
+  }
 
   return (
     <section aria-label={label}>
@@ -525,30 +538,141 @@ function TeamGroup({ label, items }: { label: string; items: FlatInitiative[] })
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {INITIATIVE_STATUSES.map((status) => (
-          <div key={status} className="flex flex-col rounded-2xl bg-muted/40 p-3">
-            <div className="mb-3 flex items-center justify-between px-1">
-              <div className="flex items-center gap-2">
-                <span className={cn("h-2.5 w-2.5 rounded-full", STATUS_DOT[status])} aria-hidden />
-                <h3 className="text-sm font-semibold text-foreground">{t(STATUS_KEY[status])}</h3>
-              </div>
-              <span className="text-xs font-medium text-muted-foreground">
-                {byStatus[status].length}
-              </span>
-            </div>
-            <div className="flex flex-col gap-3">
-              {byStatus[status].length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border/60 bg-card/40 px-3 py-6 text-center text-xs italic text-muted-foreground">
-                  {t("work.emptyStatus")}
-                </div>
-              ) : (
-                byStatus[status].map((it) => <WorkCard key={it.id} item={it} />)
-              )}
-            </div>
-          </div>
+          <StatusColumn
+            key={status}
+            teamId={teamId}
+            status={status}
+            items={byStatus[status]}
+            canEdit={canEdit}
+          />
         ))}
       </div>
     </section>
   );
+}
+
+function StatusColumn({
+  teamId,
+  status,
+  items,
+  canEdit,
+}: {
+  teamId: string;
+  status: InitiativeStatus;
+  items: FlatInitiative[];
+  canEdit: boolean;
+}) {
+  const { t } = useLocale();
+  const id = columnId(teamId, status);
+  const { setNodeRef, isOver } = useDroppable({ id, disabled: !canEdit });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={cn(
+        "flex flex-col rounded-2xl bg-muted/40 p-3 transition-colors",
+        isOver && "bg-primary/10 ring-2 ring-primary/40",
+      )}
+    >
+      <div className="mb-3 flex items-center justify-between px-1">
+        <div className="flex items-center gap-2">
+          <span className={cn("h-2.5 w-2.5 rounded-full", STATUS_DOT[status])} aria-hidden />
+          <h3 className="text-sm font-semibold text-foreground">{t(STATUS_KEY[status])}</h3>
+        </div>
+        <span className="text-xs font-medium text-muted-foreground">{items.length}</span>
+      </div>
+      <SortableContext
+        id={id}
+        items={items.map((i) => i.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="flex min-h-16 flex-col gap-3">
+          {items.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border/60 bg-card/40 px-3 py-6 text-center text-xs italic text-muted-foreground">
+              {t("work.emptyStatus")}
+            </div>
+          ) : (
+            items.map((it) =>
+              canEdit ? (
+                <SortableCard key={it.id} item={it} />
+              ) : (
+                <WorkCard key={it.id} item={it} />
+              ),
+            )
+          )}
+        </div>
+      </SortableContext>
+    </div>
+  );
+}
+
+/** A draggable card: the whole card still opens its one-pager on click, the
+ * grip is what starts a move (and what keyboard users focus). */
+function SortableCard({ item }: { item: FlatInitiative }) {
+  const { t } = useLocale();
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: item.id,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Translate.toString(transform), transition }}
+      className={cn("relative touch-manipulation", isDragging && "opacity-40")}
+    >
+      <WorkCard item={item} />
+      <button
+        type="button"
+        {...attributes}
+        {...listeners}
+        aria-label={t("work.dragHandle")}
+        title={t("work.dragHandle")}
+        className="absolute right-8 top-3 z-10 flex h-6 w-5 cursor-grab items-center justify-center rounded text-muted-foreground/60 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"
+      >
+        <GripVertical className="h-4 w-4" aria-hidden />
+      </button>
+    </div>
+  );
+}
+
+/** Mirror a move in the cached dashboard so the board updates instantly. */
+function applyMove(
+  data: DashboardDTO,
+  id: string,
+  status: InitiativeStatus,
+  teamId: string | null,
+  orderedIds: string[],
+): DashboardDTO {
+  const inColumn = new Set(orderedIds);
+  const existing: number[] = [];
+  for (const set of data.okr_sets) {
+    for (const kr of set.key_results) {
+      for (const it of kr.initiatives) {
+        if (inColumn.has(it.id)) existing.push(it.sort_order);
+      }
+    }
+  }
+  const base = existing.length > 0 ? Math.min(...existing) : 0;
+  const nextOrder = new Map(orderedIds.map((oid, i) => [oid, base + i * 10] as const));
+
+  return {
+    ...data,
+    okr_sets: data.okr_sets.map((set) => ({
+      ...set,
+      key_results: set.key_results.map((kr) => ({
+        ...kr,
+        initiatives: kr.initiatives.map((it) => {
+          const order = nextOrder.get(it.id);
+          if (it.id !== id && order === undefined) return it;
+          return {
+            ...it,
+            ...(it.id === id ? { status, team_id: teamId } : null),
+            ...(order !== undefined ? { sort_order: order } : null),
+          };
+        }),
+      })),
+    })),
+  };
 }
 
 function FilterBlock({ label, children }: { label: string; children: React.ReactNode }) {
