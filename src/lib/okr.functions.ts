@@ -705,7 +705,6 @@ export const moveInitiative = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-
 export const deleteInitiative = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ id: uuidSchema }).parse(raw))

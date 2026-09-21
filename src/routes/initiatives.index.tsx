@@ -593,11 +593,7 @@ function StatusColumn({
             </div>
           ) : (
             items.map((it) =>
-              canEdit ? (
-                <SortableCard key={it.id} item={it} />
-              ) : (
-                <WorkCard key={it.id} item={it} />
-              ),
+              canEdit ? <SortableCard key={it.id} item={it} /> : <WorkCard key={it.id} item={it} />,
             )
           )}
         </div>
