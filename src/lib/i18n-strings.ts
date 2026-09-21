@@ -248,6 +248,8 @@ export type StringKey =
   | "work.open"
   | "work.empty"
   | "work.emptyStatus"
+  | "work.dragHandle"
+  | "work.moveFailed"
   | "work.idea"
   | "work.whyNow"
   | "work.proposedOwner"
