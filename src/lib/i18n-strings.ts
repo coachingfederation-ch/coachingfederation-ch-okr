@@ -3839,6 +3839,8 @@ const it: Record<StringKey, string> = {
   "work.open": "Apri la scheda",
   "work.empty": "Nessun lavoro corrisponde a questi filtri.",
   "work.emptyStatus": "Ancora nulla",
+  "work.dragHandle": "Sposta questa scheda (trascina, oppure spazio e frecce)",
+  "work.moveFailed": "Non è stato possibile salvare lo spostamento. La bacheca è stata ripristinata.",
   "work.idea": "L'idea",
   "work.whyNow": "Perché ora",
   "work.proposedOwner": "Responsabile proposto",
