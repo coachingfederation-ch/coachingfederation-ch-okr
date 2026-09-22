@@ -40,7 +40,6 @@ import { EditInitiativeDialog } from "@/components/okr/EditInitiativeDialog";
 import { ProposeDialog } from "@/components/okr/ProposeDialog";
 import { listInitiativeInterests } from "@/lib/interests.functions";
 import {
-  AVAILABILITY_CHIP,
   AVAILABILITY_KEY,
   COMMITMENT_KEY,
   HELP_NEEDED_KEY,
