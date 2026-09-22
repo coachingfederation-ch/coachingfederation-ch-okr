@@ -40,7 +40,6 @@ import { EditInitiativeDialog } from "@/components/okr/EditInitiativeDialog";
 import { ProposeDialog } from "@/components/okr/ProposeDialog";
 import { listInitiativeInterests } from "@/lib/interests.functions";
 import {
-  AVAILABILITY_CHIP,
   AVAILABILITY_KEY,
   COMMITMENT_KEY,
   HELP_NEEDED_KEY,
@@ -207,12 +206,10 @@ function DetailContent() {
               </span>
             )}
             {initiative.status === "planned" && (
-              <span
-                className={cn(
-                  "inline-flex h-6 items-center rounded-full border px-2.5 text-[11px] font-semibold",
-                  AVAILABILITY_CHIP[initiative.availability],
-                )}
-              >
+              /* The shared AVAILABILITY_CHIP tints are built for light cards and
+                 wash out on the Deep Blue header, so this chip uses the same
+                 high-contrast outline treatment as the other header chips. */
+              <span className="inline-flex h-6 items-center rounded-full border border-hero-foreground/50 bg-hero-foreground/10 px-2.5 text-[11px] font-semibold text-hero-foreground">
                 {t(AVAILABILITY_KEY[initiative.availability])}
               </span>
             )}
