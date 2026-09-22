@@ -52,7 +52,6 @@ import {
   DECISION_KEY,
   DIRECTION_KEY,
   EVIDENCE_KEY,
-  KIND_CHIP,
   KIND_KEY,
   PHASE_TYPE_KEY,
   SIZE_KEY,
@@ -187,12 +186,9 @@ function DetailContent() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={cn(
-                "inline-flex h-6 items-center rounded-full border px-2.5 text-[11px] font-semibold uppercase tracking-wider",
-                KIND_CHIP[initiative.kind],
-              )}
-            >
+            {/* On the Deep Blue header band the shared KIND_CHIP tints read
+                washed out, so the kind chip uses ICF Yellow here. */}
+            <span className="inline-flex h-6 items-center rounded-full border border-accent bg-accent px-2.5 text-[11px] font-semibold uppercase tracking-wider text-accent-foreground">
               {t(KIND_KEY[initiative.kind])}
             </span>
             {initiative.size && (
